@@ -1,2 +1,0 @@
-# kaykhosrow.github.io
-Personal
