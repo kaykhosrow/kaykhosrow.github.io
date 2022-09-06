@@ -10,6 +10,7 @@
 <style>
   .flexcontainer {
    display: flex;
+   border:0px;
    flex-direction: row;
    align-items: center;
    justify-content: center;
@@ -36,7 +37,42 @@ padding: 0px 0px 30px 0px;
 }
 </style>
 
+<style>
+	
+.trans {
+  color: #ffffff;
+  position: relative;
+  text-decoration: none;
+  transition: color .5s ease-out;
+}
 
+.trans:hover {
+  color: #ffffff;
+  right: 0;
+  text-decoration: none;
+}
+
+.trans:hover:after {
+  border-color: #ffffff;
+  right: 0;
+}
+
+.trans:after {
+  border-radius: 1em;
+  border-top: .1em solid #2F56B0;
+  content: "";
+  position: absolute;
+    right: 100%;
+    bottom: -.15em;
+    left: 0;
+  transition: right .5s cubic-bezier(0,.5,0,1),
+              border-color .5s ease-out;
+}
+
+.trans:hover:after {
+right: 0;
+}
+</style>
 		
 <script src="https://kit.fontawesome.com/bb0a4a8912.js" crossorigin="anonymous"></script>
 		
