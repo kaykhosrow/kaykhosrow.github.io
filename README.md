@@ -1,3 +1,3 @@
-# kaykhosrow.github.io
+# kaykhusraw.github.io
 
 Code for my personal site.
