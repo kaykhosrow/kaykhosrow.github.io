@@ -122,26 +122,6 @@ right: 0;
 								
 								</div>
 								
-								<script>
-
-const img = document.querySelector('img');
-const icons = document.querySelectorAll('.icons li');
-const radius = img.offsetHeight / 2;
-const centerX = img.offsetLeft + img.offsetWidth / 2;
-const centerY = img.offsetTop + img.offsetHeight / 2;
-
-for (let i = 0; i < icons.length; i++) {
-  const angle = (2 * Math.PI / icons.length) * i;
-  const x = centerX + radius * Math.cos(angle) - icons[i].offsetWidth / 2;
-  const y = centerY + radius * Math.sin(angle) - icons[i].offsetHeight / 2;
-
-  icons[i].style.left = x + 'px';
-  icons[i].style.top = y + 'px';
-}
-									
-								</script>
-								
-								
 								<p align="justify" class="text" lang="en"> Welcome to my page. I am a final year PhD candidate at <a class="trans" href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> under the supervision of <a class="trans" href="https://www.kcl.ac.uk/people/georgios-chortareas" target="_blank">Georgios Chortareas</a> and <a class="trans" href="https://www.kcl.ac.uk/people/george-kapetanios" target="_blank">George Kapetanios</a>.
 								My research interests are primarily in macroeconomics and my thesis concerns the natural rate of interest. </p>
 								
