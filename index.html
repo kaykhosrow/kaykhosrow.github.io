@@ -124,11 +124,11 @@ right: 0;
 								
 								<script>
 
-const img = document.querySelector('#about img');
+const img = document.querySelector('img');
 const icons = document.querySelectorAll('.icons li');
-const radius = img.offsetWidth / 2;
-const centerX = img.offsetLeft + radius;
-const centerY = img.offsetTop + radius;
+const radius = img.offsetHeight / 2;
+const centerX = img.offsetLeft + img.offsetWidth / 2;
+const centerY = img.offsetTop + img.offsetHeight / 2;
 
 for (let i = 0; i < icons.length; i++) {
   const angle = (2 * Math.PI / icons.length) * i;
