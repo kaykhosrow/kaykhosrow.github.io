@@ -84,15 +84,15 @@ right: 0;
   font-size: 20px; /* Increased font size */
   font-weight: normal; /* Remove bold text */
   background-color: transparent; /* Fully transparent background */
-  border: 2px solid #ffffff; /* Permanent white border */
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+  border: 2px solid transparent; /* Transparent border to avoid movement */
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition for hover effects */
 }
 
 .citation-button:hover {
   background-color: #ffffff; /* Background turns white on hover */
   color: #000000; /* Text turns black on hover */
+  border-color: #ffffff; /* Keep white border on hover */
 }
-	
 </style>
 		
 <script src="https://kit.fontawesome.com/bb0a4a8912.js" crossorigin="anonymous"></script>
