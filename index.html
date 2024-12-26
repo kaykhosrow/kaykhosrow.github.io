@@ -76,19 +76,40 @@ right: 0;
 <style>
 	
 .citation-button {
-  display: inline-block; /* Allows padding and styling */
-  background-color: #007bff; /* Button background color */
-  color: #fff; /* Button text color */
+  display: inline-block;
   text-decoration: none; /* Removes underline */
+  color: inherit; /* Inherit color from surrounding text or styles */
   padding: 10px 15px; /* Adds padding to make it look like a button */
   border-radius: 5px; /* Adds rounded corners */
   font-size: 16px; /* Adjusts font size */
   font-weight: bold; /* Makes the text bold */
+  position: relative;
 }
 
 .citation-button:hover {
-  background-color: #0056b3; /* Changes color on hover for interactivity */
+  color: #ffffff; /* Changes text color on hover */
 }
+
+.citation-button:hover:after {
+  border-color: #ffffff; /* Changes border color on hover */
+}
+
+.citation-button:after {
+  border-radius: 1em;
+  border-top: .1em solid #2F56B0;
+  content: "";
+  position: absolute;
+  right: 100%;
+  bottom: -.15em;
+  left: 0;
+  transition: right .5s cubic-bezier(0,.5,0,1),
+              border-color .5s ease-out;
+}
+
+.citation-button:hover:after {
+  right: 0;
+}
+
 </style>
 		
 <script src="https://kit.fontawesome.com/bb0a4a8912.js" crossorigin="anonymous"></script>
@@ -157,10 +178,8 @@ right: 0;
 							<article id="research">
 
 								<h3 class="major"> Publications </h3>
-
-								<p> <a href="https://doi.org/10.1111/ecca.12566" target="_blank" class="button small"> 
 									
-								<a href="https://doi.org/10.1111/ecca.12566" target="_blank" class="citation-button">
+								<a href="https://doi.org/10.1111/ecca.12566" target="_blank" class="trans citation-button">
 								  Kaykhusraw, O. (2024) 'Longer-Run Equilibrium Interest Rates: <br> Evidence From the United Kingdom', 
 								 <i>Economica</i>, 93(366), pp. </a>
 								
