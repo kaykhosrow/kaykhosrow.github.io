@@ -81,17 +81,16 @@ right: 0;
   color: #fff; /* Default text color */
   padding: 10px 15px; /* Adds padding to make it look like a button */
   border-radius: 5px; /* Adds rounded corners */
-  font-size: 16px; /* Adjusts font size */
-  font-weight: bold; /* Makes the text bold */
-  background-color: rgba(0, 0, 0, 0.7); /* Black with transparency */
-  border: 2px solid transparent; /* Optional: Adds border for better definition */
-  transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for hover effects */
+  font-size: 18px; /* Increased font size */
+  font-weight: normal; /* Remove bold text */
+  background-color: transparent; /* Fully transparent background */
+  border: 2px solid #ffffff; /* Permanent white border */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
 }
 
 .citation-button:hover {
-  background-color: rgba(0, 0, 0, 1); /* Fully opaque black on hover */
-  color: #fff; /* Ensure text stays white */
-  border-color: #ffffff; /* Optionally, add a border color on hover */
+  background-color: #ffffff; /* Background turns white on hover */
+  color: #000000; /* Text turns black on hover */
 }
 
 .citation-button:after {
@@ -102,13 +101,11 @@ right: 0;
   right: 100%;
   bottom: -.15em;
   left: 0;
-  transition: right .5s cubic-bezier(0,.5,0,1),
-              border-color .5s ease-out;
+  transition: right .5s cubic-bezier(0,.5,0,1);
 }
 
 .citation-button:hover:after {
-  right: 0;
-  border-color: #ffffff; /* Border color on hover */
+  right: 0; /* No border color change on hover */
 }
 	
 </style>
