@@ -82,26 +82,15 @@ right: 0;
   padding: 10px 15px; /* Adds padding to make it look like a button */
   padding-left: 0; /* Eliminates padding on the left for alignment */
   border-radius: 5px; /* Adds rounded corners */
-  background-color: transparent; /* Fully transparent background */
-  overflow: hidden; /* Ensures the animation stays within the button bounds */
-  position: relative; /* Enables positioning for the pseudo-element */
+  background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.5) 90%);
+  background-size: 200% 100%; /* Makes the background twice as wide as the button */
+  background-position: -100% 0; /* Initially hide the gradient off the left */
+  transition: background-position 0.5s ease; /* Smooth reveal animation */
   font: inherit; /* Use the same font size and style as surrounding text */
 }
 
-.citation-button::before {
-  content: ""; /* Empty content for the pseudo-element */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0%; /* Start with zero width */
-  height: 100%;
-  background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.5) 90%);
-  transition: width 0.5s ease; /* Smooth reveal animation */
-  z-index: -1; /* Ensure it sits behind the text */
-}
-
-.citation-button:hover::before {
-  width: 100%; /* Expand to full width on hover */
+.citation-button:hover {
+  background-position: 0 0; /* Move the gradient into view from left to right */
 }
 	
 </style>
