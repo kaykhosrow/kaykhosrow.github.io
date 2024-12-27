@@ -83,13 +83,25 @@ right: 0;
   padding-left: 0; /* Eliminates padding on the left for alignment */
   border-radius: 5px; /* Adds rounded corners */
   background-color: transparent; /* Fully transparent background */
-  transition: background 0.3s; /* Smooth transition for hover effects */
+  overflow: hidden; /* Ensures the animation stays within the button bounds */
+  position: relative; /* Enables positioning for the pseudo-element */
   font: inherit; /* Use the same font size and style as surrounding text */
 }
 
-.citation-button:hover {
-  background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.5) 90%); /* Sharper gradient with semi-transparent white */
-  color: #fff; /* Text remains white */
+.citation-button::before {
+  content: ""; /* Empty content for the pseudo-element */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%; /* Start with zero width */
+  height: 100%;
+  background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.5) 90%);
+  transition: width 0.5s ease; /* Smooth reveal animation */
+  z-index: -1; /* Ensure it sits behind the text */
+}
+
+.citation-button:hover::before {
+  width: 100%; /* Expand to full width on hover */
 }
 	
 </style>
