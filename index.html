@@ -84,32 +84,24 @@ right: 0;
   border-radius: 5px; /* Adds rounded corners */
   background-color: transparent; /* Fully transparent background */
   position: relative; /* To position the pseudo-element */
-  overflow: hidden; /* Ensures the pseudo-element stays inside the button */
   font: inherit; /* Use the same font size and style as surrounding text */
   transition: color 0.5s ease; /* Smooth transition for text color */
-}
-
-.citation-button::before {
-  content: ""; /* Empty content for the pseudo-element */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.2) 100%); /* Gradient from left to right */
-  z-index: -1; /* Ensure it sits behind the text */
-  transform: scaleX(0); /* Initially hidden (scale X to 0) */
-  transform-origin: left; /* Start from the left for the reveal effect */
-  transition: transform 0.8s ease; /* Animate the scale transform */
-}
-
-.citation-button:hover::before {
-  transform: scaleX(1); /* Reveal the gradient from left to right */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 100%); /* Initial mask */
+  mask-image: linear-gradient(to right, transparent 0%, black 100%); /* Initial mask */
+  -webkit-mask-size: 100% 100%; /* Full button size */
+  mask-size: 100% 100%; /* Full button size */
+  -webkit-mask-position: 0% 0%; /* Initially, the mask is hidden */
+  mask-position: 0% 0%; /* Initially, the mask is hidden */
+  transition: mask-position 1s ease; /* Smooth transition for mask reveal */
 }
 
 .citation-button:hover {
   color: #fff; /* Text remains white */
+  -webkit-mask-position: 100% 0%; /* On hover, the mask reveals from left to right */
+  mask-position: 100% 0%; /* On hover, the mask reveals from left to right */
 }
+
+
 
 	
 </style>
