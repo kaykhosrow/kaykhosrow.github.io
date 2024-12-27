@@ -78,7 +78,7 @@ right: 0;
 .citation-button {
   display: inline-block;
   text-decoration: none; /* Removes underline */
-  color: #fff; /* Default text color */
+  color: #fff; /* Text is always white */
   padding: 10px 15px; /* Adds padding to make it look like a button */
   padding-left: 0; /* Eliminates padding on the left for alignment */
   border-radius: 5px; /* Adds rounded corners */
@@ -86,6 +86,7 @@ right: 0;
   position: relative; /* To position the pseudo-element */
   overflow: hidden; /* Ensures the pseudo-element stays inside the button */
   font: inherit; /* Use the same font size and style as surrounding text */
+  transition: color 0.5s ease; /* Smooth transition for text color */
 }
 
 .citation-button::before {
@@ -95,19 +96,21 @@ right: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.2) 90%);
-  opacity: 0; /* Initially hidden */
-  transition: opacity 0.8s ease; /* Smooth fade-in effect */
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.2) 100%); /* Gradient from left to right */
   z-index: -1; /* Ensure it sits behind the text */
+  transform: scaleX(0); /* Initially hidden (scale X to 0) */
+  transform-origin: left; /* Start from the left for the reveal effect */
+  transition: transform 0.8s ease; /* Animate the scale transform */
 }
 
 .citation-button:hover::before {
-  opacity: 1; /* Fade in the gradient on hover */
+  transform: scaleX(1); /* Reveal the gradient from left to right */
 }
 
 .citation-button:hover {
   color: #fff; /* Text remains white */
 }
+
 	
 </style>
 		
