@@ -96,11 +96,11 @@ right: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to left, transparent 0%, rgba(255, 255, 255, 0.2) 100%); /* Gradient from right to left */
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.2) 0%, transparent 100%); /* White to transparent gradient */
   z-index: -1; /* Ensure it sits behind the text */
   transform: scaleX(0); /* Initially hidden (scale X to 0) */
   transform-origin: right; /* Start from the right for the reveal effect */
-  transition: transform 0.8s cubic-bezier(0, 0.5, 0, 1); /* Animated right to left reveal */
+  transition: transform 0.8s cubic-bezier(0, 0.5, 0, 1); /* Animate the scale transform */
 }
 
 .citation-button:hover::before {
