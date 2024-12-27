@@ -86,7 +86,6 @@ right: 0;
   position: relative; /* To position the pseudo-element */
   overflow: hidden; /* Ensures the pseudo-element stays inside the button */
   font: inherit; /* Use the same font size and style as surrounding text */
-  transition: color 0.5s ease; /* Transition for text color */
 }
 
 .citation-button::before {
@@ -97,14 +96,13 @@ right: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.2) 90%);
-  background-size: 200% 100%; /* Make the gradient wider for sliding effect */
-  background-position: -100% 0; /* Start off-screen to the left */
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.8s ease; /* Smooth fade-in effect */
   z-index: -1; /* Ensure it sits behind the text */
-  transition: background-position 0.8s ease; /* Smooth slide-in effect */
 }
 
 .citation-button:hover::before {
-  background-position: 0 0; /* Slide the gradient into view from left to right */
+  opacity: 1; /* Fade in the gradient on hover */
 }
 
 .citation-button:hover {
