@@ -96,8 +96,8 @@ right: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* Harsher gradient with more transparent part on the left */
-  background: linear-gradient(to left, rgba(255, 255, 255, 0.1) 30%, transparent 70%); 
+  /* More balanced gradient with slightly transparent white */
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.15) 40%, transparent 60%); 
   z-index: -1; /* Ensure it sits behind the text */
   transform: scaleX(0); /* Initially hidden (scale X to 0) */
   transform-origin: right; /* Start from the right for the reveal effect */
@@ -111,6 +111,7 @@ right: 0;
 .citation-button:hover {
   color: #fff; /* Text remains white */
 }
+
 	
 </style>
 		
