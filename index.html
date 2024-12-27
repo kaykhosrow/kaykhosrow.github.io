@@ -78,31 +78,36 @@ right: 0;
 .citation-button {
   display: inline-block;
   text-decoration: none; /* Removes underline */
-  color: #fff; /* Text is always white */
+  color: #fff; /* Default text color */
   padding: 10px 15px; /* Adds padding to make it look like a button */
   padding-left: 0; /* Eliminates padding on the left for alignment */
   border-radius: 5px; /* Adds rounded corners */
   background-color: transparent; /* Fully transparent background */
   position: relative; /* To position the pseudo-element */
+  overflow: hidden; /* Ensures the pseudo-element stays inside the button */
   font: inherit; /* Use the same font size and style as surrounding text */
-  transition: color 0.5s ease; /* Smooth transition for text color */
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 100%); /* Initial mask */
-  mask-image: linear-gradient(to right, transparent 0%, black 100%); /* Initial mask */
-  -webkit-mask-size: 100% 100%; /* Full button size */
-  mask-size: 100% 100%; /* Full button size */
-  -webkit-mask-position: 0% 0%; /* Initially, the mask is hidden */
-  mask-position: 0% 0%; /* Initially, the mask is hidden */
-  transition: mask-position 1s ease; /* Smooth transition for mask reveal */
+}
+
+.citation-button::before {
+  content: ""; /* Empty content for the pseudo-element */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.1) 90%); /* More transparent white */
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.8s ease; /* Smooth fade-in effect */
+  z-index: -1; /* Ensure it sits behind the text */
+}
+
+.citation-button:hover::before {
+  opacity: 1; /* Fade in the gradient on hover */
 }
 
 .citation-button:hover {
   color: #fff; /* Text remains white */
-  -webkit-mask-position: 100% 0%; /* On hover, the mask reveals from left to right */
-  mask-position: 100% 0%; /* On hover, the mask reveals from left to right */
 }
-
-
-
 	
 </style>
 		
