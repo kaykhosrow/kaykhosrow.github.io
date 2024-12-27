@@ -78,28 +78,29 @@ right: 0;
 .citation-button {
   display: inline-block;
   text-decoration: none; /* Removes underline */
-  color: #fff; /* Text is always white */
-  padding: 10px 15px; /* Adds padding for button look */
-  padding-left: 0; /* Aligns with the margin of other text */
+  color: #fff; /* Default text color */
+  padding: 10px 15px; /* Adds padding to make it look like a button */
+  padding-left: 0; /* Eliminates padding on the left for alignment */
   border-radius: 5px; /* Adds rounded corners */
-  background-color: transparent; /* Fully transparent background initially */
-  position: relative; /* Allows positioning of the pseudo-element */
+  background-color: transparent; /* Fully transparent background */
+  position: relative; /* To position the pseudo-element */
   overflow: hidden; /* Ensures the pseudo-element stays inside the button */
-  transition: color 0.5s ease; /* Smooth transition for text color */
+  font: inherit; /* Use the same font size and style as surrounding text */
+  transition: color 0.5s ease; /* Transition for text color */
 }
 
 .citation-button::before {
-  content: ""; /* Create a pseudo-element for the gradient effect */
+  content: ""; /* Empty content for the pseudo-element */
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.2) 90%);
-  background-size: 200% 100%; /* Makes the gradient wide enough to slide in */
-  background-position: -100% 0; /* Starts off-screen to the left */
-  z-index: -1; /* Ensures it appears behind the button text */
-  transition: background-position 0.8s cubic-bezier(0, 0.5, 0, 1); /* Smooth slide-in effect */
+  background-size: 200% 100%; /* Make the gradient wider for sliding effect */
+  background-position: -100% 0; /* Start off-screen to the left */
+  z-index: -1; /* Ensure it sits behind the text */
+  transition: background-position 0.8s ease; /* Smooth slide-in effect */
 }
 
 .citation-button:hover::before {
@@ -107,7 +108,7 @@ right: 0;
 }
 
 .citation-button:hover {
-  color: #fff; /* Text color stays constant on hover */
+  color: #fff; /* Text remains white */
 }
 	
 </style>
