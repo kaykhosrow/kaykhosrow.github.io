@@ -78,35 +78,36 @@ right: 0;
 .citation-button {
   display: inline-block;
   text-decoration: none; /* Removes underline */
-  color: #fff; /* Default text color */
-  padding: 10px 15px; /* Adds padding to make it look like a button */
-  padding-left: 0; /* Eliminates padding on the left for alignment */
+  color: #fff; /* Text is always white */
+  padding: 10px 15px; /* Adds padding for button look */
+  padding-left: 0; /* Aligns with the margin of other text */
   border-radius: 5px; /* Adds rounded corners */
-  background-color: transparent; /* Fully transparent background */
-  position: relative; /* To position the pseudo-element */
+  background-color: transparent; /* Fully transparent background initially */
+  position: relative; /* Allows positioning of the pseudo-element */
   overflow: hidden; /* Ensures the pseudo-element stays inside the button */
-  font: inherit; /* Use the same font size and style as surrounding text */
+  transition: color 0.5s ease; /* Smooth transition for text color */
 }
 
 .citation-button::before {
-  content: ""; /* Empty content for the pseudo-element */
+  content: ""; /* Create a pseudo-element for the gradient effect */
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.2) 90%);
-  opacity: 0; /* Initially hidden */
-  transition: opacity 0.8s ease; /* Smooth fade-in effect */
-  z-index: -1; /* Ensure it sits behind the text */
+  background-size: 200% 100%; /* Makes the gradient wide enough to slide in */
+  background-position: -100% 0; /* Starts off-screen to the left */
+  z-index: -1; /* Ensures it appears behind the button text */
+  transition: background-position 0.8s cubic-bezier(0, 0.5, 0, 1); /* Smooth slide-in effect */
 }
 
 .citation-button:hover::before {
-  opacity: 1; /* Fade in the gradient on hover */
+  background-position: 0 0; /* Slide the gradient into view from left to right */
 }
 
 .citation-button:hover {
-  color: #fff; /* Text remains white */
+  color: #fff; /* Text color stays constant on hover */
 }
 	
 </style>
