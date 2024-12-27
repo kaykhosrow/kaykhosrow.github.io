@@ -78,21 +78,19 @@ right: 0;
 .citation-button {
   display: inline-block;
   text-decoration: none; /* Removes underline */
-  color: #fff; /* Text is always white */
+  color: #fff; /* Default text color */
   padding: 10px 15px; /* Adds padding to make it look like a button */
   padding-left: 0; /* Eliminates padding on the left for alignment */
   border-radius: 5px; /* Adds rounded corners */
-  background: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.5) 90%);
-  background-size: 200% 100%; /* Makes the background twice as wide as the button */
-  background-position: -100% 0; /* Initially hide the gradient off the left */
-  transition: background-position 0.5s ease; /* Smooth reveal animation */
+  background-color: transparent; /* Fully transparent background */
+  transition: background 0.3s, color 0.3s; /* Smooth transition for hover effects */
   font: inherit; /* Use the same font size and style as surrounding text */
 }
 
 .citation-button:hover {
   background-position: 0 0; /* Move the gradient into view from left to right */
 }
-
+	
 </style>
 		
 <script src="https://kit.fontawesome.com/bb0a4a8912.js" crossorigin="anonymous"></script>
