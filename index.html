@@ -80,14 +80,15 @@ right: 0;
   text-decoration: none; /* Removes underline */
   color: #fff; /* Default text color */
   padding: 10px 15px; /* Adds padding to make it look like a button */
+  padding-left: 0; /* Eliminates padding on the left for alignment */
   border-radius: 5px; /* Adds rounded corners */
   background-color: transparent; /* Fully transparent background */
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+  transition: background 0.3s, color 0.3s; /* Smooth transition for hover effects */
   font: inherit; /* Use the same font size and style as surrounding text */
 }
 
 .citation-button:hover {
-  background-color: #ffffff; /* Background turns white on hover */
+  background: linear-gradient(to right, transparent, #ffffff); /* Horizontal gradient from transparent to white */
   color: #000000; /* Text turns black on hover */
 }
 	
