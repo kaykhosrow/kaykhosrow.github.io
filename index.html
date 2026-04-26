@@ -376,43 +376,53 @@
 							if (isAnimating) return;
 							isAnimating = true;
 
-							var trackIndex = targetReal < 0 ? 0
-								: targetReal >= total ? total + 1
-								: targetReal + 1;
-
-							var dotIdx = ((targetReal % total) + total) % total;
-							allSlides.forEach(function(s) { s.classList.remove('active'); });
-							allSlides[trackIndex].classList.add('active');
-							dots.forEach(function(d) { d.classList.remove('active'); });
-							dots[dotIdx].classList.add('active');
-
-							track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
-							track.style.transform  = 'translateX(' + centreOffset(trackIndex) + 'px)';
-
-							track.addEventListener('transitionend', function onEnd() {
-								track.removeEventListener('transitionend', onEnd);
-
-								if (targetReal < 0 || targetReal >= total) {
-									// Landed on a clone — silently jump to the real slide.
-									// Double-rAF ensures the browser fully commits the
-									// no-transition paint before isAnimating is released,
-									// eliminating the visible jerk.
-									var realIdx = ((targetReal % total) + total) % total;
-									current = realIdx;
-									track.style.transition = 'none';
-									track.style.transform  = 'translateX(' + centreOffset(realIdx + 1) + 'px)';
+							if (targetReal < 0) {
+								// Wrapping backward: jump to clone-first (far right), animate left to real-last
+								var realIdx = total - 1;
+								track.style.transition = 'none';
+								track.style.transform  = 'translateX(' + centreOffset(total + 1) + 'px)';
+								requestAnimationFrame(function () {
 									requestAnimationFrame(function () {
-										requestAnimationFrame(function () {
-											updateUI(current);
+										current = realIdx;
+										updateUI(current);
+										track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+										track.style.transform  = 'translateX(' + centreOffset(realIdx + 1) + 'px)';
+										track.addEventListener('transitionend', function onEnd() {
+											track.removeEventListener('transitionend', onEnd);
 											isAnimating = false;
 										});
 									});
-								} else {
-									current = targetReal;
-									updateUI(current);
+								});
+
+							} else if (targetReal >= total) {
+								// Wrapping forward: jump to clone-last (far left), animate right to real-first
+								var realIdx = 0;
+								track.style.transition = 'none';
+								track.style.transform  = 'translateX(' + centreOffset(0) + 'px)';
+								requestAnimationFrame(function () {
+									requestAnimationFrame(function () {
+										current = realIdx;
+										updateUI(current);
+										track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+										track.style.transform  = 'translateX(' + centreOffset(realIdx + 1) + 'px)';
+										track.addEventListener('transitionend', function onEnd() {
+											track.removeEventListener('transitionend', onEnd);
+											isAnimating = false;
+										});
+									});
+								});
+
+							} else {
+								// Normal step — no wrap needed
+								current = targetReal;
+								updateUI(current);
+								track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+								track.style.transform  = 'translateX(' + centreOffset(current + 1) + 'px)';
+								track.addEventListener('transitionend', function onEnd() {
+									track.removeEventListener('transitionend', onEnd);
 									isAnimating = false;
-								}
-							});
+								});
+							}
 						}
 
 						window.addEventListener('resize', function () { goTo(current, false); });
