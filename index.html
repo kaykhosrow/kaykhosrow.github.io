@@ -15,7 +15,6 @@
    justify-content: center;
 }
 </style>	
-		
 <style>
   .flexbutton {
    display: flex;
@@ -25,96 +24,63 @@
    gap: 1%;
 }
 </style>
-		
-<style>
-.text { hyphens: auto;}
-</style>
+<style>.text { hyphens: auto;}</style>
+<style>.padding { padding: 0px 0px 30px 0px; }</style>
 
 <style>
-.padding {
-padding: 0px 0px 30px 0px;
-}
-</style>
-
-<style>
-	
 .trans {
   color: #ffffff;
   position: relative;
   text-decoration: none;
   transition: color .5s ease-out;
 }
-
-.trans:hover {
-  color: #ffffff;
-  right: 0;
-  text-decoration: none;
-}
-
-.trans:hover:after {
-  border-color: #ffffff;
-  right: 0;
-}
-
+.trans:hover { color: #ffffff; right: 0; text-decoration: none; }
+.trans:hover:after { border-color: #ffffff; right: 0; }
 .trans:after {
   border-radius: 1em;
   border-top: .1em solid #2F56B0;
   content: "";
   position: absolute;
-    right: 100%;
-    bottom: -.15em;
-    left: 0;
-  transition: right .5s cubic-bezier(0,.5,0,1),
-              border-color .5s ease-out;
+  right: 100%;
+  bottom: -.15em;
+  left: 0;
+  transition: right .5s cubic-bezier(0,.5,0,1), border-color .5s ease-out;
 }
-
-.trans:hover:after {
-right: 0;
-}
+.trans:hover:after { right: 0; }
 </style>
 
 <style>
-
 .citation-button {
   display: inline-block;
   text-decoration: none;
   color: #fff;
-  padding: 10px 15px; 
-  padding-left: 0; 
+  padding: 10px 15px;
+  padding-left: 0;
   border-radius: 5px;
-  background-color: transparent; 
-  position: relative; 
-  font: inherit; 
-  overflow: hidden; 
-  transition: color 0.5s ease-out; 
+  background-color: transparent;
+  position: relative;
+  font: inherit;
+  overflow: hidden;
+  transition: color 0.5s ease-out;
 }
-
 .citation-button::before {
-  content: ""; 
+  content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to left, rgba(255, 255, 255, 0.1) 0%, transparent 95%); 
-  z-index: -1; 
-  transform: scaleX(0); 
-  transform-origin: right; 
-  transition: transform 0.825s cubic-bezier(0, 0.5, 0, 1); 
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(to left, rgba(255,255,255,0.1) 0%, transparent 95%);
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.825s cubic-bezier(0, 0.5, 0, 1);
 }
-
-.citation-button:hover::before {
-  transform: scaleX(1); 
-}
-
-.citation-button:hover {
-  color: #fff;
-}
-	
+.citation-button:hover::before { transform: scaleX(1); }
+.citation-button:hover { color: #fff; }
 </style>
 
 <style>
-/* ── Vertical carousel ── */
+/* ── Gallery: horizontal carousel, portrait 9:16 videos ── */
+
 .carousel-viewport {
   overflow: hidden;
   width: 100%;
@@ -122,24 +88,31 @@ right: 0;
 
 .carousel-track {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
+/* Each slide takes full viewport width */
 .carousel-slide {
-  flex: 0 0 auto;
+  flex: 0 0 100%;
   width: 100%;
-  padding-bottom: 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .carousel-slide h3 {
+  width: 100%;
   margin-bottom: 10px;
 }
 
+/* 9:16 portrait container, capped so it doesn't get huge */
 .video-wrapper {
   position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* 16:9 */
+  width: 55%;          /* narrower width so portrait doesn't overflow */
+  padding-bottom: 97.78%;  /* 9/16 * 55% ≈ 97.78% of parent width → correct 9:16 height */
   height: 0;
   overflow: hidden;
   border-radius: 4px;
@@ -152,6 +125,7 @@ right: 0;
   border: 0;
 }
 
+/* Controls */
 .carousel-controls {
   display: flex;
   align-items: center;
@@ -161,50 +135,53 @@ right: 0;
 
 .carousel-btn {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.35);
   color: #fff;
-  padding: 6px 18px;
+  padding: 7px 20px;
   cursor: pointer;
   border-radius: 3px;
   font-size: 0.85rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: border-color 0.3s, background 0.3s;
 }
-
 .carousel-btn:hover {
   border-color: #fff;
   background: rgba(255,255,255,0.08);
 }
-
 .carousel-btn:disabled {
-  opacity: 0.25;
+  opacity: 0.2;
   cursor: default;
 }
 
-.carousel-counter {
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-  opacity: 0.6;
+.carousel-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.carousel-dot.active { background: #fff; }
 </style>
-		
+
 <script src="https://kit.fontawesome.com/bb0a4a8912.js" crossorigin="anonymous"></script>
-		
 	</head>
 
 	<body class="is-preload">
 
+		<div id="wrapper">
 
-		<!-- Wrapper -->
-			<div id="wrapper">
-
-				<!-- Header -->
-					<header id="header">
-						<div class="content">
-							<div class="inner">
-							        <h1>OMAR KAYKHUSRAW</h1>
-								<p> Economist </p>
+			<header id="header">
+				<div class="content">
+					<div class="inner">
+						<h1>OMAR KAYKHUSRAW</h1>
+						<p> Economist </p>
 						<nav>
 							<ul>
 								<li><a href="#about">About</a></li>
@@ -215,213 +192,190 @@ right: 0;
 								<li><a href="#gallery">Gallery</a></li>
 							</ul>
 						</nav>
-						</div>
-						</div>
-					</header>
+					</div>
+				</div>
+			</header>
 
-				<!-- Main -->
-					<div id="main">
-						
-						<!-- About -->
-							<article id="about">
-							<div class="flexcontainer">
-    							<img class="padding" src="/images/academic.png" width="275px">
+			<div id="main">
+
+				<!-- About -->
+				<article id="about">
+					<div class="flexcontainer">
+						<img class="padding" src="/images/academic.png" width="275px">
+					</div>
+					<div class="flexcontainer">
+						<ul class="icons">
+							<li><a href="mailto:omar.kaykhusraw@gmail.com" target="_blank" class="fa fa-envelope"></a></li>
+							<li><a href="https://twitter.com/kaykhusraw" target="_blank" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="https://www.linkedin.com/in/stochastic" target="_blank" class="icon brands fa-linkedin-in"><span class="label">Linkedin</span></a></li>
+							<li><a href="https://medium.com/@kaykhusraw" target="_blank" class="icon brands fa-medium"><span class="label">Medium</span></a></li>
+							<li><a href="https://github.com/kaykhosrow" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</div>
+					<p align="justify" class="text" lang="en"> Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a class="trans" href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused on the natural rate of interest. View my paper below: </p>
+					<p> <a href="https://kaykhosrow.github.io/JMP.pdf" target="_blank" class="button small"> Job Market Paper </a> </p>
+					<p align="justify" class="text" lang="en"> Prior to my doctorate, I read Economics at the <a class="trans" href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a class="trans" href="https://london.ac.uk/" target="_blank">University of London</a>. I enjoy studying the game of chess, formerly playing for the Cambridge University Chess Club. View my abridged CV below: </p>
+					<p> <a href="https://kaykhosrow.github.io/Abridged.pdf" target="_blank" class="button small"> Curriculum Vitae </a> </p>
+				</article>
+
+				<!-- Research -->
+				<article id="research">
+					<h3 class="major"> Publications </h3>
+					<p> <a href="https://kaykhosrow.github.io/K2024.pdf" target="_blank" class="citation-button">
+					Kaykhusraw, O. (2024) 'Longer-run equilibrium interest rates: <br> evidence from the United Kingdom', <i>Economica</i>, 92(366): 457-482. </a> </p>
+					<h3 class="major"> Working Papers </h3>
+					<p> <a class="trans" href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank" class="citation-button">
+					Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions</a>, <br>
+					joint with Georgios Chortareas and George Kapetanios. Submitted. <br>
+					Revise and Resubmit: <i>Journal of Money, Credit and Banking</i>. </p>
+					<p> <a class="trans" href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank" class="citation-button">
+					Measuring the Market Perceived Neutral Rate</a>, <br>
+					joint with Georgios Chortareas and Pierre Siklos. <br>
+					In review: <i>Journal of Economic Dynamics and Control</i>. </p>
+					<p> Balkanization: A Monetary Allegory, <br>
+					joint with Georgios Chortareas and Pierre Siklos. <br>
+					In review: <i>European Review of Economic History</i>. </p>
+					<p> <a class="trans" href="https://kaykhosrow.github.io/CK2024.pdf" target="_blank" class="citation-button">
+					Falling Stars in Small Open Economies</a>, <br>
+					joint with Georgios Chortareas. <br>
+					Status: Work in progress. </p>
+				</article>
+
+				<!-- Teaching -->
+				<article id="teaching">
+					<h3 class="major"> Current Teaching </h3>
+					<p> Assistant Professor, <a class="trans" href="https://www.northeastern.edu/" target="_blank">Northeastern University</a>, 2021 to Present.</p>
+					<h3 class="major"> Previous Teaching </h3>
+					<p> Teaching Fellow, <a class="trans" href="https://www.qmul.ac.uk/" target="_blank">Queen Mary University of London</a>, 2025 to 2026.</p>
+				</article>
+
+				<!-- Conferences -->
+				<article id="conferences">
+					<h3 class="major"> Presentations </h3>
+					<p align="justify"> <strong>2026</strong>: Scheduled: Annual Conference of the Royal Economic Society; International Conference on Applied Theory, Macro and Empirical Finance; Spring Midwest Macroeconomics Meeting; European Economics and Finance Society Conference. </p>
+					<p align="justify"> <strong>2024</strong>: Meeting of the European Economic Association and the European Meeting of the Econometric Society; Annual Meeting of the Society for Economic Dynamics; Annual Conference of the Economic History Society. </p>
+					<p align="justify"> <strong>2023</strong>: Annual Conference of the Royal Economic Society, Annual Conference of the Money, Macro and Finance Society; International Conference on Applied Theory, Macro and Empirical Finance; 15th WU-FIW Conference on International Economics; Annual Conference of the Southern Economic Association; Annual Conference of the Eastern Economic Association; Annual Meeting of the Society for Economic Dynamics. </p>
+					<p align="justify"> <strong>2022</strong>: Annual Conference of the Money, Macro and Finance Society; Annual Conference of the European Economic and Finance Society; Annual PhD Conference of the Royal Economic Society. </p>
+				</article>
+
+				<!-- Code -->
+				<article id="code">
+					<h3 class="major">Time-Varying Phillips Curves</h3>
+					<p> This tool presents time-varying estimates of the Phillips curve across multiple regions. Using kernel-weighted regression methods, it traces the relationship between inflation and unemployment over time; capturing structural shifts that static models often miss.</p>
+					<p><a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="button small">&lt/Site&gt</a></p>
+					<h3 class="major"> Unobserved Components Model </h3>
+					<p> This function implements the Stock and Watson (2007) unobserved components model with stochastic volatilities. It employs a gamma random variable generator function and can be used to extract the trend of any given univariate time series. </p>
+					<p> <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="button small">&lt/Code&gt</a> </p>
+					<h3 class="major"> VAR Historical Decomposition </h3>
+					<p> This function takes in the output from the VAR() function (see vars package) and computes the vector autoregression historical decomposition. It is an abridged translation of Cesa-Bianchi's MATLAB code (in the VAR-Toolbox) designed for R. </p>
+					<p> <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="button small">&lt/Code&gt</a> </p>
+					<h3 class="major"> Gaussian Error Propagation </h3>
+					<p> This function determines the uncertainty (or error) of any mathematical expression containing estimated variables with uncertainties by taking the partial derivatives with respect to each variable multiplied by their uncertainty and added in quadrature. </p>
+					<p> <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="button small">&lt/Code&gt</a> </p>
+				</article>
+
+				<!-- Gallery -->
+				<article id="gallery">
+
+					<div class="carousel-viewport">
+						<div class="carousel-track" id="carouselTrack">
+
+							<div class="carousel-slide">
+								<h3 class="major">The Power of Colour Grading</h3>
+								<div class="video-wrapper">
+									<iframe src="https://www.youtube.com/embed/SvZ_sF7gamI" allowfullscreen></iframe>
+								</div>
 							</div>
-								
-								<div class="flexcontainer">
-								<ul class="icons">
-									<li><a href="mailto:omar.kaykhusraw@gmail.com" target="_blank" class="fa fa-envelope"></a></li>
-									<li><a href="https://twitter.com/kaykhusraw" target="_blank" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-									<li><a href="https://www.linkedin.com/in/stochastic" target="_blank" class="icon brands fa-linkedin-in"><span class="label">Linkedin</span></a></li>
-									<li><a href="https://medium.com/@kaykhusraw" target="_blank" class="icon brands fa-medium"><span class="label">Medium</span></a></li>
-									<li><a href="https://github.com/kaykhosrow" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-								</ul>
+
+							<div class="carousel-slide">
+								<h3 class="major">Oman, First Person View</h3>
+								<div class="video-wrapper">
+									<iframe src="https://www.youtube.com/embed/J0JZivXHkH8" allowfullscreen></iframe>
 								</div>
-								
-								<p align="justify" class="text" lang="en"> Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a class="trans" href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused on the natural rate of interest. View my paper below: </p>
+							</div>
 
-								<p> <a href="https://kaykhosrow.github.io/JMP.pdf" target="_blank" class="button small"> Job Market Paper </a> </p>
-								
-								<p align="justify" class="text" lang="en"> Prior to my doctorate, I read Economics at the <a class="trans" href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a class="trans" href="https://london.ac.uk/" target="_blank">University of London</a>. I enjoy studying the game of chess, formerly playing for the Cambridge University Chess Club. View my abridged CV below: </p>
-
-								<p> <a href="https://kaykhosrow.github.io/Abridged.pdf" target="_blank" class="button small"> Curriculum Vitae </a> </p>
-
-							</article>
-
-						<!-- Research -->
-							<article id="research">
-
-								<h3 class="major"> Publications </h3>
-									
-								<p> <a href="https://kaykhosrow.github.io/K2024.pdf" target="_blank" class="citation-button">
-								Kaykhusraw, O. (2024) 'Longer-run equilibrium interest rates: <br> evidence from the United Kingdom', <i>Economica</i>, 92(366): 457-482. </a> </p>
-								
-								<h3 class="major"> Working Papers </h3> 
-								
-								<p> <a class="trans" href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank" class="citation-button"> 
-								Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions</a>, <br>	
-								joint with Georgios Chortareas and George Kapetanios. Submitted. <br>	
-								Revise and Resubmit: <i>Journal of Money, Credit and Banking</i>. </p>
-
-								<p> <a class="trans" href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank" class="citation-button">
-								Measuring the Market Perceived Neutral Rate</a>, <br>
-								joint with Georgios Chortareas and Pierre Siklos. <br>
-								In review: <i>Journal of Economic Dynamics and Control</i>. </p>
-								
-								<p> Balkanization: A Monetary Allegory, <br>
-								joint with Georgios Chortareas and Pierre Siklos. <br>
-								In review: <i>European Review of Economic History</i>. </p>
-								
-								<p> <a class="trans" href="https://kaykhosrow.github.io/CK2024.pdf" target="_blank" class="citation-button">
-								Falling Stars in Small Open Economies</a>, <br>
-								joint with Georgios Chortareas. <br>
-								Status: Work in progress. </p>
-							
-							</article>
-
-						<!-- Teaching -->
-							<article id="teaching">
-								
-								<h3 class="major"> Current Teaching </h3>
-
-								<p> Assistant Professor, <a class="trans" href="https://www.northeastern.edu/" target="_blank">Northeastern University</a>, 2021 to Present.</p>
-								
-								<h3 class="major"> Previous Teaching </h3>
-
-								<p> Teaching Fellow, <a class="trans" href="https://www.qmul.ac.uk/" target="_blank">Queen Mary University of London</a>, 2025 to 2026.</p>
-									
-							</article>
-
-					<!-- Conferences -->
-							<article id="conferences">
-								
-								<h3 class="major"> Presentations </h3>
-
-								<p align="justify"> <strong>2026</strong>: Scheduled: Annual Conference of the Royal Economic Society; International Conference on Applied Theory, Macro and Empirical Finance; Spring Midwest Macroeconomics Meeting; European Economics and Finance Society Conference. </p> 
-
-								<p align="justify"> <strong>2024</strong>: Meeting of the European Economic Association and the European Meeting of the Econometric Society; Annual Meeting of the Society for Economic Dynamics; Annual Conference of the Economic History Society. </p> 
-									
-								<p align="justify"> <strong>2023</strong>: Annual Conference of the Royal Economic Society, Annual Conference of the Money, Macro and Finance Society; International Conference on Applied Theory, Macro and Empirical Finance; 15th WU-FIW Conference on International Economics; Annual Conference of the Southern Economic Association; Annual Conference of the Eastern Economic Association; Annual Meeting of the Society for Economic Dynamics. </p> 
-								
-								<p align="justify"> <strong>2022</strong>: Annual Conference of the Money, Macro and Finance Society; Annual Conference of the European Economic and Finance Society; Annual PhD Conference of the Royal Economic Society. </p>	
-									
-							</article>
-
-						<!-- Code -->
-							<article id="code">
-		
-								<h3 class="major">Time-Varying Phillips Curves</h3>
-								<p> This tool presents time-varying estimates of the Phillips curve across multiple regions. Using kernel-weighted regression methods, it traces the relationship between inflation and unemployment over time; capturing structural shifts that static models often miss.</p>
-								<p><a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="button small">&lt/Site&gt</a></p>
-								
-								<h3 class="major"> Unobserved Components Model </h3>
-								<p> This function implements the Stock and Watson (2007) unobserved components model with stochastic volatilities. It employs a gamma random variable generator function and can be used to extract the trend of any given univariate time series. </p>
-								<p> <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="button small">&lt/Code&gt</a> </p>
-								
-								<h3 class="major"> VAR Historical Decomposition </h3>
-								<p> This function takes in the output from the VAR() function (see vars package) and computes the vector autoregression historical decomposition. It is an abridged translation of Cesa-Bianchi's MATLAB code (in the VAR-Toolbox) designed for R. </p>
-								<p> <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="button small">&lt/Code&gt</a> </p>
-
-								<h3 class="major"> Gaussian Error Propagation </h3>
-								<p> This function determines the uncertainty (or error) of any mathematical expression containing estimated variables with uncertainties by taking the partial derivatives with respect to each variable multiplied by their uncertainty and added in quadrature. </p>
-								<p> <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="button small">&lt/Code&gt</a> </p>
-
-							</article>
-
-						<!-- Gallery -->
-							<article id="gallery">
-
-								<div class="carousel-viewport">
-									<div class="carousel-track" id="carouselTrack">
-
-										<div class="carousel-slide">
-											<h3 class="major">The Power of Colour Grading</h3>
-											<div class="video-wrapper">
-												<iframe src="https://www.youtube.com/embed/SvZ_sF7gamI" allowfullscreen></iframe>
-											</div>
-										</div>
-
-										<div class="carousel-slide">
-											<h3 class="major">Oman, First Person View</h3>
-											<div class="video-wrapper">
-												<iframe src="https://www.youtube.com/embed/J0JZivXHkH8" allowfullscreen></iframe>
-											</div>
-										</div>
-
-										<div class="carousel-slide">
-											<h3 class="major">Sendang Gile &amp; Tiu Kelep Waterfalls</h3>
-											<div class="video-wrapper">
-												<iframe src="https://www.youtube.com/embed/DLA1bcUDg2g" allowfullscreen></iframe>
-											</div>
-										</div>
-
-										<div class="carousel-slide">
-											<h3 class="major">Ceking Rice Terrace</h3>
-											<div class="video-wrapper">
-												<iframe src="https://www.youtube.com/embed/7g1UTm1c4EA" allowfullscreen></iframe>
-											</div>
-										</div>
-
-									</div>
+							<div class="carousel-slide">
+								<h3 class="major">Sendang Gile &amp; Tiu Kelep Waterfalls</h3>
+								<div class="video-wrapper">
+									<iframe src="https://www.youtube.com/embed/DLA1bcUDg2g" allowfullscreen></iframe>
 								</div>
+							</div>
 
-								<div class="carousel-controls">
-									<button class="carousel-btn" id="carouselPrev" disabled>&#8593; Prev</button>
-									<span class="carousel-counter" id="carouselCounter">1 / 4</span>
-									<button class="carousel-btn" id="carouselNext">Next &#8595;</button>
+							<div class="carousel-slide">
+								<h3 class="major">Ceking Rice Terrace</h3>
+								<div class="video-wrapper">
+									<iframe src="https://www.youtube.com/embed/7g1UTm1c4EA" allowfullscreen></iframe>
 								</div>
+							</div>
 
-								<script>
-								(function () {
-									var track    = document.getElementById('carouselTrack');
-									var btnPrev  = document.getElementById('carouselPrev');
-									var btnNext  = document.getElementById('carouselNext');
-									var counter  = document.getElementById('carouselCounter');
-									var slides   = track.querySelectorAll('.carousel-slide');
-									var total    = slides.length;
-									var current  = 0;
-
-									function slideHeight() {
-										return slides[current].offsetHeight;
-									}
-
-									function goTo(index) {
-										var offset = 0;
-										for (var i = 0; i < index; i++) {
-											offset += slides[i].offsetHeight;
-										}
-										track.style.transform = 'translateY(-' + offset + 'px)';
-										current = index;
-										counter.textContent = (current + 1) + ' / ' + total;
-										btnPrev.disabled = current === 0;
-										btnNext.disabled = current === total - 1;
-									}
-
-									btnPrev.addEventListener('click', function () { if (current > 0) goTo(current - 1); });
-									btnNext.addEventListener('click', function () { if (current < total - 1) goTo(current + 1); });
-								})();
-								</script>
-
-							</article>
-
+						</div>
 					</div>
 
-				<!-- Footer -->
-					<footer id="footer">
-						<p class="copyright">&copy; 2026 Omar Kaykhusraw</p>
-					</footer>
+					<div class="carousel-controls">
+						<button class="carousel-btn" id="carouselPrev" disabled>&#8592; Prev</button>
+						<div class="carousel-dots" id="carouselDots"></div>
+						<button class="carousel-btn" id="carouselNext">Next &#8594;</button>
+					</div>
+
+					<script>
+					(function () {
+						var track   = document.getElementById('carouselTrack');
+						var btnPrev = document.getElementById('carouselPrev');
+						var btnNext = document.getElementById('carouselNext');
+						var dotsEl  = document.getElementById('carouselDots');
+						var slides  = track.querySelectorAll('.carousel-slide');
+						var total   = slides.length;
+						var current = 0;
+						var dots    = [];
+
+						for (var i = 0; i < total; i++) {
+							var d = document.createElement('div');
+							d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+							(function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
+							dotsEl.appendChild(d);
+							dots.push(d);
+						}
+
+						function goTo(index) {
+							track.style.transform = 'translateX(-' + (index * 100) + '%)';
+							dots[current].classList.remove('active');
+							current = index;
+							dots[current].classList.add('active');
+							btnPrev.disabled = current === 0;
+							btnNext.disabled = current === total - 1;
+						}
+
+						btnPrev.addEventListener('click', function () { if (current > 0) goTo(current - 1); });
+						btnNext.addEventListener('click', function () { if (current < total - 1) goTo(current + 1); });
+
+						// Swipe support
+						var touchStartX = 0;
+						track.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; }, {passive:true});
+						track.addEventListener('touchend', function(e){
+							var diff = touchStartX - e.changedTouches[0].clientX;
+							if (diff > 50 && current < total - 1) goTo(current + 1);
+							if (diff < -50 && current > 0) goTo(current - 1);
+						}, {passive:true});
+					})();
+					</script>
+
+				</article>
 
 			</div>
 
-		<!-- BG -->
-			<div id="bg"></div>
+			<footer id="footer">
+				<p class="copyright">&copy; 2026 Omar Kaykhusraw</p>
+			</footer>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+		</div>
+
+		<div id="bg"></div>
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
 
 	</body>
 </html>
