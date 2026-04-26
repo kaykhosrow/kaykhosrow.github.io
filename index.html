@@ -89,7 +89,6 @@
   cursor: pointer;
   z-index: 2;
 }
-/* Play button on active slide thumbnail */
 .gallery-slide.active .video-thumb::after {
   content: '';
   position: absolute;
@@ -112,7 +111,7 @@
   z-index: 1;
 }
 
-/* Nav overlay on neighbour slides (sits above thumb) */
+/* Nav overlay on neighbour slides */
 .slide-overlay {
   display: none;
   position: absolute;
@@ -275,7 +274,6 @@
 						var dots        = [];
 						var isAnimating = false;
 
-						// Each slide: thumbnail facade + hidden overlay for neighbours
 						function makeSlide(v) {
 							var div = document.createElement('div');
 							div.className = 'gallery-slide';
@@ -287,14 +285,14 @@
 							return div;
 						}
 
-						// Build: clone-last | real | clone-first
+						// Build: clone-last | real slides | clone-first
 						track.appendChild(makeSlide(videos[total - 1]));
 						videos.forEach(function(v) { track.appendChild(makeSlide(v)); });
 						track.appendChild(makeSlide(videos[0]));
 
 						var allSlides = track.querySelectorAll('.gallery-slide');
 
-						// Clicking the thumbnail on the active slide loads the iframe
+						// Click thumbnail on active slide → load iframe
 						track.addEventListener('click', function(e) {
 							var thumb = e.target.closest('.video-thumb');
 							if (!thumb) return;
@@ -302,9 +300,7 @@
 							if (!slide.classList.contains('active')) return;
 							var id      = thumb.getAttribute('data-id');
 							var wrapper = thumb.parentNode;
-							// Hide thumb
 							thumb.style.display = 'none';
-							// Reuse or create iframe
 							var iframe = wrapper.querySelector('iframe');
 							if (!iframe) {
 								iframe = document.createElement('iframe');
@@ -315,7 +311,7 @@
 							iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1';
 						});
 
-						// Pause the active slide's iframe (keep it alive)
+						// Pause active slide's iframe via postMessage (keep it alive)
 						function pauseActive() {
 							var wrapper = allSlides[current + 1].querySelector('.video-wrapper');
 							var iframe  = wrapper && wrapper.querySelector('iframe');
@@ -337,7 +333,7 @@
 							dots.push(d);
 						});
 
-						// Click on a neighbour slide navigates
+						// Click neighbour slide to navigate
 						allSlides.forEach(function(slide, i) {
 							slide.addEventListener('click', function() {
 								if (isAnimating) return;
@@ -395,18 +391,27 @@
 
 							track.addEventListener('transitionend', function onEnd() {
 								track.removeEventListener('transitionend', onEnd);
+
 								if (targetReal < 0 || targetReal >= total) {
+									// Landed on a clone — silently jump to the real slide.
+									// Double-rAF ensures the browser fully commits the
+									// no-transition paint before isAnimating is released,
+									// eliminating the visible jerk.
 									var realIdx = ((targetReal % total) + total) % total;
 									current = realIdx;
 									track.style.transition = 'none';
 									track.style.transform  = 'translateX(' + centreOffset(realIdx + 1) + 'px)';
-									void track.offsetWidth;
-									updateUI(current);
+									requestAnimationFrame(function () {
+										requestAnimationFrame(function () {
+											updateUI(current);
+											isAnimating = false;
+										});
+									});
 								} else {
 									current = targetReal;
 									updateUI(current);
+									isAnimating = false;
 								}
-								isAnimating = false;
 							});
 						}
 
