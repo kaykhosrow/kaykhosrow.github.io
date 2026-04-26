@@ -1,6 +1,5 @@
 <html>
 	<head>
-
 		<title>Omar Kaykhusraw</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -8,187 +7,136 @@
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		
 <style>
-  .flexcontainer {
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-   justify-content: center;
-}
-</style>	
-<style>
-  .flexbutton {
-   display: flex;
-   flex-direction: row;
-   align-items: left;
-   justify-content: left;
-   gap: 1%;
-}
+  .flexcontainer { display:flex; flex-direction:row; align-items:center; justify-content:center; }
+  .flexbutton { display:flex; flex-direction:row; align-items:left; justify-content:left; gap:1%; }
+  .text { hyphens:auto; }
+  .padding { padding:0px 0px 30px 0px; }
 </style>
-<style>.text { hyphens: auto;}</style>
-<style>.padding { padding: 0px 0px 30px 0px; }</style>
 
 <style>
 .trans {
-  color: #ffffff;
-  position: relative;
-  text-decoration: none;
-  transition: color .5s ease-out;
+  color:#ffffff; position:relative; text-decoration:none; transition:color .5s ease-out;
 }
-.trans:hover { color: #ffffff; right: 0; text-decoration: none; }
-.trans:hover:after { border-color: #ffffff; right: 0; }
+.trans:hover { color:#ffffff; right:0; text-decoration:none; }
 .trans:after {
-  border-radius: 1em;
-  border-top: .1em solid #2F56B0;
-  content: "";
-  position: absolute;
-  right: 100%;
-  bottom: -.15em;
-  left: 0;
-  transition: right .5s cubic-bezier(0,.5,0,1), border-color .5s ease-out;
+  border-radius:1em; border-top:.1em solid #2F56B0; content:"";
+  position:absolute; right:100%; bottom:-.15em; left:0;
+  transition:right .5s cubic-bezier(0,.5,0,1), border-color .5s ease-out;
 }
-.trans:hover:after { right: 0; }
+.trans:hover:after { border-color:#ffffff; right:0; }
 </style>
 
 <style>
 .citation-button {
-  display: inline-block;
-  text-decoration: none;
-  color: #fff;
-  padding: 10px 15px;
-  padding-left: 0;
-  border-radius: 5px;
-  background-color: transparent;
-  position: relative;
-  font: inherit;
-  overflow: hidden;
-  transition: color 0.5s ease-out;
+  display:inline-block; text-decoration:none; color:#fff;
+  padding:10px 15px; padding-left:0; border-radius:5px;
+  background-color:transparent; position:relative; font:inherit;
+  overflow:hidden; transition:color 0.5s ease-out;
 }
 .citation-button::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: linear-gradient(to left, rgba(255,255,255,0.1) 0%, transparent 95%);
-  z-index: -1;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.825s cubic-bezier(0, 0.5, 0, 1);
+  content:""; position:absolute; top:0; left:0; width:100%; height:100%;
+  background:linear-gradient(to left, rgba(255,255,255,0.1) 0%, transparent 95%);
+  z-index:-1; transform:scaleX(0); transform-origin:right;
+  transition:transform 0.825s cubic-bezier(0, 0.5, 0, 1);
 }
-.citation-button:hover::before { transform: scaleX(1); }
-.citation-button:hover { color: #fff; }
+.citation-button:hover::before { transform:scaleX(1); }
+.citation-button:hover { color:#fff; }
 </style>
 
 <style>
-/* ── Gallery: horizontal carousel, portrait 9:16 videos ── */
+/* ── Gallery carousel ── */
 
-.carousel-viewport {
-  overflow: hidden;
+.gallery-carousel {
+  position: relative;
+  overflow: hidden;           /* clips the faded side-peeks */
   width: 100%;
+  cursor: grab;
+  user-select: none;
 }
+.gallery-carousel.dragging { cursor: grabbing; }
 
-.carousel-track {
+.gallery-track {
   display: flex;
   flex-direction: row;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
+  /* transition applied via JS so drag feels instant */
 }
 
-/* Each slide takes full viewport width */
-.carousel-slide {
-  flex: 0 0 100%;
-  width: 100%;
+.gallery-slide {
+  flex: 0 0 78%;              /* main slide width; ~11% peeks each side */
+  width: 78%;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 0 10px;
+  transition: opacity 0.4s ease;
 }
 
-.carousel-slide h3 {
-  width: 100%;
-  margin-bottom: 10px;
+/* faded neighbours */
+.gallery-slide:not(.active) {
+  opacity: 0.35;
 }
 
-/* 9:16 portrait container, capped so it doesn't get huge */
+.gallery-slide h3 {
+  margin-bottom: 8px;
+  font-size: 0.7rem;
+}
+
+/* 9:16 portrait */
 .video-wrapper {
   position: relative;
-  width: 55%;          /* narrower width so portrait doesn't overflow */
-  padding-bottom: 97.78%;  /* 9/16 * 55% ≈ 97.78% of parent width → correct 9:16 height */
+  width: 100%;
+  padding-bottom: 177.78%;   /* 16/9 inverted = 9:16 */
   height: 0;
   overflow: hidden;
   border-radius: 4px;
+  pointer-events: none;      /* prevent iframe stealing drag */
+}
+/* re-enable pointer events on active slide only */
+.gallery-slide.active .video-wrapper {
+  pointer-events: auto;
 }
 
 .video-wrapper iframe {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  border: 0;
+  top:0; left:0;
+  width:100%; height:100%;
+  border:0;
 }
 
-/* Controls */
-.carousel-controls {
+/* dots */
+.gallery-dots {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 14px;
-}
-
-.carousel-btn {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.35);
-  color: #fff;
-  padding: 7px 20px;
-  cursor: pointer;
-  border-radius: 3px;
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  transition: border-color 0.3s, background 0.3s;
-}
-.carousel-btn:hover {
-  border-color: #fff;
-  background: rgba(255,255,255,0.08);
-}
-.carousel-btn:disabled {
-  opacity: 0.2;
-  cursor: default;
-}
-
-.carousel-dots {
-  display: flex;
+  justify-content: center;
   gap: 8px;
-  align-items: center;
+  margin-top: 16px;
 }
-.carousel-dot {
-  width: 6px;
-  height: 6px;
+.gallery-dot {
+  width: 6px; height: 6px;
   border-radius: 50%;
   background: rgba(255,255,255,0.3);
-  cursor: pointer;
   transition: background 0.3s;
+  cursor: pointer;
 }
-.carousel-dot.active { background: #fff; }
+.gallery-dot.active { background: #fff; }
 </style>
 
 <script src="https://kit.fontawesome.com/bb0a4a8912.js" crossorigin="anonymous"></script>
 	</head>
 
 	<body class="is-preload">
-
 		<div id="wrapper">
 
 			<header id="header">
 				<div class="content">
 					<div class="inner">
 						<h1>OMAR KAYKHUSRAW</h1>
-						<p> Economist </p>
+						<p>Economist</p>
 						<nav>
 							<ul>
 								<li><a href="#about">About</a></li>
 								<li><a href="#research">Research</a></li>
 								<li><a href="#teaching">Teaching</a></li>
 								<li><a href="#conferences">Conferences</a></li>
-								<li><a href="#code"> &lt/Code&gt </a></li>
+								<li><a href="#code">&lt/Code&gt</a></li>
 								<li><a href="#gallery">Gallery</a></li>
 							</ul>
 						</nav>
@@ -212,150 +160,225 @@
 							<li><a href="https://github.com/kaykhosrow" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
 						</ul>
 					</div>
-					<p align="justify" class="text" lang="en"> Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a class="trans" href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused on the natural rate of interest. View my paper below: </p>
-					<p> <a href="https://kaykhosrow.github.io/JMP.pdf" target="_blank" class="button small"> Job Market Paper </a> </p>
-					<p align="justify" class="text" lang="en"> Prior to my doctorate, I read Economics at the <a class="trans" href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a class="trans" href="https://london.ac.uk/" target="_blank">University of London</a>. I enjoy studying the game of chess, formerly playing for the Cambridge University Chess Club. View my abridged CV below: </p>
-					<p> <a href="https://kaykhosrow.github.io/Abridged.pdf" target="_blank" class="button small"> Curriculum Vitae </a> </p>
+					<p align="justify" class="text" lang="en">Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a class="trans" href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused on the natural rate of interest. View my paper below:</p>
+					<p><a href="https://kaykhosrow.github.io/JMP.pdf" target="_blank" class="button small">Job Market Paper</a></p>
+					<p align="justify" class="text" lang="en">Prior to my doctorate, I read Economics at the <a class="trans" href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a class="trans" href="https://london.ac.uk/" target="_blank">University of London</a>. I enjoy studying the game of chess, formerly playing for the Cambridge University Chess Club. View my abridged CV below:</p>
+					<p><a href="https://kaykhosrow.github.io/Abridged.pdf" target="_blank" class="button small">Curriculum Vitae</a></p>
 				</article>
 
 				<!-- Research -->
 				<article id="research">
-					<h3 class="major"> Publications </h3>
-					<p> <a href="https://kaykhosrow.github.io/K2024.pdf" target="_blank" class="citation-button">
-					Kaykhusraw, O. (2024) 'Longer-run equilibrium interest rates: <br> evidence from the United Kingdom', <i>Economica</i>, 92(366): 457-482. </a> </p>
-					<h3 class="major"> Working Papers </h3>
-					<p> <a class="trans" href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank" class="citation-button">
-					Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions</a>, <br>
-					joint with Georgios Chortareas and George Kapetanios. Submitted. <br>
-					Revise and Resubmit: <i>Journal of Money, Credit and Banking</i>. </p>
-					<p> <a class="trans" href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank" class="citation-button">
-					Measuring the Market Perceived Neutral Rate</a>, <br>
-					joint with Georgios Chortareas and Pierre Siklos. <br>
-					In review: <i>Journal of Economic Dynamics and Control</i>. </p>
-					<p> Balkanization: A Monetary Allegory, <br>
-					joint with Georgios Chortareas and Pierre Siklos. <br>
-					In review: <i>European Review of Economic History</i>. </p>
-					<p> <a class="trans" href="https://kaykhosrow.github.io/CK2024.pdf" target="_blank" class="citation-button">
-					Falling Stars in Small Open Economies</a>, <br>
-					joint with Georgios Chortareas. <br>
-					Status: Work in progress. </p>
+					<h3 class="major">Publications</h3>
+					<p><a href="https://kaykhosrow.github.io/K2024.pdf" target="_blank" class="citation-button">Kaykhusraw, O. (2024) 'Longer-run equilibrium interest rates: <br>evidence from the United Kingdom', <i>Economica</i>, 92(366): 457-482.</a></p>
+					<h3 class="major">Working Papers</h3>
+					<p><a class="trans" href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank" class="citation-button">Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions</a>, <br>joint with Georgios Chortareas and George Kapetanios. Submitted.<br>Revise and Resubmit: <i>Journal of Money, Credit and Banking</i>.</p>
+					<p><a class="trans" href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank" class="citation-button">Measuring the Market Perceived Neutral Rate</a>, <br>joint with Georgios Chortareas and Pierre Siklos.<br>In review: <i>Journal of Economic Dynamics and Control</i>.</p>
+					<p>Balkanization: A Monetary Allegory, <br>joint with Georgios Chortareas and Pierre Siklos.<br>In review: <i>European Review of Economic History</i>.</p>
+					<p><a class="trans" href="https://kaykhosrow.github.io/CK2024.pdf" target="_blank" class="citation-button">Falling Stars in Small Open Economies</a>, <br>joint with Georgios Chortareas.<br>Status: Work in progress.</p>
 				</article>
 
 				<!-- Teaching -->
 				<article id="teaching">
-					<h3 class="major"> Current Teaching </h3>
-					<p> Assistant Professor, <a class="trans" href="https://www.northeastern.edu/" target="_blank">Northeastern University</a>, 2021 to Present.</p>
-					<h3 class="major"> Previous Teaching </h3>
-					<p> Teaching Fellow, <a class="trans" href="https://www.qmul.ac.uk/" target="_blank">Queen Mary University of London</a>, 2025 to 2026.</p>
+					<h3 class="major">Current Teaching</h3>
+					<p>Assistant Professor, <a class="trans" href="https://www.northeastern.edu/" target="_blank">Northeastern University</a>, 2021 to Present.</p>
+					<h3 class="major">Previous Teaching</h3>
+					<p>Teaching Fellow, <a class="trans" href="https://www.qmul.ac.uk/" target="_blank">Queen Mary University of London</a>, 2025 to 2026.</p>
 				</article>
 
 				<!-- Conferences -->
 				<article id="conferences">
-					<h3 class="major"> Presentations </h3>
-					<p align="justify"> <strong>2026</strong>: Scheduled: Annual Conference of the Royal Economic Society; International Conference on Applied Theory, Macro and Empirical Finance; Spring Midwest Macroeconomics Meeting; European Economics and Finance Society Conference. </p>
-					<p align="justify"> <strong>2024</strong>: Meeting of the European Economic Association and the European Meeting of the Econometric Society; Annual Meeting of the Society for Economic Dynamics; Annual Conference of the Economic History Society. </p>
-					<p align="justify"> <strong>2023</strong>: Annual Conference of the Royal Economic Society, Annual Conference of the Money, Macro and Finance Society; International Conference on Applied Theory, Macro and Empirical Finance; 15th WU-FIW Conference on International Economics; Annual Conference of the Southern Economic Association; Annual Conference of the Eastern Economic Association; Annual Meeting of the Society for Economic Dynamics. </p>
-					<p align="justify"> <strong>2022</strong>: Annual Conference of the Money, Macro and Finance Society; Annual Conference of the European Economic and Finance Society; Annual PhD Conference of the Royal Economic Society. </p>
+					<h3 class="major">Presentations</h3>
+					<p align="justify"><strong>2026</strong>: Scheduled: Annual Conference of the Royal Economic Society; International Conference on Applied Theory, Macro and Empirical Finance; Spring Midwest Macroeconomics Meeting; European Economics and Finance Society Conference.</p>
+					<p align="justify"><strong>2024</strong>: Meeting of the European Economic Association and the European Meeting of the Econometric Society; Annual Meeting of the Society for Economic Dynamics; Annual Conference of the Economic History Society.</p>
+					<p align="justify"><strong>2023</strong>: Annual Conference of the Royal Economic Society, Annual Conference of the Money, Macro and Finance Society; International Conference on Applied Theory, Macro and Empirical Finance; 15th WU-FIW Conference on International Economics; Annual Conference of the Southern Economic Association; Annual Conference of the Eastern Economic Association; Annual Meeting of the Society for Economic Dynamics.</p>
+					<p align="justify"><strong>2022</strong>: Annual Conference of the Money, Macro and Finance Society; Annual Conference of the European Economic and Finance Society; Annual PhD Conference of the Royal Economic Society.</p>
 				</article>
 
 				<!-- Code -->
 				<article id="code">
 					<h3 class="major">Time-Varying Phillips Curves</h3>
-					<p> This tool presents time-varying estimates of the Phillips curve across multiple regions. Using kernel-weighted regression methods, it traces the relationship between inflation and unemployment over time; capturing structural shifts that static models often miss.</p>
+					<p>This tool presents time-varying estimates of the Phillips curve across multiple regions. Using kernel-weighted regression methods, it traces the relationship between inflation and unemployment over time; capturing structural shifts that static models often miss.</p>
 					<p><a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="button small">&lt/Site&gt</a></p>
-					<h3 class="major"> Unobserved Components Model </h3>
-					<p> This function implements the Stock and Watson (2007) unobserved components model with stochastic volatilities. It employs a gamma random variable generator function and can be used to extract the trend of any given univariate time series. </p>
-					<p> <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="button small">&lt/Code&gt</a> </p>
-					<h3 class="major"> VAR Historical Decomposition </h3>
-					<p> This function takes in the output from the VAR() function (see vars package) and computes the vector autoregression historical decomposition. It is an abridged translation of Cesa-Bianchi's MATLAB code (in the VAR-Toolbox) designed for R. </p>
-					<p> <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="button small">&lt/Code&gt</a> </p>
-					<h3 class="major"> Gaussian Error Propagation </h3>
-					<p> This function determines the uncertainty (or error) of any mathematical expression containing estimated variables with uncertainties by taking the partial derivatives with respect to each variable multiplied by their uncertainty and added in quadrature. </p>
-					<p> <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="button small">&lt/Code&gt</a> </p>
+					<h3 class="major">Unobserved Components Model</h3>
+					<p>This function implements the Stock and Watson (2007) unobserved components model with stochastic volatilities. It employs a gamma random variable generator function and can be used to extract the trend of any given univariate time series.</p>
+					<p><a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="button small">&lt/Code&gt</a></p>
+					<h3 class="major">VAR Historical Decomposition</h3>
+					<p>This function takes in the output from the VAR() function (see vars package) and computes the vector autoregression historical decomposition. It is an abridged translation of Cesa-Bianchi's MATLAB code (in the VAR-Toolbox) designed for R.</p>
+					<p><a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="button small">&lt/Code&gt</a></p>
+					<h3 class="major">Gaussian Error Propagation</h3>
+					<p>This function determines the uncertainty (or error) of any mathematical expression containing estimated variables with uncertainties by taking the partial derivatives with respect to each variable multiplied by their uncertainty and added in quadrature.</p>
+					<p><a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="button small">&lt/Code&gt</a></p>
 				</article>
 
 				<!-- Gallery -->
 				<article id="gallery">
 
-					<div class="carousel-viewport">
-						<div class="carousel-track" id="carouselTrack">
-
-							<div class="carousel-slide">
-								<h3 class="major">The Power of Colour Grading</h3>
-								<div class="video-wrapper">
-									<iframe src="https://www.youtube.com/embed/SvZ_sF7gamI" allowfullscreen></iframe>
-								</div>
-							</div>
-
-							<div class="carousel-slide">
-								<h3 class="major">Oman, First Person View</h3>
-								<div class="video-wrapper">
-									<iframe src="https://www.youtube.com/embed/J0JZivXHkH8" allowfullscreen></iframe>
-								</div>
-							</div>
-
-							<div class="carousel-slide">
-								<h3 class="major">Sendang Gile &amp; Tiu Kelep Waterfalls</h3>
-								<div class="video-wrapper">
-									<iframe src="https://www.youtube.com/embed/DLA1bcUDg2g" allowfullscreen></iframe>
-								</div>
-							</div>
-
-							<div class="carousel-slide">
-								<h3 class="major">Ceking Rice Terrace</h3>
-								<div class="video-wrapper">
-									<iframe src="https://www.youtube.com/embed/7g1UTm1c4EA" allowfullscreen></iframe>
-								</div>
-							</div>
-
+					<div class="gallery-carousel" id="galleryCarousel">
+						<div class="gallery-track" id="galleryTrack">
+							<!-- slides injected by JS (with clones for infinite loop) -->
 						</div>
 					</div>
 
-					<div class="carousel-controls">
-						<button class="carousel-btn" id="carouselPrev" disabled>&#8592; Prev</button>
-						<div class="carousel-dots" id="carouselDots"></div>
-						<button class="carousel-btn" id="carouselNext">Next &#8594;</button>
-					</div>
+					<div class="gallery-dots" id="galleryDots"></div>
 
 					<script>
 					(function () {
-						var track   = document.getElementById('carouselTrack');
-						var btnPrev = document.getElementById('carouselPrev');
-						var btnNext = document.getElementById('carouselNext');
-						var dotsEl  = document.getElementById('carouselDots');
-						var slides  = track.querySelectorAll('.carousel-slide');
-						var total   = slides.length;
-						var current = 0;
-						var dots    = [];
 
-						for (var i = 0; i < total; i++) {
+						var videos = [
+							{ title: 'The Power of Colour Grading', id: 'SvZ_sF7gamI' },
+							{ title: 'Oman, First Person View',       id: 'J0JZivXHkH8' },
+							{ title: 'Sendang Gile &amp; Tiu Kelep Waterfalls', id: 'DLA1bcUDg2g' },
+							{ title: 'Ceking Rice Terrace',           id: '7g1UTm1c4EA' }
+						];
+
+						var total    = videos.length;
+						var track    = document.getElementById('galleryTrack');
+						var carousel = document.getElementById('galleryCarousel');
+						var dotsEl   = document.getElementById('galleryDots');
+
+						// Build slides: clone-last | real slides | clone-first
+						function makeSlide(v, isClone) {
+							var div = document.createElement('div');
+							div.className = 'gallery-slide' + (isClone ? ' clone' : '');
+							div.innerHTML =
+								'<h3 class="major">' + v.title + '</h3>' +
+								'<div class="video-wrapper">' +
+								  '<iframe src="https://www.youtube.com/embed/' + v.id + '?playsinline=1" allowfullscreen></iframe>' +
+								'</div>';
+							return div;
+						}
+
+						// prepend clone of last
+						track.appendChild(makeSlide(videos[total - 1], true));
+						// real slides
+						videos.forEach(function(v) { track.appendChild(makeSlide(v, false)); });
+						// append clone of first
+						track.appendChild(makeSlide(videos[0], true));
+
+						var allSlides = track.querySelectorAll('.gallery-slide');
+
+						// Dots (real slides only)
+						var dots = [];
+						videos.forEach(function(_, i) {
 							var d = document.createElement('div');
-							d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-							(function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
+							d.className = 'gallery-dot';
+							d.addEventListener('click', function() { goTo(i); });
 							dotsEl.appendChild(d);
 							dots.push(d);
+						});
+
+						// current index into real slides (0-based)
+						var current = 0;
+
+						function slideWidth() {
+							return allSlides[0].offsetWidth;
 						}
 
-						function goTo(index) {
-							track.style.transform = 'translateX(-' + (index * 100) + '%)';
-							dots[current].classList.remove('active');
-							current = index;
+						function setTranslate(x, animate) {
+							track.style.transition = animate ? 'transform 0.45s cubic-bezier(0.4,0,0.2,1)' : 'none';
+							track.style.transform  = 'translateX(' + x + 'px)';
+						}
+
+						function updateActive() {
+							allSlides.forEach(function(s) { s.classList.remove('active'); });
+							// index in allSlides: 0=clone-last, 1..total=real, total+1=clone-first
+							allSlides[current + 1].classList.add('active');
+							dots.forEach(function(d) { d.classList.remove('active'); });
 							dots[current].classList.add('active');
-							btnPrev.disabled = current === 0;
-							btnNext.disabled = current === total - 1;
 						}
 
-						btnPrev.addEventListener('click', function () { if (current > 0) goTo(current - 1); });
-						btnNext.addEventListener('click', function () { if (current < total - 1) goTo(current + 1); });
+						function getOffset(index) {
+							// centre the active slide inside the carousel
+							var cw  = carousel.offsetWidth;
+							var sw  = slideWidth();
+							// allSlides index = index + 1 (because of prepended clone)
+							var pos = (index + 1) * sw;
+							return -(pos - (cw - sw) / 2);
+						}
 
-						// Swipe support
-						var touchStartX = 0;
-						track.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; }, {passive:true});
-						track.addEventListener('touchend', function(e){
-							var diff = touchStartX - e.changedTouches[0].clientX;
-							if (diff > 50 && current < total - 1) goTo(current + 1);
-							if (diff < -50 && current > 0) goTo(current - 1);
-						}, {passive:true});
+						function goTo(index, animate) {
+							if (animate === undefined) animate = true;
+							current = index;
+							updateActive();
+							setTranslate(getOffset(current), animate);
+						}
+
+						// Init without animation
+						goTo(0, false);
+
+						// After transition ends, silently jump if on a clone
+						track.addEventListener('transitionend', function () {
+							if (current === -1) {
+								current = total - 1;
+								goTo(current, false);
+							} else if (current === total) {
+								current = 0;
+								goTo(current, false);
+							}
+						});
+
+						// ── Drag / swipe ──
+						var startX = 0;
+						var startTranslate = 0;
+						var isDragging = false;
+						var dragMoved = false;
+
+						function currentTranslate() {
+							var t = window.getComputedStyle(track).transform;
+							if (!t || t === 'none') return 0;
+							return parseFloat(t.split(',')[4]);
+						}
+
+						carousel.addEventListener('mousedown', onDragStart);
+						carousel.addEventListener('touchstart', onDragStart, { passive: true });
+
+						function onDragStart(e) {
+							isDragging = true;
+							dragMoved  = false;
+							startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+							startTranslate = currentTranslate();
+							track.style.transition = 'none';
+							carousel.classList.add('dragging');
+						}
+
+						window.addEventListener('mousemove', onDragMove);
+						window.addEventListener('touchmove', onDragMove, { passive: true });
+
+						function onDragMove(e) {
+							if (!isDragging) return;
+							dragMoved = true;
+							var x    = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+							var diff = x - startX;
+							track.style.transform = 'translateX(' + (startTranslate + diff) + 'px)';
+						}
+
+						window.addEventListener('mouseup', onDragEnd);
+						window.addEventListener('touchend', onDragEnd);
+
+						function onDragEnd(e) {
+							if (!isDragging) return;
+							isDragging = false;
+							carousel.classList.remove('dragging');
+							if (!dragMoved) return;
+
+							var x    = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
+							var diff = x - startX;
+							var threshold = 40;
+
+							if (diff < -threshold) {
+								// dragged left → next (with infinite wrap)
+								goTo(current === total - 1 ? total : current + 1, true);
+							} else if (diff > threshold) {
+								// dragged right → prev (with infinite wrap)
+								goTo(current === 0 ? -1 : current - 1, true);
+							} else {
+								goTo(current, true); // snap back
+							}
+						}
+
+						// Recalculate on resize
+						window.addEventListener('resize', function () { goTo(current, false); });
+
 					})();
 					</script>
 
@@ -366,16 +389,13 @@
 			<footer id="footer">
 				<p class="copyright">&copy; 2026 Omar Kaykhusraw</p>
 			</footer>
-
 		</div>
 
 		<div id="bg"></div>
-
 		<script src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/browser.min.js"></script>
 		<script src="assets/js/breakpoints.min.js"></script>
 		<script src="assets/js/util.js"></script>
 		<script src="assets/js/main.js"></script>
-
 	</body>
 </html>
