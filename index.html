@@ -59,7 +59,7 @@
   flex: 0 0 78%;
   width: 78%;
   box-sizing: border-box;
-  padding: 0;
+  padding: 0 10px;
   opacity: 0.3;
   transition: opacity 0.4s ease;
 }
@@ -300,36 +300,30 @@
 							if (!thumb) return;
 							var slide = thumb.closest('.gallery-slide');
 							if (!slide.classList.contains('active')) return;
-							var id = thumb.getAttribute('data-id');
+							var id      = thumb.getAttribute('data-id');
 							var wrapper = thumb.parentNode;
-							// Remove thumb, insert iframe
-							thumb.remove();
-							var iframe = document.createElement('iframe');
+							// Hide thumb
+							thumb.style.display = 'none';
+							// Reuse or create iframe
+							var iframe = wrapper.querySelector('iframe');
+							if (!iframe) {
+								iframe = document.createElement('iframe');
+								iframe.setAttribute('allowfullscreen', '');
+								iframe.setAttribute('allow', 'autoplay');
+								wrapper.insertBefore(iframe, wrapper.querySelector('.slide-overlay'));
+							}
 							iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1';
-							iframe.setAttribute('allowfullscreen', '');
-							iframe.setAttribute('allow', 'autoplay');
-							wrapper.insertBefore(iframe, wrapper.querySelector('.slide-overlay'));
 						});
 
-						// Reset a slide back to its thumbnail (removes live iframe)
-						function resetSlide(slide) {
-							var wrapper = slide.querySelector('.video-wrapper');
-							var iframe  = wrapper.querySelector('iframe');
-							if (!iframe) return;
-							var id = videos[getRealIndex(slide)].id;
-							iframe.remove();
-							var thumb = document.createElement('div');
-							thumb.className = 'video-thumb';
-							thumb.style.backgroundImage = 'url(https://img.youtube.com/vi/' + id + '/maxresdefault.jpg)';
-							thumb.setAttribute('data-id', id);
-							wrapper.insertBefore(thumb, wrapper.querySelector('.slide-overlay'));
-						}
-
-						// Get real video index from a slide element
-						function getRealIndex(slide) {
-							var all = Array.prototype.slice.call(allSlides);
-							var i = all.indexOf(slide) - 1; // -1 for prepended clone
-							return ((i % total) + total) % total;
+						// Pause the active slide's iframe (keep it alive)
+						function pauseActive() {
+							var wrapper = allSlides[current + 1].querySelector('.video-wrapper');
+							var iframe  = wrapper && wrapper.querySelector('iframe');
+							if (iframe && iframe.contentWindow) {
+								iframe.contentWindow.postMessage(
+									JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*'
+								);
+							}
 						}
 
 						// Dots
@@ -337,7 +331,7 @@
 							var d = document.createElement('div');
 							d.className = 'gallery-dot';
 							d.addEventListener('click', function() {
-								if (!isAnimating) { resetActive(); goTo(i); }
+								if (!isAnimating) { pauseActive(); goTo(i); }
 							});
 							dotsEl.appendChild(d);
 							dots.push(d);
@@ -348,14 +342,10 @@
 							slide.addEventListener('click', function() {
 								if (isAnimating) return;
 								var activeIdx = current + 1;
-								if (i < activeIdx) { resetActive(); stepTo(current - 1); }
-								else if (i > activeIdx) { resetActive(); stepTo(current + 1); }
+								if (i < activeIdx) { pauseActive(); stepTo(current - 1); }
+								else if (i > activeIdx) { pauseActive(); stepTo(current + 1); }
 							});
 						});
-
-						function resetActive() {
-							resetSlide(allSlides[current + 1]);
-						}
 
 						function centreOffset(trackIndex) {
 							var sw = allSlides[0].offsetWidth;
