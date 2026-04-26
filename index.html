@@ -112,6 +112,40 @@ right: 0;
 }
 	
 </style>
+
+		<style>
+.video-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scroll-snap-type: x mandatory;
+}
+
+.video-card {
+  flex: 0 0 auto;
+  width: 320px; /* smaller previews */
+  scroll-snap-align: start;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 horizontal */
+  height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+</style>
 		
 <script src="https://kit.fontawesome.com/bb0a4a8912.js" crossorigin="anonymous"></script>
 		
@@ -284,33 +318,39 @@ right: 0;
 							</article>
 
 						<!-- Gallery -->
-							<article id="gallery">
+<article id="gallery">
 
-							<div class="video-strip">
+<h3 class="major">Gallery</h3>
+
+<div class="video-row">
 
   <div class="video-card">
-    <h3 class="major">The Power of Colour Grading.</h3>
-    <iframe src="https://www.youtube.com/embed/SvZ_sF7gamI" frameborder="0" allowfullscreen></iframe>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/SvZ_sF7gamI" frameborder="0" allowfullscreen></iframe>
+    </div>
   </div>
 
   <div class="video-card">
-    <h3 class="major">Oman, First Person View.</h3>
-    <iframe src="https://www.youtube.com/embed/J0JZivXHkH8" frameborder="0" allowfullscreen></iframe>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/J0JZivXHkH8" frameborder="0" allowfullscreen></iframe>
+    </div>
   </div>
 
   <div class="video-card">
-    <h3 class="major">Sendang Gile & Tiu Kelep Waterfalls.</h3>
-    <iframe src="https://www.youtube.com/embed/DLA1bcUDg2g" frameborder="0" allowfullscreen></iframe>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/DLA1bcUDg2g" frameborder="0" allowfullscreen></iframe>
+    </div>
   </div>
 
   <div class="video-card">
-    <h3 class="major">Ceking Rice Terrace.</h3>
-    <iframe src="https://www.youtube.com/embed/7g1UTm1c4EA" frameborder="0" allowfullscreen></iframe>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/7g1UTm1c4EA" frameborder="0" allowfullscreen></iframe>
+    </div>
   </div>
 
 </div>
 
-							</article>
+</article>
 
 						<!-- Elements -->
 							<article id="elements">
