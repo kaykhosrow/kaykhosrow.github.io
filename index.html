@@ -112,6 +112,82 @@ right: 0;
 }
 	
 </style>
+
+<style>
+/* ── Vertical carousel ── */
+.carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-slide {
+  flex: 0 0 auto;
+  width: 100%;
+  padding-bottom: 30px;
+}
+
+.carousel-slide h3 {
+  margin-bottom: 10px;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: 0;
+}
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.carousel-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  padding: 6px 18px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.carousel-btn:hover {
+  border-color: #fff;
+  background: rgba(255,255,255,0.08);
+}
+
+.carousel-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.carousel-counter {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+}
+</style>
 		
 <script src="https://kit.fontawesome.com/bb0a4a8912.js" crossorigin="anonymous"></script>
 		
@@ -137,7 +213,6 @@ right: 0;
 								<li><a href="#conferences">Conferences</a></li>
 								<li><a href="#code"> &lt/Code&gt </a></li>
 								<li><a href="#gallery">Gallery</a></li>
-								<!-- <li><a href="#elements">Elements</a></li> -->
 							</ul>
 						</nav>
 						</div>
@@ -161,7 +236,6 @@ right: 0;
 									<li><a href="https://medium.com/@kaykhusraw" target="_blank" class="icon brands fa-medium"><span class="label">Medium</span></a></li>
 									<li><a href="https://github.com/kaykhosrow" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
 								</ul>
-								
 								</div>
 								
 								<p align="justify" class="text" lang="en"> Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a class="trans" href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused on the natural rate of interest. View my paper below: </p>
@@ -171,7 +245,6 @@ right: 0;
 								<p align="justify" class="text" lang="en"> Prior to my doctorate, I read Economics at the <a class="trans" href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a class="trans" href="https://london.ac.uk/" target="_blank">University of London</a>. I enjoy studying the game of chess, formerly playing for the Cambridge University Chess Club. View my abridged CV below: </p>
 
 								<p> <a href="https://kaykhosrow.github.io/Abridged.pdf" target="_blank" class="button small"> Curriculum Vitae </a> </p>
-
 
 							</article>
 
@@ -203,30 +276,9 @@ right: 0;
 								Falling Stars in Small Open Economies</a>, <br>
 								joint with Georgios Chortareas. <br>
 								Status: Work in progress. </p>
-																
-								<!--<h3 class="major"> Conferences </h3>
-
-								<p> 2024: Economic History Society Annual Conference </p>
-
-								<p> 2023: Southern Economic Association Annual Conference, Money Macro Finance Society Annual Conference, International Conference on Applied Theory, Macro and Empirical Finance, Forschungsschwerpunkt Internationale Wirtschaft Conference on International Economics, Eastern Economic Association Annual Conference, Royal Economic Society Annual Conference, European Economic and Finance Society Annual Conference (DNA), Society for Economic Dynamics Annual Conference (DNA) </p>
-									
-								<p> 2022: Money Macro Finance Society Annual Conference, Royal Economic Society <br> PhD Conference, European Economic and Finance Society Annual Conference </p>
-				
-								<!--<h3 class="major"> Predoctoral work: </h3>
-									
-								<p> Kaykhusraw, O. (2018) <br>
-								Inflation Expectations and Missing Disinflation: <br>
-								Empirical Evidence from the UK Phillips Curve <br> </p>
-
-								<p>
-    								<a href="https://kaykhosrow.github.io/MSS./Dissertation.pdf" target="_blank" class="button small">PDF</a>
-								<a href="https://kaykhosrow.github.io/MSS./Dissertation Appendix.pdf" target="_blank" class="button small">APX</a> 
-								<a href="https://kaykhosrow.github.io/MSS./Data.zip" target="_blank" class="button small">DTA</a> 
-								</p> --->
 							
 							</article>
 
-						
 						<!-- Teaching -->
 							<article id="teaching">
 								
@@ -240,7 +292,6 @@ right: 0;
 									
 							</article>
 
-						
 					<!-- Conferences -->
 							<article id="conferences">
 								
@@ -256,28 +307,22 @@ right: 0;
 									
 							</article>
 
-						
 						<!-- Code -->
 							<article id="code">
 		
-<h3 class="major">Time-Varying Phillips Curves</h3>
-
-<p> This tool presents time-varying estimates of the Phillips curve across multiple regions. Using kernel-weighted regression methods, it traces the relationship between inflation and unemployment over time; capturing structural shifts that static models often miss.</p>
-<p><a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="button small">&lt/Site&gt</a></p>
-								
+								<h3 class="major">Time-Varying Phillips Curves</h3>
+								<p> This tool presents time-varying estimates of the Phillips curve across multiple regions. Using kernel-weighted regression methods, it traces the relationship between inflation and unemployment over time; capturing structural shifts that static models often miss.</p>
+								<p><a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="button small">&lt/Site&gt</a></p>
 								
 								<h3 class="major"> Unobserved Components Model </h3>
-								
 								<p> This function implements the Stock and Watson (2007) unobserved components model with stochastic volatilities. It employs a gamma random variable generator function and can be used to extract the trend of any given univariate time series. </p>
 								<p> <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="button small">&lt/Code&gt</a> </p>
 								
 								<h3 class="major"> VAR Historical Decomposition </h3>
-								
 								<p> This function takes in the output from the VAR() function (see vars package) and computes the vector autoregression historical decomposition. It is an abridged translation of Cesa-Bianchi's MATLAB code (in the VAR-Toolbox) designed for R. </p>
 								<p> <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="button small">&lt/Code&gt</a> </p>
 
 								<h3 class="major"> Gaussian Error Propagation </h3>
-								
 								<p> This function determines the uncertainty (or error) of any mathematical expression containing estimated variables with uncertainties by taking the partial derivatives with respect to each variable multiplied by their uncertainty and added in quadrature. </p>
 								<p> <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="button small">&lt/Code&gt</a> </p>
 
@@ -286,268 +331,76 @@ right: 0;
 						<!-- Gallery -->
 							<article id="gallery">
 
-							<h3 class="major"> The Power of Colour Grading. </h3>
-							<div style="position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden; margin-bottom: 50px;">
-   							<iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/SvZ_sF7gamI" frameborder="0" allowfullscreen></iframe>
-							</div>
+								<div class="carousel-viewport">
+									<div class="carousel-track" id="carouselTrack">
 
-							<h3 class="major"> Oman, First Person View. </h3>
-							<div style="position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden; margin-bottom: 50px;">
-   							<iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/J0JZivXHkH8" frameborder="0" allowfullscreen></iframe>
-							</div>
-								
-							<h3 class="major"> Sendang Gile & Tiu Kelep Waterfalls. </h3>
-							<div style="position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden; margin-bottom: 50px;">
-   							<iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/DLA1bcUDg2g" frameborder="0" allowfullscreen></iframe>
-							</div>
-								
-							<h3 class="major"> Ceking Rice Terrace. </h3>
-							<div style="position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden; margin-bottom: 25px;">
-   							<iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/7g1UTm1c4EA" frameborder="0" allowfullscreen></iframe>
-							</div>
-
-							</article>
-
-						<!-- Elements -->
-							<article id="elements">
-								<h2 class="major">Elements</h2>
-
-								<section>
-									<h3 class="major">Text</h3>
-									<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-									This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-									This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
-									<hr />
-									<h2>Heading Level 2</h2>
-									<h3>Heading Level 3</h3>
-									<h4>Heading Level 4</h4>
-									<h5>Heading Level 5</h5>
-									<h6>Heading Level 6</h6>
-									<hr />
-									<h4>Blockquote</h4>
-									<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-									<h4>Preformatted</h4>
-									<pre><code>i = 0;
-
-while (!deck.isInOrder()) {
-    print 'Iteration ' + i;
-    deck.shuffle();
-    i++;
-}
-
-print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-								</section>
-
-								<section>
-									<h3 class="major">Lists</h3>
-
-									<h4>Unordered</h4>
-									<ul>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
-
-									<h4>Alternate</h4>
-									<ul class="alt">
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
-
-									<h4>Ordered</h4>
-									<ol>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis viverra.</li>
-										<li>Felis enim feugiat.</li>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis lorem.</li>
-										<li>Felis enim et feugiat.</li>
-									</ol>
-									<h4>Icons</h4>
-									<ul class="icons">
-									<li><a href="#" class="fa fa-envelope"></a></li>
-									<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-									<li><a href="#" class="icon brands fa-linkedin-in"><span class="label">Linkedin</span></a></li>
-									<li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
-									<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-									</ul>
-
-									<h4>Actions</h4>
-									<ul class="actions">
-										<li><a href="#" class="button primary">Default</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary">Default</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-								</section>
-
-								<section>
-									<h3 class="major">Table</h3>
-									<h4>Default</h4>
-									<div class="table-wrapper">
-										<table>
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item One</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Two</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Three</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Four</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Five</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
-
-									<h4>Alternate</h4>
-									<div class="table-wrapper">
-										<table class="alt">
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item One</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Two</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Three</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Four</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Five</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
-								</section>
-
-								<section>
-									<h3 class="major">Buttons</h3>
-									<ul class="actions">
-										<li><a href="#" class="button primary">Primary</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-									<ul class="actions">
-										<li><a href="#" class="button">Default</a></li>
-										<li><a href="#" class="button small">Small</a></li>
-									</ul>
-									<ul class="actions">
-										<li><a href="#" class="button primary icon solid fa-download">Icon</a></li>
-										<li><a href="#" class="button icon solid fa-download">Icon</a></li>
-									</ul>
-									<ul class="actions">
-										<li><span class="button primary disabled">Disabled</span></li>
-										<li><span class="button disabled">Disabled</span></li>
-									</ul>
-								</section>
-
-								<section>
-									<h3 class="major">Form</h3>
-									<form method="post" action="#">
-										<div class="fields">
-											<div class="field half">
-												<label for="demo-name">Name</label>
-												<input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
-											</div>
-											<div class="field half">
-												<label for="demo-email">Email</label>
-												<input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
-											</div>
-											<div class="field">
-												<label for="demo-category">Category</label>
-												<select name="demo-category" id="demo-category">
-													<option value="">-</option>
-													<option value="1">Manufacturing</option>
-													<option value="1">Shipping</option>
-													<option value="1">Administration</option>
-													<option value="1">Human Resources</option>
-												</select>
-											</div>
-											<div class="field half">
-												<input type="radio" id="demo-priority-low" name="demo-priority" checked>
-												<label for="demo-priority-low">Low</label>
-											</div>
-											<div class="field half">
-												<input type="radio" id="demo-priority-high" name="demo-priority">
-												<label for="demo-priority-high">High</label>
-											</div>
-											<div class="field half">
-												<input type="checkbox" id="demo-copy" name="demo-copy">
-												<label for="demo-copy">Email me a copy</label>
-											</div>
-											<div class="field half">
-												<input type="checkbox" id="demo-human" name="demo-human" checked>
-												<label for="demo-human">Not a robot</label>
-											</div>
-											<div class="field">
-												<label for="demo-message">Message</label>
-												<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+										<div class="carousel-slide">
+											<h3 class="major">The Power of Colour Grading</h3>
+											<div class="video-wrapper">
+												<iframe src="https://www.youtube.com/embed/SvZ_sF7gamI" allowfullscreen></iframe>
 											</div>
 										</div>
-										<ul class="actions">
-											<li><input type="submit" value="Send Message" class="primary" /></li>
-											<li><input type="reset" value="Reset" /></li>
-										</ul>
-									</form>
-								</section>
+
+										<div class="carousel-slide">
+											<h3 class="major">Oman, First Person View</h3>
+											<div class="video-wrapper">
+												<iframe src="https://www.youtube.com/embed/J0JZivXHkH8" allowfullscreen></iframe>
+											</div>
+										</div>
+
+										<div class="carousel-slide">
+											<h3 class="major">Sendang Gile &amp; Tiu Kelep Waterfalls</h3>
+											<div class="video-wrapper">
+												<iframe src="https://www.youtube.com/embed/DLA1bcUDg2g" allowfullscreen></iframe>
+											</div>
+										</div>
+
+										<div class="carousel-slide">
+											<h3 class="major">Ceking Rice Terrace</h3>
+											<div class="video-wrapper">
+												<iframe src="https://www.youtube.com/embed/7g1UTm1c4EA" allowfullscreen></iframe>
+											</div>
+										</div>
+
+									</div>
+								</div>
+
+								<div class="carousel-controls">
+									<button class="carousel-btn" id="carouselPrev" disabled>&#8593; Prev</button>
+									<span class="carousel-counter" id="carouselCounter">1 / 4</span>
+									<button class="carousel-btn" id="carouselNext">Next &#8595;</button>
+								</div>
+
+								<script>
+								(function () {
+									var track    = document.getElementById('carouselTrack');
+									var btnPrev  = document.getElementById('carouselPrev');
+									var btnNext  = document.getElementById('carouselNext');
+									var counter  = document.getElementById('carouselCounter');
+									var slides   = track.querySelectorAll('.carousel-slide');
+									var total    = slides.length;
+									var current  = 0;
+
+									function slideHeight() {
+										return slides[current].offsetHeight;
+									}
+
+									function goTo(index) {
+										var offset = 0;
+										for (var i = 0; i < index; i++) {
+											offset += slides[i].offsetHeight;
+										}
+										track.style.transform = 'translateY(-' + offset + 'px)';
+										current = index;
+										counter.textContent = (current + 1) + ' / ' + total;
+										btnPrev.disabled = current === 0;
+										btnNext.disabled = current === total - 1;
+									}
+
+									btnPrev.addEventListener('click', function () { if (current > 0) goTo(current - 1); });
+									btnNext.addEventListener('click', function () { if (current < total - 1) goTo(current + 1); });
+								})();
+								</script>
 
 							</article>
 
