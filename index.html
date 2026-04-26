@@ -12,7 +12,6 @@
   .text { hyphens:auto; }
   .padding { padding:0px 0px 30px 0px; }
 </style>
-
 <style>
 .trans {
   color:#ffffff; position:relative; text-decoration:none; transition:color .5s ease-out;
@@ -25,7 +24,6 @@
 .trans:hover { color:#ffffff; right:0; text-decoration:none; }
 .trans:hover:after { border-color:#ffffff; right:0; }
 </style>
-
 <style>
 .citation-button {
   display:inline-block; text-decoration:none; color:#fff;
@@ -46,11 +44,6 @@
 <style>
 /* ── Gallery ── */
 
-.gallery-wrap {
-  position: relative;
-}
-
-/* viewport clips the peeking neighbours */
 .gallery-carousel {
   overflow: hidden;
   width: 100%;
@@ -63,6 +56,7 @@
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Each slide: 78% wide so ~11% peeks each side */
 .gallery-slide {
   flex: 0 0 78%;
   width: 78%;
@@ -70,9 +64,41 @@
   padding: 0 10px;
   opacity: 0.3;
   transition: opacity 0.4s ease;
+  position: relative;
+  cursor: default;
 }
 .gallery-slide.active {
   opacity: 1;
+  cursor: default;
+}
+
+/* Non-active slides become clickable and show arrow on hover */
+.gallery-slide:not(.active) {
+  cursor: pointer;
+}
+
+/* Overlay on neighbour slides */
+.gallery-slide:not(.active) .slide-overlay {
+  position: absolute;
+  inset: 0 10px 0 10px; /* match slide padding */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.3s ease;
+  z-index: 5;
+  font-size: 1.4rem;
+  color: #fff;
+  background: transparent;
+}
+.gallery-slide:not(.active):hover .slide-overlay {
+  opacity: 1;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+.gallery-slide:not(.active):hover {
+  opacity: 0.65;
 }
 
 .gallery-slide h3 {
@@ -94,58 +120,26 @@
   top:0; left:0;
   width:100%; height:100%;
   border:0;
+  pointer-events: none; /* only active slide should be interactive */
 }
-
-/* Edge arrow buttons — sit flush on the sides of the carousel */
-.gallery-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: rgba(255,255,255,0.75);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.25s, border-color 0.25s, color 0.25s;
-  font-size: 0.75rem;
-  line-height: 1;
-  padding: 0;
+.gallery-slide.active .video-wrapper iframe {
+  pointer-events: auto;
 }
-.gallery-btn:hover {
-  background: rgba(255,255,255,0.15);
-  border-color: rgba(255,255,255,0.6);
-  color: #fff;
-}
-.gallery-btn:disabled {
-  opacity: 0;
-  pointer-events: none;
-}
-.gallery-btn-prev { left: 0; }
-.gallery-btn-next { right: 0; }
 
 /* Dots */
-.gallery-footer {
+.gallery-dots {
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin-top: 28px;
+  align-items: center;
   gap: 10px;
+  margin-top: 28px;
 }
-
 .gallery-dot {
-  width: 8px;
-  height: 8px;
+  width: 8px; height: 8px;
   border-radius: 50%;
   background: rgba(255,255,255,0.25);
   cursor: pointer;
   transition: background 0.3s, transform 0.3s;
-  flex-shrink: 0;
 }
 .gallery-dot.active {
   background: #fff;
@@ -247,42 +241,29 @@
 				<!-- Gallery -->
 				<article id="gallery">
 
-					<div class="gallery-wrap">
-
-						<!-- Side arrow buttons -->
-						<button class="gallery-btn gallery-btn-prev" id="galleryPrev">&#8592;</button>
-						<button class="gallery-btn gallery-btn-next" id="galleryNext">&#8594;</button>
-
-						<div class="gallery-carousel">
-							<div class="gallery-track" id="galleryTrack"></div>
-						</div>
-
+					<div class="gallery-carousel">
+						<div class="gallery-track" id="galleryTrack"></div>
 					</div>
 
-					<div class="gallery-footer">
-						<div class="gallery-dots" id="galleryDots" style="display:flex;gap:10px;align-items:center;"></div>
-					</div>
+					<div class="gallery-dots" id="galleryDots"></div>
 
 					<script>
 					(function () {
 
 						var videos = [
-							{ title: 'The Power of Colour Grading',          id: 'SvZ_sF7gamI' },
-							{ title: 'Oman, First Person View',               id: 'J0JZivXHkH8' },
+							{ title: 'The Power of Colour Grading',            id: 'SvZ_sF7gamI' },
+							{ title: 'Oman, First Person View',                 id: 'J0JZivXHkH8' },
 							{ title: 'Sendang Gile &amp; Tiu Kelep Waterfalls', id: 'DLA1bcUDg2g' },
-							{ title: 'Ceking Rice Terrace',                   id: '7g1UTm1c4EA' }
+							{ title: 'Ceking Rice Terrace',                     id: '7g1UTm1c4EA' }
 						];
 
 						var total    = videos.length;
 						var track    = document.getElementById('galleryTrack');
 						var carousel = document.querySelector('.gallery-carousel');
 						var dotsEl   = document.getElementById('galleryDots');
-						var btnPrev  = document.getElementById('galleryPrev');
-						var btnNext  = document.getElementById('galleryNext');
 						var current  = 0;
 						var dots     = [];
 
-						// Build slides: clone-of-last | real slides | clone-of-first
 						function makeSlide(v, isClone) {
 							var div = document.createElement('div');
 							div.className = 'gallery-slide' + (isClone ? ' clone' : '');
@@ -290,15 +271,35 @@
 								'<h3 class="major">' + v.title + '</h3>' +
 								'<div class="video-wrapper">' +
 								  '<iframe src="https://www.youtube.com/embed/' + v.id + '?playsinline=1" allowfullscreen></iframe>' +
-								'</div>';
+								'</div>' +
+								'<div class="slide-overlay"></div>';
 							return div;
 						}
 
+						// Clone-of-last | real slides | clone-of-first
 						track.appendChild(makeSlide(videos[total - 1], true));
 						videos.forEach(function(v) { track.appendChild(makeSlide(v, false)); });
 						track.appendChild(makeSlide(videos[0], true));
 
 						var allSlides = track.querySelectorAll('.gallery-slide');
+
+						// Assign click handlers and arrow direction to each slide's overlay
+						function updateOverlayArrows() {
+							allSlides.forEach(function(slide, i) {
+								var overlay = slide.querySelector('.slide-overlay');
+								if (!overlay) return;
+								// i=0 is clone-of-last (prev), i=total+1 is clone-of-first (next)
+								// real slides: i = current+1 is active
+								var activeIdx = current + 1;
+								if (i < activeIdx) {
+									overlay.textContent = '←';
+								} else if (i > activeIdx) {
+									overlay.textContent = '→';
+								} else {
+									overlay.textContent = '';
+								}
+							});
+						}
 
 						// Dots
 						videos.forEach(function(_, i) {
@@ -312,8 +313,7 @@
 						function centreOffset(realIndex) {
 							var sw = allSlides[0].offsetWidth;
 							var cw = carousel.offsetWidth;
-							var trackIndex = realIndex + 1; // +1 for prepended clone
-							return -(trackIndex * sw - (cw - sw) / 2);
+							return -((realIndex + 1) * sw - (cw - sw) / 2);
 						}
 
 						function setTranslate(x, animate) {
@@ -328,6 +328,7 @@
 							allSlides[current + 1].classList.add('active');
 							dots.forEach(function(d) { d.classList.remove('active'); });
 							dots[current].classList.add('active');
+							updateOverlayArrows();
 						}
 
 						function goTo(index, animate) {
@@ -337,17 +338,22 @@
 							setTranslate(centreOffset(current), animate);
 						}
 
-						// After transition, silently jump if we landed on a clone
-						track.addEventListener('transitionend', function () {
-							if (current === -1) { current = total - 1; goTo(current, false); }
-							else if (current === total) { current = 0; goTo(current, false); }
+						// Click on a non-active slide navigates
+						allSlides.forEach(function(slide, i) {
+							slide.addEventListener('click', function() {
+								var activeIdx = current + 1;
+								if (i < activeIdx) {
+									goTo(current === 0 ? -1 : current - 1);
+								} else if (i > activeIdx) {
+									goTo(current === total - 1 ? total : current + 1);
+								}
+							});
 						});
 
-						btnPrev.addEventListener('click', function () {
-							goTo(current === 0 ? -1 : current - 1);
-						});
-						btnNext.addEventListener('click', function () {
-							goTo(current === total - 1 ? total : current + 1);
+						// Infinite loop: silently jump when landing on a clone
+						track.addEventListener('transitionend', function () {
+							if (current === -1)    { current = total - 1; goTo(current, false); }
+							else if (current === total) { current = 0;         goTo(current, false); }
 						});
 
 						window.addEventListener('resize', function () { goTo(current, false); });
