@@ -17,12 +17,12 @@
 .trans {
   color:#ffffff; position:relative; text-decoration:none; transition:color .5s ease-out;
 }
-.trans:hover { color:#ffffff; right:0; text-decoration:none; }
 .trans:after {
   border-radius:1em; border-top:.1em solid #2F56B0; content:"";
   position:absolute; right:100%; bottom:-.15em; left:0;
   transition:right .5s cubic-bezier(0,.5,0,1), border-color .5s ease-out;
 }
+.trans:hover { color:#ffffff; right:0; text-decoration:none; }
 .trans:hover:after { border-color:#ffffff; right:0; }
 </style>
 
@@ -44,35 +44,35 @@
 </style>
 
 <style>
-/* ── Gallery carousel ── */
+/* ── Gallery ── */
 
-.gallery-carousel {
+.gallery-wrap {
   position: relative;
-  overflow: hidden;           /* clips the faded side-peeks */
-  width: 100%;
-  cursor: grab;
-  user-select: none;
 }
-.gallery-carousel.dragging { cursor: grabbing; }
+
+/* viewport clips the peeking neighbours */
+.gallery-carousel {
+  overflow: hidden;
+  width: 100%;
+}
 
 .gallery-track {
   display: flex;
   flex-direction: row;
   will-change: transform;
-  /* transition applied via JS so drag feels instant */
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .gallery-slide {
-  flex: 0 0 78%;              /* main slide width; ~11% peeks each side */
+  flex: 0 0 78%;
   width: 78%;
   box-sizing: border-box;
   padding: 0 10px;
+  opacity: 0.3;
   transition: opacity 0.4s ease;
 }
-
-/* faded neighbours */
-.gallery-slide:not(.active) {
-  opacity: 0.35;
+.gallery-slide.active {
+  opacity: 1;
 }
 
 .gallery-slide h3 {
@@ -84,17 +84,11 @@
 .video-wrapper {
   position: relative;
   width: 100%;
-  padding-bottom: 177.78%;   /* 16/9 inverted = 9:16 */
+  padding-bottom: 177.78%;
   height: 0;
   overflow: hidden;
   border-radius: 4px;
-  pointer-events: none;      /* prevent iframe stealing drag */
 }
-/* re-enable pointer events on active slide only */
-.gallery-slide.active .video-wrapper {
-  pointer-events: auto;
-}
-
 .video-wrapper iframe {
   position: absolute;
   top:0; left:0;
@@ -102,21 +96,61 @@
   border:0;
 }
 
-/* dots */
-.gallery-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 16px;
-}
-.gallery-dot {
-  width: 6px; height: 6px;
+/* Edge arrow buttons — sit flush on the sides of the carousel */
+.gallery-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.75);
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.3);
-  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: background 0.25s, border-color 0.25s, color 0.25s;
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 0;
 }
-.gallery-dot.active { background: #fff; }
+.gallery-btn:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.6);
+  color: #fff;
+}
+.gallery-btn:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+.gallery-btn-prev { left: 0; }
+.gallery-btn-next { right: 0; }
+
+/* Dots */
+.gallery-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  gap: 10px;
+}
+
+.gallery-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  flex-shrink: 0;
+}
+.gallery-dot.active {
+  background: #fff;
+  transform: scale(1.25);
+}
 </style>
 
 <script src="https://kit.fontawesome.com/bb0a4a8912.js" crossorigin="anonymous"></script>
@@ -213,30 +247,42 @@
 				<!-- Gallery -->
 				<article id="gallery">
 
-					<div class="gallery-carousel" id="galleryCarousel">
-						<div class="gallery-track" id="galleryTrack">
-							<!-- slides injected by JS (with clones for infinite loop) -->
+					<div class="gallery-wrap">
+
+						<!-- Side arrow buttons -->
+						<button class="gallery-btn gallery-btn-prev" id="galleryPrev">&#8592;</button>
+						<button class="gallery-btn gallery-btn-next" id="galleryNext">&#8594;</button>
+
+						<div class="gallery-carousel">
+							<div class="gallery-track" id="galleryTrack"></div>
 						</div>
+
 					</div>
 
-					<div class="gallery-dots" id="galleryDots"></div>
+					<div class="gallery-footer">
+						<div class="gallery-dots" id="galleryDots" style="display:flex;gap:10px;align-items:center;"></div>
+					</div>
 
 					<script>
 					(function () {
 
 						var videos = [
-							{ title: 'The Power of Colour Grading', id: 'SvZ_sF7gamI' },
-							{ title: 'Oman, First Person View',       id: 'J0JZivXHkH8' },
+							{ title: 'The Power of Colour Grading',          id: 'SvZ_sF7gamI' },
+							{ title: 'Oman, First Person View',               id: 'J0JZivXHkH8' },
 							{ title: 'Sendang Gile &amp; Tiu Kelep Waterfalls', id: 'DLA1bcUDg2g' },
-							{ title: 'Ceking Rice Terrace',           id: '7g1UTm1c4EA' }
+							{ title: 'Ceking Rice Terrace',                   id: '7g1UTm1c4EA' }
 						];
 
 						var total    = videos.length;
 						var track    = document.getElementById('galleryTrack');
-						var carousel = document.getElementById('galleryCarousel');
+						var carousel = document.querySelector('.gallery-carousel');
 						var dotsEl   = document.getElementById('galleryDots');
+						var btnPrev  = document.getElementById('galleryPrev');
+						var btnNext  = document.getElementById('galleryNext');
+						var current  = 0;
+						var dots     = [];
 
-						// Build slides: clone-last | real slides | clone-first
+						// Build slides: clone-of-last | real slides | clone-of-first
 						function makeSlide(v, isClone) {
 							var div = document.createElement('div');
 							div.className = 'gallery-slide' + (isClone ? ' clone' : '');
@@ -248,17 +294,13 @@
 							return div;
 						}
 
-						// prepend clone of last
 						track.appendChild(makeSlide(videos[total - 1], true));
-						// real slides
 						videos.forEach(function(v) { track.appendChild(makeSlide(v, false)); });
-						// append clone of first
 						track.appendChild(makeSlide(videos[0], true));
 
 						var allSlides = track.querySelectorAll('.gallery-slide');
 
-						// Dots (real slides only)
-						var dots = [];
+						// Dots
 						videos.forEach(function(_, i) {
 							var d = document.createElement('div');
 							d.className = 'gallery-dot';
@@ -267,117 +309,50 @@
 							dots.push(d);
 						});
 
-						// current index into real slides (0-based)
-						var current = 0;
-
-						function slideWidth() {
-							return allSlides[0].offsetWidth;
+						function centreOffset(realIndex) {
+							var sw = allSlides[0].offsetWidth;
+							var cw = carousel.offsetWidth;
+							var trackIndex = realIndex + 1; // +1 for prepended clone
+							return -(trackIndex * sw - (cw - sw) / 2);
 						}
 
 						function setTranslate(x, animate) {
-							track.style.transition = animate ? 'transform 0.45s cubic-bezier(0.4,0,0.2,1)' : 'none';
-							track.style.transform  = 'translateX(' + x + 'px)';
+							track.style.transition = animate
+								? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)'
+								: 'none';
+							track.style.transform = 'translateX(' + x + 'px)';
 						}
 
-						function updateActive() {
+						function updateUI() {
 							allSlides.forEach(function(s) { s.classList.remove('active'); });
-							// index in allSlides: 0=clone-last, 1..total=real, total+1=clone-first
 							allSlides[current + 1].classList.add('active');
 							dots.forEach(function(d) { d.classList.remove('active'); });
 							dots[current].classList.add('active');
 						}
 
-						function getOffset(index) {
-							// centre the active slide inside the carousel
-							var cw  = carousel.offsetWidth;
-							var sw  = slideWidth();
-							// allSlides index = index + 1 (because of prepended clone)
-							var pos = (index + 1) * sw;
-							return -(pos - (cw - sw) / 2);
-						}
-
 						function goTo(index, animate) {
 							if (animate === undefined) animate = true;
 							current = index;
-							updateActive();
-							setTranslate(getOffset(current), animate);
+							updateUI();
+							setTranslate(centreOffset(current), animate);
 						}
 
-						// Init without animation
-						goTo(0, false);
-
-						// After transition ends, silently jump if on a clone
+						// After transition, silently jump if we landed on a clone
 						track.addEventListener('transitionend', function () {
-							if (current === -1) {
-								current = total - 1;
-								goTo(current, false);
-							} else if (current === total) {
-								current = 0;
-								goTo(current, false);
-							}
+							if (current === -1) { current = total - 1; goTo(current, false); }
+							else if (current === total) { current = 0; goTo(current, false); }
 						});
 
-						// ── Drag / swipe ──
-						var startX = 0;
-						var startTranslate = 0;
-						var isDragging = false;
-						var dragMoved = false;
+						btnPrev.addEventListener('click', function () {
+							goTo(current === 0 ? -1 : current - 1);
+						});
+						btnNext.addEventListener('click', function () {
+							goTo(current === total - 1 ? total : current + 1);
+						});
 
-						function currentTranslate() {
-							var t = window.getComputedStyle(track).transform;
-							if (!t || t === 'none') return 0;
-							return parseFloat(t.split(',')[4]);
-						}
-
-						carousel.addEventListener('mousedown', onDragStart);
-						carousel.addEventListener('touchstart', onDragStart, { passive: true });
-
-						function onDragStart(e) {
-							isDragging = true;
-							dragMoved  = false;
-							startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-							startTranslate = currentTranslate();
-							track.style.transition = 'none';
-							carousel.classList.add('dragging');
-						}
-
-						window.addEventListener('mousemove', onDragMove);
-						window.addEventListener('touchmove', onDragMove, { passive: true });
-
-						function onDragMove(e) {
-							if (!isDragging) return;
-							dragMoved = true;
-							var x    = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-							var diff = x - startX;
-							track.style.transform = 'translateX(' + (startTranslate + diff) + 'px)';
-						}
-
-						window.addEventListener('mouseup', onDragEnd);
-						window.addEventListener('touchend', onDragEnd);
-
-						function onDragEnd(e) {
-							if (!isDragging) return;
-							isDragging = false;
-							carousel.classList.remove('dragging');
-							if (!dragMoved) return;
-
-							var x    = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
-							var diff = x - startX;
-							var threshold = 40;
-
-							if (diff < -threshold) {
-								// dragged left → next (with infinite wrap)
-								goTo(current === total - 1 ? total : current + 1, true);
-							} else if (diff > threshold) {
-								// dragged right → prev (with infinite wrap)
-								goTo(current === 0 ? -1 : current - 1, true);
-							} else {
-								goTo(current, true); // snap back
-							}
-						}
-
-						// Recalculate on resize
 						window.addEventListener('resize', function () { goTo(current, false); });
+
+						goTo(0, false);
 
 					})();
 					</script>
