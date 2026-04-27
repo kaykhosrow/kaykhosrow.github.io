@@ -151,11 +151,7 @@
       </ul>
     </div>
 
-    <div class="email-icon">
-      <a href="mailto:omar.kaykhusraw@gmail.com">
-        <i class="ph ph-envelope"></i>
-      </a>
-    </div>
+
 
     <!-- main content -->
     <main>
@@ -166,24 +162,14 @@
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
-                <h4 class="text-uppercase freelancer">Economist</h4>
-                <h1 class="text-uppercase overflow-hidden developer" id="typewriter"></h1>
+                <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
+                <h1 class="text-uppercase overflow-hidden developer" id="my-typewriter"></h1>
                 <p class="description">Empirical Macroeconomics &amp; Time Series Econometrics</p>
-              </div>
-              <div class="d-flex gap-4">
-                <a href="https://kaykhosrow.github.io/JMP.pdf" target="_blank" class="btn work-btn text-capitalize btn-secondary">Job Market Paper</a>
-                <a href="https://kaykhosrow.github.io/Abridged.pdf" target="_blank" class="btn contact-btn text-capitalize btn-outline-secondary">Curriculum Vitae</a>
               </div>
             </div>
             <div class="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4">
               <div class="img-wrapper">
-                <div class="waves-top">
-                  <span></span><span></span><span></span><span></span>
-                </div>
-                <img class="img-fluid rounded-circle hero-img" src="./assets/images/hero.png" alt="Omar Kaykhusraw" />
-                <div class="waves-bottom">
-                  <span></span><span></span><span></span><span></span>
-                </div>
+                <img class="img-fluid hero-img" src="./assets/images/hero.png" alt="Omar Kaykhusraw" style="border-radius: 12px; width: 100%; object-fit: cover;" />
               </div>
             </div>
             <div class="col-12">
@@ -614,34 +600,56 @@
       </div>
     </main>
 
-    <!-- color switcher -->
-    <div class="color-switcher">
-      <button class="color-switcher-btn">
-        <i class="ph ph-gear-six"></i>
-      </button>
-      <div class="pallets d-flex flex-column align-items-center gap-4 justify-content-center">
-        <div class="d-flex flex-column gap-3">
-          <div class="d-flex gap-3">
-            <button style="background-color: #ffdb67" class="color-btn" data-color="255, 219, 103"></button>
-            <button style="background-color: #ff91fb" class="color-btn" data-color="255, 145, 251"></button>
-            <button style="background-color: #fdbb2e" class="color-btn" data-color="253, 187, 46"></button>
-          </div>
-          <div class="d-flex gap-3">
-            <button style="background-color: #eee8aa" class="color-btn" data-color="238, 232, 170"></button>
-            <button style="background-color: #00ffff" class="color-btn" data-color="0, 255, 255"></button>
-            <button style="background-color: #00fe9c" class="color-btn" data-color="0, 254, 156"></button>
-          </div>
-        </div>
-        <div class="d-flex gap-3 justify-content-between">
-          <button class="px-3 ltr py-2 border-0">LTR</button>
-          <button class="px-3 rtl py-2 border-0">RTL</button>
-        </div>
-        <div class="d-flex align-items-center gap-3">
-          <label for="grained">Grained BG</label>
-          <input type="checkbox" id="grained" class="grained-checkbox" />
-        </div>
-      </div>
+    <!-- Hidden controls used only to initialise defaults -->
+    <div style="display:none">
+      <button class="color-btn" data-color="255, 219, 103"></button>
+      <button class="ltr"></button>
+      <input type="checkbox" id="grained" class="grained-checkbox" />
     </div>
+
+    <!-- Initialise yellow / LTR / grain and run typewriter -->
+    <script>
+    window.addEventListener('load', function () {
+      // Set yellow colour
+      var yellowBtn = document.querySelector('.color-btn[data-color="255, 219, 103"]');
+      if (yellowBtn) yellowBtn.click();
+
+      // Set LTR
+      var ltrBtn = document.querySelector('button.ltr');
+      if (ltrBtn) ltrBtn.click();
+
+      // Enable grain
+      var grainCb = document.querySelector('.grained-checkbox');
+      if (grainCb) { grainCb.checked = true; grainCb.dispatchEvent(new Event('change')); }
+
+      // Typewriter cycling Economist / Researcher / Lecturer
+      var words = ['Economist', 'Researcher', 'Lecturer'];
+      var el = document.getElementById('my-typewriter');
+      if (!el) return;
+      var wordIdx = 0, charIdx = 0, deleting = false;
+      function tick() {
+        var word = words[wordIdx];
+        if (!deleting) {
+          el.textContent = word.substring(0, charIdx + 1);
+          charIdx++;
+          if (charIdx === word.length) {
+            deleting = true;
+            setTimeout(tick, 1800);
+            return;
+          }
+        } else {
+          el.textContent = word.substring(0, charIdx - 1);
+          charIdx--;
+          if (charIdx === 0) {
+            deleting = false;
+            wordIdx = (wordIdx + 1) % words.length;
+          }
+        }
+        setTimeout(tick, deleting ? 55 : 110);
+      }
+      setTimeout(tick, 400);
+    });
+    </script>
 
     <!-- Gallery JS -->
     <script>
