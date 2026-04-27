@@ -22,7 +22,7 @@
         -webkit-text-size-adjust: 100%;
       }
 
-      /* Disable GSAP intro animations — prevents hero content staying invisible */
+      /* Disable GSAP intro animations */
       .freelancer,
       #typewriter,
       .hero-content .description,
@@ -43,68 +43,27 @@
       }
 
       /* Research section typography */
-      .research-block {
-        margin-bottom: 2.5rem;
-      }
-      .research-block p {
-        margin-bottom: 0.75rem;
-        line-height: 1.7;
-      }
-      .research-item {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-      }
-      .research-item:last-child {
-        border-bottom: none;
-      }
-      .research-item .paper-title {
-        font-weight: 600;
-        margin-bottom: 0.3rem;
-      }
-      .research-item .paper-meta {
-        opacity: 0.7;
-        font-size: 0.92em;
-        margin-bottom: 0.3rem;
-      }
-      .research-item .paper-status {
-        opacity: 0.55;
-        font-size: 0.88em;
-        font-style: italic;
-      }
+      .research-block { margin-bottom: 2.5rem; }
+      .research-block p { margin-bottom: 0.75rem; line-height: 1.7; }
+      .research-item { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .research-item:last-child { border-bottom: none; }
+      .research-item .paper-title { font-weight: 600; margin-bottom: 0.3rem; }
+      .research-item .paper-meta { opacity: 0.7; font-size: 0.92em; margin-bottom: 0.3rem; }
+      .research-item .paper-status { opacity: 0.55; font-size: 0.88em; font-style: italic; }
 
       /* About social icons row */
-      .about-social {
-        display: flex;
-        gap: 1.2rem;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
-      }
-      .about-social a {
-        font-size: 1.3rem;
-        opacity: 0.75;
-        transition: opacity 0.2s;
-      }
-      .about-social a:hover {
-        opacity: 1;
-      }
+      .about-social { display: flex; gap: 1.2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+      .about-social a { font-size: 1.3rem; opacity: 0.75; transition: opacity 0.2s; }
+      .about-social a:hover { opacity: 1; }
 
       /* Teaching */
-      .teaching-item {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-      }
+      .teaching-item { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .teaching-item:last-child { border-bottom: none; }
       .teaching-item .role { font-weight: 600; margin-bottom: 0.25rem; }
       .teaching-item .inst { opacity: 0.7; font-size: 0.92em; }
 
       /* Code */
-      .code-item {
-        margin-bottom: 2rem;
-        padding-bottom: 2rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-      }
+      .code-item { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .code-item:last-child { border-bottom: none; }
       .code-item h5 { font-weight: 600; margin-bottom: 0.5rem; }
       .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
@@ -112,183 +71,68 @@
       /* Gallery carousel */
       .gallery-carousel { overflow: hidden; width: 100%; }
       .gallery-track { display: flex; flex-direction: row; will-change: transform; }
-      .gallery-slide {
-        flex: 0 0 80%; width: 80%; box-sizing: border-box;
-        padding: 0 10px; opacity: 0.3; transition: opacity 0.4s ease;
-      }
+      .gallery-slide { flex: 0 0 80%; width: 80%; box-sizing: border-box; padding: 0 10px; opacity: 0.3; transition: opacity 0.4s ease; }
       .gallery-slide.active { opacity: 1; }
       .gallery-slide:not(.active) { cursor: pointer; }
-      .video-wrapper {
-        position: relative; width: 100%; padding-bottom: 177.78%;
-        height: 0; overflow: hidden; border-radius: 4px;
-      }
-      .video-thumb {
-        position: absolute; inset: 0; background-size: cover;
-        background-position: center; cursor: pointer; z-index: 2;
-      }
-      .gallery-slide.active .video-thumb::after {
-        content: ''; position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%, -50%); width: 56px; height: 56px;
-        background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat;
-        border-radius: 50%; transition: background-color 0.2s;
-      }
+      .video-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 4px; }
+      .video-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; z-index: 2; }
+      .gallery-slide.active .video-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; transition: background-color 0.2s; }
       .gallery-slide.active .video-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
-      .video-wrapper iframe {
-        position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1;
-      }
-      .slide-overlay {
-        display: none; position: absolute; inset: 0; align-items: center;
-        justify-content: center; border-radius: 4px; z-index: 5;
-        font-size: 1.5rem; color: rgba(255,255,255,0); background: rgba(255,255,255,0);
-        transition: background 0.3s ease, color 0.3s ease;
-      }
+      .video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1; }
+      .slide-overlay { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; border-radius: 4px; z-index: 5; font-size: 1.5rem; color: rgba(255,255,255,0); background: rgba(255,255,255,0); transition: background 0.3s ease, color 0.3s ease; }
       .gallery-slide:not(.active) .slide-overlay { display: flex; }
-      .gallery-slide:not(.active):hover .slide-overlay {
-        background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9);
-      }
+      .gallery-slide:not(.active):hover .slide-overlay { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
       .gallery-slide:not(.active):hover { opacity: 0.65; }
-      .gallery-dots {
-        display: flex; justify-content: center; align-items: center;
-        gap: 10px; margin-top: 28px;
-      }
-      .gallery-dot {
-        width: 8px; height: 8px; border-radius: 50%;
-        background: rgba(255,255,255,0.25); cursor: pointer;
-        transition: background 0.3s, transform 0.3s;
-      }
+      .gallery-dots { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 28px; }
+      .gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.25); cursor: pointer; transition: background 0.3s, transform 0.3s; }
       .gallery-dot.active { background: #fff; transform: scale(1.25); }
 
-      /* ── Hero: match the bottom gap to the top gap ── */
-      section.hero .next-chapter {
-        padding-top: 60px !important;
-        padding-bottom: 20px !important;
-      }
+      /* Hero bottom gap */
+      section.hero .next-chapter { padding-top: 60px !important; padding-bottom: 20px !important; }
       @media (min-width: 1400px) {
-        section.hero .next-chapter {
-          padding-top: 130px !important;
-          padding-bottom: 90px !important;
-        }
-      }
-      /* ── Settings bar ── */
-      .settings-bar {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0 12px 0 8px;
-        border-left: 1px solid rgba(0,0,0,0.1);
-      }
-      .settings-options {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        max-width: 0;
-        overflow: hidden;
-        opacity: 0;
-        transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease;
-      }
-      .settings-options.open {
-        max-width: 200px;
-        opacity: 1;
-      }
-      .setting-swatch {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: 2px solid rgba(0,0,0,0.12);
-        cursor: pointer;
-        flex-shrink: 0;
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-      .setting-swatch:hover { opacity: 0.85; }
-      .grain-swatch {
-        background-image: radial-gradient(circle, #777 1px, transparent 1px),
-                          radial-gradient(circle, #777 1px, transparent 1px);
-        background-size: 4px 4px;
-        background-position: 0 0, 2px 2px;
-        background-color: #bbb;
-      }
-      .grain-swatch.active {
-        border-color: rgba(0,0,0,0.5);
-      }
-      .settings-gear-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 4px;
-        border: 2px solid rgba(0,0,0,0.3);
-        background: transparent;
-        color: rgb(var(--black));
-        font-size: 1rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 0.4s ease;
-        flex-shrink: 0;
-      }
-      .settings-gear-btn.open { transform: rotate(90deg); }
-      /* Square off hero buttons */
-      .hero .btn {
-        border-radius: 4px !important;
-      }
-      /* Equal-height cards in research swiper */
-      #research .service-swiper .swiper-wrapper {
-        align-items: stretch;
-      }
-      #research .service-swiper .swiper-slide {
-        height: auto;
-        display: flex;
-      }
-      #research .service-swiper .service-card {
-        height: 100%;
-        width: 100%;
-      }
-      /* Research working paper list items: block so text wraps naturally */
-      #research .service-list li {
-        display: block !important;
-      }
-      /* Clickable full card for working papers */
-      #research .service-card {
-        position: relative;
-      }
-      .card-full-link {
-        position: absolute;
-        inset: 0;
-        z-index: 10;
-        border-radius: inherit;
+        section.hero .next-chapter { padding-top: 130px !important; padding-bottom: 90px !important; }
       }
 
-      .research-sub-heading {
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        font-weight: 600;
-        opacity: 0.55;
-        margin-bottom: 1.25rem;
-        margin-top: 0;
-      }
+      /* Settings bar */
+      .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-left: 1px solid rgba(0,0,0,0.1); }
+      .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
+      .settings-options.open { max-width: 200px; opacity: 1; }
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s; }
+      .setting-swatch:hover { opacity: 0.85; }
+      .grain-swatch { background-image: radial-gradient(circle, #777 1px, transparent 1px), radial-gradient(circle, #777 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: #bbb; }
+      .grain-swatch.active { border-color: rgba(0,0,0,0.5); }
+      .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.3); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
+      .settings-gear-btn.open { transform: rotate(90deg); }
+
+      /* Square hero buttons */
+      .hero .btn { border-radius: 4px !important; }
+
+      /* Equal-height cards in research swiper */
+      #research .service-swiper .swiper-wrapper { align-items: stretch; }
+      #research .service-swiper .swiper-slide { height: auto; display: flex; }
+      #research .service-swiper .service-card { height: 100%; width: 100%; }
+      #research .service-list li { display: block !important; }
+      #research .service-card { position: relative; }
+      .card-full-link { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
+
+      .research-sub-heading { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; opacity: 0.55; margin-bottom: 1.25rem; margin-top: 0; }
 
       /* Left bar social icon borders */
-      .left-bar ul li a {
-        border: 2px solid rgba(0,0,0,0.35);
-        border-radius: 4px;
-      }
+      .left-bar ul li a { border: 2px solid rgba(0,0,0,0.35); border-radius: 4px; }
 
-      /* New about button */
-      .about-new-btn {
-        border-radius: 4px !important;
-        transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease !important;
-      }
-      .about-new-btn:hover {
-        background-color: #000 !important;
-        border-color: #000 !important;
-        color: #fff !important;
-      }
+      /* About button */
+      .about-new-btn { border-radius: 4px !important; transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease !important; }
+      .about-new-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
+
+      /* View All Code link */
+      .view-all-code { display: inline-flex; align-items: center; gap: 20px; margin-top: 2.5rem; margin-bottom: 0.5rem; text-decoration: none; color: rgb(var(--black)); font-weight: 500; font-size: 1.1rem; }
+      .view-all-code .vac-line { display: block; width: 100px; height: 1px; background: currentColor; flex-shrink: 0; }
+      .view-all-code .vac-arrow { width: 52px; height: 52px; border-radius: 50%; border: 1px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: background 0.3s, color 0.3s; flex-shrink: 0; position: relative; }
+      .view-all-code:hover .vac-arrow { background: rgb(var(--black)); color: rgb(var(--primary)); }
     </style>
   </head>
   <body>
     <div id="grain"></div>
-    <!-- Hidden stub: app.js queries .color-switcher-btn on load; null throws and kills all JS -->
     <div class="color-switcher" style="display:none">
       <button class="color-switcher-btn"></button>
     </div>
@@ -308,22 +152,13 @@
       </div>
     </header>
 
-    <!-- left bar -->
     <div class="left-bar">
       <img src="./assets/images/icon.png" alt="" />
       <ul>
-        <li>
-          <a href="mailto:omar.kaykhusraw@gmail.com"><i class="ph ph-envelope"></i></a>
-        </li>
-        <li>
-          <a href="https://twitter.com/kaykhusraw" target="_blank"><i class="ph ph-twitter-logo"></i></a>
-        </li>
-        <li>
-          <a href="https://www.linkedin.com/in/stochastic" target="_blank"><i class="ph ph-linkedin-logo"></i></a>
-        </li>
-        <li>
-          <a href="https://github.com/kaykhosrow" target="_blank"><i class="ph ph-github-logo"></i></a>
-        </li>
+        <li><a href="mailto:omar.kaykhusraw@gmail.com"><i class="ph ph-envelope"></i></a></li>
+        <li><a href="https://twitter.com/kaykhusraw" target="_blank"><i class="ph ph-twitter-logo"></i></a></li>
+        <li><a href="https://www.linkedin.com/in/stochastic" target="_blank"><i class="ph ph-linkedin-logo"></i></a></li>
+        <li><a href="https://github.com/kaykhosrow" target="_blank"><i class="ph ph-github-logo"></i></a></li>
       </ul>
     </div>
 
@@ -343,7 +178,6 @@
                 <a href="#research" class="btn contact-btn text-capitalize btn-outline-secondary">Research</a>
               </div>
             </div>
-
             <div class="col-12">
               <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter">
                 <span class="page">01/06</span>
@@ -361,29 +195,14 @@
           </div>
           <img src="./assets/images/logo.png" class="d-xl-none mb-3" alt="" />
           <ul>
-            <li class="nav-link">
-              <a href="#top" class="active"><span class="text">top</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#about_me"><span class="text">about</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#research"><span class="text">research</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#teaching"><span class="text">teaching</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#code"><span class="text">code</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#gallery"><span class="text">gallery</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#contact"><span class="text">contact</span></a>
-            </li>
+            <li class="nav-link"><a href="#top" class="active"><span class="text">top</span></a></li>
+            <li class="nav-link"><a href="#about_me"><span class="text">about</span></a></li>
+            <li class="nav-link"><a href="#research"><span class="text">research</span></a></li>
+            <li class="nav-link"><a href="#teaching"><span class="text">teaching</span></a></li>
+            <li class="nav-link"><a href="#code"><span class="text">&lt;/Code&gt;</span></a></li>
+            <li class="nav-link"><a href="#gallery"><span class="text">gallery</span></a></li>
+            <li class="nav-link"><a href="#contact"><span class="text">contact</span></a></li>
           </ul>
-          <!-- Settings inline with nav bar, right end, desktop only -->
           <div class="settings-bar d-none d-xl-flex">
             <div class="settings-options" id="settingsOptions">
               <button style="background-color:#ffdb67" class="color-btn setting-swatch" data-color="255, 219, 103"></button>
@@ -411,9 +230,7 @@
                   Welcome to my personal site. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a href="https://www.kcl.ac.uk/" target="_blank">King's College London</a>. My thesis focused on the natural rate of interest. Prior to my doctorate, I read Economics at the <a href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a href="https://london.ac.uk/" target="_blank">University of London</a>. Click below to see my abridged resume:
                 </p>
                 <div class="d-flex gap-3 mt-4 flex-wrap">
-                  <a href="#" class="btn btn-outline-secondary about-new-btn">
-                    Curriculum Vitae
-                  </a>
+                  <a href="#" class="btn btn-outline-secondary about-new-btn">Curriculum Vitae</a>
                 </div>
               </div>
             </div>
@@ -442,7 +259,6 @@
             <h2>Research</h2>
           </div>
 
-          <!-- Publication subsection -->
           <h5 class="research-sub-heading">Publication</h5>
           <div class="d-flex flex-column gap-4 mb-5">
             <div class="blog-card" style="padding:24px; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
@@ -457,12 +273,10 @@
             </div>
           </div>
 
-          <!-- Working Papers subsection -->
           <h5 class="research-sub-heading">Working Papers</h5>
           <div dir="ltr" class="swiper service-swiper">
             <div class="swiper-wrapper">
 
-              <!-- 01 -->
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <a href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank" class="card-full-link" aria-label="Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions"></a>
@@ -483,7 +297,6 @@
                 </div>
               </div>
 
-              <!-- 02 -->
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <a href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank" class="card-full-link" aria-label="Measuring the Market Perceived Neutral Rate"></a>
@@ -504,7 +317,6 @@
                 </div>
               </div>
 
-              <!-- 03 -->
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <div class="card-inner"></div>
@@ -524,7 +336,6 @@
                 </div>
               </div>
 
-              <!-- 04 -->
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <a href="https://kaykhosrow.github.io/CK2024.pdf" target="_blank" class="card-full-link" aria-label="Falling Stars in Small Open Economies"></a>
@@ -593,7 +404,7 @@
 
         <!-- Code -->
         <section id="code" class="about section container">
-          <span class="section-title-overlay-text">Code</span>
+          <span class="section-title-overlay-text">&lt;/Code&gt;</span>
           <div class="section-title text-capitalize">
             <h4>Tools &amp; implementations</h4>
             <h2>&lt;/Code&gt;</h2>
@@ -617,11 +428,14 @@
             <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
           </div>
 
-          <div class="code-item">
-            <h5>Gaussian Error Propagation</h5>
-            <p>This function determines the uncertainty of any mathematical expression containing<br> estimated variables with uncertainties by taking partial derivatives with respect to each<br> variable multiplied by their uncertainty and added in quadrature.</p>
-            <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
-          </div>
+          <!-- View All link -->
+          <a href="code.html" class="view-all-code">
+            <span>View All &lt;/Code&gt;</span>
+            <span class="vac-line"></span>
+            <span class="vac-arrow">
+              <i class="ph ph-arrow-right"></i>
+            </span>
+          </a>
 
           <div class="col-12">
             <a href="#gallery" class="d-flex gap-4 align-items-center next-chapter">
@@ -732,8 +546,8 @@
               allSlides.forEach(function(s, i) {
                 var ov = s.querySelector('.slide-overlay');
                 if (!ov) return;
-                if (i < realIndex + 1) ov.textContent = '←';
-                else if (i > realIndex + 1) ov.textContent = '→';
+                if (i < realIndex + 1) ov.textContent = '\u2190';
+                else if (i > realIndex + 1) ov.textContent = '\u2192';
                 else ov.textContent = '';
               });
             }
@@ -814,19 +628,9 @@
               </div>
               <div class="col-12">
                 <button type="submit" id="mail-submit-btn" class="submit-btn position-relative">
-                  <div class="waves-top-md">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
+                  <div class="waves-top-md"><span></span><span></span><span></span><span></span></div>
                   submit
-                  <div class="waves-bottom-md">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
+                  <div class="waves-bottom-md"><span></span><span></span><span></span><span></span></div>
                 </button>
               </div>
             </div>
@@ -851,7 +655,6 @@
           });
         </script>
 
-        <!-- Footer -->
         <footer>
           <div class="container">
             <div class="row">
@@ -865,25 +668,21 @@
       </div>
     </main>
 
-    <!-- Hidden elements required by app.js -->
     <input type="checkbox" id="grained" class="grained-checkbox" style="display:none" />
     <button class="ltr" style="display:none" aria-hidden="true"></button>
     <button class="rtl" style="display:none" aria-hidden="true"></button>
 
     <script>
-      // Gear toggle
       document.getElementById('settingsGearBtn').addEventListener('click', function() {
         this.classList.toggle('open');
         document.getElementById('settingsOptions').classList.toggle('open');
       });
-      // Grain button → drives the hidden checkbox that app.js listens to
       document.getElementById('grainToggleBtn').addEventListener('click', function() {
         var cb = document.querySelector('.grained-checkbox');
         cb.checked = !cb.checked;
         cb.dispatchEvent(new Event('change'));
         this.classList.toggle('active');
       });
-      // Stop autoplay on the research swiper only
       document.addEventListener('DOMContentLoaded', function() {
         var researchSwiper = document.querySelector('#research .service-swiper');
         if (researchSwiper && researchSwiper.swiper) {
