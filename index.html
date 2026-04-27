@@ -150,16 +150,19 @@
       }
       .gallery-dot.active { background: #fff; transform: scale(1.25); }
 
-      /* ── Hero: strip excess bottom padding so next-chapter sits
-         at the same distance from the bottom edge as the name
-         sits from the top edge ── */
-      section.hero {
-        padding-bottom: 0 !important;
-      }
+      /* ── Hero: match the bottom gap to the top gap.
+         Top gap = hero padding-top (20px) + hero-content padding-top (40px) = 60px.
+         Next Chapter's original padding-top was 120px — replaced with 60px.
+         At 1400px+ the hero padding-top becomes 90px → total top gap = 130px. ── */
       section.hero .next-chapter {
-        padding-bottom: 0;
-        margin-top: 0;
-        margin-bottom: 0;
+        padding-top: 60px !important;
+        padding-bottom: 20px !important;
+      }
+      @media (min-width: 1400px) {
+        section.hero .next-chapter {
+          padding-top: 130px !important;
+          padding-bottom: 90px !important;
+        }
       }
     </style>
   </head>
