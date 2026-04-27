@@ -1,0 +1,13 @@
+// mixins
+
+@mixin min-width($breakpoint) {
+  $breakpoints: map-get($grid-breakpoints, $breakpoint);
+
+  @if $breakpoints {
+    @media (min-width: $breakpoints) {
+      @content;
+    }
+  } @else {
+    @warn "No valid breakpoint found for `#{$breakpoint}`. Valid breakpoints are: #{map-keys($grid-breakpoints)}.";
+  }
+}

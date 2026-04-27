@@ -1,0 +1,32 @@
+$black: #000000;
+$yellow: #ffdb67;
+$white: #ffffff;
+
+$btn-border-radius: 50px;
+$btn-padding-x: 16px;
+$btn-padding-y: 10px;
+$btn-font-size: 14px;
+$btn-font-weight: 500;
+
+$primary: $yellow;
+$secondary: #000000;
+
+// gutters
+
+$spacer: 1rem;
+$gutters: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4.5,
+  7: $spacer * 6,
+  8: $spacer * 7.5,
+  9: $spacer * 9,
+  10: $spacer * 10,
+);
+
+/* libs */
+@import "bootstrap/scss/bootstrap";
