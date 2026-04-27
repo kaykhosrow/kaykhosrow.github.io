@@ -42,6 +42,19 @@
 </style>
 
 <style>
+#header h1 a {
+  color: #ffffff;
+  text-decoration: none;
+  -webkit-text-stroke: 2px transparent;
+  transition: color 0.45s ease, -webkit-text-stroke-color 0.45s ease;
+}
+#header h1 a:hover {
+  color: transparent;
+  -webkit-text-stroke: 2px #ffffff;
+}
+</style>
+
+<style>
 /* ── Gallery ── */
 
 .gallery-carousel {
@@ -166,11 +179,10 @@
 			<header id="header">
 				<div class="content">
 					<div class="inner">
-						<h1>OMAR KAYKHUSRAW</h1>
+						<h1><a href="#about">OMAR KAYKHUSRAW</a></h1>
 						<p>Economist</p>
 						<nav>
 							<ul>
-								<li><a href="#about">About</a></li>
 								<li><a href="#research">Research</a></li>
 								<li><a href="#teaching">Teaching</a></li>
 								<li><a href="#conferences">Conferences</a></li>
@@ -378,16 +390,13 @@
 
 							if (targetReal < 0) {
 								// Backward wrap: first → last
-								// Force clone-first (far right) to full opacity silently
 								var cloneFirst = allSlides[total + 1];
 								cloneFirst.style.transition = 'none';
 								cloneFirst.style.opacity    = '1';
-								// Jump silently to clone-first
 								track.style.transition = 'none';
 								track.style.transform  = 'translateX(' + centreOffset(total + 1) + 'px)';
 								requestAnimationFrame(function () {
 									requestAnimationFrame(function () {
-										// Restore clone transition, switch active to real-last, animate
 										cloneFirst.style.transition = '';
 										cloneFirst.style.opacity    = '';
 										current = total - 1;
@@ -403,16 +412,13 @@
 
 							} else if (targetReal >= total) {
 								// Forward wrap: last → first
-								// Force clone-last (far left) to full opacity silently
 								var cloneLast = allSlides[0];
 								cloneLast.style.transition = 'none';
 								cloneLast.style.opacity    = '1';
-								// Jump silently to clone-last
 								track.style.transition = 'none';
 								track.style.transform  = 'translateX(' + centreOffset(0) + 'px)';
 								requestAnimationFrame(function () {
 									requestAnimationFrame(function () {
-										// Restore clone transition, switch active to real-first, animate
 										cloneLast.style.transition = '';
 										cloneLast.style.opacity    = '';
 										current = 0;
