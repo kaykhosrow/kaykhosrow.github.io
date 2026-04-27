@@ -164,30 +164,65 @@
           padding-bottom: 90px !important;
         }
       }
-      /* ── Color switcher: gear stretches to full panel height (flush join),
-         pallets auto-width to fit content exactly, no extra right space. ── */
-      .color-switcher {
-        display: flex !important;
-        align-items: stretch !important;
-        transform: translate(150px, -50%) !important;
+      /* ── Settings bar: lives inside the sticky nav bar, right end ── */
+      .settings-bar {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 12px 0 8px;
+        border-left: 1px solid rgba(0,0,0,0.1);
       }
-      .color-switcher.opened {
-        transform: translate(0, -50%) !important;
+      .settings-options {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        max-width: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease;
       }
-      .color-switcher .pallets {
-        width: auto !important;
-        padding: 14px !important;
-        border-radius: 8px !important;
+      .settings-options.open {
+        max-width: 200px;
+        opacity: 1;
       }
-      .color-switcher .color-switcher-btn {
-        border-radius: 8px 0 0 8px !important;
-        background-color: rgb(var(--white)) !important;
-        width: 50px !important;
-        height: auto !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+      .setting-swatch {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid rgba(0,0,0,0.12);
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: transform 0.2s, box-shadow 0.2s;
       }
+      .setting-swatch:hover { transform: scale(1.15); }
+      .grain-swatch {
+        background-image: radial-gradient(circle, #777 1px, transparent 1px),
+                          radial-gradient(circle, #777 1px, transparent 1px);
+        background-size: 4px 4px;
+        background-position: 0 0, 2px 2px;
+        background-color: #bbb;
+      }
+      .grain-swatch.active {
+        border-color: rgba(0,0,0,0.5);
+        box-shadow: 0 0 0 2px rgba(0,0,0,0.25);
+      }
+      .settings-gear-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        border: 1px solid rgba(0,0,0,0.1);
+        background: transparent;
+        color: rgb(var(--black));
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.4s ease;
+        flex-shrink: 0;
+      }
+      .settings-gear-btn.open { transform: rotate(60deg); }
     </style>
   </head>
   <body>
@@ -283,6 +318,17 @@
               <a href="#gallery"><span class="text">gallery</span></a>
             </li>
           </ul>
+          <!-- Settings inline with nav bar, right end, desktop only -->
+          <div class="settings-bar d-none d-xl-flex">
+            <div class="settings-options" id="settingsOptions">
+              <button style="background-color:#ffdb67" class="color-btn setting-swatch" data-color="255, 219, 103"></button>
+              <button style="background-color:#eee8aa" class="color-btn setting-swatch" data-color="238, 232, 170"></button>
+              <button class="grain-swatch setting-swatch" id="grainToggleBtn" title="Toggle Grain"></button>
+            </div>
+            <button class="settings-gear-btn" id="settingsGearBtn">
+              <i class="ph ph-gear-six"></i>
+            </button>
+          </div>
         </nav>
         <div class="nav-overlay d-xl-none"></div>
 
@@ -632,25 +678,25 @@
       </div>
     </main>
 
-    <!-- Color switcher -->
-    <div class="color-switcher">
-      <button class="color-switcher-btn">
-        <i class="ph ph-gear-six"></i>
-      </button>
-      <div class="pallets d-flex flex-column gap-3">
-        <div class="d-flex gap-3">
-          <button style="background-color: #ffdb67" class="color-btn" data-color="255, 219, 103"></button>
-          <button style="background-color: #eee8aa" class="color-btn" data-color="238, 232, 170"></button>
-        </div>
-        <div class="d-flex align-items-center gap-3">
-          <label for="grained" style="font-size:0.8rem;letter-spacing:0.05em;">GRAIN</label>
-          <input type="checkbox" id="grained" class="grained-checkbox" />
-        </div>
-      </div>
-      <!-- LTR + RTL hidden but present so app.js doesn't throw -->
-      <button class="ltr" style="display:none" aria-hidden="true"></button>
-      <button class="rtl" style="display:none" aria-hidden="true"></button>
-    </div>
+    <!-- Hidden elements required by app.js -->
+    <input type="checkbox" id="grained" class="grained-checkbox" style="display:none" />
+    <button class="ltr" style="display:none" aria-hidden="true"></button>
+    <button class="rtl" style="display:none" aria-hidden="true"></button>
+
+    <script>
+      // Gear toggle
+      document.getElementById('settingsGearBtn').addEventListener('click', function() {
+        this.classList.toggle('open');
+        document.getElementById('settingsOptions').classList.toggle('open');
+      });
+      // Grain button → drives the hidden checkbox that app.js listens to
+      document.getElementById('grainToggleBtn').addEventListener('click', function() {
+        var cb = document.querySelector('.grained-checkbox');
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+        this.classList.toggle('active');
+      });
+    </script>
 
   </body>
 </html>
