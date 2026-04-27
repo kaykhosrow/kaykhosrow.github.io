@@ -164,10 +164,32 @@
           padding-bottom: 90px !important;
         }
       }
+      /* ── Restructured color switcher: gear integrated into panel.
+         Panel width 160px, gear 40px. Closed: translate(120px) so gear peeks.
+         Opened: translate(0) shows full panel. ── */
+      .color-switcher {
+        display: block !important;
+        transform: translate(120px, -50%) !important;
+      }
+      .color-switcher.opened {
+        transform: translate(0, -50%) !important;
+      }
+      .color-switcher .pallets {
+        width: 160px !important;
+        border-radius: 8px !important;
+        padding: 14px 16px !important;
+      }
+      .color-switcher .color-switcher-btn {
+        border-radius: 6px !important;
+        width: 40px !important;
+        height: 40px !important;
+        background: transparent !important;
+        flex-shrink: 0;
+      }
     </style>
   </head>
   <body>
-    <div id="grain" class="grain"></div>
+    <div id="grain"></div>
 
     <header class="header">
       <div class="container d-flex align-items-center justify-content-between">
@@ -610,22 +632,24 @@
 
     <!-- Color switcher -->
     <div class="color-switcher">
-      <button class="color-switcher-btn">
-        <i class="ph ph-gear-six"></i>
-      </button>
-      <div class="pallets d-flex flex-column align-items-center gap-4 justify-content-center">
-        <div class="d-flex gap-3">
-          <button style="background-color: #ffdb67" class="color-btn" data-color="255, 219, 103"></button>
-          <button style="background-color: #eee8aa" class="color-btn" data-color="238, 232, 170"></button>
-        </div>
-        <!-- LTR + RTL hidden but present so app.js doesn't throw a null error -->
-        <button class="ltr" style="display:none" aria-hidden="true"></button>
-        <button class="rtl" style="display:none" aria-hidden="true"></button>
+      <div class="pallets d-flex flex-column gap-3">
         <div class="d-flex align-items-center gap-3">
-          <label for="grained">Grained BG</label>
-          <input type="checkbox" id="grained" class="grained-checkbox" checked />
+          <button class="color-switcher-btn">
+            <i class="ph ph-gear-six"></i>
+          </button>
+          <div class="d-flex gap-2">
+            <button style="background-color: #ffdb67" class="color-btn" data-color="255, 219, 103"></button>
+            <button style="background-color: #eee8aa" class="color-btn" data-color="238, 232, 170"></button>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <label for="grained" style="font-size:0.8rem;letter-spacing:0.05em;">GRAIN</label>
+          <input type="checkbox" id="grained" class="grained-checkbox" />
         </div>
       </div>
+      <!-- LTR + RTL hidden but present so app.js doesn't throw -->
+      <button class="ltr" style="display:none" aria-hidden="true"></button>
+      <button class="rtl" style="display:none" aria-hidden="true"></button>
     </div>
 
   </body>
