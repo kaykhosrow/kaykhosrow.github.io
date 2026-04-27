@@ -2,224 +2,121 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon" />
     <title>Omar Kaykhusraw</title>
     <script defer src="assets/js/app.js"></script>
-    <link href="assets/css/index.css" rel="stylesheet">
+    <link href="assets/css/index.css" rel="stylesheet" />
+
+    <!-- Custom styles carried over from old site -->
     <style>
-      /* Zoom fix */
-      html {
-        zoom: 1;
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%;
-      }
-
-      /* Disable GSAP intro animations — prevents hero content staying invisible */
-      .freelancer,
-      #typewriter,
-      .hero-content .description,
-      .hero-content .d-flex,
-      .img-wrapper,
-      .hero-img {
-        opacity: 1 !important;
-        transform: none !important;
-        animation: none !important;
-        transition: none !important;
-      }
-
-      /* Typewriter overflow fix */
-      #typewriter {
-        overflow: visible !important;
-        white-space: nowrap;
-      }
-
-      /* Research section typography */
-      .research-block {
-        margin-bottom: 2.5rem;
-      }
-      .research-block p {
-        margin-bottom: 0.75rem;
-        line-height: 1.7;
-      }
-      .research-item {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-      }
-      .research-item:last-child {
-        border-bottom: none;
-      }
-      .research-item .paper-title {
-        font-weight: 600;
-        margin-bottom: 0.3rem;
-      }
-      .research-item .paper-meta {
-        opacity: 0.7;
-        font-size: 0.92em;
-        margin-bottom: 0.3rem;
-      }
-      .research-item .paper-status {
-        opacity: 0.55;
-        font-size: 0.88em;
-        font-style: italic;
-      }
-
-      /* About social icons row */
-      .about-social {
-        display: flex;
-        gap: 1.2rem;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
-      }
-      .about-social a {
-        font-size: 1.3rem;
-        opacity: 0.75;
-        transition: opacity 0.2s;
-      }
-      .about-social a:hover {
-        opacity: 1;
-      }
-
-      /* Hero full-bleed layout */
-      .hero-fullbleed {
-        display: flex !important;
-        align-items: stretch !important;
-        min-height: 100vh !important;
-        padding: 0 !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        overflow: hidden;
-      }
-      .hero-left {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 4rem 5rem;
+      .trans {
+        color: inherit;
         position: relative;
+        text-decoration: none;
+        transition: color .5s ease-out;
       }
-      .hero-next {
+      .trans:after {
+        border-radius: 1em;
+        border-top: .1em solid currentColor;
+        content: "";
         position: absolute;
-        bottom: 2.5rem;
-        left: 5rem;
+        right: 100%;
+        bottom: -.15em;
+        left: 0;
+        transition: right .5s cubic-bezier(0, .5, 0, 1), border-color .5s ease-out;
       }
-      .hero-right {
-        width: 42%;
-        flex-shrink: 0;
-        display: flex;
-        align-items: stretch;
-      }
-      .hero-bar {
-        width: 6px;
-        background: #000;
-        flex-shrink: 0;
-      }
-      .hero-panel-img {
-        flex: 1;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center top;
-        display: block;
-        border-radius: 0 !important;
-      }
+      .trans:hover { text-decoration: none; }
+      .trans:hover:after { right: 0; }
 
-      /* Move gear to top-right over the image */
-      .color-switcher {
-        position: fixed !important;
-        top: 1.2rem !important;
-        right: 1.2rem !important;
-        bottom: auto !important;
-        left: auto !important;
+      .citation-button {
+        display: inline-block;
+        text-decoration: none;
+        color: inherit;
+        padding: 6px 0;
+        background-color: transparent;
+        position: relative;
+        font: inherit;
+        overflow: hidden;
+        transition: opacity 0.3s ease-out;
       }
+      .citation-button:hover { opacity: 0.75; }
 
-      /* About photo */
-      .about-photo {
-        width: 100%;
-        max-width: 300px;
-        height: auto;
-        aspect-ratio: 2 / 3;
-        border-radius: 12px;
-        object-fit: cover;
-        object-position: center top;
-        margin-bottom: 1.5rem;
-        display: block;
-      }
-
-      /* Teaching */
-      .teaching-item {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-      }
-      .teaching-item:last-child { border-bottom: none; }
-      .teaching-item .role { font-weight: 600; margin-bottom: 0.25rem; }
-      .teaching-item .inst { opacity: 0.7; font-size: 0.92em; }
-
-      /* Code */
-      .code-item {
-        margin-bottom: 2rem;
-        padding-bottom: 2rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-      }
-      .code-item:last-child { border-bottom: none; }
-      .code-item h5 { font-weight: 600; margin-bottom: 0.5rem; }
-      .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
-
-      /* Gallery carousel */
+      /* ── Gallery carousel ── */
       .gallery-carousel { overflow: hidden; width: 100%; }
       .gallery-track { display: flex; flex-direction: row; will-change: transform; }
       .gallery-slide {
-        flex: 0 0 80%; width: 80%; box-sizing: border-box;
-        padding: 0 10px; opacity: 0.3; transition: opacity 0.4s ease;
+        flex: 0 0 80%; width: 80%;
+        box-sizing: border-box; padding: 0 10px;
+        opacity: 0.3; transition: opacity 0.4s ease;
       }
       .gallery-slide.active { opacity: 1; }
       .gallery-slide:not(.active) { cursor: pointer; }
       .video-wrapper {
-        position: relative; width: 100%; padding-bottom: 177.78%;
-        height: 0; overflow: hidden; border-radius: 4px;
+        position: relative; width: 100%;
+        padding-bottom: 177.78%; height: 0;
+        overflow: hidden; border-radius: 4px;
       }
       .video-thumb {
-        position: absolute; inset: 0; background-size: cover;
-        background-position: center; cursor: pointer; z-index: 2;
+        position: absolute; inset: 0;
+        background-size: cover; background-position: center;
+        cursor: pointer; z-index: 2;
       }
       .gallery-slide.active .video-thumb::after {
-        content: ''; position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%, -50%); width: 56px; height: 56px;
+        content: '';
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 56px; height: 56px;
         background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat;
-        border-radius: 50%; transition: background-color 0.2s;
+        border-radius: 50%;
+        transition: background-color 0.2s;
       }
       .gallery-slide.active .video-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
       .video-wrapper iframe {
-        position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1;
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        border: 0; z-index: 1;
       }
       .slide-overlay {
-        display: none; position: absolute; inset: 0; align-items: center;
-        justify-content: center; border-radius: 4px; z-index: 5;
-        font-size: 1.5rem; color: rgba(255,255,255,0); background: rgba(255,255,255,0);
+        display: none; position: absolute; inset: 0;
+        align-items: center; justify-content: center;
+        border-radius: 4px; z-index: 5;
+        font-size: 1.5rem;
+        color: rgba(255,255,255,0);
+        background: rgba(255,255,255,0);
         transition: background 0.3s ease, color 0.3s ease;
       }
       .gallery-slide:not(.active) .slide-overlay { display: flex; }
       .gallery-slide:not(.active):hover .slide-overlay {
-        background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9);
+        background: rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.9);
       }
       .gallery-slide:not(.active):hover { opacity: 0.65; }
       .gallery-dots {
-        display: flex; justify-content: center; align-items: center;
-        gap: 10px; margin-top: 28px;
+        display: flex; justify-content: center;
+        align-items: center; gap: 10px; margin-top: 28px;
       }
       .gallery-dot {
         width: 8px; height: 8px; border-radius: 50%;
-        background: rgba(255,255,255,0.25); cursor: pointer;
-        transition: background 0.3s, transform 0.3s;
+        background: rgba(255,255,255,0.25);
+        cursor: pointer; transition: background 0.3s, transform 0.3s;
       }
       .gallery-dot.active { background: #fff; transform: scale(1.25); }
+
+      /* Research / paper entries */
+      .paper-entry { margin-bottom: 1.5rem; line-height: 1.7; }
+      .paper-entry .paper-status {
+        font-size: 0.82rem;
+        opacity: 0.65;
+        display: block;
+        margin-top: 0.25rem;
+      }
     </style>
   </head>
   <body>
     <div id="grain"></div>
 
+    <!-- header (mobile only) -->
     <header class="header">
       <div class="container d-flex align-items-center justify-content-between">
         <a href="index.html" class="d-xl-none">
@@ -235,13 +132,10 @@
       </div>
     </header>
 
-    <!-- left bar -->
+    <!-- left bar social icons -->
     <div class="left-bar">
       <img src="./assets/images/icon.png" alt="" />
       <ul>
-        <li>
-          <a href="mailto:omar.kaykhusraw@gmail.com"><i class="ph ph-envelope"></i></a>
-        </li>
         <li>
           <a href="https://twitter.com/kaykhusraw" target="_blank"><i class="ph ph-twitter-logo"></i></a>
         </li>
@@ -251,38 +145,58 @@
         <li>
           <a href="https://github.com/kaykhosrow" target="_blank"><i class="ph ph-github-logo"></i></a>
         </li>
+        <li>
+          <a href="https://medium.com/@kaykhusraw" target="_blank"><i class="ph ph-medium-logo"></i></a>
+        </li>
       </ul>
     </div>
 
+    <div class="email-icon">
+      <a href="mailto:omar.kaykhusraw@gmail.com">
+        <i class="ph ph-envelope"></i>
+      </a>
+    </div>
 
+    <!-- main content -->
     <main>
       <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
 
-        <!-- Hero -->
-        <section id="top" class="hero hero-fullbleed">
-          <div class="hero-left">
-            <div class="hero-content">
+        <!-- ── HERO ── -->
+        <section id="top" class="hero container">
+          <div class="row gx-4 align-items-center">
+            <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
-                <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
-                <h1 class="text-uppercase developer" id="typewriter"></h1>
+                <h4 class="text-uppercase freelancer">Economist</h4>
+                <h1 class="text-uppercase overflow-hidden developer" id="typewriter"></h1>
+                <p class="description">Empirical Macroeconomics &amp; Time Series Econometrics</p>
               </div>
               <div class="d-flex gap-4">
-                <a href="#about_me" class="btn work-btn text-capitalize btn-secondary">About me</a>
-                <a href="#research" class="btn contact-btn text-capitalize btn-outline-secondary">Research</a>
+                <a href="https://kaykhosrow.github.io/JMP.pdf" target="_blank" class="btn work-btn text-capitalize btn-secondary">Job Market Paper</a>
+                <a href="https://kaykhosrow.github.io/Abridged.pdf" target="_blank" class="btn contact-btn text-capitalize btn-outline-secondary">Curriculum Vitae</a>
               </div>
             </div>
-            <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter hero-next">
-              <span class="page">01/05</span>
-              <span class="next">Next Chapter</span>
-              <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
-            </a>
-          </div>
-          <div class="hero-right">
-            <div class="hero-bar"></div>
-            <img src="./images/profile.jpg" alt="Omar Kaykhusraw" class="hero-panel-img" />
+            <div class="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4">
+              <div class="img-wrapper">
+                <div class="waves-top">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <img class="img-fluid rounded-circle hero-img" src="./assets/images/hero.png" alt="Omar Kaykhusraw" />
+                <div class="waves-bottom">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter">
+                <span class="page">01/08</span>
+                <span class="next">Next Chapter</span>
+                <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
+              </a>
+            </div>
           </div>
         </section>
 
+        <!-- ── SIDEBAR NAV ── -->
         <nav class="navigation" id="navigation">
           <div class="scroll-down d-none d-xl-flex">
             <div class="scroll-anim"><span></span></div>
@@ -290,366 +204,408 @@
           </div>
           <img src="./assets/images/logo.png" class="d-xl-none mb-3" alt="" />
           <ul>
-            <li class="nav-link">
-              <a href="#top" class="active"><span class="text">top</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#about_me"><span class="text">about me</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#research"><span class="text">research</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#teaching"><span class="text">teaching</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#code"><span class="text">code</span></a>
-            </li>
-            <li class="nav-link">
-              <a href="#gallery"><span class="text">gallery</span></a>
-            </li>
+            <li class="nav-link"><a href="#top" class="active"><span class="text">top</span></a></li>
+            <li class="nav-link"><a href="#about_me"><span class="text">about</span></a></li>
+            <li class="nav-link"><a href="#research"><span class="text">research</span></a></li>
+            <li class="nav-link"><a href="#teaching"><span class="text">teaching</span></a></li>
+            <li class="nav-link"><a href="#conferences"><span class="text">conferences</span></a></li>
+            <li class="nav-link"><a href="#code"><span class="text">code</span></a></li>
+            <li class="nav-link"><a href="#gallery"><span class="text">gallery</span></a></li>
+            <li class="nav-link"><a href="#contact"><span class="text">contact</span></a></li>
           </ul>
         </nav>
         <div class="nav-overlay d-xl-none"></div>
 
-        <!-- About Me -->
+        <!-- ── ABOUT ── -->
         <section id="about_me" class="about section container">
           <span class="section-title-overlay-text">About me</span>
           <div class="section-title text-capitalize">
             <h4>Some words about me</h4>
-            <h2>know me more</h2>
+            <h2>Know me more</h2>
           </div>
-          <div class="row mb-4 mb-lg-5 align-items-start">
-            <div class="col-12 about-desc">
-
+          <div class="row mb-4 mb-lg-5 align-items-center">
+            <div class="col-lg-7 col-xl-8 about-desc">
+              <h2>I'm Omar Kaykhusraw, an Economist</h2>
               <p class="desc">
-                Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused on the natural rate of interest. Prior to my doctorate, I read Economics at the <a href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a href="https://london.ac.uk/" target="_blank">University of London</a>.
+                Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a class="trans" href="https://www.kcl.ac.uk/" target="_blank">King's College London</a>, where my thesis focused on the natural rate of interest. Prior to my doctorate, I read Economics at the <a class="trans" href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a class="trans" href="https://london.ac.uk/" target="_blank">University of London</a>. I enjoy studying the game of chess, formerly playing for the Cambridge University Chess Club.
               </p>
-
+              <div class="row contact">
+                <div class="col-sm-4">
+                  <p>Email:</p>
+                  <a href="mailto:omar.kaykhusraw@gmail.com">omar.kaykhusraw@gmail.com</a>
+                </div>
+                <div class="col-sm-4">
+                  <p>Affiliation:</p>
+                  <span>Northeastern University</span>
+                </div>
+                <div class="col-sm-4">
+                  <p>Field:</p>
+                  <span>Macroeconomics</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5 col-xl-4">
+              <div class="experience-card">
+                <div class="card-inner"></div>
+                <div>
+                  <div class="numbers">
+                    <span class="number-outline-one">4</span>
+                    <span class="number-outline-two">4</span>
+                    <span class="number-main">4</span>
+                  </div>
+                  <p>Publications &amp; Working Papers</p>
+                </div>
+              </div>
             </div>
           </div>
           <div class="col-12">
             <a href="#research" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">02/05</span>
+              <span class="page">02/08</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
           </div>
         </section>
 
-        <!-- Research -->
-        <section id="research" class="about section container">
+        <!-- ── RESEARCH ── -->
+        <section id="research" class="experience section position-relative container">
           <span class="section-title-overlay-text">Research</span>
           <div class="section-title text-capitalize">
-            <h4>Academic work</h4>
-            <h2>Research</h2>
+            <h4>Academic output</h4>
+            <h2>My Research</h2>
           </div>
+          <div class="row pb-60">
+            <div class="col-lg-10 col-xl-9">
 
-          <!-- Publications -->
-          <div class="research-block">
-            <h4 style="text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.85rem;">Publications</h4>
-            <div class="research-item">
-              <p class="paper-title">
-                <a href="https://kaykhosrow.github.io/K2024.pdf" target="_blank">
-                  Longer-run equilibrium interest rates: evidence from the United Kingdom
-                </a>
-              </p>
-              <p class="paper-meta"><em>Economica</em>, 92(366): 457–482, 2024.</p>
+              <div class="experience-wrapper d-flex flex-column">
+
+                <div class="experience-item">
+                  <h5>Publications</h5>
+                  <div class="paper-entry">
+                    <a href="https://kaykhosrow.github.io/K2024.pdf" target="_blank" class="citation-button">
+                      Kaykhusraw, O. (2024) 'Longer-run equilibrium interest rates: evidence from the United Kingdom', <em>Economica</em>, 92(366): 457–482.
+                    </a>
+                  </div>
+                </div>
+
+                <div class="experience-item">
+                  <h5>Working Papers</h5>
+
+                  <div class="paper-entry">
+                    <a href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank" class="citation-button">
+                      Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions
+                    </a>
+                    <br />joint with Georgios Chortareas and George Kapetanios.
+                    <span class="paper-status">Submitted — Revise and Resubmit: <em>Journal of Money, Credit and Banking</em></span>
+                  </div>
+
+                  <div class="paper-entry">
+                    <a href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank" class="citation-button">
+                      Measuring the Market Perceived Neutral Rate
+                    </a>
+                    <br />joint with Georgios Chortareas and Pierre Siklos.
+                    <span class="paper-status">In review: <em>Journal of Economic Dynamics and Control</em></span>
+                  </div>
+
+                  <div class="paper-entry">
+                    Balkanization: A Monetary Allegory
+                    <br />joint with Georgios Chortareas and Pierre Siklos.
+                    <span class="paper-status">In review: <em>European Review of Economic History</em></span>
+                  </div>
+
+                  <div class="paper-entry">
+                    <a href="https://kaykhosrow.github.io/CK2024.pdf" target="_blank" class="citation-button">
+                      Falling Stars in Small Open Economies
+                    </a>
+                    <br />joint with Georgios Chortareas.
+                    <span class="paper-status">Work in progress</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- CV download button -->
+              <a href="https://kaykhosrow.github.io/Abridged.pdf" target="_blank" class="download-cv position-relative">
+                <div class="waves-top-md">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <svg width="45" height="54" viewBox="0 0 45 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M44 31.449L22.5 52.949L1 31.449L8.98204 23.3382L16.8353 31.449V0.550781H28.1647V31.449L36.018 23.3382L44 31.449Z" stroke="currentColor" />
+                </svg>
+                <div class="waves-bottom-md">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </a>
+
             </div>
           </div>
-
-          <!-- Working Papers -->
-          <div class="research-block">
-            <h4 style="text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.85rem;">Working Papers</h4>
-
-            <div class="research-item">
-              <p class="paper-title">
-                <a href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank">
-                  Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions
-                </a>
-              </p>
-              <p class="paper-meta">Joint with Georgios Chortareas and George Kapetanios.</p>
-              <p class="paper-status">Submitted. Revise and Resubmit: <em>Journal of Money, Credit and Banking</em>.</p>
-            </div>
-
-            <div class="research-item">
-              <p class="paper-title">
-                <a href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank">
-                  Measuring the Market Perceived Neutral Rate
-                </a>
-              </p>
-              <p class="paper-meta">Joint with Georgios Chortareas and Pierre Siklos.</p>
-              <p class="paper-status">In review: <em>Journal of Economic Dynamics and Control</em>.</p>
-            </div>
-
-            <div class="research-item">
-              <p class="paper-title">Balkanization: A Monetary Allegory</p>
-              <p class="paper-meta">Joint with Georgios Chortareas and Pierre Siklos.</p>
-              <p class="paper-status">In review: <em>European Review of Economic History</em>.</p>
-            </div>
-
-            <div class="research-item">
-              <p class="paper-title">
-                <a href="https://kaykhosrow.github.io/CK2024.pdf" target="_blank">
-                  Falling Stars in Small Open Economies
-                </a>
-              </p>
-              <p class="paper-meta">Joint with Georgios Chortareas.</p>
-              <p class="paper-status">Work in progress.</p>
-            </div>
-          </div>
-
           <div class="col-12">
             <a href="#teaching" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">03/05</span>
+              <span class="page">03/08</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
           </div>
         </section>
 
-        <!-- Teaching -->
-        <section id="teaching" class="about section container">
+        <!-- ── TEACHING ── -->
+        <section id="teaching" class="experience section position-relative container">
           <span class="section-title-overlay-text">Teaching</span>
           <div class="section-title text-capitalize">
             <h4>Academic instruction</h4>
-            <h2>Teaching</h2>
+            <h2>My Teaching</h2>
           </div>
+          <div class="row pb-60">
+            <div class="col-lg-10 col-xl-8">
+              <div class="experience-wrapper d-flex flex-column">
 
-          <div style="margin-bottom: 2.5rem;">
-            <h4 style="text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.85rem;">Current</h4>
-            <div class="teaching-item">
-              <p class="role">Assistant Professor</p>
-              <p class="inst"><a href="https://www.northeastern.edu/" target="_blank">Northeastern University</a> &mdash; 2021 to Present</p>
+                <div class="experience-item">
+                  <h5>2021 – Present</h5>
+                  <h3>Assistant Professor — <a class="trans" href="https://www.northeastern.edu/" target="_blank">Northeastern University</a></h3>
+                  <p>Principles of Macroeconomics, Business Economics, Econometrics; dissertation and research proposal supervision.</p>
+                </div>
+
+                <div class="experience-item">
+                  <h5>2025 – 2026</h5>
+                  <h3>Teaching Fellow — <a class="trans" href="https://www.qmul.ac.uk/" target="_blank">Queen Mary University of London</a></h3>
+                  <p>Graduate and undergraduate economics instruction.</p>
+                </div>
+
+              </div>
             </div>
           </div>
+          <div class="col-12">
+            <a href="#conferences" class="d-flex gap-4 align-items-center next-chapter">
+              <span class="page">04/08</span>
+              <span class="next">Next Chapter</span>
+              <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
+            </a>
+          </div>
+        </section>
 
-          <div style="margin-bottom: 2.5rem;">
-            <h4 style="text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.85rem;">Previous</h4>
-            <div class="teaching-item">
-              <p class="role">Teaching Fellow</p>
-              <p class="inst"><a href="https://www.qmul.ac.uk/" target="_blank">Queen Mary University of London</a> &mdash; 2025 to 2026</p>
+        <!-- ── CONFERENCES ── -->
+        <section id="conferences" class="experience section position-relative container">
+          <span class="section-title-overlay-text">Conferences</span>
+          <div class="section-title text-capitalize">
+            <h4>Academic presentations</h4>
+            <h2>Conferences</h2>
+          </div>
+          <div class="row pb-60">
+            <div class="col-lg-10 col-xl-9">
+              <div class="experience-wrapper d-flex flex-column">
+
+                <div class="experience-item">
+                  <h5>2026</h5>
+                  <p>Annual Conference of the Royal Economic Society; International Conference on Applied Theory, Macro and Empirical Finance; Spring Midwest Macroeconomics Meeting; European Economics and Finance Society Conference.</p>
+                </div>
+
+                <div class="experience-item">
+                  <h5>2024</h5>
+                  <p>Meeting of the European Economic Association and the European Meeting of the Econometric Society; Annual Meeting of the Society for Economic Dynamics; Annual Conference of the Economic History Society.</p>
+                </div>
+
+                <div class="experience-item">
+                  <h5>2023</h5>
+                  <p>Annual Conference of the Royal Economic Society; Annual Conference of the Money, Macro and Finance Society; International Conference on Applied Theory, Macro and Empirical Finance; 15th WU-FIW Conference on International Economics; Annual Conference of the Southern Economic Association; Annual Conference of the Eastern Economic Association; Annual Meeting of the Society for Economic Dynamics.</p>
+                </div>
+
+                <div class="experience-item">
+                  <h5>2022</h5>
+                  <p>Annual Conference of the Money, Macro and Finance Society; Annual Conference of the European Economic and Finance Society; Annual PhD Conference of the Royal Economic Society.</p>
+                </div>
+
+              </div>
             </div>
           </div>
-
           <div class="col-12">
             <a href="#code" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">04/05</span>
+              <span class="page">05/08</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
           </div>
         </section>
 
-        <!-- Code -->
-        <section id="code" class="about section container">
+        <!-- ── CODE ── -->
+        <section id="code" class="services section position-relative container">
           <span class="section-title-overlay-text">Code</span>
           <div class="section-title text-capitalize">
-            <h4>Tools &amp; implementations</h4>
+            <h4>Open source tools and functions</h4>
             <h2>&lt;/Code&gt;</h2>
           </div>
+          <div dir="ltr" class="swiper service-swiper">
+            <div class="swiper-wrapper">
 
-          <div class="code-item">
-            <h5>Time-Varying Phillips Curves</h5>
-            <p>This tool presents time-varying estimates of the Phillips curve across multiple regions. Using kernel-weighted regression methods, it traces the relationship between inflation and unemployment over time, capturing structural shifts that static models often miss.</p>
-            <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Site&gt;</a>
+              <div class="swiper-slide overflow-visible p-3">
+                <div class="service-card">
+                  <div class="card-inner"></div>
+                  <div class="content">
+                    <div class="number-circle">
+                      <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
+                      <h2>01</h2>
+                      <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
+                    </div>
+                    <h4>Time-Varying Phillips Curves</h4>
+                    <p style="font-size:0.9rem; margin-bottom:1rem;">Interactive tool presenting kernel-weighted time-varying Phillips curve estimates across multiple economies. Traces inflation–unemployment dynamics over time, capturing structural shifts that static models miss.</p>
+                    <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-outline-secondary btn-sm">&lt;/Site&gt;</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="swiper-slide overflow-visible p-3">
+                <div class="service-card">
+                  <div class="card-inner"></div>
+                  <div class="content">
+                    <div class="number-circle">
+                      <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
+                      <h2>02</h2>
+                      <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
+                    </div>
+                    <h4>Unobserved Components Model</h4>
+                    <p style="font-size:0.9rem; margin-bottom:1rem;">Implements the Stock and Watson (2007) unobserved components model with stochastic volatilities. Uses a gamma random variable generator and can extract the trend of any univariate time series.</p>
+                    <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-outline-secondary btn-sm">&lt;/Code&gt;</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="swiper-slide overflow-visible p-3">
+                <div class="service-card">
+                  <div class="card-inner"></div>
+                  <div class="content">
+                    <div class="number-circle">
+                      <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
+                      <h2>03</h2>
+                      <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
+                    </div>
+                    <h4>VAR Historical Decomposition</h4>
+                    <p style="font-size:0.9rem; margin-bottom:1rem;">Takes output from the R <code>vars</code> package and computes the VAR historical decomposition. An abridged translation of Cesa-Bianchi's MATLAB code from the VAR-Toolbox, designed for R.</p>
+                    <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-outline-secondary btn-sm">&lt;/Code&gt;</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="swiper-slide overflow-visible p-3">
+                <div class="service-card">
+                  <div class="card-inner"></div>
+                  <div class="content">
+                    <div class="number-circle">
+                      <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
+                      <h2>04</h2>
+                      <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
+                    </div>
+                    <h4>Gaussian Error Propagation</h4>
+                    <p style="font-size:0.9rem; margin-bottom:1rem;">Determines the uncertainty of any mathematical expression containing estimated variables with uncertainties by taking partial derivatives with respect to each variable and adding in quadrature.</p>
+                    <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="btn btn-outline-secondary btn-sm">&lt;/Code&gt;</a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
           </div>
-
-          <div class="code-item">
-            <h5>Unobserved Components Model</h5>
-            <p>This function implements the Stock and Watson (2007) unobserved components model with stochastic volatilities. It employs a gamma random variable generator function and can be used to extract the trend of any given univariate time series.</p>
-            <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
-          </div>
-
-          <div class="code-item">
-            <h5>VAR Historical Decomposition</h5>
-            <p>This function takes in the output from the VAR() function (see vars package) and computes the vector autoregression historical decomposition. It is an abridged translation of Cesa-Bianchi's MATLAB code (in the VAR-Toolbox) designed for R.</p>
-            <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
-          </div>
-
-          <div class="code-item">
-            <h5>Gaussian Error Propagation</h5>
-            <p>This function determines the uncertainty of any mathematical expression containing estimated variables with uncertainties by taking partial derivatives with respect to each variable multiplied by their uncertainty and added in quadrature.</p>
-            <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
-          </div>
-
           <div class="col-12">
             <a href="#gallery" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">05/05</span>
+              <span class="page">06/08</span>
               <span class="next">Next Chapter</span>
-              <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
+              <i class="ph ph-arrow-elbow-right-down"></i>
             </a>
           </div>
         </section>
 
-        <!-- Gallery -->
-        <section id="gallery" class="about section container">
+        <!-- ── GALLERY ── -->
+        <section id="gallery" class="section position-relative container">
           <span class="section-title-overlay-text">Gallery</span>
           <div class="section-title text-capitalize">
-            <h4>Video</h4>
+            <h4>Video archive</h4>
             <h2>Gallery</h2>
           </div>
-
-          <div class="gallery-carousel">
-            <div class="gallery-track" id="galleryTrack"></div>
+          <div class="pb-60">
+            <div class="gallery-carousel">
+              <div class="gallery-track" id="galleryTrack"></div>
+            </div>
+            <div class="gallery-dots" id="galleryDots"></div>
           </div>
-          <div class="gallery-dots" id="galleryDots"></div>
-
-          <script>
-          (function () {
-            var videos = [
-              { id: 'SvZ_sF7gamI' },
-              { id: 'J0JZivXHkH8' },
-              { id: 'DLA1bcUDg2g' },
-              { id: '7g1UTm1c4EA' }
-            ];
-            var total = videos.length;
-            var track = document.getElementById('galleryTrack');
-            var carousel = document.querySelector('.gallery-carousel');
-            var dotsEl = document.getElementById('galleryDots');
-            var current = 0, dots = [], isAnimating = false;
-
-            function makeSlide(v) {
-              var div = document.createElement('div');
-              div.className = 'gallery-slide';
-              div.innerHTML =
-                '<div class="video-wrapper">' +
-                  '<div class="video-thumb" style="background-image:url(https://img.youtube.com/vi/' + v.id + '/maxresdefault.jpg)" data-id="' + v.id + '"></div>' +
-                  '<div class="slide-overlay"></div>' +
-                '</div>';
-              return div;
-            }
-
-            track.appendChild(makeSlide(videos[total - 1]));
-            videos.forEach(function(v) { track.appendChild(makeSlide(v)); });
-            track.appendChild(makeSlide(videos[0]));
-            var allSlides = track.querySelectorAll('.gallery-slide');
-
-            track.addEventListener('click', function(e) {
-              var thumb = e.target.closest('.video-thumb');
-              if (!thumb) return;
-              var slide = thumb.closest('.gallery-slide');
-              if (!slide.classList.contains('active')) return;
-              var id = thumb.getAttribute('data-id');
-              var wrapper = thumb.parentNode;
-              thumb.style.display = 'none';
-              var iframe = wrapper.querySelector('iframe');
-              if (!iframe) {
-                iframe = document.createElement('iframe');
-                iframe.setAttribute('allowfullscreen', '');
-                iframe.setAttribute('allow', 'autoplay');
-                wrapper.insertBefore(iframe, wrapper.querySelector('.slide-overlay'));
-              }
-              iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160';
-            });
-
-            function pauseActive() {
-              var wrapper = allSlides[current + 1].querySelector('.video-wrapper');
-              var iframe = wrapper && wrapper.querySelector('iframe');
-              if (iframe && iframe.contentWindow) {
-                iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*');
-              }
-            }
-
-            videos.forEach(function(_, i) {
-              var d = document.createElement('div');
-              d.className = 'gallery-dot';
-              d.addEventListener('click', function() { if (!isAnimating) { pauseActive(); goTo(i); } });
-              dotsEl.appendChild(d);
-              dots.push(d);
-            });
-
-            allSlides.forEach(function(slide, i) {
-              slide.addEventListener('click', function() {
-                if (isAnimating) return;
-                var activeIdx = current + 1;
-                if (i < activeIdx) { pauseActive(); stepTo(current - 1); }
-                else if (i > activeIdx) { pauseActive(); stepTo(current + 1); }
-              });
-            });
-
-            function centreOffset(trackIndex) {
-              var sw = allSlides[0].offsetWidth;
-              var cw = carousel.offsetWidth;
-              return -(trackIndex * sw - (cw - sw) / 2);
-            }
-
-            function updateUI(realIndex) {
-              allSlides.forEach(function(s) { s.classList.remove('active'); });
-              allSlides[realIndex + 1].classList.add('active');
-              dots.forEach(function(d) { d.classList.remove('active'); });
-              dots[((realIndex % total) + total) % total].classList.add('active');
-              allSlides.forEach(function(s, i) {
-                var ov = s.querySelector('.slide-overlay');
-                if (!ov) return;
-                if (i < realIndex + 1) ov.textContent = '←';
-                else if (i > realIndex + 1) ov.textContent = '→';
-                else ov.textContent = '';
-              });
-            }
-
-            function goTo(realIndex, animate) {
-              if (animate === undefined) animate = true;
-              current = realIndex;
-              updateUI(current);
-              track.style.transition = animate ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)' : 'none';
-              track.style.transform = 'translateX(' + centreOffset(current + 1) + 'px)';
-            }
-
-            function stepTo(targetReal) {
-              if (isAnimating) return;
-              isAnimating = true;
-              if (targetReal < 0) {
-                var cloneFirst = allSlides[total + 1];
-                cloneFirst.style.transition = 'none'; cloneFirst.style.opacity = '1';
-                track.style.transition = 'none';
-                track.style.transform = 'translateX(' + centreOffset(total + 1) + 'px)';
-                requestAnimationFrame(function() { requestAnimationFrame(function() {
-                  cloneFirst.style.transition = ''; cloneFirst.style.opacity = '';
-                  current = total - 1; updateUI(current);
-                  track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
-                  track.style.transform = 'translateX(' + centreOffset(total) + 'px)';
-                  track.addEventListener('transitionend', function onEnd() { track.removeEventListener('transitionend', onEnd); isAnimating = false; });
-                }); });
-              } else if (targetReal >= total) {
-                var cloneLast = allSlides[0];
-                cloneLast.style.transition = 'none'; cloneLast.style.opacity = '1';
-                track.style.transition = 'none';
-                track.style.transform = 'translateX(' + centreOffset(0) + 'px)';
-                requestAnimationFrame(function() { requestAnimationFrame(function() {
-                  cloneLast.style.transition = ''; cloneLast.style.opacity = '';
-                  current = 0; updateUI(current);
-                  track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
-                  track.style.transform = 'translateX(' + centreOffset(1) + 'px)';
-                  track.addEventListener('transitionend', function onEnd() { track.removeEventListener('transitionend', onEnd); isAnimating = false; });
-                }); });
-              } else {
-                current = targetReal; updateUI(current);
-                track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
-                track.style.transform = 'translateX(' + centreOffset(current + 1) + 'px)';
-                track.addEventListener('transitionend', function onEnd() { track.removeEventListener('transitionend', onEnd); isAnimating = false; });
-              }
-            }
-
-            window.addEventListener('resize', function() { goTo(current, false); });
-            goTo(0, false);
-          })();
-          </script>
-
-          <div class="col mt-5 pt-5 next-chapter">
-            <span class="page">05/05</span>
+          <div class="col-12">
+            <a href="#contact" class="d-flex gap-4 align-items-center next-chapter">
+              <span class="page">07/08</span>
+              <span class="next">Next Chapter</span>
+              <i class="ph ph-arrow-elbow-right-down"></i>
+            </a>
           </div>
         </section>
 
-        <!-- Footer -->
+        <!-- ── CONTACT ── -->
+        <section id="contact" class="contact section position-relative container">
+          <span class="section-title-overlay-text">contact</span>
+          <div class="section-title text-capitalize">
+            <h4>Let's get in touch</h4>
+            <h2>Contact me</h2>
+          </div>
+          <div class="row pb-120 contact-items">
+            <div class="row g-4">
+              <div class="col-sm-6 col-xl-4 col-xxl-3">
+                <div class="contact-item">
+                  <div class="icon-box"><i class="ph ph-envelope-open"></i></div>
+                  <p>omar.kaykhusraw@gmail.com</p>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4 col-xxl-3">
+                <div class="contact-item">
+                  <div class="icon-box"><i class="ph ph-map-pin"></i></div>
+                  <p>London, United Kingdom</p>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4 col-xxl-3 d-flex align-items-center">
+                <div class="d-flex gap-3 social-icons">
+                  <a href="https://twitter.com/kaykhusraw" target="_blank"><i class="ph ph-twitter-logo"></i></a>
+                  <a href="https://www.linkedin.com/in/stochastic" target="_blank"><i class="ph ph-linkedin-logo"></i></a>
+                  <a href="https://github.com/kaykhosrow" target="_blank"><i class="ph ph-github-logo"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <form id="contact-form" class="contact-form">
+            <h4>Leave a Message</h4>
+            <div class="row g-4 g-xl-5">
+              <div class="col-sm-6">
+                <label for="user_name">Name</label>
+                <input type="text" id="user_name" name="user_name" placeholder="Your name" required />
+              </div>
+              <div class="col-sm-6">
+                <label for="user_email">Email</label>
+                <input type="email" id="user_email" name="user_email" placeholder="Your e-mail" required />
+              </div>
+              <div class="col-12">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Your message"></textarea>
+              </div>
+              <div class="col-12">
+                <button type="submit" id="submit-btn" class="submit-btn position-relative">
+                  <div class="waves-top-md">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                  submit
+                  <div class="waves-bottom-md">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </form>
+          <div class="col mt-5 pt-5 next-chapter">
+            <span class="page">08/08</span>
+          </div>
+        </section>
+
+        <!-- ── FOOTER ── -->
         <footer>
           <div class="container">
             <div class="row">
               <div class="col-md-6">
-                <p>Copyright &copy; <span id="year"></span> Omar Kaykhusraw. All rights reserved.</p>
+                <p>Copyright &copy; <span id="year"></span>. All rights reserved</p>
               </div>
               <div class="col-md-6 right">
-                <p><a href="mailto:omar.kaykhusraw@gmail.com">omar.kaykhusraw@gmail.com</a></p>
+                <p>Omar Kaykhusraw</p>
               </div>
             </div>
           </div>
@@ -658,7 +614,7 @@
       </div>
     </main>
 
-    <!-- Color switcher -->
+    <!-- color switcher -->
     <div class="color-switcher">
       <button class="color-switcher-btn">
         <i class="ph ph-gear-six"></i>
@@ -686,6 +642,180 @@
         </div>
       </div>
     </div>
+
+    <!-- Gallery JS -->
+    <script>
+    (function () {
+      var videos = [
+        { id: 'SvZ_sF7gamI' },
+        { id: 'J0JZivXHkH8' },
+        { id: 'DLA1bcUDg2g' },
+        { id: '7g1UTm1c4EA' }
+      ];
+
+      var total       = videos.length;
+      var track       = document.getElementById('galleryTrack');
+      var carousel    = document.querySelector('.gallery-carousel');
+      var dotsEl      = document.getElementById('galleryDots');
+      var current     = 0;
+      var dots        = [];
+      var isAnimating = false;
+
+      function makeSlide(v) {
+        var div = document.createElement('div');
+        div.className = 'gallery-slide';
+        div.innerHTML =
+          '<div class="video-wrapper">' +
+            '<div class="video-thumb" style="background-image:url(https://img.youtube.com/vi/' + v.id + '/maxresdefault.jpg)" data-id="' + v.id + '"></div>' +
+            '<div class="slide-overlay"></div>' +
+          '</div>';
+        return div;
+      }
+
+      track.appendChild(makeSlide(videos[total - 1]));
+      videos.forEach(function(v) { track.appendChild(makeSlide(v)); });
+      track.appendChild(makeSlide(videos[0]));
+
+      var allSlides = track.querySelectorAll('.gallery-slide');
+
+      track.addEventListener('click', function(e) {
+        var thumb = e.target.closest('.video-thumb');
+        if (!thumb) return;
+        var slide = thumb.closest('.gallery-slide');
+        if (!slide.classList.contains('active')) return;
+        var id      = thumb.getAttribute('data-id');
+        var wrapper = thumb.parentNode;
+        thumb.style.display = 'none';
+        var iframe = wrapper.querySelector('iframe');
+        if (!iframe) {
+          iframe = document.createElement('iframe');
+          iframe.setAttribute('allowfullscreen', '');
+          iframe.setAttribute('allow', 'autoplay');
+          wrapper.insertBefore(iframe, wrapper.querySelector('.slide-overlay'));
+        }
+        iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160';
+      });
+
+      function pauseActive() {
+        var wrapper = allSlides[current + 1].querySelector('.video-wrapper');
+        var iframe  = wrapper && wrapper.querySelector('iframe');
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage(
+            JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }), '*'
+          );
+        }
+      }
+
+      videos.forEach(function(_, i) {
+        var d = document.createElement('div');
+        d.className = 'gallery-dot';
+        d.addEventListener('click', function() {
+          if (!isAnimating) { pauseActive(); goTo(i); }
+        });
+        dotsEl.appendChild(d);
+        dots.push(d);
+      });
+
+      allSlides.forEach(function(slide, i) {
+        slide.addEventListener('click', function() {
+          if (isAnimating) return;
+          var activeIdx = current + 1;
+          if (i < activeIdx) { pauseActive(); stepTo(current - 1); }
+          else if (i > activeIdx) { pauseActive(); stepTo(current + 1); }
+        });
+      });
+
+      function centreOffset(trackIndex) {
+        var sw = allSlides[0].offsetWidth;
+        var cw = carousel.offsetWidth;
+        return -(trackIndex * sw - (cw - sw) / 2);
+      }
+
+      function updateUI(realIndex) {
+        allSlides.forEach(function(s) { s.classList.remove('active'); });
+        allSlides[realIndex + 1].classList.add('active');
+        dots.forEach(function(d) { d.classList.remove('active'); });
+        var dotIdx = ((realIndex % total) + total) % total;
+        dots[dotIdx].classList.add('active');
+        allSlides.forEach(function(s, i) {
+          var ov = s.querySelector('.slide-overlay');
+          if (!ov) return;
+          if (i < realIndex + 1) ov.textContent = '←';
+          else if (i > realIndex + 1) ov.textContent = '→';
+          else ov.textContent = '';
+        });
+      }
+
+      function goTo(realIndex, animate) {
+        if (animate === undefined) animate = true;
+        current = realIndex;
+        updateUI(current);
+        track.style.transition = animate ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)' : 'none';
+        track.style.transform  = 'translateX(' + centreOffset(current + 1) + 'px)';
+      }
+
+      function stepTo(targetReal) {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        if (targetReal < 0) {
+          var cloneFirst = allSlides[total + 1];
+          cloneFirst.style.transition = 'none';
+          cloneFirst.style.opacity    = '1';
+          track.style.transition = 'none';
+          track.style.transform  = 'translateX(' + centreOffset(total + 1) + 'px)';
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              cloneFirst.style.transition = '';
+              cloneFirst.style.opacity    = '';
+              current = total - 1;
+              updateUI(current);
+              track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+              track.style.transform  = 'translateX(' + centreOffset(total) + 'px)';
+              track.addEventListener('transitionend', function onEnd() {
+                track.removeEventListener('transitionend', onEnd);
+                isAnimating = false;
+              });
+            });
+          });
+
+        } else if (targetReal >= total) {
+          var cloneLast = allSlides[0];
+          cloneLast.style.transition = 'none';
+          cloneLast.style.opacity    = '1';
+          track.style.transition = 'none';
+          track.style.transform  = 'translateX(' + centreOffset(0) + 'px)';
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              cloneLast.style.transition = '';
+              cloneLast.style.opacity    = '';
+              current = 0;
+              updateUI(current);
+              track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+              track.style.transform  = 'translateX(' + centreOffset(1) + 'px)';
+              track.addEventListener('transitionend', function onEnd() {
+                track.removeEventListener('transitionend', onEnd);
+                isAnimating = false;
+              });
+            });
+          });
+
+        } else {
+          current = targetReal;
+          updateUI(current);
+          track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
+          track.style.transform  = 'translateX(' + centreOffset(current + 1) + 'px)';
+          track.addEventListener('transitionend', function onEnd() {
+            track.removeEventListener('transitionend', onEnd);
+            isAnimating = false;
+          });
+        }
+      }
+
+      window.addEventListener('resize', function () { goTo(current, false); });
+      goTo(0, false);
+    })();
+    </script>
 
   </body>
 </html>
