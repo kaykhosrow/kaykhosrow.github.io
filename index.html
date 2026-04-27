@@ -19,6 +19,12 @@
       animation: none !important;
       transition: none !important;
     }
+
+    /* Fix typewriter text clipping */
+    #typewriter {
+      overflow: visible !important;
+      white-space: nowrap;
+    }
   </style>
   <body>
     <!-- header section -->
@@ -74,7 +80,7 @@
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
                 <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
-                <h1 class="text-uppercase overflow-hidden developer" id="typewriter"></h1>
+                <h1 class="text-uppercase developer" id="typewriter"></h1>
               </div>
               <div class="d-flex gap-4">
                 <a href="#projects" class="btn work-btn text-capitalize btn-secondary">view my work</a>
@@ -141,10 +147,6 @@
               <a href="#contact"><span class="text">contact</span> </a>
             </li>
           </ul>
-          <!-- <div class="contact">
-              <a href="mailto:john@wilson.com">emily@devis.com</a>
-              <a href="tel:+420 652 887 351">+420 652 887 351</a>
-            </div> -->
         </nav>
         <div class="nav-overlay d-xl-none"></div>
         <!-- about me -->
@@ -1225,7 +1227,7 @@
               </ul>
               <div class="outcome">
                 <h5 class="mb-3">Outcome:</h5>
-                <p>The blog quickly gained traction, attracting a growing audience and enhancing the influencer’s online presence. The user-friendly design and seamless social media integration led to higher engagement rates and increased content sharing.</p>
+                <p>The blog quickly gained traction, attracting a growing audience and enhancing the influencer's online presence. The user-friendly design and seamless social media integration led to higher engagement rates and increased content sharing.</p>
               </div>
               <form class="contact-form full-width">
                 <h3 class="mb-3">Have project in mind? Let's discuss</h3>
