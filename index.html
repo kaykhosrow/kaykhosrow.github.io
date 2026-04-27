@@ -38,6 +38,8 @@
          FULL-BLEED HERO IMAGE
       ============================================= */
       section#top.hero {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
         min-height: 100vh;
         overflow: hidden;
         padding: 0 !important;
@@ -262,22 +264,22 @@
 
         <!-- Hero -->
         <section id="top" class="hero" style="position:relative; width:100%; max-width:100%; margin:0; padding:0 !important; overflow:hidden;">
-          <div class="row gx-0 align-items-stretch" style="min-height:100vh; margin:0; flex-wrap:nowrap;">
+          <div style="display:flex; flex-direction:row; flex-wrap:nowrap; align-items:flex-start; min-height:100vh; width:100%; margin:0; padding:0;">
 
-            <!-- Left: text content — padded to clear the fixed left-bar (~70px) -->
-            <div class="col hero-content" style="flex:0 0 52%; max-width:52%; display:flex; flex-direction:column; justify-content:center; padding: 2.5rem 3rem 2.5rem 100px;">
+            <!-- Left: text — flex:1 fills whatever space the image doesn't take -->
+            <div class="hero-content" style="flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; min-height:100vh; padding:2.5rem 3rem 2.5rem 100px;">
               <div>
                 <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
               </div>
-              <div class="d-flex gap-4" style="margin-top: 1.5rem;">
+              <div class="d-flex gap-4" style="margin-top:1.5rem;">
                 <a href="#about_me" class="btn work-btn text-capitalize btn-secondary">About me</a>
                 <a href="#research" class="btn contact-btn text-capitalize btn-outline-secondary">Research</a>
               </div>
             </div>
 
-            <!-- Right: image at natural 1024×1536 ratio — height fills viewport, width is auto (no cropping) -->
-            <div style="flex:0 0 auto; padding:0; margin:0; line-height:0; overflow:hidden;">
+            <!-- Right: natural 1024×1536 aspect ratio, no cropping, flush to right edge -->
+            <div style="flex:0 0 auto; padding:0; margin:0; line-height:0; font-size:0;">
               <img src="./images/profile.jpg" alt="Omar Kaykhusraw"
                 style="height:100vh; width:auto; display:block; margin:0; padding:0; border-radius:0;" />
             </div>
