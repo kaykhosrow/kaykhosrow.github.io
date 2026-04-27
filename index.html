@@ -5,7 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon" />
     <title>Portify - Personal Portfolio Website Template</title>
-  <script defer src="assets/js/app.js"></script><link href="assets/css/index.css" rel="stylesheet"></head>
+  <script defer src="assets/js/app.js"></script><link href="assets/css/index.css" rel="stylesheet">
+  <style>
+    /* Disable GSAP intro animations on hero text and image */
+    .freelancer,
+    #typewriter,
+    .hero-content .description,
+    .hero-content .d-flex,
+    .img-wrapper,
+    .hero-img {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+      transition: none !important;
+    }
+  </style>
   <body>
     <!-- header section -->
 
@@ -59,9 +73,8 @@
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
-                <h4 class="text-uppercase freelancer">HI, I'M A FREELANCER</h4>
+                <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase overflow-hidden developer" id="typewriter"></h1>
-                <p class="description">based in Los Angeles, California.</p>
               </div>
               <div class="d-flex gap-4">
                 <a href="#projects" class="btn work-btn text-capitalize btn-secondary">view my work</a>
@@ -70,19 +83,7 @@
             </div>
             <div class="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4">
               <div class="img-wrapper">
-                <div class="waves-top">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
                 <img class="img-fluid rounded-circle hero-img" src="./assets/images/hero.png" alt="" />
-                <div class="waves-bottom">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
               </div>
             </div>
             <div class="col-12">
