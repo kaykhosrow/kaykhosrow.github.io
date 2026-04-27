@@ -195,7 +195,7 @@
         flex-shrink: 0;
         transition: transform 0.2s, box-shadow 0.2s;
       }
-      .setting-swatch:hover { transform: scale(1.15); }
+      .setting-swatch:hover { opacity: 0.85; }
       .grain-swatch {
         background-image: radial-gradient(circle, #777 1px, transparent 1px),
                           radial-gradient(circle, #777 1px, transparent 1px);
@@ -205,7 +205,6 @@
       }
       .grain-swatch.active {
         border-color: rgba(0,0,0,0.5);
-        box-shadow: 0 0 0 2px rgba(0,0,0,0.25);
       }
       .settings-gear-btn {
         width: 32px;
@@ -227,6 +226,10 @@
   </head>
   <body>
     <div id="grain"></div>
+    <!-- Hidden stub: app.js queries .color-switcher-btn on load; null throws and kills all JS -->
+    <div class="color-switcher" style="display:none">
+      <button class="color-switcher-btn"></button>
+    </div>
 
     <header class="header">
       <div class="container d-flex align-items-center justify-content-between">
