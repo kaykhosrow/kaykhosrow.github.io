@@ -151,10 +151,7 @@
       }
       .gallery-dot.active { background: #fff; transform: scale(1.25); }
 
-      /* ── Hero: match the bottom gap to the top gap.
-         Top gap = hero padding-top (20px) + hero-content padding-top (40px) = 60px.
-         Next Chapter's original padding-top was 120px — replaced with 60px.
-         At 1400px+ the hero padding-top becomes 90px → total top gap = 130px. ── */
+      /* ── Hero: match the bottom gap to the top gap ── */
       section.hero .next-chapter {
         padding-top: 60px !important;
         padding-bottom: 20px !important;
@@ -165,7 +162,7 @@
           padding-bottom: 90px !important;
         }
       }
-      /* ── Settings bar: lives inside the sticky nav bar, right end ── */
+      /* ── Settings bar ── */
       .settings-bar {
         margin-left: auto;
         display: flex;
@@ -252,6 +249,17 @@
         margin-bottom: 1.25rem;
         margin-top: 0;
       }
+
+      /* New about button */
+      .about-new-btn {
+        border-radius: 4px !important;
+        transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease !important;
+      }
+      .about-new-btn:hover {
+        background-color: #000 !important;
+        border-color: #000 !important;
+        color: #fff !important;
+      }
     </style>
   </head>
   <body>
@@ -295,8 +303,6 @@
       </ul>
     </div>
 
-    <!-- email-icon intentionally removed -->
-
     <main>
       <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
 
@@ -307,7 +313,6 @@
               <div>
                 <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
-
               </div>
               <div class="d-flex gap-4">
                 <a href="#about_me" class="btn work-btn text-capitalize btn-secondary">About me</a>
@@ -376,8 +381,17 @@
             <div class="col-12 about-desc">
 
               <p class="desc">
-                Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused on the natural rate of interest. Prior to my doctorate, I read Economics at the <a href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a href="https://london.ac.uk/" target="_blank">University of London</a>. Click below to read my abdridged résumé: 
+                Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused on the natural rate of interest. Prior to my doctorate, I read Economics at the <a href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a href="https://london.ac.uk/" target="_blank">University of London</a>. Click below to read my abridged résumé:
               </p>
+
+              <div class="d-flex gap-3 mt-4 flex-wrap">
+                <a href="#" class="btn btn-outline-secondary about-new-btn">
+                  Résumé
+                </a>
+                <a href="#" class="btn btn-outline-secondary about-new-btn">
+                  Button Label
+                </a>
+              </div>
 
             </div>
           </div>
@@ -398,7 +412,7 @@
             <h2>Research</h2>
           </div>
 
-          <!-- Publication subsection (blog-card style, no image) -->
+          <!-- Publication subsection -->
           <h5 class="research-sub-heading">Publication</h5>
           <div class="d-flex flex-column gap-4 mb-5">
             <div class="blog-card" style="padding:24px; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
@@ -418,7 +432,7 @@
           <div dir="ltr" class="swiper service-swiper">
             <div class="swiper-wrapper">
 
-              <!-- 01 Working Paper -->
+              <!-- 01 -->
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <div class="card-inner"></div>
@@ -438,7 +452,7 @@
                 </div>
               </div>
 
-              <!-- 02 Working Paper -->
+              <!-- 02 -->
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <div class="card-inner"></div>
@@ -458,7 +472,7 @@
                 </div>
               </div>
 
-              <!-- 03 Working Paper -->
+              <!-- 03 -->
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <div class="card-inner"></div>
@@ -478,7 +492,7 @@
                 </div>
               </div>
 
-              <!-- 04 Working Paper -->
+              <!-- 04 -->
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <div class="card-inner"></div>
@@ -779,9 +793,7 @@
         cb.dispatchEvent(new Event('change'));
         this.classList.toggle('active');
       });
-      // Stop autoplay on the research swiper only.
-      // DOMContentLoaded fires after deferred scripts (app.js) complete,
-      // so the Swiper instance already exists on the element by then.
+      // Stop autoplay on the research swiper only
       document.addEventListener('DOMContentLoaded', function() {
         var researchSwiper = document.querySelector('#research .service-swiper');
         if (researchSwiper && researchSwiper.swiper) {
