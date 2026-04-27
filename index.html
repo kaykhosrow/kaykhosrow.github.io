@@ -227,6 +227,28 @@
       .hero .btn {
         border-radius: 4px !important;
       }
+      /* Equal-height cards in research swiper */
+      #research .service-swiper .swiper-wrapper {
+        align-items: stretch;
+      }
+      #research .service-swiper .swiper-slide {
+        height: auto;
+        display: flex;
+      }
+      #research .service-swiper .service-card {
+        height: 100%;
+        width: 100%;
+      }
+      /* Research subsection headings */
+      .research-sub-heading {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-weight: 600;
+        opacity: 0.55;
+        margin-bottom: 1.25rem;
+        margin-top: 0;
+      }
     </style>
   </head>
   <body>
@@ -373,10 +395,26 @@
             <h2>Research</h2>
           </div>
 
+          <!-- Publication subsection (blog-card style, no image) -->
+          <h5 class="research-sub-heading">Publication</h5>
+          <div class="d-flex flex-column gap-4 mb-5">
+            <a href="https://kaykhosrow.github.io/K2024.pdf" target="_blank" class="blog-card">
+              <div>
+                <h4 class="fw-medium mb-3">Longer-run equilibrium interest rates: evidence from the United Kingdom</h4>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <i class="ph ph-book-open fs-5"></i>
+                  <p class="mb-0"><em>Economica</em>, 92(366): 457&ndash;482, 2024</p>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Working Papers subsection -->
+          <h5 class="research-sub-heading">Working Papers</h5>
           <div dir="ltr" class="swiper service-swiper">
             <div class="swiper-wrapper">
 
-              <!-- 01 Publication -->
+              <!-- 01 Working Paper -->
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <div class="card-inner"></div>
@@ -386,10 +424,11 @@
                       <h2>01</h2>
                       <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
                     </div>
-                    <h4>Publication</h4>
+                    <h4>Working Paper</h4>
                     <ul class="service-list">
-                      <li><a href="https://kaykhosrow.github.io/K2024.pdf" target="_blank">Longer-run equilibrium interest rates: evidence from the United Kingdom</a></li>
-                      <li><em>Economica</em>, 92(366): 457&ndash;482, 2024</li>
+                      <li><a href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank">Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions</a></li>
+                      <li>With G. Chortareas &amp; G. Kapetanios</li>
+                      <li>R&amp;R: <em>Journal of Money, Credit and Banking</em></li>
                     </ul>
                   </div>
                 </div>
@@ -407,9 +446,9 @@
                     </div>
                     <h4>Working Paper</h4>
                     <ul class="service-list">
-                      <li><a href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank">Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions</a></li>
-                      <li>With G. Chortareas &amp; G. Kapetanios</li>
-                      <li>R&amp;R: <em>Journal of Money, Credit and Banking</em></li>
+                      <li><a href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank">Measuring the Market Perceived Neutral Rate</a></li>
+                      <li>With G. Chortareas &amp; P. Siklos</li>
+                      <li>In review: <em>Journal of Economic Dynamics and Control</em></li>
                     </ul>
                   </div>
                 </div>
@@ -427,9 +466,9 @@
                     </div>
                     <h4>Working Paper</h4>
                     <ul class="service-list">
-                      <li><a href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank">Measuring the Market Perceived Neutral Rate</a></li>
+                      <li>Balkanization: A Monetary Allegory</li>
                       <li>With G. Chortareas &amp; P. Siklos</li>
-                      <li>In review: <em>Journal of Economic Dynamics and Control</em></li>
+                      <li>In review: <em>European Review of Economic History</em></li>
                     </ul>
                   </div>
                 </div>
@@ -443,26 +482,6 @@
                     <div class="number-circle">
                       <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
                       <h2>04</h2>
-                      <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
-                    </div>
-                    <h4>Working Paper</h4>
-                    <ul class="service-list">
-                      <li>Balkanization: A Monetary Allegory</li>
-                      <li>With G. Chortareas &amp; P. Siklos</li>
-                      <li>In review: <em>European Review of Economic History</em></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 05 Working Paper -->
-              <div class="swiper-slide overflow-visible p-3">
-                <div class="service-card">
-                  <div class="card-inner"></div>
-                  <div class="content">
-                    <div class="number-circle">
-                      <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
-                      <h2>05</h2>
                       <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
                     </div>
                     <h4>Working Paper</h4>
