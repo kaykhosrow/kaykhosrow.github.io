@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon" />
-    <title>Omar Kaykhusraw</title>
+    <title>Kaykhusraw</title>
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
@@ -33,6 +33,62 @@
         overflow: visible !important;
         white-space: nowrap;
       }
+
+      /* =============================================
+         FULL-BLEED HERO IMAGE
+      ============================================= */
+      section#top.hero {
+        min-height: 100vh;
+        overflow: hidden;
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        position: relative;
+      }
+
+      section#top.hero > .row {
+        min-height: 100vh;
+        margin: 0 !important;
+        align-items: stretch !important;
+        flex-wrap: nowrap;
+      }
+
+      section#top.hero .hero-content-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2.5rem 3.5rem;
+        flex: 0 0 55%;
+        max-width: 55%;
+      }
+
+      section#top.hero .hero-image-col {
+        flex: 0 0 45%;
+        max-width: 45%;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      section#top.hero .about-photo {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100vh !important;
+        border-radius: 0 !important;
+        aspect-ratio: unset !important;
+        margin: 0 !important;
+        display: block;
+        object-fit: cover;
+        object-position: center top;
+      }
+
+      section#top.hero .next-chapter-row {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 3.5rem;
+      }
+
+      /* ============================================= */
 
       /* Research section typography */
       .research-block {
@@ -81,7 +137,7 @@
         opacity: 1;
       }
 
-      /* About photo */
+      /* About photo (non-hero usage) */
       .about-photo {
         width: 100%;
         max-width: 300px;
@@ -211,29 +267,35 @@
       <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
 
         <!-- Hero -->
-        <section id="top" class="hero container">
-          <div class="row gx-4 align-items-center">
-            <div class="col-12 col-md-6 col-xl-6 hero-content">
+        <section id="top" class="hero">
+          <div class="row gx-0 align-items-stretch" style="min-height:100vh; margin:0;">
+
+            <!-- Left: text content -->
+            <div class="col-12 col-md-7 hero-content-col hero-content" style="display:flex; flex-direction:column; justify-content:center; padding: 2.5rem 3.5rem;">
               <div>
                 <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
-
               </div>
-              <div class="d-flex gap-4">
+              <div class="d-flex gap-4" style="margin-top: 1.5rem;">
                 <a href="#about_me" class="btn work-btn text-capitalize btn-secondary">About me</a>
                 <a href="#research" class="btn contact-btn text-capitalize btn-outline-secondary">Research</a>
               </div>
             </div>
-            <div class="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4">
-              <img src="./images/profile.jpg" alt="Omar Kaykhusraw" class="about-photo" />
+
+            <!-- Right: full-bleed image -->
+            <div class="col-12 col-md-5 hero-image-col" style="padding:0; margin:0;">
+              <img src="./images/profile.jpg" alt="Omar Kaykhusraw" class="about-photo" style="width:100%; max-width:100%; height:100vh; border-radius:0; aspect-ratio:unset; margin:0; object-fit:cover; object-position:center top; display:block;" />
             </div>
-            <div class="col-12">
-              <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter">
-                <span class="page">01/05</span>
-                <span class="next">Next Chapter</span>
-                <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
-              </a>
-            </div>
+
+          </div>
+
+          <!-- Next chapter — positioned absolutely over the hero -->
+          <div style="position:absolute; bottom:1.5rem; left:3.5rem;">
+            <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter">
+              <span class="page">01/05</span>
+              <span class="next">Next Chapter</span>
+              <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
+            </a>
           </div>
         </section>
 
@@ -275,11 +337,9 @@
           </div>
           <div class="row mb-4 mb-lg-5 align-items-start">
             <div class="col-12 about-desc">
-
               <p class="desc">
                 Welcome to my page. I am a research economist with interests in empirical macroeconomics and time series econometrics. I hold a DPhil in Economics from <a href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused on the natural rate of interest. Prior to my doctorate, I read Economics at the <a href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a href="https://london.ac.uk/" target="_blank">University of London</a>.
               </p>
-
             </div>
           </div>
           <div class="col-12">
