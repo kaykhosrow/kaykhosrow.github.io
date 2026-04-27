@@ -163,8 +163,12 @@
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
                 <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
-                <h1 class="text-uppercase overflow-hidden developer" id="my-typewriter"></h1>
+                <h2 class="text-uppercase overflow-hidden" id="my-typewriter" style="font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: 0.05em; min-height: 1.4em;"></h2>
                 <p class="description">Empirical Macroeconomics &amp; Time Series Econometrics</p>
+              </div>
+              <div class="d-flex gap-4">
+                <a href="#research" class="btn work-btn text-capitalize btn-secondary">Research</a>
+                <a href="#contact" class="btn contact-btn text-capitalize btn-outline-secondary">Contact Me</a>
               </div>
             </div>
             <div class="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4">
@@ -626,6 +630,14 @@
       var words = ['Economist', 'Researcher', 'Lecturer'];
       var el = document.getElementById('my-typewriter');
       if (!el) return;
+      el.style.borderRight = '2px solid currentColor';
+      el.style.paddingRight = '2px';
+      // Blink cursor
+      var cursorVisible = true;
+      setInterval(function() {
+        cursorVisible = !cursorVisible;
+        el.style.borderRightColor = cursorVisible ? 'currentColor' : 'transparent';
+      }, 530);
       var wordIdx = 0, charIdx = 0, deleting = false;
       function tick() {
         var word = words[wordIdx];
@@ -634,7 +646,7 @@
           charIdx++;
           if (charIdx === word.length) {
             deleting = true;
-            setTimeout(tick, 1800);
+            setTimeout(tick, 2000);
             return;
           }
         } else {
@@ -645,9 +657,9 @@
             wordIdx = (wordIdx + 1) % words.length;
           }
         }
-        setTimeout(tick, deleting ? 55 : 110);
+        setTimeout(tick, deleting ? 55 : 120);
       }
-      setTimeout(tick, 400);
+      setTimeout(tick, 600);
     });
     </script>
 
