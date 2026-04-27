@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon" />
-    <title>Kaykhusraw</title>
+    <title>Omar Kaykhusraw</title>
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
@@ -267,11 +267,11 @@
       <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
 
         <!-- Hero -->
-        <section id="top" class="hero">
-          <div class="row gx-0 align-items-stretch" style="min-height:100vh; margin:0;">
+        <section id="top" class="hero" style="position:relative; width:100%; max-width:100%; margin:0; padding:0 !important; overflow:hidden;">
+          <div class="row gx-0 align-items-stretch" style="min-height:100vh; margin:0; flex-wrap:nowrap;">
 
-            <!-- Left: text content -->
-            <div class="col-12 col-md-7 hero-content-col hero-content" style="display:flex; flex-direction:column; justify-content:center; padding: 2.5rem 3.5rem;">
+            <!-- Left: text content — padded to clear the fixed left-bar (~70px) -->
+            <div class="col hero-content" style="flex:0 0 52%; max-width:52%; display:flex; flex-direction:column; justify-content:center; padding: 2.5rem 3rem 2.5rem 100px;">
               <div>
                 <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -282,15 +282,16 @@
               </div>
             </div>
 
-            <!-- Right: full-bleed image -->
-            <div class="col-12 col-md-5 hero-image-col" style="padding:0; margin:0;">
-              <img src="./images/profile.jpg" alt="Omar Kaykhusraw" class="about-photo" style="width:100%; max-width:100%; height:100vh; border-radius:0; aspect-ratio:unset; margin:0; object-fit:cover; object-position:center top; display:block;" />
+            <!-- Right: full-bleed image — wider column = less zoom -->
+            <div style="flex:0 0 48%; max-width:48%; padding:0; margin:0; overflow:hidden;">
+              <img src="./images/profile.jpg" alt="Omar Kaykhusraw"
+                style="width:100%; height:100vh; display:block; object-fit:cover; object-position:center top; margin:0; padding:0; border-radius:0;" />
             </div>
 
           </div>
 
-          <!-- Next chapter — positioned absolutely over the hero -->
-          <div style="position:absolute; bottom:1.5rem; left:3.5rem;">
+          <!-- Next chapter — positioned absolutely at bottom-left, clear of left-bar -->
+          <div style="position:absolute; bottom:1.5rem; left:100px;">
             <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter">
               <span class="page">01/05</span>
               <span class="next">Next Chapter</span>
