@@ -81,19 +81,6 @@
         opacity: 1;
       }
 
-      /* About photo */
-      .about-photo {
-        width: 100%;
-        max-width: 300px;
-        height: auto;
-        aspect-ratio: 2 / 3;
-        border-radius: 12px;
-        object-fit: cover;
-        object-position: center top;
-        margin-bottom: 1.5rem;
-        display: block;
-      }
-
       /* Teaching */
       .teaching-item {
         margin-bottom: 1.5rem;
@@ -225,7 +212,21 @@
               </div>
             </div>
             <div class="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4">
-              <img src="./images/profile.jpg" alt="Omar Kaykhusraw" class="about-photo" />
+              <div class="img-wrapper">
+                <div class="waves-top">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <img class="img-fluid rounded-circle hero-img" src="./images/profile.jpg" alt="Omar Kaykhusraw" />
+                <div class="waves-bottom">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
             </div>
             <div class="col-12">
               <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter">
