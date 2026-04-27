@@ -149,6 +149,21 @@
         transition: background 0.3s, transform 0.3s;
       }
       .gallery-dot.active { background: #fff; transform: scale(1.25); }
+
+      /* ── Hero: match the bottom gap to the top gap.
+         Top gap = hero padding-top (20px) + hero-content padding-top (40px) = 60px.
+         Next Chapter's original padding-top was 120px — replaced with 60px.
+         At 1400px+ the hero padding-top becomes 90px → total top gap = 130px. ── */
+      section.hero .next-chapter {
+        padding-top: 60px !important;
+        padding-bottom: 20px !important;
+      }
+      @media (min-width: 1400px) {
+        section.hero .next-chapter {
+          padding-top: 130px !important;
+          padding-bottom: 90px !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -188,11 +203,7 @@
       </ul>
     </div>
 
-    <div class="email-icon">
-      <a href="mailto:omar.kaykhusraw@gmail.com">
-        <i class="ph ph-envelope"></i>
-      </a>
-    </div>
+    <!-- email-icon intentionally removed -->
 
     <main>
       <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
@@ -293,7 +304,7 @@
                   Longer-run equilibrium interest rates: evidence from the United Kingdom
                 </a>
               </p>
-              <p class="paper-meta"><em>Economica</em>, 92(366): 457–482, 2024.</p>
+              <p class="paper-meta"><em>Economica</em>, 92(366): 457&ndash;482, 2024.</p>
             </div>
           </div>
 
@@ -603,21 +614,9 @@
         <i class="ph ph-gear-six"></i>
       </button>
       <div class="pallets d-flex flex-column align-items-center gap-4 justify-content-center">
-        <div class="d-flex flex-column gap-3">
-          <div class="d-flex gap-3">
-            <button style="background-color: #ffdb67" class="color-btn" data-color="255, 219, 103"></button>
-            <button style="background-color: #ff91fb" class="color-btn" data-color="255, 145, 251"></button>
-            <button style="background-color: #fdbb2e" class="color-btn" data-color="253, 187, 46"></button>
-          </div>
-          <div class="d-flex gap-3">
-            <button style="background-color: #eee8aa" class="color-btn" data-color="238, 232, 170"></button>
-            <button style="background-color: #00ffff" class="color-btn" data-color="0, 255, 255"></button>
-            <button style="background-color: #00fe9c" class="color-btn" data-color="0, 254, 156"></button>
-          </div>
-        </div>
-        <div class="d-flex gap-3 justify-content-between">
-          <button class="px-3 ltr py-2 border-0">LTR</button>
-          <button class="px-3 rtl py-2 border-0">RTL</button>
+        <div class="d-flex gap-3">
+          <button style="background-color: #ffdb67" class="color-btn" data-color="255, 219, 103"></button>
+          <button style="background-color: #eee8aa" class="color-btn" data-color="238, 232, 170"></button>
         </div>
         <div class="d-flex align-items-center gap-3">
           <label for="grained">Grained BG</label>
