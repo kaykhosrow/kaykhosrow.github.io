@@ -15,6 +15,19 @@
         -webkit-text-size-adjust: 100%;
       }
 
+      /* Disable GSAP intro animations — prevents hero content staying invisible */
+      .freelancer,
+      #typewriter,
+      .hero-content .description,
+      .hero-content .d-flex,
+      .img-wrapper,
+      .hero-img {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        transition: none !important;
+      }
+
       /* Typewriter overflow fix */
       #typewriter {
         overflow: visible !important;
