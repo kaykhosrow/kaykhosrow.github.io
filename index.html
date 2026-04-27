@@ -149,21 +149,6 @@
         transition: background 0.3s, transform 0.3s;
       }
       .gallery-dot.active { background: #fff; transform: scale(1.25); }
-
-      /* ── Hero: match the bottom gap to the top gap.
-         Top gap = hero padding-top (20px) + hero-content padding-top (40px) = 60px.
-         Next Chapter's original padding-top was 120px — replaced with 60px.
-         At 1400px+ the hero padding-top becomes 90px → total top gap = 130px. ── */
-      section.hero .next-chapter {
-        padding-top: 60px !important;
-        padding-bottom: 20px !important;
-      }
-      @media (min-width: 1400px) {
-        section.hero .next-chapter {
-          padding-top: 130px !important;
-          padding-bottom: 90px !important;
-        }
-      }
     </style>
   </head>
   <body>
@@ -203,7 +188,11 @@
       </ul>
     </div>
 
-    <!-- email-icon intentionally removed -->
+    <div class="email-icon">
+      <a href="mailto:omar.kaykhusraw@gmail.com">
+        <i class="ph ph-envelope"></i>
+      </a>
+    </div>
 
     <main>
       <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
@@ -304,7 +293,7 @@
                   Longer-run equilibrium interest rates: evidence from the United Kingdom
                 </a>
               </p>
-              <p class="paper-meta"><em>Economica</em>, 92(366): 457&ndash;482, 2024.</p>
+              <p class="paper-meta"><em>Economica</em>, 92(366): 457–482, 2024.</p>
             </div>
           </div>
 
