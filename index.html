@@ -81,59 +81,6 @@
         opacity: 1;
       }
 
-      /* Hero full-bleed layout */
-      .hero-fullbleed {
-        display: flex !important;
-        align-items: stretch !important;
-        min-height: 100vh !important;
-        padding: 0 !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        overflow: hidden;
-      }
-      .hero-left {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 4rem 5rem;
-        position: relative;
-      }
-      .hero-next {
-        position: absolute;
-        bottom: 2.5rem;
-        left: 5rem;
-      }
-      .hero-right {
-        width: 42%;
-        flex-shrink: 0;
-        display: flex;
-        align-items: stretch;
-      }
-      .hero-bar {
-        width: 6px;
-        background: #000;
-        flex-shrink: 0;
-      }
-      .hero-panel-img {
-        flex: 1;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center top;
-        display: block;
-        border-radius: 0 !important;
-      }
-
-      /* Move gear to top-right over the image */
-      .color-switcher {
-        position: fixed !important;
-        top: 1.2rem !important;
-        right: 1.2rem !important;
-        bottom: auto !important;
-        left: auto !important;
-      }
-
       /* About photo */
       .about-photo {
         width: 100%;
@@ -254,32 +201,39 @@
       </ul>
     </div>
 
+    <div class="email-icon">
+      <a href="mailto:omar.kaykhusraw@gmail.com">
+        <i class="ph ph-envelope"></i>
+      </a>
+    </div>
 
     <main>
       <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
 
         <!-- Hero -->
-        <section id="top" class="hero hero-fullbleed">
-          <div class="hero-left">
-            <div class="hero-content">
+        <section id="top" class="hero container">
+          <div class="row gx-4 align-items-center">
+            <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
                 <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
+
               </div>
               <div class="d-flex gap-4">
                 <a href="#about_me" class="btn work-btn text-capitalize btn-secondary">About me</a>
                 <a href="#research" class="btn contact-btn text-capitalize btn-outline-secondary">Research</a>
               </div>
             </div>
-            <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter hero-next">
-              <span class="page">01/05</span>
-              <span class="next">Next Chapter</span>
-              <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
-            </a>
-          </div>
-          <div class="hero-right">
-            <div class="hero-bar"></div>
-            <img src="./images/profile.jpg" alt="Omar Kaykhusraw" class="hero-panel-img" />
+            <div class="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4">
+              <img src="./images/profile.jpg" alt="Omar Kaykhusraw" class="about-photo" />
+            </div>
+            <div class="col-12">
+              <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter">
+                <span class="page">01/05</span>
+                <span class="next">Next Chapter</span>
+                <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
+              </a>
+            </div>
           </div>
         </section>
 
