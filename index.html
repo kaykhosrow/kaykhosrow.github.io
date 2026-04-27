@@ -618,6 +618,11 @@
           <button style="background-color: #ffdb67" class="color-btn" data-color="255, 219, 103"></button>
           <button style="background-color: #eee8aa" class="color-btn" data-color="238, 232, 170"></button>
         </div>
+        <div class="d-flex gap-3 justify-content-center">
+          <button class="px-3 ltr py-2 border-0">LTR</button>
+          <!-- RTL hidden but present so app.js doesn't throw a null error -->
+          <button class="rtl" style="display:none" aria-hidden="true"></button>
+        </div>
         <div class="d-flex align-items-center gap-3">
           <label for="grained">Grained BG</label>
           <input type="checkbox" id="grained" class="grained-checkbox" />
