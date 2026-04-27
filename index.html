@@ -164,27 +164,29 @@
           padding-bottom: 90px !important;
         }
       }
-      /* ── Color switcher: restore flex layout, narrower pallets (160px).
-         Closed: translate(160px) so the 50px gear tab peeks at screen edge.
-         Opened: translate(0) shows full panel. ── */
+      /* ── Color switcher: gear stretches to full panel height (flush join),
+         pallets auto-width to fit content exactly, no extra right space. ── */
       .color-switcher {
         display: flex !important;
-        align-items: center !important;
-        transform: translate(160px, -50%) !important;
+        align-items: stretch !important;
+        transform: translate(150px, -50%) !important;
       }
       .color-switcher.opened {
         transform: translate(0, -50%) !important;
       }
       .color-switcher .pallets {
-        width: 160px !important;
-        padding: 16px !important;
+        width: auto !important;
+        padding: 14px !important;
         border-radius: 8px !important;
       }
       .color-switcher .color-switcher-btn {
         border-radius: 8px 0 0 8px !important;
         background-color: rgb(var(--white)) !important;
         width: 50px !important;
-        height: 50px !important;
+        height: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
     </style>
   </head>
