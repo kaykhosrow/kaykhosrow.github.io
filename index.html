@@ -37,6 +37,15 @@
       /* =============================================
          FULL-BLEED HERO IMAGE
       ============================================= */
+
+      /* Kill any theme-injected top spacing on hero and its wrappers */
+      main,
+      main > .col-12,
+      section#top.hero {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+      }
+
       section#top.hero {
         min-height: 100vh;
         overflow: hidden;
@@ -257,21 +266,15 @@
       </ul>
     </div>
 
-    <div class="email-icon">
-      <a href="mailto:omar.kaykhusraw@gmail.com">
-        <i class="ph ph-envelope"></i>
-      </a>
-    </div>
-
     <main>
       <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
 
         <!-- Hero -->
-        <section id="top" class="hero" style="position:relative; width:100%; max-width:100%; margin:0; padding:0 !important; overflow:hidden;">
-          <div class="row gx-0 align-items-stretch" style="min-height:100vh; margin:0; flex-wrap:nowrap;">
+        <section id="top" class="hero" style="position:relative; width:100vw; max-width:100vw; margin:0 !important; padding:0 !important; overflow:hidden;">
+          <div style="display:flex; flex-direction:row; flex-wrap:nowrap; align-items:stretch; min-height:100vh; margin:0; padding:0;">
 
             <!-- Left: text content — padded to clear the fixed left-bar (~70px) -->
-            <div class="col hero-content" style="flex:0 0 52%; max-width:52%; display:flex; flex-direction:column; justify-content:center; padding: 2.5rem 3rem 2.5rem 100px;">
+            <div class="hero-content" style="flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; padding: 2.5rem 3rem 2.5rem 100px; min-width:0;">
               <div>
                 <h4 class="text-uppercase freelancer">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -282,15 +285,15 @@
               </div>
             </div>
 
-            <!-- Right: full-bleed image — wider column = less zoom -->
-            <div style="flex:0 0 48%; max-width:48%; padding:0; margin:0; overflow:hidden;">
+            <!-- Right: image at natural aspect ratio (1024×1536), height=100vh, width auto — no cropping -->
+            <div style="flex:0 0 auto; padding:0; margin:0; line-height:0;">
               <img src="./images/profile.jpg" alt="Omar Kaykhusraw"
-                style="width:100%; height:100vh; display:block; object-fit:cover; object-position:center top; margin:0; padding:0; border-radius:0;" />
+                style="height:100vh; width:auto; display:block; margin:0; padding:0; border-radius:0; vertical-align:top;" />
             </div>
 
           </div>
 
-          <!-- Next chapter — positioned absolutely at bottom-left, clear of left-bar -->
+          <!-- Next chapter -->
           <div style="position:absolute; bottom:1.5rem; left:100px;">
             <a href="#about_me" class="d-flex gap-4 align-items-center next-chapter">
               <span class="page">01/05</span>
