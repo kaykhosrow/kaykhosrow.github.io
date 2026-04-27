@@ -377,16 +377,23 @@
 							isAnimating = true;
 
 							if (targetReal < 0) {
-								// Wrapping backward: jump to clone-first (far right), animate left to real-last
-								var realIdx = total - 1;
+								// Backward wrap: first → last
+								// Force clone-first (far right) to full opacity silently
+								var cloneFirst = allSlides[total + 1];
+								cloneFirst.style.transition = 'none';
+								cloneFirst.style.opacity    = '1';
+								// Jump silently to clone-first
 								track.style.transition = 'none';
 								track.style.transform  = 'translateX(' + centreOffset(total + 1) + 'px)';
 								requestAnimationFrame(function () {
 									requestAnimationFrame(function () {
-										current = realIdx;
+										// Restore clone transition, switch active to real-last, animate
+										cloneFirst.style.transition = '';
+										cloneFirst.style.opacity    = '';
+										current = total - 1;
 										updateUI(current);
 										track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
-										track.style.transform  = 'translateX(' + centreOffset(realIdx + 1) + 'px)';
+										track.style.transform  = 'translateX(' + centreOffset(total) + 'px)';
 										track.addEventListener('transitionend', function onEnd() {
 											track.removeEventListener('transitionend', onEnd);
 											isAnimating = false;
@@ -395,16 +402,23 @@
 								});
 
 							} else if (targetReal >= total) {
-								// Wrapping forward: jump to clone-last (far left), animate right to real-first
-								var realIdx = 0;
+								// Forward wrap: last → first
+								// Force clone-last (far left) to full opacity silently
+								var cloneLast = allSlides[0];
+								cloneLast.style.transition = 'none';
+								cloneLast.style.opacity    = '1';
+								// Jump silently to clone-last
 								track.style.transition = 'none';
 								track.style.transform  = 'translateX(' + centreOffset(0) + 'px)';
 								requestAnimationFrame(function () {
 									requestAnimationFrame(function () {
-										current = realIdx;
+										// Restore clone transition, switch active to real-first, animate
+										cloneLast.style.transition = '';
+										cloneLast.style.opacity    = '';
+										current = 0;
 										updateUI(current);
 										track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
-										track.style.transform  = 'translateX(' + centreOffset(realIdx + 1) + 'px)';
+										track.style.transform  = 'translateX(' + centreOffset(1) + 'px)';
 										track.addEventListener('transitionend', function onEnd() {
 											track.removeEventListener('transitionend', onEnd);
 											isAnimating = false;
@@ -413,7 +427,7 @@
 								});
 
 							} else {
-								// Normal step — no wrap needed
+								// Normal step
 								current = targetReal;
 								updateUI(current);
 								track.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1)';
