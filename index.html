@@ -256,10 +256,10 @@
         transform: scale(1.25);
       }
       /* Video gallery */
-      .vid-gallery { overflow: hidden; width: 100%; max-width: 460px; margin: 0 auto; cursor: grab; user-select: none; }
+      .vid-gallery { overflow: hidden; width: 100%; cursor: grab; user-select: none; }
       .vid-gallery:active { cursor: grabbing; }
       .vid-track { display: flex; will-change: transform; }
-      .vid-slide { flex: 0 0 100%; width: 100%; box-sizing: border-box; padding: 0 8px; }
+      .vid-slide { flex: 0 0 calc(100% / 3); box-sizing: border-box; padding: 0 8px; }
       .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 8px; }
       .vid-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; }
       .vid-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 52px; height: 52px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; transition: background-color 0.2s; }
@@ -622,16 +622,22 @@
             var dotsEl  = document.getElementById('vidDots');
             var slides  = track.querySelectorAll('.vid-slide');
             var total   = slides.length;
-            var current = 0;
-            var startX  = 0;
-            var dragX   = 0;
-            var dragging = false;
-            var dragged  = false;
+            var current   = 0;
+            var startX    = 0;
+            var dragX     = 0;
+            var dragging  = false;
+            var dragged   = false;
             var THRESHOLD = 50;
+            var visible   = 3;
+            var maxIdx    = total - visible;
+
+            function slideWidth() {
+              return track.parentElement.offsetWidth / visible;
+            }
 
             /* dots */
             var dots = [];
-            for (var i = 0; i < total; i++) {
+            for (var i = 0; i <= maxIdx; i++) {
               var d = document.createElement('div');
               d.className = 'vid-dot';
               (function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
@@ -640,9 +646,9 @@
             }
 
             function goTo(idx) {
-              current = (idx + total) % total;
+              current = Math.max(0, Math.min(idx, maxIdx));
               track.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
-              track.style.transform  = 'translateX(-' + (current * 100) + '%)';
+              track.style.transform  = 'translateX(-' + (current * slideWidth()) + 'px)';
               dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
             }
 
@@ -651,7 +657,7 @@
               if (!dragging) return;
               dragX = x - startX;
               if (Math.abs(dragX) > 5) dragged = true;
-              track.style.transform = 'translateX(calc(-' + (current * 100) + '% + ' + dragX + 'px))';
+              track.style.transform = 'translateX(calc(-' + (current * slideWidth()) + 'px + ' + dragX + 'px))';
             }
             function dragEnd() {
               if (!dragging) return;
@@ -691,6 +697,7 @@
             });
 
             goTo(0);
+            window.addEventListener('resize', function() { goTo(current); });
           })();
           </script>
 
