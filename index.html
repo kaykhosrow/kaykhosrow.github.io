@@ -131,8 +131,8 @@
       .view-all-code:hover .vac-arrow { background: rgb(var(--black)); color: rgb(var(--primary)); }
       .view-all-code .vac-arrow .waves-top-sm,
       .view-all-code .vac-arrow .waves-bottom-sm { transition: opacity 0.3s ease; }
-      .view-all-code:hover .vac-arrow .waves-top-sm,
-      .view-all-code:hover .vac-arrow .waves-bottom-sm { opacity: 0; }
+      .vac-arrow:hover .waves-top-sm,
+      .vac-arrow:hover .waves-bottom-sm { opacity: 0; }
 
       /* Code section buttons */
       .code-btn {
@@ -715,11 +715,11 @@
         if (!link) return;
         var arrow = link.querySelector('.vac-arrow');
         if (!arrow) return;
-        link.addEventListener('mouseenter', function() {
+        arrow.addEventListener('mouseenter', function() {
           var ws = arrow.querySelectorAll('.waves-top-sm, .waves-bottom-sm');
           ws.forEach(function(w) { w.style.opacity = '0'; });
         });
-        link.addEventListener('mouseleave', function() {
+        arrow.addEventListener('mouseleave', function() {
           var ws = arrow.querySelectorAll('.waves-top-sm, .waves-bottom-sm');
           ws.forEach(function(w) { w.style.opacity = ''; });
         });
