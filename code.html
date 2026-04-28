@@ -16,6 +16,19 @@
       .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
       .back-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 2rem; opacity: 0.7; transition: opacity 0.2s; }
       .back-link:hover { opacity: 1; }
+
+      /* Code section buttons */
+      .code-btn {
+        font-size: 0.82rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 4px !important;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+      }
+      .code-btn:hover {
+        background-color: #000 !important;
+        border-color: #000 !important;
+        color: #fff !important;
+      }
     </style>
   </head>
   <body>
@@ -81,25 +94,25 @@
           <div class="code-item">
             <h5>Time-Varying Phillips Curves</h5>
             <p>This tool presents time-varying estimates of the Phillips curve across multiple regions.<br> Using kernel-weighted regression methods, it traces the relationship between inflation<br> and unemployment over time, capturing structural shifts that static models often miss.</p>
-            <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Site&gt;</a>
+            <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Site&gt;</a>
           </div>
 
           <div class="code-item">
             <h5>Unobserved Components Model</h5>
             <p>This function implements the Stock and Watson (2007) unobserved components<br> model with stochastic volatilities. It employs a gamma random variable generator<br> function and can be used to extract the trend of any given univariate time series.</p>
-            <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
+            <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
           </div>
 
           <div class="code-item">
             <h5>VAR Historical Decomposition</h5>
             <p>This function takes in the output from the VAR function (refer to the vars package)<br> and computes the vector autoregression historical decomposition. It is an abridged<br> translation of Cesa-Bianchi's MATLAB code (from his VAR-Toolbox) designed for R.</p>
-            <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
+            <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
           </div>
 
           <div class="code-item">
             <h5>Gaussian Error Propagation</h5>
             <p>This function determines the uncertainty of any mathematical expression containing<br> estimated variables with uncertainties by taking partial derivatives with respect to each<br> variable multiplied by their uncertainty and added in quadrature.</p>
-            <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
+            <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
           </div>
 
         </section>
