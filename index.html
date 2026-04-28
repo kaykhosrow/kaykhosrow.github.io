@@ -68,7 +68,7 @@
       .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
 
       /* Gallery carousel */
-      .gallery-carousel { overflow: hidden; width: 100%; max-width: 680px; margin: 0 auto; }
+      .gallery-carousel { overflow: hidden; width: 100%; max-width: 460px; margin: 0 auto; }
       .gallery-track { display: flex; flex-direction: row; will-change: transform; }
       .gallery-slide { flex: 0 0 80%; width: 80%; box-sizing: border-box; padding: 0 10px; opacity: 0.3; transition: opacity 0.4s ease; }
       .gallery-slide.active { opacity: 1; }
@@ -576,53 +576,39 @@
             <h2>Gallery</h2>
           </div>
 
-          <div class="gallery-swiper">
+          <div dir="ltr" class="swiper gallery-swiper" style="max-width:460px; margin:0 auto;">
             <div class="swiper-wrapper">
 
-              <div class="swiper-slide">
+              <div class="swiper-slide overflow-visible p-2">
                 <div class="gallery-video-wrapper">
                   <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg)" data-id="SvZ_sF7gamI"></div>
                 </div>
               </div>
 
-              <div class="swiper-slide">
+              <div class="swiper-slide overflow-visible p-2">
                 <div class="gallery-video-wrapper">
                   <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div>
                 </div>
               </div>
 
-              <div class="swiper-slide">
+              <div class="swiper-slide overflow-visible p-2">
                 <div class="gallery-video-wrapper">
                   <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div>
                 </div>
               </div>
 
-              <div class="swiper-slide">
+              <div class="swiper-slide overflow-visible p-2">
                 <div class="gallery-video-wrapper">
                   <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div>
                 </div>
               </div>
 
             </div>
-            <div class="swiper-pagination gallery-pagination"></div>
+            <div class="swiper-pagination gallery-pagination" style="margin-top:20px; position:relative;"></div>
           </div>
 
           <script>
-          setTimeout(function() {
-            var gallerySwiper = new Swiper('.gallery-swiper', {
-              slidesPerView: 1.2,
-              spaceBetween: 16,
-              grabCursor: true,
-              centeredSlides: true,
-              pagination: {
-                el: '.gallery-pagination',
-                clickable: true,
-              },
-              breakpoints: {
-                768: { slidesPerView: 2.2, spaceBetween: 20 },
-                992: { slidesPerView: 3, spaceBetween: 24 }
-              }
-            });
+          document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.gallery-swiper').addEventListener('click', function(e) {
               var thumb = e.target.closest('.gallery-thumb');
               if (!thumb) return;
@@ -639,7 +625,7 @@
               }
               iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1';
             });
-          }, 300);
+          });
           </script>
 
           <div class="col mt-5 pt-5 next-chapter">
