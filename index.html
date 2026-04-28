@@ -180,6 +180,14 @@
         border-color: #000 !important;
         color: #fff !important;
       }
+      /* About image hover shadow */
+      .about-img {
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+      }
+      .about-img:hover {
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+        transform: translateY(-3px);
+      }
     </style>
   </head>
   <body>
@@ -285,6 +293,7 @@
               <img
                 src="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png"
                 alt="Omar Kaykhusraw"
+                class="about-img"
                 style="max-width: 100%; max-height: 480px; object-fit: cover;"
               />
             </div>
