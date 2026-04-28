@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kaykhusraw</title>
+    <title>Kaykhusraw, O.</title>
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
@@ -304,6 +304,14 @@
       #code .view-all-code { margin-top: 0.75rem; }
       #conferences .next-chapter { padding-top: 30px; }
       #teaching .next-chapter { padding-top: 45px; }
+      /* Hide template images/portify content in mobile nav */
+      @media (max-width: 1200px) {
+        .navigation img,
+        .navigation .nav-logo,
+        .navigation .logo,
+        .navigation > img,
+        .navigation .contact { display: none !important; }
+      }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
