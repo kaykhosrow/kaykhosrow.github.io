@@ -129,6 +129,28 @@
       .view-all-code .vac-line { display: block; width: 100px; height: 1px; background: currentColor; flex-shrink: 0; }
       .view-all-code .vac-arrow { width: 52px; height: 52px; border-radius: 50%; border: 1px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: background 0.3s, color 0.3s; flex-shrink: 0; position: relative; }
       .vac-arrow:hover { background: rgb(var(--black)); color: rgb(var(--primary)); }
+      @keyframes vacRippleCard {
+        from { transform: scale(1); opacity: 0.5; }
+        to   { transform: scale(1.25); opacity: 0; }
+      }
+      .card-ripple {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 1px solid rgb(var(--black));
+        animation: vacRippleCard 2.5s linear infinite;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .card-ripple:nth-child(2) { animation-delay: 0.625s; }
+      .card-ripple:nth-child(3) { animation-delay: 1.25s; }
+      .card-ripple:nth-child(4) { animation-delay: 1.875s; }
+      .service-card:hover .card-ripple { opacity: 1; }
+      @keyframes vacRippleSubmit {
+        from { transform: scale(1); opacity: 0.6; }
+        to   { transform: scale(1.3); opacity: 0; }
+      }
       @keyframes vacRipple {
         from { transform: scale(1); opacity: 0.6; }
         to   { transform: scale(1.5); opacity: 0; }
@@ -146,6 +168,7 @@
       .vac-ripple:nth-child(3) { animation-delay: 1.25s; }
       .vac-ripple:nth-child(4) { animation-delay: 1.875s; }
       .vac-arrow:hover .vac-ripple { opacity: 0 !important; }
+      .contact-form .submit-btn .vac-ripple { animation-name: vacRippleSubmit; }
       .contact-form .submit-btn:hover .vac-ripple { opacity: 0 !important; }
 
       /* Code section buttons */
@@ -313,9 +336,8 @@
                   <div class="card-inner"></div>
                   <div class="content">
                     <div class="number-circle">
-                      <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
+                      <div class="card-ripple"></div><div class="card-ripple"></div><div class="card-ripple"></div><div class="card-ripple"></div>
                       <h2>01</h2>
-                      <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
                     </div>
                     <h4>Working Paper</h4>
                     <ul class="service-list">
@@ -333,9 +355,8 @@
                   <div class="card-inner"></div>
                   <div class="content">
                     <div class="number-circle">
-                      <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
+                      <div class="card-ripple"></div><div class="card-ripple"></div><div class="card-ripple"></div><div class="card-ripple"></div>
                       <h2>02</h2>
-                      <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
                     </div>
                     <h4>Working Paper</h4>
                     <ul class="service-list">
@@ -352,9 +373,8 @@
                   <div class="card-inner"></div>
                   <div class="content">
                     <div class="number-circle">
-                      <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
+                      <div class="card-ripple"></div><div class="card-ripple"></div><div class="card-ripple"></div><div class="card-ripple"></div>
                       <h2>03</h2>
-                      <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
                     </div>
                     <h4>Working Paper</h4>
                     <ul class="service-list">
@@ -372,9 +392,8 @@
                   <div class="card-inner"></div>
                   <div class="content">
                     <div class="number-circle">
-                      <div class="waves-top-sm"><span></span><span></span><span></span><span></span></div>
+                      <div class="card-ripple"></div><div class="card-ripple"></div><div class="card-ripple"></div><div class="card-ripple"></div>
                       <h2>04</h2>
-                      <div class="waves-bottom-sm"><span></span><span></span><span></span><span></span></div>
                     </div>
                     <h4>Working Paper</h4>
                     <ul class="service-list">
