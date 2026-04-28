@@ -7,8 +7,14 @@
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
-      /* Hero vertical centering */
-
+      /* Hero */
+      section.hero {
+        min-height: unset !important;
+        height: calc(100vh - 95px);
+        display: flex;
+        flex-direction: column;
+      }
+      section.hero .row:first-child { flex: 1; }
 
       /* Zoom fix */
       html {
@@ -18,16 +24,20 @@
       }
 
       /* Disable GSAP intro animations */
+      .hero-content,
+      .hero-content > div,
       .freelancer,
       #typewriter,
       .hero-content .description,
       .hero-content .d-flex,
+      .hero .row,
+      .hero .row > *,
       .img-wrapper,
       .hero-img {
         opacity: 1 !important;
         transform: none !important;
         animation: none !important;
-        transition: none !important;
+        visibility: visible !important;
       }
 
       /* Typewriter overflow fix */
@@ -84,13 +94,11 @@
 
       /* Hero */
       section.hero {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
         min-height: unset !important;
         height: calc(100vh - 145px);
+        padding-top: 8vh !important;
       }
-      section.hero .next-chapter { padding-top: 60px !important; padding-bottom: 20px !important; }
+      section.hero .next-chapter { padding-top: 4vh !important; padding-bottom: 2vh !important; }
 
       /* Settings bar */
       .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-left: 1px solid rgba(0,0,0,0.1); }
