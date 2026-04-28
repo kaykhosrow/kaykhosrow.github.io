@@ -576,7 +576,7 @@
             <h2>Gallery</h2>
           </div>
 
-          <div dir="ltr" class="swiper gallery-swiper" style="max-width:460px; margin:0 auto;">
+          <div class="gallery-swiper" style="max-width:460px; margin:0 auto; overflow:hidden;">
             <div class="swiper-wrapper">
 
               <div class="swiper-slide overflow-visible p-2">
@@ -608,7 +608,18 @@
           </div>
 
           <script>
-          document.addEventListener('DOMContentLoaded', function() {
+          window.addEventListener('load', function() {
+            var gs = new Swiper('.gallery-swiper', {
+              slidesPerView: 1,
+              spaceBetween: 16,
+              grabCursor: true,
+              loop: true,
+              pagination: {
+                el: '.gallery-pagination',
+                clickable: true,
+              }
+            });
+
             document.querySelector('.gallery-swiper').addEventListener('click', function(e) {
               var thumb = e.target.closest('.gallery-thumb');
               if (!thumb) return;
