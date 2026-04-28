@@ -40,6 +40,15 @@
         .navigation > img,
         .navigation .contact { display: none !important; }
       }
+      /* Match index.html left bar icon borders */
+      .left-bar ul li a { border: 2px solid rgba(0,0,0,0.35); border-radius: 4px; }
+      /* Suppress nav slide animation during resize */
+      .navigation.no-transition,
+      .navigation.no-transition * { transition: none !important; }
+      @media (max-width: 1199px) {
+        .navigation { transform: translateX(-120%) !important; }
+        .navigation.opened { transform: translateX(0) !important; }
+      }
     </style>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='80'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
   </head>
@@ -162,6 +171,20 @@
         // Watch for dynamic injection
         var observer = new MutationObserver(removePortifyBranding);
         observer.observe(document.body, { childList: true, subtree: true });
+      })();
+    </script>
+    <script>
+      (function() {
+        var nav = document.getElementById('navigation');
+        if (!nav) return;
+        var timer;
+        function freeze() {
+          nav.classList.add('no-transition');
+          clearTimeout(timer);
+          timer = setTimeout(function() { nav.classList.remove('no-transition'); }, 200);
+        }
+        freeze();
+        window.addEventListener('resize', freeze);
       })();
     </script>
   </body>
