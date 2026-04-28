@@ -314,6 +314,15 @@
         .navigation > img,
         .navigation .contact { display: none !important; }
       }
+      /* Hero next-chapter fade in */
+      .hero .next-chapter {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUpIn 0.8s ease 1.5s forwards;
+      }
+      @keyframes fadeUpIn {
+        to { opacity: 1; transform: translateY(0); }
+      }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
