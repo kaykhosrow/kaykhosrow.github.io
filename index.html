@@ -41,8 +41,6 @@
       /* Disable GSAP intro animations */
       .hero-content,
       .hero-content > div,
-      .freelancer,
-      #typewriter,
       .hero-content .description,
       .hero-content .d-flex,
       .hero .row,
@@ -55,14 +53,7 @@
         visibility: visible !important;
       }
 
-      /* Typewriter overflow fix */
-      #typewriter {
-        overflow: visible !important;
-        white-space: nowrap;
-        margin-left: -3px;
-        min-height: 1.2em;
-        display: block;
-      }
+
 
       /* Research section typography */
       .research-block { margin-bottom: 2.5rem; }
@@ -314,7 +305,37 @@
         .navigation > img,
         .navigation .contact { display: none !important; }
       }
-      /* Hero next-chapter fade in */
+        to   { opacity: 1; transform: translateY(0); }
+      }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      /* Typewriter */
+      #typewriter {
+        overflow: visible !important;
+        white-space: nowrap;
+        margin-left: -3px;
+        min-height: 1.2em;
+        display: block;
+        opacity: 0;
+        transform: translateY(15px);
+        animation: twFadeUp 0.6s ease 0.9s forwards;
+      }
+      @keyframes twFadeUp {
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Name slides up from typewriter position */
+      .freelancer {
+        opacity: 0;
+        transform: translateY(var(--name-offset, 80px));
+        animation: nameSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
+      }
+      @keyframes nameSlideUp {
+        from { opacity: 0; transform: translateY(var(--name-offset, 80px)); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Next chapter fades up */
       .hero .next-chapter {
         opacity: 0;
         transform: translateY(20px);
@@ -322,32 +343,6 @@
       }
       @keyframes fadeUpIn {
         to { opacity: 1; transform: translateY(0); }
-      }
-      /* Name slides up from typewriter position */
-      .freelancer {
-        opacity: 0;
-        animation: nameSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
-      }
-      @keyframes nameSlideUp {
-        from { opacity: 0; transform: translateY(var(--name-offset, 80px)); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-      /* Trailing cursor fades up behind name */
-      #typewriter::after {
-        content: '|';
-        font-weight: 300;
-        opacity: 0;
-        transform: translateY(var(--name-offset, 80px));
-        display: inline-block;
-        animation: cursorTrail 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.35s forwards,
-                   hideFakeCursor 0s 0.95s forwards;
-      }
-      @keyframes cursorTrail {
-        from { opacity: 1; transform: translateY(var(--name-offset, 80px)); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes hideFakeCursor {
-        to { opacity: 0; }
       }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
