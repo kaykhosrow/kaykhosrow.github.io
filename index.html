@@ -129,6 +129,19 @@
       .view-all-code .vac-line { display: block; width: 100px; height: 1px; background: currentColor; flex-shrink: 0; }
       .view-all-code .vac-arrow { width: 52px; height: 52px; border-radius: 50%; border: 1px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: background 0.3s, color 0.3s; flex-shrink: 0; position: relative; }
       .view-all-code:hover .vac-arrow { background: rgb(var(--black)); color: rgb(var(--primary)); }
+
+      /* Code section buttons */
+      .code-btn {
+        font-size: 0.74rem;
+        padding: 0.21rem 0.43rem;
+        border-radius: 4px !important;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+      }
+      .code-btn:hover {
+        background-color: #000 !important;
+        border-color: #000 !important;
+        color: #fff !important;
+      }
     </style>
   </head>
   <body>
@@ -413,19 +426,19 @@
           <div class="code-item">
             <h5>Time-Varying Phillips Curves</h5>
             <p>This tool presents time-varying estimates of the Phillips curve across multiple regions.<br> Using kernel-weighted regression methods, it traces the relationship between inflation<br> and unemployment over time, capturing structural shifts that static models often miss.</p>
-            <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Site&gt;</a>
+            <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Site&gt;</a>
           </div>
 
           <div class="code-item">
             <h5>Unobserved Components Model</h5>
             <p>This function implements the Stock and Watson (2007) unobserved components<br> model with stochastic volatilities. It employs a gamma random variable generator<br> function and can be used to extract the trend of any given univariate time series.</p>
-            <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
+            <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
           </div>
 
           <div class="code-item">
             <h5>VAR Historical Decomposition</h5>
             <p>This function takes in the output from the VAR function (refer to the vars package)<br> and computes the vector autoregression historical decomposition. It is an abridged<br> translation of Cesa-Bianchi's MATLAB code (from his VAR-Toolbox) designed for R.</p>
-            <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-secondary text-capitalize btn-sm">&lt;/Code&gt;</a>
+            <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
           </div>
 
           <!-- View All link -->
