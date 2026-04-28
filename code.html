@@ -144,5 +144,26 @@
     <button class="ltr" style="display:none" aria-hidden="true"></button>
     <button class="rtl" style="display:none" aria-hidden="true"></button>
 
+    <script>
+      (function() {
+        function removePortifyBranding() {
+          var nav = document.getElementById('navigation');
+          if (!nav) return;
+          nav.querySelectorAll('img, a.navbar-brand, .nav-logo, [class*="logo"], [class*="brand"]').forEach(function(el) { el.remove(); });
+          // Also remove any element whose text is "Portify"
+          nav.querySelectorAll('*').forEach(function(el) {
+            if (el.children.length === 0 && el.textContent.trim() === 'Portify') el.parentNode && el.parentNode.remove();
+          });
+        }
+        removePortifyBranding();
+        document.addEventListener('DOMContentLoaded', removePortifyBranding);
+        setTimeout(removePortifyBranding, 200);
+        setTimeout(removePortifyBranding, 600);
+        setTimeout(removePortifyBranding, 1500);
+        // Watch for dynamic injection
+        var observer = new MutationObserver(removePortifyBranding);
+        observer.observe(document.body, { childList: true, subtree: true });
+      })();
+    </script>
   </body>
 </html>
