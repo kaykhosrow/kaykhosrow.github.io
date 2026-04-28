@@ -682,6 +682,20 @@
               wrapper.appendChild(iframe);
               var ov = document.createElement('div');
               ov.className = 'vid-play-overlay';
+              var isPlaying = true;
+              ov.addEventListener('click', function(e) {
+                if (dragged) return;
+                var f = wrapper.querySelector('iframe');
+                if (!f) return;
+                try {
+                  if (isPlaying) {
+                    f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}), '*');
+                  } else {
+                    f.contentWindow.postMessage(JSON.stringify({event:'command',func:'playVideo',args:[]}), '*');
+                  }
+                  isPlaying = !isPlaying;
+                } catch(e) {}
+              });
               wrapper.appendChild(ov);
             });
 
