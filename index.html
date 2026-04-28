@@ -188,22 +188,22 @@
       .about-img-wrap::after {
         content: '';
         position: absolute;
-        bottom: -22px;
+        bottom: -40px;
         left: 50%;
         transform: translateX(-50%);
-        width: 70%;
-        height: 30px;
+        width: 60%;
+        height: 18px;
         border-radius: 50%;
-        background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 70%);
-        filter: blur(6px);
-        transition: opacity 0.4s ease, width 0.4s ease, height 0.4s ease;
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 75%);
+        filter: blur(8px);
+        transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease;
         opacity: 0;
         pointer-events: none;
       }
       .about-img-wrap:hover::after {
         opacity: 1;
-        width: 80%;
-        height: 35px;
+        bottom: -36px;
+        width: 70%;
       }
       .about-img-wrap .about-img {
         transition: transform 0.4s ease;
