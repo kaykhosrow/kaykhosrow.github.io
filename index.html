@@ -277,12 +277,11 @@
       .vid-bar { flex: 1; height: 1px; background: rgba(0,0,0,0.3); transition: background 0.2s; }
       .vid-prev:hover .vid-bar, .vid-next:hover .vid-bar { background: rgba(0,0,0,0.8); }
       .vid-arrow { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
-      /* Conferences: stop vertical line extending beyond last item */
-      #conferences .experience-wrapper { padding-bottom: 0; }
-      #conferences .experience-wrapper::before { display: none; }
-      #conferences .experience-item::before { display: none; }
-      #conferences .experience-item { padding-left: 0; border-left: 2px solid rgba(0,0,0,0.3); padding-left: 20px; }
-      #conferences .experience-item:last-child { border-left: none; padding-left: 22px; }
+      /* Conferences: keep template line but stop it going past last item */
+      #conferences .experience-wrapper { padding-bottom: 0 !important; }
+      /* View All + next-chapter spacing */
+      #conferences .view-all-code { margin-top: 1.5rem; margin-bottom: 0; }
+      #conferences .next-chapter { padding-top: 2.5rem; }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
