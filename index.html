@@ -255,6 +255,18 @@
         border-color: #000;
         transform: scale(1.25);
       }
+      /* Video gallery */
+      .vid-gallery { overflow: hidden; width: 100%; max-width: 460px; margin: 0 auto; cursor: grab; user-select: none; }
+      .vid-gallery:active { cursor: grabbing; }
+      .vid-track { display: flex; will-change: transform; }
+      .vid-slide { flex: 0 0 100%; width: 100%; box-sizing: border-box; padding: 0 8px; }
+      .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 8px; }
+      .vid-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; }
+      .vid-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 52px; height: 52px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; transition: background-color 0.2s; }
+      .vid-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
+      .vid-dots { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+      .vid-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; border: 2.5px solid rgba(0,0,0,0.4); cursor: pointer; transition: background 0.3s, border-color 0.3s, transform 0.3s; }
+      .vid-dot.active { background: #000; border-color: #000; transform: scale(1.25); }
     </style>
   </head>
   <body>
@@ -578,40 +590,91 @@
             <h2>Gallery</h2>
           </div>
 
-          <div dir="ltr" class="swiper gallery-swiper">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide p-2">
-                <div class="gallery-video-wrapper">
-                  <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg)" data-id="SvZ_sF7gamI"></div>
+          <div class="vid-gallery">
+            <div class="vid-track" id="vidTrack">
+              <div class="vid-slide">
+                <div class="vid-wrapper">
+                  <div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg)" data-id="SvZ_sF7gamI"></div>
                 </div>
               </div>
-              <div class="swiper-slide p-2">
-                <div class="gallery-video-wrapper">
-                  <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div>
+              <div class="vid-slide">
+                <div class="vid-wrapper">
+                  <div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div>
                 </div>
               </div>
-              <div class="swiper-slide p-2">
-                <div class="gallery-video-wrapper">
-                  <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div>
+              <div class="vid-slide">
+                <div class="vid-wrapper">
+                  <div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div>
                 </div>
               </div>
-              <div class="swiper-slide p-2">
-                <div class="gallery-video-wrapper">
-                  <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div>
+              <div class="vid-slide">
+                <div class="vid-wrapper">
+                  <div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div>
                 </div>
               </div>
             </div>
-            <div class="swiper-pagination"></div>
           </div>
+          <div class="vid-dots" id="vidDots"></div>
 
           <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            var el = document.querySelector('.gallery-swiper');
-            if (el && el.swiper) {
-              if (el.swiper.autoplay) el.swiper.autoplay.stop();
+          (function() {
+            var track   = document.getElementById('vidTrack');
+            var dotsEl  = document.getElementById('vidDots');
+            var slides  = track.querySelectorAll('.vid-slide');
+            var total   = slides.length;
+            var current = 0;
+            var startX  = 0;
+            var dragX   = 0;
+            var dragging = false;
+            var dragged  = false;
+            var THRESHOLD = 50;
+
+            /* dots */
+            var dots = [];
+            for (var i = 0; i < total; i++) {
+              var d = document.createElement('div');
+              d.className = 'vid-dot';
+              (function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
+              dotsEl.appendChild(d);
+              dots.push(d);
             }
-            el.addEventListener('click', function(e) {
-              var thumb = e.target.closest('.gallery-thumb');
+
+            function goTo(idx) {
+              current = (idx + total) % total;
+              track.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+              track.style.transform  = 'translateX(-' + (current * 100) + '%)';
+              dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
+            }
+
+            function dragStart(x) { startX = x; dragX = 0; dragging = true; dragged = false; track.style.transition = 'none'; }
+            function dragMove(x)  {
+              if (!dragging) return;
+              dragX = x - startX;
+              if (Math.abs(dragX) > 5) dragged = true;
+              track.style.transform = 'translateX(calc(-' + (current * 100) + '% + ' + dragX + 'px))';
+            }
+            function dragEnd() {
+              if (!dragging) return;
+              dragging = false;
+              if (dragX < -THRESHOLD) goTo(current + 1);
+              else if (dragX > THRESHOLD) goTo(current - 1);
+              else goTo(current);
+            }
+
+            /* touch */
+            track.addEventListener('touchstart', function(e){ dragStart(e.touches[0].clientX); }, {passive:true});
+            track.addEventListener('touchmove',  function(e){ dragMove(e.touches[0].clientX); },  {passive:true});
+            track.addEventListener('touchend',   dragEnd);
+
+            /* mouse */
+            track.addEventListener('mousedown',  function(e){ dragStart(e.clientX); });
+            window.addEventListener('mousemove', function(e){ dragMove(e.clientX); });
+            window.addEventListener('mouseup',   dragEnd);
+
+            /* click to play */
+            track.addEventListener('click', function(e) {
+              if (dragged) return;
+              var thumb = e.target.closest('.vid-thumb');
               if (!thumb) return;
               var wrapper = thumb.parentNode;
               var id = thumb.getAttribute('data-id');
@@ -619,14 +682,16 @@
               var iframe = wrapper.querySelector('iframe');
               if (!iframe) {
                 iframe = document.createElement('iframe');
-                iframe.setAttribute('allowfullscreen', '');
-                iframe.setAttribute('allow', 'autoplay');
+                iframe.setAttribute('allowfullscreen','');
+                iframe.setAttribute('allow','autoplay');
                 iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';
                 wrapper.appendChild(iframe);
               }
               iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1';
             });
-          });
+
+            goTo(0);
+          })();
           </script>
 
           <div class="col mt-5 pt-5 next-chapter">
