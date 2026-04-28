@@ -68,7 +68,7 @@
       .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
 
       /* Gallery carousel */
-      .gallery-carousel { overflow: hidden; width: 100%; max-width: 380px; margin: 0 auto; }
+      .gallery-carousel { overflow: hidden; width: 100%; max-width: 520px; margin: 0 auto; }
       .gallery-track { display: flex; flex-direction: row; will-change: transform; }
       .gallery-slide { flex: 0 0 80%; width: 80%; box-sizing: border-box; padding: 0 10px; opacity: 0.3; transition: opacity 0.4s ease; }
       .gallery-slide.active { opacity: 1; }
@@ -83,8 +83,8 @@
       .gallery-slide:not(.active):hover .slide-overlay { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
       .gallery-slide:not(.active):hover { opacity: 0.65; }
       .gallery-dots { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 28px; }
-      .gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.25); cursor: pointer; transition: background 0.3s, transform 0.3s; }
-      .gallery-dot.active { background: #000; border-color: #000; transform: scale(1.25); }
+      .gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; border: 1.5px solid rgba(0,0,0,0.4); cursor: pointer; transition: background 0.3s, border-color 0.3s, transform 0.3s; }
+      .gallery-dot.active { background: #000; border: 1.5px solid #000; transform: scale(1.25); }
 
       /* Hero bottom gap */
       section.hero .next-chapter { padding-top: 60px !important; padding-bottom: 20px !important; }
