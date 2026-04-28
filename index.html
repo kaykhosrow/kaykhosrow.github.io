@@ -261,7 +261,7 @@
       .vid-gallery:active { cursor: grabbing; }
       .vid-track { display: flex; will-change: transform; }
       .vid-slide { flex: 0 0 calc(100% / 2); box-sizing: border-box; padding: 0 8px; }
-      .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 10px; border: 7px solid #000; }
+      .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 0; border: 7px solid #000; }
       .vid-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; }
       .vid-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 52px; height: 52px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; transition: background-color 0.2s; }
       .vid-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
