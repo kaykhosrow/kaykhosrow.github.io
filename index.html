@@ -256,7 +256,8 @@
         transform: scale(1.25);
       }
       /* Video gallery */
-      .vid-gallery { overflow: hidden; width: 100%; cursor: grab; user-select: none; }
+      .vid-gallery { overflow: hidden; width: 100%; user-select: none; }
+
       .vid-gallery:active { cursor: grabbing; }
       .vid-track { display: flex; will-change: transform; }
       .vid-slide { flex: 0 0 calc(100% / 2); box-sizing: border-box; padding: 0 8px; }
@@ -268,9 +269,14 @@
       .vid-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; border: 2.5px solid rgba(0,0,0,0.4); cursor: pointer; transition: background 0.3s, border-color 0.3s, transform 0.3s; }
       .vid-dot.active { background: #000; border-color: #000; transform: scale(1.25); }
       .vid-gallery-wrap { position: relative; width: 100%; }
-      .vid-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }
-      .vid-prev, .vid-next { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.4); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: background 0.2s, color 0.2s; flex-shrink: 0; }
-      .vid-prev:hover, .vid-next:hover { background: #000; color: #fff; border-color: #000; }
+      .vid-bottom { display: flex; align-items: center; margin-top: 24px; gap: 0; }
+      .vid-prev, .vid-next { display: flex; align-items: center; flex: 1; cursor: pointer; background: transparent; border: none; padding: 0; transition: opacity 0.2s; opacity: 0.5; }
+      .vid-prev:hover, .vid-next:hover { opacity: 1; }
+      .vid-prev { justify-content: flex-start; }
+      .vid-next { justify-content: flex-end; }
+      .vid-bar { flex: 1; height: 1px; background: rgba(0,0,0,0.3); transition: background 0.2s; }
+      .vid-prev:hover .vid-bar, .vid-next:hover .vid-bar { background: rgba(0,0,0,0.8); }
+      .vid-arrow { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
     </style>
   </head>
   <body>
@@ -605,9 +611,9 @@
           </div>
           </div>
           <div class="vid-bottom">
-            <button class="vid-prev" id="vidPrev"><i class="ph ph-arrow-left"></i></button>
+            <button class="vid-prev" id="vidPrev"><span class="vid-arrow"><i class="ph ph-arrow-left"></i></span><span class="vid-bar"></span></button>
             <div class="vid-dots" id="vidDots"></div>
-            <button class="vid-next" id="vidNext"><i class="ph ph-arrow-right"></i></button>
+            <button class="vid-next" id="vidNext"><span class="vid-bar"></span><span class="vid-arrow"><i class="ph ph-arrow-right"></i></span></button>
           </div>
 
           <script>
@@ -619,8 +625,7 @@
             var visible   = 2;
             var maxIdx    = total - visible;
             var current   = 0;
-            var startX    = 0, dragX = 0, dragging = false, dragged = false;
-            var THRESHOLD = 50;
+            var dragged = false;
 
             /* Dots */
             var dots = [];
@@ -647,36 +652,10 @@
               dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
             }
 
-            function dragStart(x) { startX = x; dragX = 0; dragging = true; dragged = false; track.style.transition = 'none'; }
-            function dragMove(x) {
-              if (!dragging) return;
-              dragX = x - startX;
-              if (Math.abs(dragX) > 5) dragged = true;
-              track.style.transform = 'translateX(calc(-' + (current * sw()) + 'px + ' + dragX + 'px))';
-            }
-            function dragEnd() {
-              if (!dragging) return;
-              dragging = false;
-              if (dragX < -THRESHOLD)     { stopAllVideos(); goTo(current + 1); }
-              else if (dragX > THRESHOLD) { stopAllVideos(); goTo(current - 1); }
-              else                          goTo(current);
-            }
 
-            track.addEventListener('touchstart', function(e){ dragStart(e.touches[0].clientX); }, {passive:true});
-            track.addEventListener('touchmove',  function(e){ dragMove(e.touches[0].clientX); },  {passive:true});
-            track.addEventListener('touchend',   dragEnd);
-            track.addEventListener('mousedown',  function(e){ dragStart(e.clientX); });
-            window.addEventListener('mousemove', function(e){ dragMove(e.clientX); });
-            window.addEventListener('mouseup',   dragEnd);
-
-            /* Also attach drag to overlays (for when video is playing) */
-            track.addEventListener('mousedown', function(e) {
-              if (e.target.classList.contains('vid-play-overlay')) dragStart(e.clientX);
-            });
 
             /* Click to play */
             track.addEventListener('click', function(e) {
-              if (dragged) return;
               var thumb = e.target.closest('.vid-thumb');
               if (!thumb) return;
               var wrapper = thumb.parentNode;
