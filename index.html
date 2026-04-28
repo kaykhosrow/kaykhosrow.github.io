@@ -180,13 +180,37 @@
         border-color: #000 !important;
         color: #fff !important;
       }
-      /* About image hover shadow */
-      .about-img {
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+      /* About image ground shadow */
+      .about-img-wrap {
+        position: relative;
+        display: inline-block;
       }
-      .about-img:hover {
-        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
-        transform: translateY(-3px);
+      .about-img-wrap::after {
+        content: '';
+        position: absolute;
+        bottom: -22px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70%;
+        height: 30px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 70%);
+        filter: blur(6px);
+        transition: opacity 0.4s ease, width 0.4s ease, height 0.4s ease;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .about-img-wrap:hover::after {
+        opacity: 1;
+        width: 80%;
+        height: 35px;
+      }
+      .about-img-wrap .about-img {
+        transition: transform 0.4s ease;
+        display: block;
+      }
+      .about-img-wrap:hover .about-img {
+        transform: translateY(-6px);
       }
     </style>
   </head>
@@ -290,12 +314,14 @@
               </div>
             </div>
             <div class="col-12 col-lg-5 mt-5 mt-lg-0 d-flex justify-content-center justify-content-lg-end">
-              <img
-                src="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png"
-                alt="Omar Kaykhusraw"
-                class="about-img"
-                style="max-width: 100%; max-height: 480px; object-fit: cover;"
-              />
+              <div class="about-img-wrap">
+                <img
+                  src="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png"
+                  alt="Omar Kaykhusraw"
+                  class="about-img"
+                  style="max-width: 100%; max-height: 480px; object-fit: cover;"
+                />
+              </div>
             </div>
           </div>
           <div class="col-12">
