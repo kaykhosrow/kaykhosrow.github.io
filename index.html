@@ -279,7 +279,7 @@
       .vid-arrow { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
       /* Conferences: keep template line but stop it going past last item */
       /* Match code-item last-child bottom gap before View All */
-      #conferences .experience-wrapper { overflow: hidden; }
+      #conferences .experience-wrapper::before { display: none; }
       #conferences .view-all-code { margin-top: 4rem; margin-bottom: 0.5rem; }
       #conferences .next-chapter { padding-top: 60px; }
     </style>
