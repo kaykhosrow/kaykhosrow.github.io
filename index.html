@@ -17,6 +17,18 @@
         justify-content: center;
       }
       section.hero .next-chapter { padding-top: 40px !important; padding-bottom: 20px !important; }
+      /* Nav anchored to bottom on initial load */
+      .nav-pinned-bottom {
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 81px;
+        right: 0;
+        z-index: 100;
+      }
+      @media (max-width: 1200px) {
+        .nav-pinned-bottom { left: 0; }
+      }
 
       /* Zoom fix */
       html {
@@ -874,6 +886,21 @@
           var ws = arrow.querySelectorAll('.vac-ripple');
           ws.forEach(function(w) { w.style.opacity = ''; });
         });
+      })();
+    </script>
+
+    <script>
+      (function() {
+        var nav = document.getElementById('navigation');
+        if (nav) {
+          nav.classList.add('nav-pinned-bottom');
+          window.addEventListener('scroll', function onScroll() {
+            if (window.scrollY > 5) {
+              nav.classList.remove('nav-pinned-bottom');
+              window.removeEventListener('scroll', onScroll);
+            }
+          }, { passive: true });
+        }
       })();
     </script>
   </body>
