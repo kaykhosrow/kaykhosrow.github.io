@@ -68,7 +68,12 @@
       .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
 
       /* Gallery carousel */
-      .gallery-carousel { overflow: hidden; width: 100%; }
+      .gallery-carousel { 
+        overflow: hidden; 
+        width: 100%;
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+      }
       .gallery-track { display: flex; flex-direction: row; will-change: transform; }
       .gallery-slide { flex: 0 0 80%; width: 80%; box-sizing: border-box; padding: 0 10px; opacity: 0.3; transition: opacity 0.4s ease; }
       .gallery-slide.active { opacity: 1; }
