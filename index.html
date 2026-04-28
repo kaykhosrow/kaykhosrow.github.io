@@ -679,7 +679,10 @@
             }
 
             /* Drag */
-            function dragStart(x) { startX = x; dragX = 0; dragging = true; dragged = false; track.style.transition = 'none'; }
+            function setIframeEvents(val) {
+              track.querySelectorAll('iframe').forEach(function(f) { f.style.pointerEvents = val; });
+            }
+            function dragStart(x) { startX = x; dragX = 0; dragging = true; dragged = false; track.style.transition = 'none'; setIframeEvents('none'); }
             function dragMove(x) {
               if (!dragging) return;
               dragX = x - startX;
@@ -689,6 +692,7 @@
             function dragEnd() {
               if (!dragging) return;
               dragging = false;
+              setIframeEvents('auto');
               if (dragX < -THRESHOLD)      goTo(currentDOM + 1, true);
               else if (dragX > THRESHOLD)  goTo(currentDOM - 1, true);
               else                          goTo(currentDOM, true);
@@ -717,7 +721,13 @@
                 iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';
                 wrapper.appendChild(iframe);
               }
-              iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1';
+              iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160';
+            });
+
+            /* Preload all thumbnails */
+            realSlides.forEach(function(v) {
+              var img = new Image();
+              img.src = 'https://img.youtube.com/vi/' + v.id + '/maxresdefault.jpg';
             });
 
             window.addEventListener('resize', function() { goTo(currentDOM, false); });
