@@ -34,6 +34,8 @@
       }
       /* Match index.html left bar icon borders */
       .left-bar ul li a { border: 2px solid rgba(0,0,0,0.35); border-radius: 4px; }
+      /* Prevent nav transition flash on load/resize */
+      .navigation.no-trans { transition: none !important; }
     </style>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='80'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
   </head>
@@ -159,6 +161,38 @@
           });
         }
       });
+    </script>
+    <script>
+      (function() {
+        var nav = document.getElementById('navigation');
+        if (!nav) return;
+
+        // Suppress transition on load and resize to prevent flash
+        var t;
+        function freeze() {
+          nav.classList.add('no-trans');
+          clearTimeout(t);
+          t = setTimeout(function() { nav.classList.remove('no-trans'); }, 100);
+        }
+        freeze();
+        window.addEventListener('resize', freeze);
+
+        // Reliable hamburger toggle fallback
+        var btn = document.querySelector('.nav-icon');
+        var overlay = document.querySelector('.nav-overlay');
+        if (btn) {
+          btn.closest('button').addEventListener('click', function(e) {
+            btn.classList.toggle('open');
+            nav.classList.toggle('opened');
+          });
+        }
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            if (btn) btn.classList.remove('open');
+            nav.classList.remove('opened');
+          });
+        }
+      })();
     </script>
   </body>
 </html>
