@@ -36,6 +36,16 @@
       .left-bar ul li a { border: 2px solid rgba(0,0,0,0.35); border-radius: 4px; }
       /* Prevent nav transition flash on load/resize */
       .navigation.no-trans { transition: none !important; }
+      /* Settings bar */
+      .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-left: 1px solid rgba(0,0,0,0.1); }
+      .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
+      .settings-options.open { max-width: 200px; opacity: 1; }
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s; }
+      .setting-swatch:hover { opacity: 0.85; }
+      .grain-swatch { background-image: radial-gradient(circle, #777 1px, transparent 1px), radial-gradient(circle, #777 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: #bbb; }
+      .grain-swatch.active { border-color: rgba(0,0,0,0.5); }
+      .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.3); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
+      .settings-gear-btn.open { transform: rotate(90deg); }
     </style>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='80'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
   </head>
