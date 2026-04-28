@@ -88,6 +88,9 @@
 
       /* Hero bottom gap */
       section.hero .next-chapter { padding-top: 60px !important; padding-bottom: 20px !important; }
+      /* Tighten next-chapter spacing for research and teaching */
+      #research .next-chapter { padding-top: 20px !important; }
+      #teaching .next-chapter { padding-top: 20px !important; }
       @media (min-width: 1400px) {
         section.hero .next-chapter { padding-top: 130px !important; padding-bottom: 90px !important; }
       }
@@ -261,7 +264,7 @@
       .vid-gallery:active { cursor: grabbing; }
       .vid-track { display: flex; will-change: transform; }
       .vid-slide { flex: 0 0 calc(100% / 2); box-sizing: border-box; padding: 0 8px; }
-      .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 0; border: 7.5px solid #000; border-radius: 16px; }
+      .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 0; border: 5px solid #000; border-radius: 16px; }
       .vid-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; }
       .vid-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 110px; height: 110px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; transition: background-color 0.2s; }
       .vid-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
@@ -277,6 +280,12 @@
       .vid-bar { flex: 1; height: 1px; background: rgba(0,0,0,0.3); transition: background 0.2s; }
       .vid-prev:hover .vid-bar, .vid-next:hover .vid-bar { background: rgba(0,0,0,0.8); }
       .vid-arrow { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+      /* Conferences: stop vertical line extending beyond last item */
+      #conferences .experience-wrapper { padding-bottom: 0; }
+      #conferences .experience-wrapper::before { display: none; }
+      #conferences .experience-item::before { display: none; }
+      #conferences .experience-item { padding-left: 0; border-left: 2px solid rgba(0,0,0,0.3); padding-left: 20px; }
+      #conferences .experience-item:last-child { border-left: none; padding-left: 22px; }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
@@ -562,17 +571,17 @@
               <div class="experience-wrapper d-flex flex-column">
 
                 <div class="experience-item">
-                  <h5>2026</h5>
+                  <h5><strong>2026</strong></h5>
                   <p>Annual Conference of the Royal Economic Society; International Conference on Applied Theory, Macro and Empirical Finance; Spring Midwest Macroeconomics Meeting; European Economics and Finance Society Conference.</p>
                 </div>
 
                 <div class="experience-item">
-                  <h5>2024</h5>
+                  <h5><strong>2024</strong></h5>
                   <p>Meeting of the European Economic Association and the European Meeting of the Econometric Society; Annual Meeting of the Society for Economic Dynamics; Annual Conference of the Economic History Society.</p>
                 </div>
 
                 <div class="experience-item">
-                  <h5>2023</h5>
+                  <h5><strong>2023</strong></h5>
                   <p>Annual Conference of the Royal Economic Society; Annual Conference of the Money, Macro and Finance Society; International Conference on Applied Theory, Macro and Empirical Finance; 15th WU-FIW Conference on International Economics; Annual Conference of the Southern Economic Association; Annual Conference of the Eastern Economic Association; Annual Meeting of the Society for Economic Dynamics.</p>
                 </div>
 
@@ -741,8 +750,12 @@
           })();
           </script>
 
-          <div class="col mt-5 pt-5 next-chapter">
-            <span class="page">07/08</span>
+          <div class="col-12" style="margin-top: 2rem;">
+            <a href="#contact" class="d-flex gap-4 align-items-center next-chapter">
+              <span class="page">07/08</span>
+              <span class="next">Next Chapter</span>
+              <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
+            </a>
           </div>
         </section>
 
