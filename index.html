@@ -214,6 +214,9 @@
         transform: translateY(-6px);
       }
       /* Gallery swiper */
+      .gallery-swiper { width: 100%; max-width: 600px; margin: 0 auto; }
+      .gallery-swiper .swiper-slide { max-width: 340px; }
+
       .gallery-swiper { max-width: 680px; margin: 0 auto; overflow: hidden; padding-bottom: 40px; }
       .gallery-video-wrapper {
         position: relative;
@@ -576,7 +579,7 @@
             <h2>Gallery</h2>
           </div>
 
-          <div class="gallery-swiper" style="max-width:460px; margin:0 auto; overflow:hidden;">
+          <div class="gallery-swiper">
             <div class="swiper-wrapper">
 
               <div class="swiper-slide overflow-visible p-2">
@@ -610,13 +613,17 @@
           <script>
           window.addEventListener('load', function() {
             var gs = new Swiper('.gallery-swiper', {
-              slidesPerView: 1,
-              spaceBetween: 16,
+              slidesPerView: 1.2,
+              spaceBetween: 20,
               grabCursor: true,
               loop: true,
+              centeredSlides: true,
               pagination: {
                 el: '.gallery-pagination',
                 clickable: true,
+              },
+              breakpoints: {
+                768: { slidesPerView: 1.4 }
               }
             });
 
