@@ -591,93 +591,117 @@
           </div>
 
           <div class="vid-gallery">
-            <div class="vid-track" id="vidTrack">
-              <div class="vid-slide">
-                <div class="vid-wrapper">
-                  <div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg)" data-id="SvZ_sF7gamI"></div>
-                </div>
-              </div>
-              <div class="vid-slide">
-                <div class="vid-wrapper">
-                  <div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div>
-                </div>
-              </div>
-              <div class="vid-slide">
-                <div class="vid-wrapper">
-                  <div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div>
-                </div>
-              </div>
-              <div class="vid-slide">
-                <div class="vid-wrapper">
-                  <div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div>
-                </div>
-              </div>
-            </div>
+            <div class="vid-track" id="vidTrack"></div>
           </div>
           <div class="vid-dots" id="vidDots"></div>
 
           <script>
           (function() {
-            var track   = document.getElementById('vidTrack');
-            var dotsEl  = document.getElementById('vidDots');
-            var slides  = track.querySelectorAll('.vid-slide');
-            var total   = slides.length;
-            var current   = 0;
-            var startX    = 0;
-            var dragX     = 0;
-            var dragging  = false;
-            var dragged   = false;
-            var THRESHOLD = 50;
-            var visible   = 3;
-            var maxIdx    = total - visible;
+            var realSlides = [
+              { id: 'SvZ_sF7gamI' },
+              { id: 'J0JZivXHkH8' },
+              { id: 'DLA1bcUDg2g' },
+              { id: '7g1UTm1c4EA' }
+            ];
+            var total    = realSlides.length;
+            var visible  = 3;
+            var prepend  = visible - 1; // 2 clones at start
+            var append   = visible - 1; // 2 clones at end
+            var realStart = prepend;    // DOM index of first real slide
+            var track    = document.getElementById('vidTrack');
+            var dotsEl   = document.getElementById('vidDots');
 
-            function slideWidth() {
-              return track.parentElement.offsetWidth / visible;
-            }
+            /* Build DOM: [clones from end] + [real] + [clones from start] */
+            track.innerHTML = '';
+            var allIds = [];
+            for (var i = total - prepend; i < total; i++) allIds.push(realSlides[i].id);
+            for (var i = 0; i < total; i++)               allIds.push(realSlides[i].id);
+            for (var i = 0; i < append; i++)              allIds.push(realSlides[i].id);
 
-            /* dots */
+            allIds.forEach(function(id) {
+              var slide = document.createElement('div');
+              slide.className = 'vid-slide';
+              slide.innerHTML = '<div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/' + id + '/maxresdefault.jpg)" data-id="' + id + '"></div></div>';
+              track.appendChild(slide);
+            });
+
+            /* Dots — one per real video */
             var dots = [];
-            for (var i = 0; i <= maxIdx; i++) {
+            for (var i = 0; i < total; i++) {
               var d = document.createElement('div');
               d.className = 'vid-dot';
-              (function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
+              (function(idx){ d.addEventListener('click', function(){
+                var target = realStart + idx - 1; // click dot i → show i as middle
+                goTo(target, true);
+              }); })(i);
               dotsEl.appendChild(d);
               dots.push(d);
             }
 
-            function goTo(idx) {
-              current = Math.max(0, Math.min(idx, maxIdx));
-              track.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
-              track.style.transform  = 'translateX(-' + (current * slideWidth()) + 'px)';
-              dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
+            var currentDOM = realStart; // start showing real slides 0,1,2
+            var startX = 0, dragX = 0, dragging = false, dragged = false;
+            var THRESHOLD = 50;
+            var jumping = false;
+
+            function sw() { return track.parentElement.offsetWidth / visible; }
+
+            function realIdxOf(domIdx) {
+              return ((domIdx - realStart) % total + total) % total;
             }
 
+            function updateDots() {
+              var middleReal = realIdxOf(currentDOM + 1);
+              dots.forEach(function(d, i) { d.classList.toggle('active', i === middleReal); });
+            }
+
+            function goTo(domIdx, animate) {
+              currentDOM = domIdx;
+              track.style.transition = animate !== false ? 'transform 0.4s cubic-bezier(0.4,0,0.2,1)' : 'none';
+              track.style.transform  = 'translateX(-' + (currentDOM * sw()) + 'px)';
+              updateDots();
+
+              if (animate !== false) {
+                track.addEventListener('transitionend', function onEnd() {
+                  track.removeEventListener('transitionend', onEnd);
+                  /* silently jump if in clone territory */
+                  if (currentDOM < realStart) {
+                    currentDOM += total;
+                    track.style.transition = 'none';
+                    track.style.transform  = 'translateX(-' + (currentDOM * sw()) + 'px)';
+                  } else if (currentDOM >= realStart + total) {
+                    currentDOM -= total;
+                    track.style.transition = 'none';
+                    track.style.transform  = 'translateX(-' + (currentDOM * sw()) + 'px)';
+                  }
+                  updateDots();
+                });
+              }
+            }
+
+            /* Drag */
             function dragStart(x) { startX = x; dragX = 0; dragging = true; dragged = false; track.style.transition = 'none'; }
-            function dragMove(x)  {
+            function dragMove(x) {
               if (!dragging) return;
               dragX = x - startX;
               if (Math.abs(dragX) > 5) dragged = true;
-              track.style.transform = 'translateX(calc(-' + (current * slideWidth()) + 'px + ' + dragX + 'px))';
+              track.style.transform = 'translateX(calc(-' + (currentDOM * sw()) + 'px + ' + dragX + 'px))';
             }
             function dragEnd() {
               if (!dragging) return;
               dragging = false;
-              if (dragX < -THRESHOLD) goTo(current + 1);
-              else if (dragX > THRESHOLD) goTo(current - 1);
-              else goTo(current);
+              if (dragX < -THRESHOLD)      goTo(currentDOM + 1, true);
+              else if (dragX > THRESHOLD)  goTo(currentDOM - 1, true);
+              else                          goTo(currentDOM, true);
             }
 
-            /* touch */
             track.addEventListener('touchstart', function(e){ dragStart(e.touches[0].clientX); }, {passive:true});
             track.addEventListener('touchmove',  function(e){ dragMove(e.touches[0].clientX); },  {passive:true});
             track.addEventListener('touchend',   dragEnd);
-
-            /* mouse */
             track.addEventListener('mousedown',  function(e){ dragStart(e.clientX); });
             window.addEventListener('mousemove', function(e){ dragMove(e.clientX); });
             window.addEventListener('mouseup',   dragEnd);
 
-            /* click to play */
+            /* Click to play */
             track.addEventListener('click', function(e) {
               if (dragged) return;
               var thumb = e.target.closest('.vid-thumb');
@@ -696,9 +720,10 @@
               iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1';
             });
 
-            goTo(0);
-            window.addEventListener('resize', function() { goTo(current); });
+            window.addEventListener('resize', function() { goTo(currentDOM, false); });
+            goTo(currentDOM, false);
           })();
+          </script>
           </script>
 
           <div class="col mt-5 pt-5 next-chapter">
