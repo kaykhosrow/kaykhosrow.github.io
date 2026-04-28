@@ -3,45 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon" />
-    <title>Omar Kaykhusraw &mdash; Code</title>
+    <title>Omar Kaykhusraw &mdash; Conferences</title>
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
       html { zoom: 1; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
       .left-bar ul li a { border: 2px solid rgba(0,0,0,0.35); border-radius: 4px; }
-      .code-item { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
-      .code-item:last-child { border-bottom: none; }
-      .code-item h5 { font-weight: 600; margin-bottom: 0.5rem; }
-      .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
-      .back-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 2rem; opacity: 0.7; transition: opacity 0.2s; }
+      .conf-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 3rem; max-width: 860px; }
+      .conf-entry h5 { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.4rem; }
+      .conf-entry p { margin: 0; line-height: 1.7; }
+      .back-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 2rem; opacity: 0.7; transition: opacity 0.2s; text-decoration: none; color: inherit; }
       .back-link:hover { opacity: 1; }
-
-      /* Code section buttons */
-      .code-btn {
-        font-size: 0.82rem;
-        padding: 0.3rem 0.7rem;
-        border-radius: 4px !important;
-        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
-      }
-      .code-btn:hover {
-        background-color: #000 !important;
-        border-color: #000 !important;
-        color: #fff !important;
-      }
     </style>
   </head>
   <body>
     <div id="grain"></div>
-    <div class="color-switcher" style="display:none">
-      <button class="color-switcher-btn"></button>
-    </div>
 
     <header class="header">
       <div class="container d-flex align-items-center justify-content-between">
-        <a href="index.html" class="d-xl-none">
-          <img src="./assets/images/logo.png" alt="logo" />
-        </a>
         <button class="bg-transparent border-0 d-xl-none">
           <div class="nav-icon"><span></span><span></span><span></span></div>
         </button>
@@ -49,10 +28,10 @@
     </header>
 
     <div class="left-bar">
-      <img src="./assets/images/icon.png" alt="" />
-      <ul style="margin-bottom: 0px;">
+      <ul style="margin-top: auto; margin-bottom: 0px;">
         <li><a href="mailto:omar.kaykhusraw@gmail.com"><i class="ph ph-envelope"></i></a></li>
         <li><a href="https://www.linkedin.com/in/stochastic" target="_blank"><i class="ph ph-linkedin-logo"></i></a></li>
+        <li><a href="https://twitter.com/kaykhusraw" target="_blank"><i class="ph ph-twitter-logo"></i></a></li>
         <li><a href="https://github.com/kaykhosrow" target="_blank"><i class="ph ph-github-logo"></i></a></li>
       </ul>
     </div>
@@ -65,55 +44,53 @@
             <div class="scroll-anim"><span></span></div>
             <p>Scroll Down</p>
           </div>
-          <img src="./assets/images/logo.png" class="d-xl-none mb-3" alt="" />
           <ul>
             <li class="nav-link"><a href="index.html#top"><span class="text">top</span></a></li>
             <li class="nav-link"><a href="index.html#about_me"><span class="text">about</span></a></li>
             <li class="nav-link"><a href="index.html#research"><span class="text">research</span></a></li>
             <li class="nav-link"><a href="index.html#teaching"><span class="text">teaching</span></a></li>
-            <li class="nav-link"><a href="index.html#code" class="active"><span class="text">code</span></a></li>
+            <li class="nav-link"><a href="index.html#conferences" class="active"><span class="text">conferences</span></a></li>
+            <li class="nav-link"><a href="index.html#code"><span class="text">code</span></a></li>
             <li class="nav-link"><a href="index.html#gallery"><span class="text">gallery</span></a></li>
             <li class="nav-link"><a href="index.html#contact"><span class="text">contact</span></a></li>
           </ul>
         </nav>
         <div class="nav-overlay d-xl-none"></div>
 
-        <!-- Code Archive -->
-        <section id="code" class="about section container">
-          <span class="section-title-overlay-text">Code</span>
+        <section class="about section position-relative container">
+          <span class="section-title-overlay-text">Conferences</span>
           <div class="section-title text-capitalize">
-            <h4>Tools &amp; Replication</h4>
-            <h2>Code</h2>
+            <h4>Academic presentations</h4>
+            <h2>Conferences</h2>
           </div>
 
-          <a href="index.html#code" class="back-link">
+          <a href="index.html#conferences" class="back-link">
             <i class="ph ph-arrow-left"></i> Back
           </a>
 
-          <div class="code-item">
-            <h5>Time-Varying Phillips Curves</h5>
-            <p>This tool presents time-varying estimates of the Phillips curve across multiple regions.<br> Using kernel-weighted regression methods, it traces the relationship between inflation<br> and unemployment over time, capturing structural shifts that static models often miss.</p>
-            <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Site&gt;</a>
-          </div>
+          <div class="conf-list">
 
-          <div class="code-item">
-            <h5>Unobserved Components Model</h5>
-            <p>This function implements the Stock and Watson (2007) unobserved components<br> model with stochastic volatilities. It employs a gamma random variable generator<br> function and can be used to extract the trend of any given univariate time series.</p>
-            <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
-          </div>
+            <div class="conf-entry">
+              <h5>2026</h5>
+              <p>Annual Conference of the Royal Economic Society; International Conference on Applied Theory, Macro and Empirical Finance; Spring Midwest Macroeconomics Meeting; European Economics and Finance Society Conference.</p>
+            </div>
 
-          <div class="code-item">
-            <h5>VAR Historical Decomposition</h5>
-            <p>This function takes in the output from the VAR function (refer to the vars package)<br> and computes the vector autoregression historical decomposition. It is an abridged<br> translation of Cesa-Bianchi's MATLAB code (see the VAR-Toolbox) designed for R.</p>
-            <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
-          </div>
+            <div class="conf-entry">
+              <h5>2024</h5>
+              <p>Meeting of the European Economic Association and the European Meeting of the Econometric Society; Annual Meeting of the Society for Economic Dynamics; Annual Conference of the Economic History Society.</p>
+            </div>
 
-          <div class="code-item">
-            <h5>Gaussian Error Propagation</h5>
-            <p>This function determines the uncertainty of any mathematical expression containing<br> estimated variables with uncertainties by taking partial derivatives with respect to each<br> variable multiplied by their uncertainty and added in quadrature.</p>
-            <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
-          </div>
+            <div class="conf-entry">
+              <h5>2023</h5>
+              <p>Annual Conference of the Royal Economic Society; Annual Conference of the Money, Macro and Finance Society; International Conference on Applied Theory, Macro and Empirical Finance; 15th WU-FIW Conference on International Economics; Annual Conference of the Southern Economic Association; Annual Conference of the Eastern Economic Association; Annual Meeting of the Society for Economic Dynamics.</p>
+            </div>
 
+            <div class="conf-entry">
+              <h5>2022</h5>
+              <p>Annual Conference of the Money, Macro and Finance Society; Annual Conference of the European Economic and Finance Society; Annual PhD Conference of the Royal Economic Society.</p>
+            </div>
+
+          </div>
         </section>
 
         <footer>
