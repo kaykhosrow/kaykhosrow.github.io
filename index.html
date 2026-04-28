@@ -28,7 +28,7 @@
         z-index: 49;
       }
       #navigation {
-        transition: opacity 0.3s ease;
+        transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       /* Zoom fix */
@@ -177,7 +177,7 @@
         border: 1px solid currentColor;
         animation: vacRipple 2.5s linear infinite;
         pointer-events: none;
-        transition: opacity 0.3s ease;
+        transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .vac-ripple:nth-child(2) { animation-delay: 0.833s; }
       .vac-ripple:nth-child(3) { animation-delay: 1.667s; }
@@ -895,20 +895,12 @@
         var nav = document.getElementById('navigation');
         if (!nav) return;
 
-        var lastPinned = true;
         function update() {
-          var shouldPin = window.scrollY < 60;
-          if (shouldPin === lastPinned) return;
-          lastPinned = shouldPin;
-          nav.style.opacity = '0';
-          setTimeout(function() {
-            if (shouldPin) {
-              nav.classList.add('nav-pinned-bottom');
-            } else {
-              nav.classList.remove('nav-pinned-bottom');
-            }
-            nav.style.opacity = '1';
-          }, 150);
+          if (window.scrollY < 60) {
+            nav.classList.add('nav-pinned-bottom');
+          } else {
+            nav.classList.remove('nav-pinned-bottom');
+          }
         }
 
         update();
