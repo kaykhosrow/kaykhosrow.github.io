@@ -49,12 +49,6 @@
         .navigation { transform: translateX(-120%) !important; }
         .navigation.opened { transform: translateX(0) !important; }
       }
-      /* Pin hamburger to top right on mobile */
-      @media (max-width: 1199px) {
-        .header { position: fixed; top: 0; right: 0; left: 0; z-index: 200; background-color: rgb(var(--primary)); }
-        .header .container { justify-content: flex-end !important; }
-        main { padding-top: 55px; }
-      }
     </style>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='80'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
   </head>
@@ -66,9 +60,7 @@
 
     <header class="header">
       <div class="container d-flex align-items-center justify-content-between">
-        <a href="index.html" class="d-xl-none">
-        </a>
-        <button class="bg-transparent border-0 d-xl-none">
+<button class="bg-transparent border-0 d-xl-none">
           <div class="nav-icon"><span></span><span></span><span></span></div>
         </button>
       </div>
@@ -192,6 +184,25 @@
         freeze();
         window.addEventListener('resize', freeze);
       })();
+    </script>
+    <script>
+      // Hamburger toggle fallback
+      document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.querySelector('.nav-icon');
+        var nav = document.getElementById('navigation');
+        var overlay = document.querySelector('.nav-overlay');
+        if (!btn || !nav) return;
+        btn.parentElement.addEventListener('click', function() {
+          btn.classList.toggle('open');
+          nav.classList.toggle('opened');
+        });
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            btn.classList.remove('open');
+            nav.classList.remove('opened');
+          });
+        }
+      });
     </script>
   </body>
 </html>
