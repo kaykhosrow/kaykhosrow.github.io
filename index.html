@@ -9,7 +9,6 @@
     <style>
       /* Hero */
 
-
       /* Hero centering */
       section.hero {
         display: flex;
@@ -109,8 +108,6 @@
       .gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; border: 2.5px solid rgba(0,0,0,0.5); cursor: pointer; transition: background 0.3s, border-color 0.3s, transform 0.3s; }
       .gallery-dot.active { background: #000; border: 2.5px solid #000; transform: scale(1.25); }
 
-
-
       /* Settings bar */
       .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-left: 1px solid rgba(0,0,0,0.1); }
       .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
@@ -199,6 +196,7 @@
         border-color: #000 !important;
         color: #fff !important;
       }
+
       /* About image ground shadow */
       .about-img-wrap {
         position: relative;
@@ -232,9 +230,9 @@
       .about-img-wrap:hover .about-img {
         transform: translateY(-6px);
       }
+
       /* Gallery swiper */
       .gallery-swiper { width: 100%; overflow: hidden; }
-
       .gallery-swiper { max-width: 680px; margin: 0 auto; overflow: hidden; padding-bottom: 40px; }
       .gallery-video-wrapper {
         position: relative;
@@ -274,13 +272,13 @@
         border-color: #000;
         transform: scale(1.25);
       }
+
       /* Video gallery */
       .vid-gallery { overflow: hidden; width: 100%; user-select: none; }
-
       .vid-gallery:active { cursor: grabbing; }
       .vid-track { display: flex; will-change: transform; }
       .vid-slide { flex: 0 0 calc(100% / 2); box-sizing: border-box; padding: 0 8px; }
-      .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 0; border: 5px solid #000; border-radius: 16px; }
+      .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border: 5px solid #000; border-radius: 16px; }
       .vid-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; }
       .vid-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 110px; height: 110px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' stroke='white' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; border: 5px solid #000; transition: background-color 0.2s; }
       .vid-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
@@ -296,16 +294,15 @@
       .vid-bar { flex: 1; height: 1px; background: rgba(0,0,0,0.3); transition: background 0.2s; }
       .vid-prev:hover .vid-bar, .vid-next:hover .vid-bar { background: rgba(0,0,0,0.8); }
       .vid-arrow { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
-      /* Conferences: keep template line but stop it going past last item */
-      /* Match code-item last-child bottom gap before View All */
+
       /* Conferences spacing */
       #conferences .experience-wrapper { padding-bottom: 0 !important; }
-
       #conferences .experience-item p { font-size: 0.97rem; }
       #conferences .view-all-code { margin-top: 4rem; margin-bottom: 0.5rem; }
       #code .view-all-code { margin-top: 0.75rem; }
       #conferences .next-chapter { padding-top: 30px; }
       #teaching .next-chapter { padding-top: 45px; }
+
       /* Hide template images/portify content in mobile nav */
       @media (max-width: 1200px) {
         .navigation img,
@@ -314,6 +311,7 @@
         .navigation > img,
         .navigation .contact { display: none !important; }
       }
+
       /* Hero next-chapter fade in */
       .hero .next-chapter {
         opacity: 0;
@@ -323,12 +321,19 @@
       @keyframes fadeUpIn {
         to { opacity: 1; transform: translateY(0); }
       }
+
+      /* ── Split-flap: neutralise GSAP's slide-from-right on section titles ── */
+      .section-title h4,
+      .section-title h2 {
+        transform: none !important;
+        opacity: 1 !important;
+      }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg">
-      <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='80'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='80'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
   </head>
   <body>
     <div id="grain"></div>
@@ -338,8 +343,7 @@
 
     <header class="header">
       <div class="container d-flex align-items-center justify-content-between">
-        <a href="index.html" class="d-xl-none">
-        </a>
+        <a href="index.html" class="d-xl-none"></a>
         <button class="bg-transparent border-0 d-xl-none">
           <div class="nav-icon">
             <span></span>
@@ -523,7 +527,7 @@
                     <h4>Working Paper</h4>
                     <ul class="service-list">
                       <li>Status: Under Review</li>
-                    <li><span><em>European Review of Economic History</em></span></li>
+                      <li><span><em>European Review of Economic History</em></span></li>
                     </ul>
                   </div>
                 </div>
@@ -667,7 +671,6 @@
             <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
           </div>
 
-          <!-- View All link -->
           <div class="view-all-code">
             <span>View All Code</span>
             <span class="vac-line"></span>
@@ -697,14 +700,14 @@
           </div>
 
           <div class="vid-gallery-wrap">
-          <div class="vid-gallery">
-            <div class="vid-track" id="vidTrack">
-              <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg)" data-id="SvZ_sF7gamI"></div></div></div>
-              <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div></div></div>
-              <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div></div></div>
-              <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div></div></div>
+            <div class="vid-gallery">
+              <div class="vid-track" id="vidTrack">
+                <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg)" data-id="SvZ_sF7gamI"></div></div></div>
+                <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div></div></div>
+                <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div></div></div>
+                <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div></div></div>
+              </div>
             </div>
-          </div>
           </div>
           <div class="vid-bottom">
             <button class="vid-prev" id="vidPrev"><span class="vid-arrow"><i class="ph ph-arrow-left"></i></span><span class="vid-bar"></span></button>
@@ -714,17 +717,14 @@
 
           <script>
           (function() {
-            var track     = document.getElementById('vidTrack');
-            var dotsEl    = document.getElementById('vidDots');
-            var slides    = track.querySelectorAll('.vid-slide');
-            var total     = slides.length;
-            var visible   = 2;
-            var maxIdx    = total - visible;
-            var current   = 0;
-            var dragged = false;
+            var track   = document.getElementById('vidTrack');
+            var dotsEl  = document.getElementById('vidDots');
+            var total   = track.querySelectorAll('.vid-slide').length;
+            var visible = 2;
+            var maxIdx  = total - visible;
+            var current = 0;
+            var dots    = [];
 
-            /* Dots */
-            var dots = [];
             for (var i = 0; i <= maxIdx; i++) {
               var d = document.createElement('div');
               d.className = 'vid-dot';
@@ -748,9 +748,6 @@
               dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
             }
 
-
-
-            /* Click to play */
             track.addEventListener('click', function(e) {
               var thumb = e.target.closest('.vid-thumb');
               if (!thumb) return;
@@ -773,7 +770,6 @@
                 setTimeout(setQ, 2500);
               });
               wrapper.appendChild(iframe);
-
             });
 
             document.getElementById('vidPrev').addEventListener('click', function() { stopAllVideos(); goTo(current - 1); });
@@ -893,12 +889,10 @@
           });
         }
         arrow.addEventListener('mouseenter', function() {
-          var ws = arrow.querySelectorAll('.vac-ripple');
-          ws.forEach(function(w) { w.style.opacity = '0'; });
+          arrow.querySelectorAll('.vac-ripple').forEach(function(w) { w.style.opacity = '0'; });
         });
         arrow.addEventListener('mouseleave', function() {
-          var ws = arrow.querySelectorAll('.vac-ripple');
-          ws.forEach(function(w) { w.style.opacity = ''; });
+          arrow.querySelectorAll('.vac-ripple').forEach(function(w) { w.style.opacity = ''; });
         });
       })();
     </script>
@@ -919,7 +913,6 @@
         update();
         window.addEventListener('scroll', update, { passive: true });
 
-        // When TOP is clicked, scroll to absolute zero
         document.querySelectorAll('a[href="#home"]').forEach(function(link) {
           link.addEventListener('click', function(e) {
             e.preventDefault();
@@ -928,8 +921,73 @@
             history.replaceState(null, '', window.location.pathname);
           });
         });
-
       })();
     </script>
-</body>
+
+    <!-- ── Split-flap / Vestaboard reveal for section titles ── -->
+    <script>
+    (function () {
+      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·—';
+
+      function splitFlap(el) {
+        var original = el.textContent.trim();
+        var isH2     = (el.tagName === 'H2');
+        var display  = isH2 ? original.toUpperCase() : original;
+
+        el.innerHTML = '';
+        var chars = display.split('').map(function (ch) {
+          var span           = document.createElement('span');
+          span.style.display = 'inline-block';
+          if (ch === ' ') {
+            span.style.minWidth = '0.35em';
+            span.textContent    = '\u00a0';
+          } else {
+            span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+          }
+          el.appendChild(span);
+          return { span: span, final: ch, space: ch === ' ' };
+        });
+
+        var stagger   = 52;
+        var flipSpeed = 40;
+        var flipCount = 13;
+
+        chars.forEach(function (c, i) {
+          if (c.space) return;
+          var frame = 0;
+          setTimeout(function tick() {
+            if (frame < flipCount) {
+              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+              frame++;
+              setTimeout(tick, flipSpeed);
+            } else {
+              c.span.textContent = c.final;
+            }
+          }, i * stagger);
+        });
+      }
+
+      var selectors = [
+        '#about', '#research', '#teaching',
+        '#conferences', '#code', '#gallery', '#contact'
+      ].map(function (id) {
+        return id + ' .section-title h2, ' + id + ' .section-title h4';
+      }).join(', ');
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            splitFlap(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+
+      document.querySelectorAll(selectors).forEach(function (el) {
+        observer.observe(el);
+      });
+    })();
+    </script>
+
+  </body>
 </html>
