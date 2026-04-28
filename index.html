@@ -214,7 +214,7 @@
         transform: translateY(-6px);
       }
       /* Gallery swiper */
-      .gallery-swiper { padding-bottom: 40px !important; }
+      .gallery-swiper { max-width: 680px; margin: 0 auto; overflow: hidden; padding-bottom: 40px; }
       .gallery-video-wrapper {
         position: relative;
         width: 100%;
@@ -576,7 +576,7 @@
             <h2>Gallery</h2>
           </div>
 
-          <div dir="ltr" class="swiper gallery-swiper">
+          <div class="gallery-swiper">
             <div class="swiper-wrapper">
 
               <div class="swiper-slide">
@@ -608,7 +608,7 @@
           </div>
 
           <script>
-          document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(function() {
             var gallerySwiper = new Swiper('.gallery-swiper', {
               slidesPerView: 1.2,
               spaceBetween: 16,
@@ -623,7 +623,6 @@
                 992: { slidesPerView: 3, spaceBetween: 24 }
               }
             });
-
             document.querySelector('.gallery-swiper').addEventListener('click', function(e) {
               var thumb = e.target.closest('.gallery-thumb');
               if (!thumb) return;
@@ -640,7 +639,7 @@
               }
               iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1';
             });
-          });
+          }, 300);
           </script>
 
           <div class="col mt-5 pt-5 next-chapter">
