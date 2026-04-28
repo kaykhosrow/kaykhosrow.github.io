@@ -890,16 +890,28 @@
     <script>
       (function() {
         var nav = document.getElementById('navigation');
-        if (nav) {
-          nav.classList.add('nav-pinned-bottom');
-          window.addEventListener('scroll', function() {
-            if (window.scrollY > 5) {
-              nav.classList.remove('nav-pinned-bottom');
-            } else {
-              nav.classList.add('nav-pinned-bottom');
-            }
-          }, { passive: true });
+        if (!nav) return;
+
+        function update() {
+          if (window.scrollY < 60) {
+            nav.classList.add('nav-pinned-bottom');
+          } else {
+            nav.classList.remove('nav-pinned-bottom');
+          }
         }
+
+        update();
+        window.addEventListener('scroll', update, { passive: true });
+
+        // When TOP is clicked, scroll to absolute zero
+        document.querySelectorAll('a[href="#top"]').forEach(function(link) {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.scrollTo(0, 0);
+          });
+        });
+
       })();
     </script>
   </body>
