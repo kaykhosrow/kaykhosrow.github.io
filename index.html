@@ -678,7 +678,17 @@
               iframe.setAttribute('allowfullscreen','');
               iframe.setAttribute('allow','autoplay');
               iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';
-              iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160';
+              iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160&hd=1';
+              iframe.addEventListener('load', function() {
+                var setQ = function() {
+                  try {
+                    iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'setPlaybackQualityRange',args:['hd2160','hd2160']}), '*');
+                    iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'setPlaybackQuality',args:['hd2160']}), '*');
+                  } catch(e) {}
+                };
+                setTimeout(setQ, 800);
+                setTimeout(setQ, 2500);
+              });
               wrapper.appendChild(iframe);
               var ov = document.createElement('div');
               ov.className = 'vid-play-overlay';
