@@ -379,7 +379,7 @@
             <p>Scroll Down</p>
           </div>
           <ul>
-            <li class="nav-link"><a href="#home" class="active"><span class="text">home</span></a></li>
+            <li class="nav-link"><a href="#home" class="active"><span class="text">top</span></a></li>
             <li class="nav-link"><a href="#about_me"><span class="text">about</span></a></li>
             <li class="nav-link"><a href="#research"><span class="text">research</span></a></li>
             <li class="nav-link"><a href="#teaching"><span class="text">teaching</span></a></li>
@@ -920,6 +920,7 @@
             e.preventDefault();
             e.stopPropagation();
             window.scrollTo(0, 0);
+            history.replaceState(null, '', window.location.pathname);
           });
         });
 
