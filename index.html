@@ -188,22 +188,23 @@
       .about-img-wrap::after {
         content: '';
         position: absolute;
-        bottom: -40px;
+        bottom: -38px;
         left: 50%;
         transform: translateX(-50%);
-        width: 60%;
-        height: 18px;
+        width: 65%;
+        height: 22px;
         border-radius: 50%;
-        background: radial-gradient(ellipse at center, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 75%);
-        filter: blur(8px);
+        background: radial-gradient(ellipse at center top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0) 75%);
+        filter: blur(7px);
         transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease;
         opacity: 0;
         pointer-events: none;
+        z-index: 2;
       }
       .about-img-wrap:hover::after {
         opacity: 1;
-        bottom: -36px;
-        width: 70%;
+        bottom: -34px;
+        width: 75%;
       }
       .about-img-wrap .about-img {
         transition: transform 0.4s ease;
