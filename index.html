@@ -322,11 +322,22 @@
         to { opacity: 1; transform: translateY(0); }
       }
 
-      /* ── Split-flap: neutralise GSAP's slide-from-right on section titles ── */
+      /* ── Split-flap / Vestaboard reveal for section titles ── */
       .section-title h4,
       .section-title h2 {
         transform: none !important;
-        opacity: 1 !important;
+        opacity: 0;
+        transition: opacity 0.55s ease;
+        will-change: opacity;
+      }
+      .section-title.is-visible h4,
+      .section-title.is-visible h2 {
+        opacity: 1;
+      }
+      .section-title .split-char {
+        display: inline-block;
+        min-width: 0.6ch;
+        text-align: center;
       }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -927,20 +938,24 @@
     <!-- ── Split-flap / Vestaboard reveal for section titles ── -->
     <script>
     (function () {
-      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·—';
+      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&@#%$!?*~';
 
       function splitFlap(el) {
+        if (el.dataset.splitFlapDone === '1') return;
+        el.dataset.splitFlapDone = '1';
+
         var original = el.textContent.trim();
         var isH2     = (el.tagName === 'H2');
         var display  = isH2 ? original.toUpperCase() : original;
 
         el.innerHTML = '';
+
         var chars = display.split('').map(function (ch) {
-          var span           = document.createElement('span');
-          span.style.display = 'inline-block';
+          var span = document.createElement('span');
+          span.className = 'split-char';
           if (ch === ' ') {
             span.style.minWidth = '0.35em';
-            span.textContent    = '\u00a0';
+            span.textContent = '\u00a0';
           } else {
             span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
           }
@@ -948,9 +963,9 @@
           return { span: span, final: ch, space: ch === ' ' };
         });
 
-        var stagger   = 52;
-        var flipSpeed = 40;
-        var flipCount = 13;
+        var stagger   = 48;
+        var flipSpeed = 38;
+        var flipCount = 12;
 
         chars.forEach(function (c, i) {
           if (c.space) return;
@@ -967,23 +982,28 @@
         });
       }
 
-      var selectors = [
-        '#about', '#research', '#teaching',
-        '#conferences', '#code', '#gallery', '#contact'
-      ].map(function (id) {
-        return id + ' .section-title h2, ' + id + ' .section-title h4';
-      }).join(', ');
+      var titles = document.querySelectorAll([
+        '#about .section-title h2', '#about .section-title h4',
+        '#research .section-title h2', '#research .section-title h4',
+        '#teaching .section-title h2', '#teaching .section-title h4',
+        '#conferences .section-title h2', '#conferences .section-title h4',
+        '#code .section-title h2', '#code .section-title h4',
+        '#gallery .section-title h2', '#gallery .section-title h4',
+        '#contact .section-title h2', '#contact .section-title h4'
+      ].join(', '));
 
       var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            splitFlap(entry.target);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.4 });
+          if (!entry.isIntersecting) return;
 
-      document.querySelectorAll(selectors).forEach(function (el) {
+          var title = entry.target.closest('.section-title');
+          if (title) title.classList.add('is-visible');
+          splitFlap(entry.target);
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.35 });
+
+      titles.forEach(function (el) {
         observer.observe(el);
       });
     })();
