@@ -138,15 +138,15 @@
         inset: 0;
         border-radius: 50%;
         border: 1px solid currentColor;
-        animation: vacRipple 1.6s linear infinite;
+        animation: vacRipple 2.5s linear infinite;
         pointer-events: none;
         transition: opacity 0.3s ease;
       }
-      .vac-ripple:nth-child(2) { animation-delay: 0.4s; }
-      .vac-ripple:nth-child(3) { animation-delay: 0.8s; }
-      .vac-ripple:nth-child(4) { animation-delay: 1.2s; }
-      .vac-arrow:hover .vac-ripple { opacity: 0; }
-      .submit-btn:hover .vac-ripple { opacity: 0; }
+      .vac-ripple:nth-child(2) { animation-delay: 0.625s; }
+      .vac-ripple:nth-child(3) { animation-delay: 1.25s; }
+      .vac-ripple:nth-child(4) { animation-delay: 1.875s; }
+      .vac-arrow:hover .vac-ripple { opacity: 0 !important; }
+      .contact-form .submit-btn:hover .vac-ripple { opacity: 0 !important; }
 
       /* Code section buttons */
       .code-btn {
@@ -730,6 +730,15 @@
         if (!link) return;
         var arrow = link.querySelector('.vac-arrow');
         if (!arrow) return;
+        var submitBtn = document.getElementById('mail-submit-btn');
+        if (submitBtn) {
+          submitBtn.addEventListener('mouseenter', function() {
+            submitBtn.querySelectorAll('.vac-ripple').forEach(function(r) { r.style.opacity = '0'; });
+          });
+          submitBtn.addEventListener('mouseleave', function() {
+            submitBtn.querySelectorAll('.vac-ripple').forEach(function(r) { r.style.opacity = ''; });
+          });
+        }
         arrow.addEventListener('mouseenter', function() {
           var ws = arrow.querySelectorAll('.vac-ripple');
           ws.forEach(function(w) { w.style.opacity = '0'; });
