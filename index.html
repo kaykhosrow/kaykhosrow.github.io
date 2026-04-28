@@ -351,7 +351,7 @@
       <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
 
         <!-- Hero -->
-        <section id="top" class="hero container">
+        <section id="home" class="hero container">
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
@@ -379,7 +379,7 @@
             <p>Scroll Down</p>
           </div>
           <ul>
-            <li class="nav-link"><a href="#top" class="active"><span class="text">top</span></a></li>
+            <li class="nav-link"><a href="#home" class="active"><span class="text">home</span></a></li>
             <li class="nav-link"><a href="#about_me"><span class="text">about</span></a></li>
             <li class="nav-link"><a href="#research"><span class="text">research</span></a></li>
             <li class="nav-link"><a href="#teaching"><span class="text">teaching</span></a></li>
@@ -915,7 +915,7 @@
         window.addEventListener('scroll', update, { passive: true });
 
         // When TOP is clicked, scroll to absolute zero
-        document.querySelectorAll('a[href="#top"]').forEach(function(link) {
+        document.querySelectorAll('a[href="#home"]').forEach(function(link) {
           link.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
