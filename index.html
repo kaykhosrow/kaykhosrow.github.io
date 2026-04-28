@@ -578,55 +578,39 @@
             <h2>Gallery</h2>
           </div>
 
-          <div class="gallery-swiper">
+          <div dir="ltr" class="swiper gallery-swiper">
             <div class="swiper-wrapper">
-
-              <div class="swiper-slide overflow-visible p-2">
+              <div class="swiper-slide p-2">
                 <div class="gallery-video-wrapper">
                   <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg)" data-id="SvZ_sF7gamI"></div>
                 </div>
               </div>
-
-              <div class="swiper-slide overflow-visible p-2">
+              <div class="swiper-slide p-2">
                 <div class="gallery-video-wrapper">
                   <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div>
                 </div>
               </div>
-
-              <div class="swiper-slide overflow-visible p-2">
+              <div class="swiper-slide p-2">
                 <div class="gallery-video-wrapper">
                   <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div>
                 </div>
               </div>
-
-              <div class="swiper-slide overflow-visible p-2">
+              <div class="swiper-slide p-2">
                 <div class="gallery-video-wrapper">
                   <div class="gallery-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div>
                 </div>
               </div>
-
             </div>
-            <div class="swiper-pagination gallery-pagination" style="margin-top:20px; position:relative;"></div>
+            <div class="swiper-pagination"></div>
           </div>
 
           <script>
-          window.addEventListener('load', function() {
-            var gs = new Swiper('.gallery-swiper', {
-              slidesPerView: 1.2,
-              spaceBetween: 20,
-              grabCursor: true,
-              loop: true,
-              centeredSlides: true,
-              pagination: {
-                el: '.gallery-pagination',
-                clickable: true,
-              },
-              breakpoints: {
-                768: { slidesPerView: 1.4 }
-              }
-            });
-
-            document.querySelector('.gallery-swiper').addEventListener('click', function(e) {
+          document.addEventListener('DOMContentLoaded', function() {
+            var el = document.querySelector('.gallery-swiper');
+            if (el && el.swiper) {
+              if (el.swiper.autoplay) el.swiper.autoplay.stop();
+            }
+            el.addEventListener('click', function(e) {
               var thumb = e.target.closest('.gallery-thumb');
               if (!thumb) return;
               var wrapper = thumb.parentNode;
