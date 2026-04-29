@@ -1076,9 +1076,15 @@
       var h4 = document.querySelector('h4.freelancer[data-ipa]');
       if (!h4) return;
 
-      // Cycling pool: uppercase Latin letters + digits + symbols, matching
-      // the full-caps resting state of the title.
-      var CHARS     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
+      // Cycling pool: uppercase Latin + lowercase Latin + digits + symbols.
+      // The mixed case visually bridges the uppercase resting title
+      // ("OMAR KAYKHUSRAW") and the lowercase IPA, so neither end of the
+      // transition feels like an abrupt case-jump. Section-title cycling
+      // pool is separate and stays uppercase-only.
+      var CHARS     =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+        'abcdefghijklmnopqrstuvwxyz' +
+        '0123456789$€£#@%&?!';
       var stagger   = 52;
       var flipSpeed = 40;
       var flipCount = 13;
