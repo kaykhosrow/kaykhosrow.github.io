@@ -1183,33 +1183,34 @@
       var ipaCycleMs  = computeCycleMs(ipaText);
       var origCycleMs = computeCycleMs(origText);
 
-      // One click runs the full cycle: forward to IPA, hold for 1 s, then
-      // back to the original. Repeat clicks are ignored while a cycle is
-      // already running so we don't get a tangled mid-animation state.
-      var holdMs = 1000;
-      var isAnimating = false;
+      // Press and hold: pointerdown starts the forward cycle; the IPA is
+      // held while the user keeps the button pressed. Releasing — or the
+      // pointer leaving while still pressed (drag-off, touch slide-off) —
+      // triggers the reverse cycle back to the original.
+      var isPressed = false;
 
-      h4.addEventListener('click', function () {
-        if (isAnimating) return;
-        isAnimating = true;
-
-        // Forward: cycle to the IPA, opacity fades 100% → 50% over the
-        // same duration so the two land together.
+      function showIpa() {
+        if (isPressed) return;
+        isPressed = true;
         h4.style.transitionDuration = ipaCycleMs + 'ms';
         h4.classList.add('is-ipa');
         splitFlapTo(ipaText);
+      }
+      function showOriginal() {
+        if (!isPressed) return;
+        isPressed = false;
+        h4.style.transitionDuration = origCycleMs + 'ms';
+        h4.classList.remove('is-ipa');
+        splitFlapTo(origText);
+      }
 
-        // After the cycle settles, hold for a beat, then reverse.
-        setTimeout(function () {
-          h4.style.transitionDuration = origCycleMs + 'ms';
-          h4.classList.remove('is-ipa');
-          splitFlapTo(origText);
-
-          setTimeout(function () {
-            isAnimating = false;
-          }, origCycleMs);
-        }, ipaCycleMs + holdMs);
+      h4.addEventListener('pointerdown', function (e) {
+        e.preventDefault();
+        showIpa();
       });
+      h4.addEventListener('pointerup',     showOriginal);
+      h4.addEventListener('pointerleave',  showOriginal);
+      h4.addEventListener('pointercancel', showOriginal);
     })();
     </script>
 
