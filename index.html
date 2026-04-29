@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>O. Kaykhusraw</title>
+    <title>Kaykhusraw, O.</title>
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
@@ -339,16 +339,19 @@
         visibility: visible !important;
       }
 
-      /* Cap the timeline line so it doesn't overshoot past the last item */
+      /* Clip the timeline line at 100% so it animates but doesn't overshoot */
       #conferences .experience-wrapper {
-        --height: 100% !important;
+        position: relative;
+        overflow: hidden;
       }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='80'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" href="images/o.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="images/o.png">
+    <link rel="apple-touch-icon" href="images/o.png">
   </head>
   <body>
     <div id="grain"></div>
