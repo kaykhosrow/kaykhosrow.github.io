@@ -1162,37 +1162,36 @@
         });
       }
 
-      // Length of the longest "word" in the IPA, used to time the fade-in
-      // to land exactly when the last character of the cycle does.
-      var ipaMaxWord = 0, _w = 0;
-      for (var _i = 0; _i < ipaText.length; _i++) {
-        if (ipaText.charAt(_i) === ' ') {
-          if (_w > ipaMaxWord) ipaMaxWord = _w;
-          _w = 0;
-        } else {
-          _w++;
+      // Compute the cycle length for any given target string — driven by
+      // the longest "word" between spaces, since the per-word stagger
+      // resets at each space.
+      function computeCycleMs(text) {
+        var maxWord = 0, w = 0;
+        for (var i = 0; i < text.length; i++) {
+          if (text.charAt(i) === ' ') {
+            if (w > maxWord) maxWord = w;
+            w = 0;
+          } else {
+            w++;
+          }
         }
+        if (w > maxWord) maxWord = w;
+        return (maxWord - 1) * stagger + flipCount * flipSpeed;
       }
-      if (_w > ipaMaxWord) ipaMaxWord = _w;
-      var ipaCycleMs = (ipaMaxWord - 1) * stagger + flipCount * flipSpeed;
-
-      // Generation counter — each hover transition bumps it, so any pending
-      // fade-in scheduled by an earlier mouseenter is ignored once the user
-      // has hovered off (or hovered on again).
-      var hoverGen = 0;
+      var ipaCycleMs  = computeCycleMs(ipaText);
+      var origCycleMs = computeCycleMs(origText);
 
       h4.addEventListener('mouseenter', function () {
-        var gen = ++hoverGen;
+        // Match the opacity-fade duration to the cycle length so the title
+        // reaches 50% the instant the last IPA character lands.
+        h4.style.transitionDuration = ipaCycleMs + 'ms';
+        h4.classList.add('is-ipa');
         splitFlapTo(ipaText);
-        // Hold opacity at 100% throughout the cycle; fade to 50% only when
-        // the last IPA character has landed.
-        setTimeout(function () {
-          if (hoverGen !== gen) return;
-          h4.classList.add('is-ipa');
-        }, ipaCycleMs);
       });
       h4.addEventListener('mouseleave', function () {
-        hoverGen++;
+        // Same trick on the way back: opacity returns to 100% as the cycle
+        // settles into "OMAR KAYKHUSRAW".
+        h4.style.transitionDuration = origCycleMs + 'ms';
         h4.classList.remove('is-ipa');
         splitFlapTo(origText);
       });
