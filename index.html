@@ -402,7 +402,6 @@
       }
       .freelancer span.is-cycling {
         filter: blur(0.0125em);
-        text-align: center;
       }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -1111,37 +1110,10 @@
             span.textContent = useFinal
               ? ch
               : CHARS[Math.floor(Math.random() * CHARS.length)];
-            // While cycling, give every cell the fixed maximum char width
-            // so wide randoms (M, W, @) can't elbow neighbours rightward.
-            // Cleared the moment the char lands on its final value.
-            if (!useFinal && cellWidth) {
-              span.style.width = cellWidth + 'px';
-            }
           }
           h4.appendChild(span);
           return { span: span, final: ch, space: ch === ' ' };
         });
-      }
-
-      // Measure the widest character in either the cycling pool or any
-      // final-state string. This becomes a fixed cell width during cycling
-      // so the title never grows beyond its locked horizontal footprint.
-      var cellWidth = 0;
-      function measureCellWidth() {
-        var probe = document.createElement('span');
-        probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;display:inline-block;';
-        h4.appendChild(probe);
-        var pool = CHARS + origText + ipaText;
-        var seen = {};
-        for (var i = 0; i < pool.length; i++) {
-          var ch = pool.charAt(i);
-          if (ch === ' ' || seen[ch]) continue;
-          seen[ch] = true;
-          probe.textContent = ch;
-          var w = probe.getBoundingClientRect().width;
-          if (w > cellWidth) cellWidth = w;
-        }
-        h4.removeChild(probe);
       }
 
       // Lock the h4's width to the IPA (longer) state.
@@ -1153,11 +1125,9 @@
         var ipaWidth = h4.getBoundingClientRect().width;
         h4.style.display = prevDisplay;
         h4.style.minWidth = ipaWidth + 'px';
-        // Restore the resting text.
+        // Restore the resting small-caps text.
         h4.innerHTML   = '';
         h4.textContent = origText;
-        // Measure once now — fonts have settled, so this won't change.
-        measureCellWidth();
       }
 
       if (document.fonts && document.fonts.ready) {
@@ -1185,7 +1155,6 @@
           setTimeout(function tick() {
             if (Date.now() - startTime >= landAt) {
               c.span.textContent = c.final;
-              c.span.style.width = '';
               c.span.classList.remove('is-cycling');
             } else {
               c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
