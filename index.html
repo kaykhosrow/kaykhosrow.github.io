@@ -389,7 +389,6 @@
          capitalised by the parent. */
       .freelancer {
         white-space: nowrap;
-        font-weight: 600;
         transition: opacity 0.7s ease;
       }
       .freelancer.is-ipa {
@@ -1163,11 +1162,37 @@
         });
       }
 
+      // Length of the longest "word" in the IPA, used to time the fade-in
+      // to land exactly when the last character of the cycle does.
+      var ipaMaxWord = 0, _w = 0;
+      for (var _i = 0; _i < ipaText.length; _i++) {
+        if (ipaText.charAt(_i) === ' ') {
+          if (_w > ipaMaxWord) ipaMaxWord = _w;
+          _w = 0;
+        } else {
+          _w++;
+        }
+      }
+      if (_w > ipaMaxWord) ipaMaxWord = _w;
+      var ipaCycleMs = (ipaMaxWord - 1) * stagger + flipCount * flipSpeed;
+
+      // Generation counter — each hover transition bumps it, so any pending
+      // fade-in scheduled by an earlier mouseenter is ignored once the user
+      // has hovered off (or hovered on again).
+      var hoverGen = 0;
+
       h4.addEventListener('mouseenter', function () {
-        h4.classList.add('is-ipa');
+        var gen = ++hoverGen;
         splitFlapTo(ipaText);
+        // Hold opacity at 100% throughout the cycle; fade to 50% only when
+        // the last IPA character has landed.
+        setTimeout(function () {
+          if (hoverGen !== gen) return;
+          h4.classList.add('is-ipa');
+        }, ipaCycleMs);
       });
       h4.addEventListener('mouseleave', function () {
+        hoverGen++;
         h4.classList.remove('is-ipa');
         splitFlapTo(origText);
       });
