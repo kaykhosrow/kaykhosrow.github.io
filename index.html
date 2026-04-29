@@ -954,8 +954,11 @@
         var flipSpeed = 40;
         var flipCount = 13;
 
-        chars.forEach(function (c, i) {
-          if (c.space) return;
+        var wordIdx = 0;
+        chars.forEach(function (c) {
+          if (c.space) { wordIdx = 0; return; }
+          var delay = wordIdx * stagger;
+          wordIdx++;
           var frame = 0;
           setTimeout(function tick() {
             if (frame < flipCount) {
@@ -965,7 +968,7 @@
             } else {
               c.span.textContent = c.final;
             }
-          }, i * stagger);
+          }, delay);
         });
       }
 
@@ -979,7 +982,6 @@
       var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            entry.target.style.setProperty('opacity', '1', 'important');
             splitFlap(entry.target);
             observer.unobserve(entry.target);
           }
@@ -987,8 +989,6 @@
       }, { threshold: 0.4 });
 
       document.querySelectorAll(selectors).forEach(function (el) {
-        el.style.setProperty('opacity', '0', 'important');
-        el.style.setProperty('transition', 'opacity 0.8s ease', 'important');
         observer.observe(el);
       });
     })();
