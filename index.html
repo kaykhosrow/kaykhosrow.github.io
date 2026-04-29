@@ -379,14 +379,16 @@
         right: 0;
       }
 
-      /* Hero name: hover anywhere on the h4 to vestaboard the whole name
+      /* Hero name: press-and-hold on the h4 to vestaboard the whole name
          into its IPA pronunciation. The h4's width is locked to the IPA
          (longer) state on load and white-space: nowrap keeps it on one
          line — so nothing shifts horizontally or vertically. The resting
          state renders in full caps via the underlying text-uppercase
-         class; spans created during the cycle override text-transform so
-         the lowercase IPA characters render as-written rather than being
-         capitalised by the parent. */
+         class. Spans inherit text-transform from the parent so they go
+         through the SAME OpenType uppercasing pipeline as the resting
+         text node — keeping kerning/spacing identical between the two
+         states. The .is-ipa-char class is the targeted opt-out for IPA
+         and lowercase cycle characters that need to render as written. */
       .freelancer {
         white-space: nowrap;
         transition: opacity 0.7s ease;
@@ -397,8 +399,10 @@
         opacity: 0.5 !important;
       }
       .freelancer span {
-        text-transform: none !important;
         transition: filter 0.05s ease-out;
+      }
+      .freelancer span.is-ipa-char {
+        text-transform: none !important;
       }
       .freelancer span.is-cycling {
         filter: blur(0.0125em);
@@ -447,7 +451,7 @@
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
-                <h4 class="text-uppercase freelancer" data-original="OMAR KAYKHUSRAW" data-ipa="/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/">Omar Kaykhusraw</h4>
+                <h4 class="text-uppercase freelancer" data-original="Omar Kaykhusraw" data-ipa="/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
               </div>
               <div class="d-flex gap-4">
@@ -1076,7 +1080,7 @@
     })();
     </script>
 
-    <!-- ── Hover-IPA effect on hero name (whole name, locked width, mixed pool) ── -->
+    <!-- ── Press-and-hold IPA effect on hero name (whole name, locked width) ── -->
     <script>
     (function () {
       var h4 = document.querySelector('h4.freelancer[data-ipa]');
@@ -1095,14 +1099,28 @@
       var flipSpeed = 40;
       var flipCount = 8;
 
-      var origText = h4.dataset.original;
+      var origText = h4.dataset.original;        // "Omar Kaykhusraw"
       var ipaText  = h4.dataset.ipa;
 
+      // ── Painting the spans ──
+      // Spans inherit the parent's text-uppercase by default, so the resting
+      // "Omar Kaykhusraw" goes through the SAME OpenType uppercase pipeline
+      // as the initial text node — keeping kerning identical between the
+      // first paint and post-animation paint. Lowercase / IPA characters
+      // that need to render as written get tagged with .is-ipa-char which
+      // overrides text-transform: none.
       function paint(text, useFinal) {
         h4.innerHTML = '';
+        var isIpaTarget = (text === ipaText);
         return text.split('').map(function (ch) {
           var span = document.createElement('span');
           span.style.display = 'inline-block';
+          // Cycling spans (random pool) and final IPA spans both opt out of
+          // uppercasing. Final original spans inherit text-uppercase from
+          // the parent so they look identical to the initial text.
+          if (!useFinal || isIpaTarget) {
+            span.classList.add('is-ipa-char');
+          }
           if (ch === ' ') {
             span.style.minWidth = '0.35em';
             span.textContent    = '\u00a0';
@@ -1112,7 +1130,7 @@
               : CHARS[Math.floor(Math.random() * CHARS.length)];
           }
           h4.appendChild(span);
-          return { span: span, final: ch, space: ch === ' ' };
+          return { span: span, final: ch, space: ch === ' ', ipa: isIpaTarget };
         });
       }
 
@@ -1125,7 +1143,7 @@
         var ipaWidth = h4.getBoundingClientRect().width;
         h4.style.display = prevDisplay;
         h4.style.minWidth = ipaWidth + 'px';
-        // Restore the resting small-caps text.
+        // Restore the resting text node.
         h4.innerHTML   = '';
         h4.textContent = origText;
       }
@@ -1141,11 +1159,10 @@
         var wordIdx = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
-          // Phase-offset each char's flips by (wordIdx*stagger) mod flipSpeed
-          // so the cycling cascades left-to-right in the same rolling wave
-          // the section-title vestaboard uses — but the cycle runs all the
-          // way through to the land time, so no character sits frozen
-          // waiting for its turn.
+          // Phase-offset each char's flips so the cycling cascades
+          // left-to-right in a rolling wave, while running continuously to
+          // the land time so no character sits frozen on a single random
+          // letter waiting for its turn.
           var delayBase    = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
           var landAt       = delayBase + flipCount * flipSpeed;
@@ -1155,6 +1172,10 @@
           setTimeout(function tick() {
             if (Date.now() - startTime >= landAt) {
               c.span.textContent = c.final;
+              // For original-target finals, drop .is-ipa-char so the
+              // parent's text-uppercase takes over — same OpenType pipeline
+              // as the initial text node, so kerning matches exactly.
+              if (!c.ipa) c.span.classList.remove('is-ipa-char');
               c.span.classList.remove('is-cycling');
             } else {
               c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
