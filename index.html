@@ -331,15 +331,12 @@
         animation: none !important;
       }
 
-      /* Conferences: fade in without zoom/move */
+      /* Conferences: static, no animation */
       #conferences .experience-item {
         transform: none !important;
         animation: none !important;
-        opacity: 0;
-        transition: opacity 0.8s ease;
-      }
-      #conferences .experience-item.in-view {
-        opacity: 1;
+        opacity: 1 !important;
+        visibility: visible !important;
       }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -1002,23 +999,6 @@
       document.querySelectorAll(selectors).forEach(function (el) {
         observer.observe(el);
       });
-    })();
-    </script>
-
-    <!-- Conferences fade-in -->
-    <script>
-    (function () {
-      var items = document.querySelectorAll('#conferences .experience-item');
-      if (!items.length) return;
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.2 });
-      items.forEach(function (el) { observer.observe(el); });
     })();
     </script>
 
