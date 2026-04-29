@@ -368,14 +368,17 @@
       }
 
       /* Hero name: hover anywhere on the h4 to vestaboard the whole name
-         into its IPA pronunciation. The h4's width is locked to the wider
-         (IPA) state on load so that nothing shifts horizontally or
-         vertically during the cycling — the original sits left-aligned in
-         that locked width. The original is uppercase via the underlying
-         text-uppercase class; the IPA lives inside spans whose own
-         text-transform is forced to none, so the lowercase phonetic
-         characters render as written. */
+         into its IPA pronunciation. The resting name is rendered in actual
+         Unicode small-cap glyphs ("ᴏᴍᴀʀ ᴋᴀʏᴋʜᴜꜱʀᴀᴡ") so its visual height
+         matches the lowercase IPA. The cycling pool mixes lowercase Latin
+         letters with those same small-cap glyphs to bridge the two states
+         naturally. white-space: nowrap keeps the heading on one line and
+         the script locks the h4's width to the IPA state on load, so
+         nothing shifts horizontally or vertically during the cycle.
+         text-uppercase on the h4 is overridden so it doesn't try to
+         capitalise the small-cap or IPA characters. */
       .freelancer {
+        text-transform: none !important;
         white-space: nowrap;
       }
       .freelancer span {
@@ -425,7 +428,7 @@
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
-                <h4 class="text-uppercase freelancer" data-original="Omar Kaykhusraw" data-ipa="/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/">Omar Kaykhusraw</h4>
+                <h4 class="text-uppercase freelancer" data-original="ᴏᴍᴀʀ ᴋᴀʏᴋʜᴜꜱʀᴀᴡ" data-ipa="/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/">ᴏᴍᴀʀ ᴋᴀʏᴋʜᴜꜱʀᴀᴡ</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
               </div>
               <div class="d-flex gap-4">
@@ -1047,13 +1050,20 @@
     })();
     </script>
 
-    <!-- ── Hover-IPA effect on hero name (whole name, locked width) ── -->
+    <!-- ── Hover-IPA effect on hero name (whole name, locked width, mixed pool) ── -->
     <script>
     (function () {
       var h4 = document.querySelector('h4.freelancer[data-ipa]');
       if (!h4) return;
 
-      var CHARS     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
+      // Cycling pool: lowercase Latin letters + Unicode small-cap glyphs +
+      // digits + symbols. Mixing the two letter forms means the cycle
+      // visually blends the small-caps resting state with the lowercase
+      // IPA state, so neither end of the transition feels abrupt.
+      var CHARS     =
+        'abcdefghijklmnopqrstuvwxyz' +
+        'ᴀʙᴄᴅᴇɢʜɪᴊᴋʟᴍɴᴏᴘʀᴛᴜᴠᴡʏᴢ' +
+        '0123456789$€£#@%&?!';
       var stagger   = 52;
       var flipSpeed = 40;
       var flipCount = 13;
@@ -1061,10 +1071,6 @@
       var origText = h4.dataset.original;
       var ipaText  = h4.dataset.ipa;
 
-      // ── Lock the h4's width to the IPA (longer) state.
-      // Render the IPA temporarily inside spans (matching the animation
-      // structure) so its measured width isn't distorted by the parent's
-      // text-uppercase class, then restore the original and pin width.
       function paint(text, useFinal) {
         h4.innerHTML = '';
         return text.split('').map(function (ch) {
@@ -1083,29 +1089,26 @@
         });
       }
 
+      // Lock the h4's width to the IPA (longer) state.
       function lockWidth() {
         var prevDisplay = h4.style.display;
-        h4.style.display = 'inline-block';
+        h4.style.display    = 'inline-block';
         h4.style.whiteSpace = 'nowrap';
         paint(ipaText, true);
         var ipaWidth = h4.getBoundingClientRect().width;
         h4.style.display = prevDisplay;
         h4.style.minWidth = ipaWidth + 'px';
-        // Restore plain text so the underlying text-uppercase styling shows
-        // it as "OMAR KAYKHUSRAW" until the user hovers.
-        h4.innerHTML = '';
+        // Restore the resting small-caps text.
+        h4.innerHTML   = '';
         h4.textContent = origText;
       }
 
-      // Lock once fonts are settled, otherwise the measurement can be off.
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(lockWidth);
       } else {
         lockWidth();
       }
 
-      // ── Vestaboard cycle to a target string. Width is already locked,
-      // so this only swaps content; nothing shifts.
       function splitFlapTo(targetText) {
         var chars = paint(targetText, false);
         var wordIdx = 0;
