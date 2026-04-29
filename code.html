@@ -54,7 +54,7 @@
       .code-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 2rem 3rem;
+        gap: 4rem 3rem;
       }
       @media (max-width: 768px) {
         .code-grid { grid-template-columns: 1fr; }
@@ -64,6 +64,7 @@
         margin-bottom: 0;
         padding-bottom: 0;
       }
+      .code-grid .code-item p { margin-bottom: 1.5rem; }
     </style>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='80'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
   </head>
@@ -142,25 +143,25 @@
 
             <div class="code-item">
               <h5>Time-Varying Phillips Curves</h5>
-              <p>This tool presents time-varying estimates of the Phillips curve across multiple regions. Using kernel-weighted regression methods, it traces the relationship between inflation and unemployment over time, capturing structural shifts that static models often miss.</p>
+              <p>This tool presents time-varying estimates of the Phillips curve across multiple regions.<br> Using kernel-weighted regression methods, it traces the relationship between inflation<br> and unemployment over time, capturing structural shifts that static models often miss.</p>
               <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Site&gt;</a>
             </div>
 
             <div class="code-item">
               <h5>Unobserved Components Model</h5>
-              <p>This function implements the Stock and Watson (2007) unobserved components model with stochastic volatilities. It employs a gamma random variable generator function and can be used to extract the trend of any given univariate time series.</p>
+              <p>This function implements the Stock and Watson (2007) unobserved components<br> model with stochastic volatilities. It employs a gamma random variable generator<br> function and can be used to extract the trend of any given univariate time series.</p>
               <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
             </div>
 
             <div class="code-item">
               <h5>VAR Historical Decomposition</h5>
-              <p>This function takes in the output from the VAR function (refer to the vars package) and computes the vector autoregression historical decomposition (HD). This is an abridged translation of Cesa-Bianchi's MATLAB code (see the VAR-Toolbox) designed for R.</p>
+              <p>This function takes in the output from the VAR function (refer to the vars package)<br> and computes the vector autoregression historical decomposition. It is an abridged<br> translation of Cesa-Bianchi's MATLAB code (see the VAR-Toolbox) designed for R.</p>
               <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
             </div>
 
             <div class="code-item">
               <h5>Gaussian Error Propagation</h5>
-              <p>This function determines the uncertainty of any mathematical expression containing estimated variables with uncertainties by taking the partial derivatives with respect to each variable, multiplied by their uncertainty, and added in quadrature.</p>
+              <p>This function determines the uncertainty of any mathematical expression containing<br> estimated variables with uncertainties by taking the partial derivatives with respect to<br> each variable, multiplied by their uncertainty, and added in quadrature.</p>
               <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="btn btn-outline-secondary text-capitalize code-btn">&lt;/Code&gt;</a>
             </div>
 
