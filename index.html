@@ -391,16 +391,28 @@
          and lowercase cycle characters that need to render as written. */
       .freelancer {
         white-space: nowrap;
-        letter-spacing: 0.05em;
         transition: opacity 0.7s ease;
         cursor: pointer;
         user-select: none;
+        /* Hidden until lockWidth runs and sets the final layout, so the
+           user never sees a brief unstyled flash of the title at narrower
+           plain-text spacing. The script removes this by setting
+           visibility: visible once the spans-based render is in place. */
+        visibility: hidden;
       }
       .freelancer.is-ipa {
         opacity: 0.5 !important;
       }
       .freelancer span {
+        display: inline-block;
+        /* Equidistant spacing between every character pair. Applies to
+           every span (including the space span) so word gaps widen by the
+           same amount. */
+        margin-right: 0.05em;
         transition: filter 0.05s ease-out;
+      }
+      .freelancer span:last-child {
+        margin-right: 0;
       }
       .freelancer span.is-ipa-char {
         text-transform: none !important;
@@ -1135,16 +1147,6 @@
         });
       }
 
-      // Lock the h4's width to the IPA (longer) state, then leave the
-      // resting state as the spans-based "Omar Kaykhusraw" rendering.
-      //
-      // Why we don't restore a plain text node here: CSS kerning cannot
-      // apply across separate inline-block boxes (this is a fundamental
-      // browser rendering rule), so the spans-based and text-node-based
-      // renderings of the same string aren't pixel-identical. By leaving
-      // the resting state as spans, every state of the title — initial
-      // load, mid-animation, post-animation — uses the same rendering
-      // pipeline, and the title's spacing never shifts.
       function lockWidth() {
         var prevDisplay = h4.style.display;
         h4.style.display    = 'inline-block';
@@ -1156,6 +1158,10 @@
         // Paint the resting state as spans so it matches the post-animation
         // rendering exactly.
         paint(origText, true);
+        // Reveal the title now that its final layout is in place — avoids
+        // any visible reflow between the initial plain-text render and the
+        // spans-based render.
+        h4.style.visibility = 'visible';
       }
 
       if (document.fonts && document.fonts.ready) {
