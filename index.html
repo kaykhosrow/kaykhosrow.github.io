@@ -390,6 +390,8 @@
       .freelancer {
         white-space: nowrap;
         transition: opacity 0.7s ease;
+        cursor: pointer;
+        user-select: none;
       }
       .freelancer.is-ipa {
         opacity: 0.5 !important;
@@ -1181,19 +1183,32 @@
       var ipaCycleMs  = computeCycleMs(ipaText);
       var origCycleMs = computeCycleMs(origText);
 
-      h4.addEventListener('mouseenter', function () {
-        // Match the opacity-fade duration to the cycle length so the title
-        // reaches 50% the instant the last IPA character lands.
+      // One click runs the full cycle: forward to IPA, hold for 1 s, then
+      // back to the original. Repeat clicks are ignored while a cycle is
+      // already running so we don't get a tangled mid-animation state.
+      var holdMs = 1000;
+      var isAnimating = false;
+
+      h4.addEventListener('click', function () {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        // Forward: cycle to the IPA, opacity fades 100% → 50% over the
+        // same duration so the two land together.
         h4.style.transitionDuration = ipaCycleMs + 'ms';
         h4.classList.add('is-ipa');
         splitFlapTo(ipaText);
-      });
-      h4.addEventListener('mouseleave', function () {
-        // Same trick on the way back: opacity returns to 100% as the cycle
-        // settles into "OMAR KAYKHUSRAW".
-        h4.style.transitionDuration = origCycleMs + 'ms';
-        h4.classList.remove('is-ipa');
-        splitFlapTo(origText);
+
+        // After the cycle settles, hold for a beat, then reverse.
+        setTimeout(function () {
+          h4.style.transitionDuration = origCycleMs + 'ms';
+          h4.classList.remove('is-ipa');
+          splitFlapTo(origText);
+
+          setTimeout(function () {
+            isAnimating = false;
+          }, origCycleMs);
+        }, ipaCycleMs + holdMs);
       });
     })();
     </script>
