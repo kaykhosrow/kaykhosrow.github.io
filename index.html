@@ -1131,8 +1131,10 @@
       }
 
       function splitFlapTo(targetText) {
+        var token = (h4._cycleToken = (h4._cycleToken || 0) + 1);
         var chars = paint(targetText, false);
         var wordIdx = 0;
+        var maxLandAt = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
           // Phase-offset each char's flips by (wordIdx*stagger) mod flipSpeed
@@ -1143,6 +1145,7 @@
           var delayBase    = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
           var landAt       = delayBase + flipCount * flipSpeed;
+          if (landAt > maxLandAt) maxLandAt = landAt;
           wordIdx++;
           c.span.classList.add('is-cycling');
           var startTime = Date.now();
@@ -1156,6 +1159,24 @@
             }
           }, initialDelay);
         });
+
+        // When the animation returns to the original text, collapse the
+        // per-char spans back into plain text once everything has landed.
+        // Without this, each character stays in its own inline-block box
+        // and natural kerning can't apply, leaving the resting letters
+        // ever so slightly more spread than the initial post-load state.
+        // We skip this for the IPA side because the parent's text-uppercase
+        // class would then capitalise the lowercase phonetic characters
+        // (the spans currently shield the IPA via text-transform: none).
+        // The token guard prevents a stale cleanup from clobbering a newer
+        // hover that fires before this timeout runs.
+        if (targetText === origText) {
+          setTimeout(function () {
+            if (h4._cycleToken !== token) return;
+            h4.innerHTML   = '';
+            h4.textContent = origText;
+          }, maxLandAt + 100);
+        }
       }
 
       h4.addEventListener('mouseenter', function () {
