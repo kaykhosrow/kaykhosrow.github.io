@@ -368,17 +368,14 @@
       }
 
       /* Hero name: hover anywhere on the h4 to vestaboard the whole name
-         into its IPA pronunciation. The resting name is rendered in actual
-         Unicode small-cap glyphs ("ᴏᴍᴀʀ ᴋᴀʏᴋʜᴜꜱʀᴀᴡ") so its visual height
-         matches the lowercase IPA. The cycling pool mixes lowercase Latin
-         letters with those same small-cap glyphs to bridge the two states
-         naturally. white-space: nowrap keeps the heading on one line and
-         the script locks the h4's width to the IPA state on load, so
-         nothing shifts horizontally or vertically during the cycle.
-         text-uppercase on the h4 is overridden so it doesn't try to
-         capitalise the small-cap or IPA characters. */
+         into its IPA pronunciation. The h4's width is locked to the IPA
+         (longer) state on load and white-space: nowrap keeps it on one
+         line — so nothing shifts horizontally or vertically. The resting
+         state renders in full caps via the underlying text-uppercase
+         class; spans created during the cycle override text-transform so
+         the lowercase IPA characters render as-written rather than being
+         capitalised by the parent. */
       .freelancer {
-        text-transform: none !important;
         white-space: nowrap;
       }
       .freelancer span {
@@ -428,7 +425,7 @@
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
-                <h4 class="text-uppercase freelancer" data-original="ᴏᴍᴀʀ ᴋᴀʏᴋʜᴜꜱʀᴀᴡ" data-ipa="/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/">ᴏᴍᴀʀ ᴋᴀʏᴋʜᴜꜱʀᴀᴡ</h4>
+                <h4 class="text-uppercase freelancer" data-original="OMAR KAYKHUSRAW" data-ipa="/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
               </div>
               <div class="d-flex gap-4">
@@ -1056,14 +1053,9 @@
       var h4 = document.querySelector('h4.freelancer[data-ipa]');
       if (!h4) return;
 
-      // Cycling pool: lowercase Latin letters + Unicode small-cap glyphs +
-      // digits + symbols. Mixing the two letter forms means the cycle
-      // visually blends the small-caps resting state with the lowercase
-      // IPA state, so neither end of the transition feels abrupt.
-      var CHARS     =
-        'abcdefghijklmnopqrstuvwxyz' +
-        'ᴀʙᴄᴅᴇɢʜɪᴊᴋʟᴍɴᴏᴘʀᴛᴜᴠᴡʏᴢ' +
-        '0123456789$€£#@%&?!';
+      // Cycling pool: uppercase Latin letters + digits + symbols, matching
+      // the full-caps resting state of the title.
+      var CHARS     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
       var stagger   = 52;
       var flipSpeed = 40;
       var flipCount = 13;
