@@ -338,6 +338,11 @@
         opacity: 1 !important;
         visibility: visible !important;
       }
+
+      /* Cap the timeline line so it doesn't overshoot past the last item */
+      #conferences .experience-wrapper {
+        --height: 100% !important;
+      }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
