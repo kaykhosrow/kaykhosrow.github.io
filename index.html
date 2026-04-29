@@ -40,7 +40,6 @@
       /* Disable GSAP intro animations */
       .hero-content,
       .hero-content > div,
-      .freelancer,
       #typewriter,
       .hero-content .description,
       .hero-content .d-flex,
@@ -394,6 +393,12 @@
         transition: opacity 0.7s ease;
         cursor: pointer;
         user-select: none;
+        /* GSAP-neutralisation overrides applied individually, so we can
+           still set our own visibility/opacity below without being trumped
+           by the multi-selector !important block above. */
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
         /* Hidden until lockWidth runs and sets the final layout, so the
            user never sees a brief unstyled flash of the title at narrower
            plain-text spacing. The script removes this by setting
@@ -413,6 +418,13 @@
       }
       .freelancer span:last-child {
         margin-right: 0;
+      }
+      /* Pairs that look awkwardly spread without natural kerning across
+         inline-block boxes. AY in particular sits too wide because
+         normally an A's diagonal and Y's left arm interlock. Tightening
+         this pair pulls Y (and everything after it) closer to A. */
+      .freelancer span.tight-right {
+        margin-right: -0.04em;
       }
       .freelancer span.is-ipa-char {
         text-transform: none !important;
@@ -1125,7 +1137,8 @@
       function paint(text, useFinal) {
         h4.innerHTML = '';
         var isIpaTarget = (text === ipaText);
-        return text.split('').map(function (ch) {
+        var allChars    = text.split('');
+        return allChars.map(function (ch, i) {
           var span = document.createElement('span');
           span.style.display = 'inline-block';
           // Cycling spans (random pool) and final IPA spans both opt out of
@@ -1133,6 +1146,17 @@
           // the parent so they look identical to the initial text.
           if (!useFinal || isIpaTarget) {
             span.classList.add('is-ipa-char');
+          }
+          // Tighten AY pair spacing for the original-text target (in both
+          // cycling and final states, so the spacing stays consistent
+          // throughout the animation). Skipped for the IPA target, which
+          // has its own natural lowercase spacing.
+          if (!isIpaTarget) {
+            var nextCh = allChars[i + 1];
+            if (ch && ch.toLowerCase() === 'a' &&
+                nextCh && nextCh.toLowerCase() === 'y') {
+              span.classList.add('tight-right');
+            }
           }
           if (ch === ' ') {
             span.style.minWidth = '0.35em';
