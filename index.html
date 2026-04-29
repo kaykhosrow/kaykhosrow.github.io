@@ -367,15 +367,18 @@
         right: 0;
       }
 
-      /* Hero name: hover each word to vestaboard into IPA pronunciation.
-         The h4 never wraps; the active word's width is animated via JS so
-         the second word smoothly slides right/left as the first one grows
-         and contracts, while the typewriter h1 below stays put. */
+      /* Hero name: hover anywhere on the h4 to vestaboard the whole name
+         into its IPA pronunciation. The h4's width is locked to the wider
+         (IPA) state on load so that nothing shifts horizontally or
+         vertically during the cycling — the original sits left-aligned in
+         that locked width. The original is uppercase via the underlying
+         text-uppercase class; the IPA lives inside spans whose own
+         text-transform is forced to none, so the lowercase phonetic
+         characters render as written. */
       .freelancer {
         white-space: nowrap;
       }
-      .freelancer .name-word {
-        display: inline-block;
+      .freelancer span {
         text-transform: none !important;
       }
     </style>
@@ -422,7 +425,7 @@
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
-                <h4 class="text-uppercase freelancer"><span class="name-word" data-original="OMAR" data-ipa="/ˈoʊmɑːr">OMAR</span> <span class="name-word" data-original="KAYKHUSRAW" data-ipa="ˈkeɪkhuːsrɑːw/">KAYKHUSRAW</span></h4>
+                <h4 class="text-uppercase freelancer" data-original="Omar Kaykhusraw" data-ipa="/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/">Omar Kaykhusraw</h4>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
               </div>
               <div class="d-flex gap-4">
@@ -1044,18 +1047,27 @@
     })();
     </script>
 
-    <!-- ── Hover-IPA effect on hero name (per-word, smooth width transition) ── -->
+    <!-- ── Hover-IPA effect on hero name (whole name, locked width) ── -->
     <script>
     (function () {
+      var h4 = document.querySelector('h4.freelancer[data-ipa]');
+      if (!h4) return;
+
       var CHARS     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
       var stagger   = 52;
       var flipSpeed = 40;
       var flipCount = 13;
-      var widthMs   = 550;
 
-      function buildSpans(el, targetText, useFinal) {
-        el.innerHTML = '';
-        return targetText.split('').map(function (ch) {
+      var origText = h4.dataset.original;
+      var ipaText  = h4.dataset.ipa;
+
+      // ── Lock the h4's width to the IPA (longer) state.
+      // Render the IPA temporarily inside spans (matching the animation
+      // structure) so its measured width isn't distorted by the parent's
+      // text-uppercase class, then restore the original and pin width.
+      function paint(text, useFinal) {
+        h4.innerHTML = '';
+        return text.split('').map(function (ch) {
           var span = document.createElement('span');
           span.style.display = 'inline-block';
           if (ch === ' ') {
@@ -1066,45 +1078,36 @@
               ? ch
               : CHARS[Math.floor(Math.random() * CHARS.length)];
           }
-          el.appendChild(span);
+          h4.appendChild(span);
           return { span: span, final: ch, space: ch === ' ' };
         });
       }
 
-      function splitFlapTo(el, targetText) {
-        var token = (el._flapToken = (el._flapToken || 0) + 1);
+      function lockWidth() {
+        var prevDisplay = h4.style.display;
+        h4.style.display = 'inline-block';
+        h4.style.whiteSpace = 'nowrap';
+        paint(ipaText, true);
+        var ipaWidth = h4.getBoundingClientRect().width;
+        h4.style.display = prevDisplay;
+        h4.style.minWidth = ipaWidth + 'px';
+        // Restore plain text so the underlying text-uppercase styling shows
+        // it as "OMAR KAYKHUSRAW" until the user hovers.
+        h4.innerHTML = '';
+        h4.textContent = origText;
+      }
 
-        // Measure current rendered width before we touch the DOM.
-        var oldWidth = el.getBoundingClientRect().width;
+      // Lock once fonts are settled, otherwise the measurement can be off.
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(lockWidth);
+      } else {
+        lockWidth();
+      }
 
-        // Lay out the target with FINAL chars to measure target width.
-        el.style.transition = 'none';
-        el.style.width      = '';
-        el.style.overflow   = 'hidden';
-        buildSpans(el, targetText, true);
-        var newWidth = el.getBoundingClientRect().width;
-
-        // Swap to random starts (vestaboard initial frame).
-        var chars = buildSpans(el, targetText, false);
-
-        // Pin to old width, force reflow, transition to new width.
-        el.style.width = oldWidth + 'px';
-        void el.offsetWidth;
-        el.style.transition = 'width ' + widthMs + 'ms cubic-bezier(0.4, 0, 0.2, 1)';
-        el.style.width      = newWidth + 'px';
-
-        // Clean up inline width after the transition (only if no newer call).
-        function onEnd(e) {
-          if (e.propertyName !== 'width') return;
-          el.removeEventListener('transitionend', onEnd);
-          if (el._flapToken !== token) return;
-          el.style.width      = '';
-          el.style.overflow   = '';
-          el.style.transition = '';
-        }
-        el.addEventListener('transitionend', onEnd);
-
-        // Vestaboard char flips (matches the section-title animation).
+      // ── Vestaboard cycle to a target string. Width is already locked,
+      // so this only swaps content; nothing shifts.
+      function splitFlapTo(targetText) {
+        var chars = paint(targetText, false);
         var wordIdx = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
@@ -1123,13 +1126,11 @@
         });
       }
 
-      document.querySelectorAll('.freelancer .name-word').forEach(function (word) {
-        word.addEventListener('mouseenter', function () {
-          splitFlapTo(word, word.dataset.ipa);
-        });
-        word.addEventListener('mouseleave', function () {
-          splitFlapTo(word, word.dataset.original);
-        });
+      h4.addEventListener('mouseenter', function () {
+        splitFlapTo(ipaText);
+      });
+      h4.addEventListener('mouseleave', function () {
+        splitFlapTo(origText);
       });
     })();
     </script>
