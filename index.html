@@ -1,3 +1,6 @@
+The file tools are erroring intermittently — let me just paste the full HTML inline. Only two changes from your original: the CSS block at the bottom of `<style>` and one added line at the top of `splitFlap()`.
+
+```html
 <!doctype html>
 <html lang="en">
   <head>
@@ -322,11 +325,12 @@
         to { opacity: 1; transform: translateY(0); }
       }
 
-      /* ── Split-flap: neutralise GSAP's slide-from-right on section titles ── */
+      /* ── Split-flap: section titles fade in (no swoop) while flap plays ── */
       .section-title h4,
       .section-title h2 {
         transform: none !important;
-        opacity: 1 !important;
+        opacity: 0 !important;
+        transition: opacity 0.8s ease !important;
       }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -930,6 +934,8 @@
       var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
 
       function splitFlap(el) {
+        el.style.setProperty('opacity', '1', 'important');
+
         var original = el.textContent.trim();
         var isH2     = (el.tagName === 'H2');
         var display  = isH2 ? original.toUpperCase() : original;
@@ -991,3 +997,4 @@
 
   </body>
 </html>
+```
