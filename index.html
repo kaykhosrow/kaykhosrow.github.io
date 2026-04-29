@@ -1106,21 +1106,24 @@
         var wordIdx = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
-          // Every character cycles continuously from t=0. The stagger now
-          // only determines when each one *stops* cycling and lands on its
-          // final value — so no character ever sits frozen on a single
-          // random letter waiting for its turn.
-          var landAt = wordIdx * stagger + flipCount * flipSpeed;
+          // Phase-offset each char's flips by (wordIdx*stagger) mod flipSpeed
+          // so the cycling cascades left-to-right in the same rolling wave
+          // the section-title vestaboard uses — but the cycle runs all the
+          // way through to the land time, so no character sits frozen
+          // waiting for its turn.
+          var delayBase    = wordIdx * stagger;
+          var initialDelay = delayBase % flipSpeed;
+          var landAt       = delayBase + flipCount * flipSpeed;
           wordIdx++;
           var startTime = Date.now();
-          (function tick() {
+          setTimeout(function tick() {
             if (Date.now() - startTime >= landAt) {
               c.span.textContent = c.final;
             } else {
               c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
               setTimeout(tick, flipSpeed);
             }
-          })();
+          }, initialDelay);
         });
       }
 
