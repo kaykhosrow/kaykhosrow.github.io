@@ -1188,10 +1188,14 @@
         h4.style.visibility = 'visible';
       }
 
+      // Run lockWidth as early as possible so the title becomes visible
+      // immediately. Calling it synchronously here means it executes the
+      // moment the browser parses this script (which is at end-of-body, so
+      // the h4 already exists in the DOM). We then re-run after fonts.ready
+      // to refine the locked width if web fonts shift letter widths.
+      lockWidth();
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(lockWidth);
-      } else {
-        lockWidth();
       }
 
       function splitFlapTo(targetText) {
