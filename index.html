@@ -344,6 +344,27 @@
         position: relative;
         overflow: hidden;
       }
+
+      /* Hover underline animation on inline body text links */
+      section p a:not(.btn) {
+        position: relative;
+        text-decoration: none;
+        transition: color .5s ease-out;
+      }
+      section p a:not(.btn)::after {
+        content: "";
+        position: absolute;
+        border-radius: 1em;
+        border-top: .1em solid #000;
+        right: 100%;
+        bottom: -.15em;
+        left: 0;
+        transition: right .5s cubic-bezier(0,.5,0,1),
+                    border-color .5s ease-out;
+      }
+      section p a:not(.btn):hover::after {
+        right: 0;
+      }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
