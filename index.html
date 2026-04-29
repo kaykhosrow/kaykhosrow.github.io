@@ -345,22 +345,26 @@
         overflow: hidden;
       }
 
-      /* Hover underline animation on inline body text links
-         (uses background-image so multi-line links underline both fragments) */
+      /* Hover underline animation on inline body text links */
       section p a:not(.btn) {
+        position: relative;
         text-decoration: none;
-        background-image: linear-gradient(#000, #000);
-        background-size: 0% 0.08em;
-        background-position: 0 100%;
-        background-repeat: no-repeat;
-        padding-bottom: 0.18em;
-        -webkit-box-decoration-break: clone;
-        box-decoration-break: clone;
-        transition: background-size .5s cubic-bezier(0,.5,0,1),
-                    color .5s ease-out;
+        transition: color .5s ease-out;
       }
-      section p a:not(.btn):hover {
-        background-size: 100% 0.08em;
+      section p a:not(.btn)::after {
+        content: "";
+        position: absolute;
+        border-radius: 1em;
+        border-top: .1em solid #000;
+        right: 100%;
+        bottom: -.15em;
+        left: 0;
+        transition: right .5s cubic-bezier(0,.5,0,1),
+                    border-color .5s ease-out;
+      }
+      section p a:not(.btn):hover::after,
+      section p .link-pair:hover a:not(.btn)::after {
+        right: 0;
       }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -463,7 +467,7 @@
               </div>
               <div class="about-desc mb-4 mb-lg-5">
                 <p class="desc" style="text-align: justify;">
-                 Welcome to my page. I am currently an Assistant Professor / Lecturer in Economics with research interests in empirical macroeconomics and macroeconometrics. I hold a PhD in Economics from <a href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused primarily on the natural rate of interest. Prior to my doctorate, I read Economics at the <a href="https://www.cam.ac.uk/" target="_blank">University of Cambridge</a> and Philosophy, Politics and Economics at the <a href="https://london.ac.uk/" target="_blank">University of London</a>. 
+                 Welcome to my page. I am currently an Assistant Professor / Lecturer in Economics with research interests in empirical macroeconomics and macroeconometrics. I hold a PhD in Economics from <a href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused primarily on the natural rate of interest. Prior to my doctorate, I read Economics at the <span class="link-pair"><a href="https://www.cam.ac.uk/" target="_blank">University</a> <a href="https://www.cam.ac.uk/" target="_blank">of Cambridge</a></span> and Philosophy, Politics and Economics at the <a href="https://london.ac.uk/" target="_blank">University of London</a>. 
                 </p>
                 <div class="d-flex gap-3 mt-4 flex-wrap">
                   <a href="#" class="btn btn-outline-secondary about-new-btn">Curriculum Vitae</a>
