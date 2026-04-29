@@ -331,6 +331,18 @@
         animation: none !important;
       }
 
+      /* Same motion-blur treatment as the hero name vestaboard: a hint of
+         softening while each character is flipping, snapping crisp the
+         moment it lands on its final letter. */
+      .section-title h2 span,
+      .section-title h4 span {
+        transition: filter 0.05s ease-out;
+      }
+      .section-title h2 span.is-cycling,
+      .section-title h4 span.is-cycling {
+        filter: blur(0.015em);
+      }
+
       /* Conferences: static, no animation */
       #conferences .experience-item {
         transform: none !important;
@@ -380,10 +392,10 @@
       }
       .freelancer span {
         text-transform: none !important;
-        transition: filter 0.075s ease-out;
+        transition: filter 0.05s ease-out;
       }
       .freelancer span.is-cycling {
-        filter: blur(0.025em);
+        filter: blur(0.015em);
       }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -1014,18 +1026,25 @@
         var wordIdx = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
-          var delay = wordIdx * stagger;
+          // Phase-offset each char's flips so the cycling cascades
+          // left-to-right in a rolling wave, while running continuously to
+          // the land time so no character sits frozen on a single random
+          // letter waiting for its turn.
+          var delayBase    = wordIdx * stagger;
+          var initialDelay = delayBase % flipSpeed;
+          var landAt       = delayBase + flipCount * flipSpeed;
           wordIdx++;
-          var frame = 0;
+          c.span.classList.add('is-cycling');
+          var startTime = Date.now();
           setTimeout(function tick() {
-            if (frame < flipCount) {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              frame++;
-              setTimeout(tick, flipSpeed);
-            } else {
+            if (Date.now() - startTime >= landAt) {
               c.span.textContent = c.final;
+              c.span.classList.remove('is-cycling');
+            } else {
+              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+              setTimeout(tick, flipSpeed);
             }
-          }, delay);
+          }, initialDelay);
         });
       }
 
