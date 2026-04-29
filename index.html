@@ -1134,7 +1134,16 @@
         });
       }
 
-      // Lock the h4's width to the IPA (longer) state.
+      // Lock the h4's width to the IPA (longer) state, then leave the
+      // resting state as the spans-based "Omar Kaykhusraw" rendering.
+      //
+      // Why we don't restore a plain text node here: CSS kerning cannot
+      // apply across separate inline-block boxes (this is a fundamental
+      // browser rendering rule), so the spans-based and text-node-based
+      // renderings of the same string aren't pixel-identical. By leaving
+      // the resting state as spans, every state of the title — initial
+      // load, mid-animation, post-animation — uses the same rendering
+      // pipeline, and the title's spacing never shifts.
       function lockWidth() {
         var prevDisplay = h4.style.display;
         h4.style.display    = 'inline-block';
@@ -1143,9 +1152,9 @@
         var ipaWidth = h4.getBoundingClientRect().width;
         h4.style.display = prevDisplay;
         h4.style.minWidth = ipaWidth + 'px';
-        // Restore the resting text node.
-        h4.innerHTML   = '';
-        h4.textContent = origText;
+        // Paint the resting state as spans so it matches the post-animation
+        // rendering exactly.
+        paint(origText, true);
       }
 
       if (document.fonts && document.fonts.ready) {
@@ -1155,10 +1164,8 @@
       }
 
       function splitFlapTo(targetText) {
-        var token = (h4._token = (h4._token || 0) + 1);
         var chars = paint(targetText, false);
         var wordIdx = 0;
-        var maxLandAt = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
           // Phase-offset each char's flips so the cycling cascades
@@ -1168,7 +1175,6 @@
           var delayBase    = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
           var landAt       = delayBase + flipCount * flipSpeed;
-          if (landAt > maxLandAt) maxLandAt = landAt;
           wordIdx++;
           c.span.classList.add('is-cycling');
           var startTime = Date.now();
@@ -1176,8 +1182,7 @@
             if (Date.now() - startTime >= landAt) {
               c.span.textContent = c.final;
               // For original-target finals, drop .is-ipa-char so the
-              // parent's text-uppercase takes over — same OpenType pipeline
-              // as the initial text node, so kerning matches exactly.
+              // parent's text-uppercase takes over.
               if (!c.ipa) c.span.classList.remove('is-ipa-char');
               c.span.classList.remove('is-cycling');
             } else {
@@ -1186,22 +1191,6 @@
             }
           }, initialDelay);
         });
-
-        // For the reverse cycle (back to "Omar Kaykhusraw"), once every
-        // character has landed AND its de-blur transition has finished,
-        // tear down the per-character spans and restore a plain text node.
-        // This guarantees the post-animation resting state is byte-for-byte
-        // identical to the initial load — no spans, no spacing artefacts.
-        // The token check ignores stale cleanups if a new press fires
-        // before this timeout runs (avoiding a swap mid-forward-cycle).
-        // Buffer = 50 ms blur transition + 50 ms safety.
-        if (targetText === origText) {
-          setTimeout(function () {
-            if (h4._token !== token) return;
-            h4.innerHTML   = '';
-            h4.textContent = origText;
-          }, maxLandAt + 100);
-        }
       }
 
       // Compute the cycle length for any given target string — driven by
