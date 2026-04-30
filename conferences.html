@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Omar Kaykhusraw</title>
+    <!-- Manual scroll restoration: must run before paint to take effect. -->
+    <script>
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+    </script>
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
@@ -147,6 +153,45 @@
     <button class="ltr" style="display:none" aria-hidden="true"></button>
     <button class="rtl" style="display:none" aria-hidden="true"></button>
 
+    <!-- Manual scroll restoration -->
+    <script>
+    (function () {
+      var KEY = 'scroll-' + location.pathname;
+      window.addEventListener('pagehide', function () {
+        try { sessionStorage.setItem(KEY, String(window.scrollY)); } catch (e) {}
+      });
+      window.addEventListener('pageshow', function (e) {
+        if (e.persisted) return;
+        var hash = location.hash;
+        var target = null;
+        if (hash) { try { target = document.querySelector(hash); } catch (err) {} }
+        function doScroll() {
+          if (target) {
+            target.scrollIntoView();
+          } else {
+            var saved;
+            try { saved = sessionStorage.getItem(KEY); } catch (e) { saved = null; }
+            if (saved !== null) window.scrollTo(0, parseInt(saved, 10) || 0);
+          }
+        }
+        doScroll();
+        var lastY = window.scrollY, userScrolled = false;
+        function onUserScroll() {
+          if (Math.abs(window.scrollY - lastY) > 8) userScrolled = true;
+        }
+        window.addEventListener('scroll', onUserScroll, { passive: true });
+        [50, 200, 500, 900].forEach(function (ms) {
+          setTimeout(function () {
+            if (!userScrolled) { doScroll(); lastY = window.scrollY; }
+          }, ms);
+        });
+        setTimeout(function () {
+          window.removeEventListener('scroll', onUserScroll);
+        }, 1200);
+      });
+    })();
+    </script>
+
 <script>
       // Hamburger toggle fallback
       document.addEventListener('DOMContentLoaded', function() {
@@ -171,7 +216,6 @@
         var nav = document.getElementById('navigation');
         if (!nav) return;
 
-        // Suppress transition on load and resize to prevent flash
         var t;
         function freeze() {
           nav.classList.add('no-trans');
@@ -181,7 +225,6 @@
         freeze();
         window.addEventListener('resize', freeze);
 
-        // Reliable hamburger toggle fallback
         var btn = document.querySelector('.nav-icon');
         var overlay = document.querySelector('.nav-overlay');
         if (btn) {
