@@ -4,6 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Omar Kaykhusraw</title>
+    <!-- Manual scroll restoration: disable the browser's auto-restore as
+         early as possible. Must run before paint to take effect. -->
+    <script>
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+    </script>
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
@@ -230,6 +237,20 @@
         transform: translateY(-6px);
       }
 
+      /* Reserve a stable box for the about image while it loads, so the
+         page below doesn't shift when the image arrives. The actual image
+         fits within these bounds via max-width / max-height. */
+      .about-img-wrap {
+        width: 100%;
+        max-width: 480px;
+        aspect-ratio: 1 / 1;
+      }
+      .about-img-wrap .about-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
       /* Gallery swiper */
       .gallery-swiper { width: 100%; overflow: hidden; }
       .gallery-swiper { max-width: 680px; margin: 0 auto; overflow: hidden; padding-bottom: 40px; }
@@ -301,6 +322,12 @@
       #code .view-all-code { margin-top: 0.75rem; }
       #conferences .next-chapter { padding-top: 30px; }
       #teaching .next-chapter { padding-top: 45px; }
+
+      /* Section anchor offset: when scrolling to a section via the URL
+         hash, leave a little breathing room above so the first heading
+         isn't jammed against the top of the viewport. Also gives the
+         scroll-restore code a forgiving target. */
+      section[id] { scroll-margin-top: 24px; }
 
       /* Hide template images/portify content in mobile nav */
       @media (max-width: 1200px) {
@@ -546,7 +573,8 @@
                   src="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png"
                   alt="Omar Kaykhusraw"
                   class="about-img"
-                  style="max-width: 100%; max-height: 480px; object-fit: cover;"
+                  width="480"
+                  height="480"
                 />
               </div>
             </div>
@@ -960,6 +988,79 @@
     <button class="ltr" style="display:none" aria-hidden="true"></button>
     <button class="rtl" style="display:none" aria-hidden="true"></button>
 
+    <!-- ── Manual scroll restoration ──
+         Save the user's scroll position when they leave the page; restore
+         it when they come back. Re-tries at staggered delays (50/200/500ms)
+         to compensate for layout shifts as images, fonts, and the Swiper
+         carousel finish loading. Stops re-trying if the user manually
+         scrolls in the meantime, so we never fight against intent. -->
+    <script>
+    (function () {
+      var KEY = 'scroll-' + location.pathname;
+
+      // Save scrollY on pagehide (more reliable than beforeunload, and
+      // fires for both regular navigation AND when the page enters bfcache).
+      window.addEventListener('pagehide', function () {
+        try { sessionStorage.setItem(KEY, String(window.scrollY)); } catch (e) {}
+      });
+
+      window.addEventListener('pageshow', function (e) {
+        // bfcache restore: the page (including scroll position) is
+        // already exactly as it was. Don't touch it.
+        if (e.persisted) return;
+
+        // Determine the target scroll position.
+        // - If the URL has a fragment, scroll to that element.
+        // - Otherwise, restore the saved scrollY.
+        var hash = location.hash;
+        var target = null;
+        if (hash) {
+          try { target = document.querySelector(hash); } catch (err) {}
+        }
+
+        function doScroll() {
+          if (target) {
+            target.scrollIntoView();
+          } else {
+            var saved;
+            try { saved = sessionStorage.getItem(KEY); } catch (e) { saved = null; }
+            if (saved !== null) {
+              window.scrollTo(0, parseInt(saved, 10) || 0);
+            }
+          }
+        }
+
+        // Run immediately.
+        doScroll();
+
+        // Then re-run at 50/200/500/900 ms to catch layout shifts as
+        // images load, fonts swap, and the Swiper carousel inits. Stop
+        // re-running if the user has manually scrolled.
+        var lastY = window.scrollY;
+        var userScrolled = false;
+        function onUserScroll() {
+          if (Math.abs(window.scrollY - lastY) > 8) {
+            userScrolled = true;
+          }
+        }
+        window.addEventListener('scroll', onUserScroll, { passive: true });
+
+        [50, 200, 500, 900].forEach(function (ms) {
+          setTimeout(function () {
+            if (!userScrolled) {
+              doScroll();
+              lastY = window.scrollY;
+            }
+          }, ms);
+        });
+
+        setTimeout(function () {
+          window.removeEventListener('scroll', onUserScroll);
+        }, 1200);
+      });
+    })();
+    </script>
+
     <script>
       document.getElementById('settingsGearBtn').addEventListener('click', function() {
         this.classList.toggle('open');
@@ -1127,13 +1228,6 @@
       var origText = h4.dataset.original;        // "Omar Kaykhusraw"
       var ipaText  = h4.dataset.ipa;
 
-      // ── Painting the spans ──
-      // Spans inherit the parent's text-uppercase by default, so the resting
-      // "Omar Kaykhusraw" goes through the SAME OpenType uppercase pipeline
-      // as the initial text node — keeping kerning identical between the
-      // first paint and post-animation paint. Lowercase / IPA characters
-      // that need to render as written get tagged with .is-ipa-char which
-      // overrides text-transform: none.
       function paint(text, useFinal) {
         h4.innerHTML = '';
         var isIpaTarget = (text === ipaText);
@@ -1141,16 +1235,9 @@
         return allChars.map(function (ch, i) {
           var span = document.createElement('span');
           span.style.display = 'inline-block';
-          // Cycling spans (random pool) and final IPA spans both opt out of
-          // uppercasing. Final original spans inherit text-uppercase from
-          // the parent so they look identical to the initial text.
           if (!useFinal || isIpaTarget) {
             span.classList.add('is-ipa-char');
           }
-          // Tighten AY pair spacing for the original-text target (in both
-          // cycling and final states, so the spacing stays consistent
-          // throughout the animation). Skipped for the IPA target, which
-          // has its own natural lowercase spacing.
           if (!isIpaTarget) {
             var nextCh = allChars[i + 1];
             if (ch && ch.toLowerCase() === 'a' &&
@@ -1179,20 +1266,10 @@
         var ipaWidth = h4.getBoundingClientRect().width;
         h4.style.display = prevDisplay;
         h4.style.minWidth = ipaWidth + 'px';
-        // Paint the resting state as spans so it matches the post-animation
-        // rendering exactly.
         paint(origText, true);
-        // Reveal the title now that its final layout is in place — avoids
-        // any visible reflow between the initial plain-text render and the
-        // spans-based render.
         h4.style.visibility = 'visible';
       }
 
-      // Run lockWidth as early as possible so the title becomes visible
-      // immediately. Calling it synchronously here means it executes the
-      // moment the browser parses this script (which is at end-of-body, so
-      // the h4 already exists in the DOM). We then re-run after fonts.ready
-      // to refine the locked width if web fonts shift letter widths.
       lockWidth();
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(lockWidth);
@@ -1203,10 +1280,6 @@
         var wordIdx = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
-          // Phase-offset each char's flips so the cycling cascades
-          // left-to-right in a rolling wave, while running continuously to
-          // the land time so no character sits frozen on a single random
-          // letter waiting for its turn.
           var delayBase    = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
           var landAt       = delayBase + flipCount * flipSpeed;
@@ -1216,8 +1289,6 @@
           setTimeout(function tick() {
             if (Date.now() - startTime >= landAt) {
               c.span.textContent = c.final;
-              // For original-target finals, drop .is-ipa-char so the
-              // parent's text-uppercase takes over.
               if (!c.ipa) c.span.classList.remove('is-ipa-char');
               c.span.classList.remove('is-cycling');
             } else {
@@ -1228,9 +1299,6 @@
         });
       }
 
-      // Compute the cycle length for any given target string — driven by
-      // the longest "word" between spaces, since the per-word stagger
-      // resets at each space.
       function computeCycleMs(text) {
         var maxWord = 0, w = 0;
         for (var i = 0; i < text.length; i++) {
@@ -1247,13 +1315,6 @@
       var ipaCycleMs  = computeCycleMs(ipaText);
       var origCycleMs = computeCycleMs(origText);
 
-      // Toggle: each click flips the title between the original and IPA
-      // states. The reverse animation only triggers on a SECOND click —
-      // i.e. the IPA state holds indefinitely until the user clicks again.
-      // Clicks during a running animation are ignored so we don't get a
-      // tangled mid-flap state. The IPA state also auto-reverts when the
-      // user scrolls past the hero or navigates to another section, so
-      // the phonetic isn't left dangling on screen as they move on.
       var showingIpa  = false;
       var isAnimating = false;
 
@@ -1271,8 +1332,6 @@
         if (isAnimating) return;
 
         if (!showingIpa) {
-          // Forward: original → IPA. Opacity fades 100% → 50% over the
-          // same window the chars are vestaboarding.
           showingIpa = true;
           isAnimating = true;
           h4.style.transitionDuration = ipaCycleMs + 'ms';
@@ -1284,18 +1343,12 @@
         }
       });
 
-      // Scrolling away from the hero reverts the title. A small threshold
-      // (40 px) avoids reverting on accidental wheel-flicks or trackpad
-      // jitter while the user is reading the hero.
       window.addEventListener('scroll', function () {
         if (showingIpa && window.scrollY > 40) {
           revertToOriginal();
         }
       }, { passive: true });
 
-      // Clicking any in-page nav link also reverts. Catches the section
-      // nav, the "Next Chapter" links, and the hero's About/Contact
-      // buttons — anything pointing at an in-page anchor.
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
         link.addEventListener('click', revertToOriginal);
       });
