@@ -378,15 +378,15 @@
         right: 0;
       }
 
-      /* Hero name: press-and-hold on the h4 to vestaboard the whole name
-         into its IPA pronunciation. The h4's width is locked to the IPA
-         (longer) state on load and white-space: nowrap keeps it on one
-         line — so nothing shifts horizontally or vertically. The resting
-         state renders in full caps via the underlying text-uppercase
-         class. Spans inherit text-transform from the parent so they go
-         through the SAME OpenType uppercasing pipeline as the resting
-         text node — keeping kerning/spacing identical between the two
-         states. The .is-ipa-char class is the targeted opt-out for IPA
+      /* Hero name: click to vestaboard the whole name into its IPA
+         pronunciation; click again to flip back. The h4's width is locked
+         to the IPA (longer) state on load and white-space: nowrap keeps it
+         on one line — so nothing shifts horizontally or vertically. The
+         resting state renders in full caps via the underlying
+         text-uppercase class. Spans inherit text-transform from the parent
+         so they go through the SAME OpenType uppercasing pipeline as the
+         resting text node — keeping kerning/spacing identical between the
+         two states. The .is-ipa-char class is the targeted opt-out for IPA
          and lowercase cycle characters that need to render as written. */
       .freelancer {
         white-space: nowrap;
@@ -1105,7 +1105,7 @@
     })();
     </script>
 
-    <!-- ── Press-and-hold IPA effect on hero name (whole name, locked width) ── -->
+    <!-- ── Toggle IPA effect on hero name (whole name, locked width) ── -->
     <script>
     (function () {
       var h4 = document.querySelector('h4.freelancer[data-ipa]');
@@ -1247,34 +1247,36 @@
       var ipaCycleMs  = computeCycleMs(ipaText);
       var origCycleMs = computeCycleMs(origText);
 
-      // Press and hold: pointerdown starts the forward cycle; the IPA is
-      // held while the user keeps the button pressed. Releasing — or the
-      // pointer leaving while still pressed (drag-off, touch slide-off) —
-      // triggers the reverse cycle back to the original.
-      var isPressed = false;
+      // Toggle: each click flips the title between the original and IPA
+      // states. The reverse animation only triggers on a SECOND click —
+      // i.e. the IPA state holds indefinitely until the user clicks again.
+      // Clicks during a running animation are ignored so we don't get a
+      // tangled mid-flap state.
+      var showingIpa  = false;
+      var isAnimating = false;
 
-      function showIpa() {
-        if (isPressed) return;
-        isPressed = true;
-        h4.style.transitionDuration = ipaCycleMs + 'ms';
-        h4.classList.add('is-ipa');
-        splitFlapTo(ipaText);
-      }
-      function showOriginal() {
-        if (!isPressed) return;
-        isPressed = false;
-        h4.style.transitionDuration = origCycleMs + 'ms';
-        h4.classList.remove('is-ipa');
-        splitFlapTo(origText);
-      }
+      h4.addEventListener('click', function () {
+        if (isAnimating) return;
+        isAnimating = true;
 
-      h4.addEventListener('pointerdown', function (e) {
-        e.preventDefault();
-        showIpa();
+        if (!showingIpa) {
+          // Forward: original → IPA. Opacity fades 100% → 50% over the
+          // same window the chars are vestaboarding.
+          showingIpa = true;
+          h4.style.transitionDuration = ipaCycleMs + 'ms';
+          h4.classList.add('is-ipa');
+          splitFlapTo(ipaText);
+          setTimeout(function () { isAnimating = false; }, ipaCycleMs);
+        } else {
+          // Reverse: IPA → original. Opacity returns to 100% over the
+          // (shorter) reverse cycle.
+          showingIpa = false;
+          h4.style.transitionDuration = origCycleMs + 'ms';
+          h4.classList.remove('is-ipa');
+          splitFlapTo(origText);
+          setTimeout(function () { isAnimating = false; }, origCycleMs);
+        }
       });
-      h4.addEventListener('pointerup',     showOriginal);
-      h4.addEventListener('pointerleave',  showOriginal);
-      h4.addEventListener('pointercancel', showOriginal);
     })();
     </script>
 
