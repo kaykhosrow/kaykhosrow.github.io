@@ -1251,31 +1251,53 @@
       // states. The reverse animation only triggers on a SECOND click —
       // i.e. the IPA state holds indefinitely until the user clicks again.
       // Clicks during a running animation are ignored so we don't get a
-      // tangled mid-flap state.
+      // tangled mid-flap state. The IPA state also auto-reverts when the
+      // user scrolls past the hero or navigates to another section, so
+      // the phonetic isn't left dangling on screen as they move on.
       var showingIpa  = false;
       var isAnimating = false;
 
+      function revertToOriginal() {
+        if (!showingIpa || isAnimating) return;
+        showingIpa = false;
+        isAnimating = true;
+        h4.style.transitionDuration = origCycleMs + 'ms';
+        h4.classList.remove('is-ipa');
+        splitFlapTo(origText);
+        setTimeout(function () { isAnimating = false; }, origCycleMs);
+      }
+
       h4.addEventListener('click', function () {
         if (isAnimating) return;
-        isAnimating = true;
 
         if (!showingIpa) {
           // Forward: original → IPA. Opacity fades 100% → 50% over the
           // same window the chars are vestaboarding.
           showingIpa = true;
+          isAnimating = true;
           h4.style.transitionDuration = ipaCycleMs + 'ms';
           h4.classList.add('is-ipa');
           splitFlapTo(ipaText);
           setTimeout(function () { isAnimating = false; }, ipaCycleMs);
         } else {
-          // Reverse: IPA → original. Opacity returns to 100% over the
-          // (shorter) reverse cycle.
-          showingIpa = false;
-          h4.style.transitionDuration = origCycleMs + 'ms';
-          h4.classList.remove('is-ipa');
-          splitFlapTo(origText);
-          setTimeout(function () { isAnimating = false; }, origCycleMs);
+          revertToOriginal();
         }
+      });
+
+      // Scrolling away from the hero reverts the title. A small threshold
+      // (40 px) avoids reverting on accidental wheel-flicks or trackpad
+      // jitter while the user is reading the hero.
+      window.addEventListener('scroll', function () {
+        if (showingIpa && window.scrollY > 40) {
+          revertToOriginal();
+        }
+      }, { passive: true });
+
+      // Clicking any in-page nav link also reverts. Catches the section
+      // nav, the "Next Chapter" links, and the hero's About/Contact
+      // buttons — anything pointing at an in-page anchor.
+      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+        link.addEventListener('click', revertToOriginal);
       });
     })();
     </script>
