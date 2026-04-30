@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Omar Kaykhusraw</title>
+    <script defer src="assets/js/app.js"></script>
+    <link href="assets/css/index.css" rel="stylesheet">
+    <style>
+      html { zoom: 1; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
+      .code-item { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .code-item:last-child { border-bottom: none; }
+      .code-item h5 { font-weight: 600; margin-bottom: 0.5rem; }
+      .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
+      .back-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 2rem; opacity: 0.7; transition: opacity 0.2s; }
+      .back-link:hover { opacity: 1; }
+
+      /* Code section buttons */
+      .code-btn {
+        font-size: 0.82rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 4px !important;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+      }
+      .code-btn:hover {
+        background-color: #000 !important;
+        border-color: #000 !important;
+        color: #fff !important;
+      }
+      /* Nav fixed to top — desktop only */
+      @media (min-width: 1200px) {
+        .navigation { position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; margin-left: 81px; }
+        main { padding-top: 55px; }
+      }
+      /* Match index.html left bar icon borders */
+      .left-bar ul li a { border: 2px solid rgba(0,0,0,0.35); border-radius: 4px; }
+      /* Prevent nav transition flash on load/resize */
+      .navigation.no-trans { transition: none !important; }
+      /* Settings bar */
+      .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-left: 1px solid rgba(0,0,0,0.1); }
+      .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
+      .settings-options.open { max-width: 200px; opacity: 1; }
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s; }
+      .setting-swatch:hover { opacity: 0.85; }
+      .grain-swatch { background-image: radial-gradient(circle, #777 1px, transparent 1px), radial-gradient(circle, #777 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: #bbb; }
+      .grain-swatch.active { border-color: rgba(0,0,0,0.5); }
+      .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.3); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
+      .settings-gear-btn.open { transform: rotate(90deg); }
+
+      /* Ensure the last code item can clear the fixed footer */
+      #code.section { padding-bottom: 140px; }
+
+      /* Two-column grid for code items, collapses to one on narrow screens */
+      .code-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem 3rem;
+      }
+      @media (max-width: 768px) {
+        .code-grid { grid-template-columns: 1fr; }
+      }
+      .code-grid .code-item {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .code-grid .code-item p { margin-bottom: 1.5rem; }
+    </style>
+    <link rel="icon" type="image/png" href="images/o.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="images/o.png">
+    <link rel="apple-touch-icon" href="images/o.png">
+  </head>
+  <body>
+    <div id="grain"></div>
+    <div class="color-switcher" style="display:none">
+      <button class="color-switcher-btn"></button>
+    </div>
+
+    <header class="header">
+      <div class="container d-flex align-items-center justify-content-between">
+        <a href="index.html" class="d-xl-none">
+        </a>
+        <button class="bg-transparent border-0 d-xl-none">
+          <div class="nav-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <div class="left-bar">
+      <ul style="margin-bottom: 0px; margin-top: auto;">
+        <li><a href="mailto:omar.kaykhusraw@gmail.com"><i class="ph ph-envelope"></i></a></li>
+        <li><a href="https://www.linkedin.com/in/stochastic" target="_blank"><i class="ph ph-linkedin-logo"></i></a></li>
+        <li><a href="https://github.com/kaykhosrow" target="_blank"><i class="ph ph-github-logo"></i></a></li>
+      </ul>
+    </div>
+
+    <main>
+      <div class="col-12">
+
+        <nav class="navigation" id="navigation">
+          <div class="scroll-down d-none d-xl-flex">
+            <div class="scroll-anim"><span></span></div>
+            <p>Scroll Down</p>
+          </div>
+          <ul>
+            <li class="nav-link"><a href="https://kaykhosrow.github.io/"><span class="text">home</span></a></li>
+            <li class="nav-link"><a href="index.html#about"><span class="text">about</span></a></li>
+            <li class="nav-link"><a href="index.html#research"><span class="text">research</span></a></li>
+            <li class="nav-link"><a href="index.html#teaching"><span class="text">teaching</span></a></li>
+            <li class="nav-link"><a href="index.html#conferences"><span class="text">conferences</span></a></li>
+            <li class="nav-link"><a href="index.html#code" class="active"><span class="text">code</span></a></li>
+            <li class="nav-link"><a href="index.html#gallery"><span class="text">gallery</span></a></li>
+            <li class="nav-link"><a href="index.html#contact"><span class="text">contact</span></a></li>
+          </ul>
+          <div class="settings-bar d-none d-xl-flex">
+            <div class="settings-options" id="settingsOptions">
+              <button style="background-color:#ffdb67" class="color-btn setting-swatch" data-color="255, 219, 103"></button>
+              <button style="background-color:#eee8aa" class="color-btn setting-swatch" data-color="238, 232, 170"></button>
+              <button class="grain-swatch setting-swatch" id="grainToggleBtn" title="Toggle Grain"></button>
+            </div>
+            <button class="settings-gear-btn" id="settingsGearBtn">
+              <i class="ph ph-gear-six"></i>
+            </button>
+          </div>
+        </nav>
+        <div class="nav-overlay d-xl-none"></div>
+
+        <!-- Code Archive -->
+        <section id="code" class="about section container">
+          <span class="section-title-overlay-text">Code</span>
+          <div class="section-title text-capitalize">
+            <h4>Tools &amp; Replication</h4>
+            <h2>CODE</h2>
+          </div>
+
+          <a href="index.html#code" class="back-link">
+            <i class="ph ph-arrow-left"></i> Back
+          </a>
+
+          <div class="code-grid">
+
+            <div class="code-item">
+              <h5>Time-Varying Phillips Curves</h5>
+              <p>This tool presents time-varying estimates of the Phillips curve across multiple regions.<br> Using kernel-weighted regression methods, it traces the relationship between inflation<br> and unemployment over time, capturing structural shifts that static models often miss.</p>
+              <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/site&gt;</a>
+            </div>
+
+            <div class="code-item">
+              <h5>Unobserved Components Model</h5>
+              <p>This function implements the Stock and Watson (2007) unobserved components<br> model with stochastic volatilities. It employs a gamma random variable generator<br> function and can be used to extract the trend of any given univariate time series.</p>
+              <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/code&gt;</a>
+            </div>
+
+            <div class="code-item">
+              <h5>VAR Historical Decomposition</h5>
+              <p>This function takes in the output from the VAR function (refer to the vars package)<br> and computes the vector autoregression historical decomposition. It is an abridged<br> translation of Cesa-Bianchi's MATLAB code (see the VAR-Toolbox) designed for R.</p>
+              <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/code&gt;</a>
+            </div>
+
+            <div class="code-item">
+              <h5>Gaussian Error Propagation</h5>
+              <p>This function determines the uncertainty of any mathematical expression containing<br> estimated variables with uncertainties by taking the partial derivatives with respect to<br> each variable, multiplied by their uncertainty, and added in quadrature.</p>
+              <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/code&gt;</a>
+            </div>
+
+          </div>
+
+        </section>
+
+        <footer style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 49; background: linear-gradient(rgba(0,0,0,0.06), rgba(0,0,0,0.06)), rgb(255,219,103);">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <p>Copyright &copy; Omar Kaykhusraw</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+
+    <input type="checkbox" id="grained" class="grained-checkbox" style="display:none" />
+    <button class="ltr" style="display:none" aria-hidden="true"></button>
+    <button class="rtl" style="display:none" aria-hidden="true"></button>
+
+<script>
+      // Hamburger toggle fallback
+      document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.querySelector('.nav-icon');
+        var nav = document.getElementById('navigation');
+        var overlay = document.querySelector('.nav-overlay');
+        if (!btn || !nav) return;
+        btn.parentElement.addEventListener('click', function() {
+          btn.classList.toggle('open');
+          nav.classList.toggle('opened');
+        });
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            btn.classList.remove('open');
+            nav.classList.remove('opened');
+          });
+        }
+      });
+    </script>
+    <script>
+      (function() {
+        var nav = document.getElementById('navigation');
+        if (!nav) return;
+
+        // Suppress transition on load and resize to prevent flash
+        var t;
+        function freeze() {
+          nav.classList.add('no-trans');
+          clearTimeout(t);
+          t = setTimeout(function() { nav.classList.remove('no-trans'); }, 100);
+        }
+        freeze();
+        window.addEventListener('resize', freeze);
+
+        // Reliable hamburger toggle fallback
+        var btn = document.querySelector('.nav-icon');
+        var overlay = document.querySelector('.nav-overlay');
+        if (btn) {
+          btn.closest('button').addEventListener('click', function(e) {
+            btn.classList.toggle('open');
+            nav.classList.toggle('opened');
+          });
+        }
+        if (overlay) {
+          overlay.addEventListener('click', function() {
+            if (btn) btn.classList.remove('open');
+            nav.classList.remove('opened');
+          });
+        }
+      })();
+    </script>
+    <script>
+      document.getElementById('settingsGearBtn').addEventListener('click', function() {
+        this.classList.toggle('open');
+        document.getElementById('settingsOptions').classList.toggle('open');
+      });
+      document.getElementById('grainToggleBtn').addEventListener('click', function() {
+        var cb = document.querySelector('.grained-checkbox');
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+        this.classList.toggle('active');
+      });
+    </script>
+  </body>
+</html>
