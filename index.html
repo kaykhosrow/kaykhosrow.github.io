@@ -237,20 +237,6 @@
         transform: translateY(-6px);
       }
 
-      /* Reserve a stable box for the about image while it loads, so the
-         page below doesn't shift when the image arrives. The actual image
-         fits within these bounds via max-width / max-height. */
-      .about-img-wrap {
-        width: 100%;
-        max-width: 480px;
-        aspect-ratio: 1 / 1;
-      }
-      .about-img-wrap .about-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
       /* Gallery swiper */
       .gallery-swiper { width: 100%; overflow: hidden; }
       .gallery-swiper { max-width: 680px; margin: 0 auto; overflow: hidden; padding-bottom: 40px; }
@@ -322,12 +308,6 @@
       #code .view-all-code { margin-top: 0.75rem; }
       #conferences .next-chapter { padding-top: 30px; }
       #teaching .next-chapter { padding-top: 45px; }
-
-      /* Section anchor offset: when scrolling to a section via the URL
-         hash, leave a little breathing room above so the first heading
-         isn't jammed against the top of the viewport. Also gives the
-         scroll-restore code a forgiving target. */
-      section[id] { scroll-margin-top: 24px; }
 
       /* Hide template images/portify content in mobile nav */
       @media (max-width: 1200px) {
@@ -573,8 +553,7 @@
                   src="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png"
                   alt="Omar Kaykhusraw"
                   class="about-img"
-                  width="480"
-                  height="480"
+                  style="max-width: 100%; max-height: 480px; object-fit: cover;"
                 />
               </div>
             </div>
