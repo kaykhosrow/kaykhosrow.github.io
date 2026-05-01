@@ -1,8 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- FIX: Add js-loading class synchronously before any CSS or scripts
-         load. This prevents transitions and GSAP from firing on first paint. -->
+    <!-- Suppress all transitions/animations before first paint -->
     <script>document.documentElement.classList.add('js-loading');</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,15 +31,13 @@
         z-index: 49;
       }
 
-      /* FIX: transition is only active AFTER js-loading is removed.
-         On first load the nav snaps instantly into position so there
-         is no slide animation and no scrollbar layout-shift overshoot. */
+      /* Nav transition only re-enabled after js-loading is removed,
+         so the initial snap (from HTML class) is always instant. */
       html:not(.js-loading) #navigation {
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      /* FIX: freeze every element that GSAP or transitions touch during
-         the load window. Removed as soon as DOMContentLoaded fires. */
+      /* Everything frozen during js-loading window */
       html.js-loading #navigation,
       html.js-loading .img-wrapper,
       html.js-loading .hero-img {
@@ -537,7 +534,14 @@
           </div>
         </section>
 
-        <nav class="navigation" id="navigation">
+        <!--
+          THE KEY FIX: nav-pinned-bottom is baked directly into the class
+          attribute here. The nav now renders in the correct initial position
+          from the very first frame — before any script or CSS has run.
+          The JS update() function will re-add it at scrollY<60 (no-op)
+          or remove it when the user scrolls past 60px.
+        -->
+        <nav class="navigation nav-pinned-bottom" id="navigation">
           <div class="scroll-down d-none d-xl-flex">
             <div class="scroll-anim"><span></span></div>
             <p>Scroll Down</p>
@@ -1288,15 +1292,8 @@
     })();
     </script>
 
-    <!--
-      FIX: Remove js-loading at DOMContentLoaded — which fires after all
-      deferred scripts (including app.js) have executed but before the
-      browser paints. This means:
-        1. The nav transition is re-enabled after its initial snap,
-           so scrolling still animates the nav correctly thereafter.
-        2. GSAP tweens on .img-wrapper and .navigation are killed before
-           first paint, clearing the inline styles they set immediately.
-    -->
+    <!-- Remove js-loading at DOMContentLoaded (after deferred app.js has run,
+         before first paint) to re-enable nav transitions and kill GSAP tweens. -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.documentElement.classList.remove('js-loading');
