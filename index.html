@@ -30,9 +30,6 @@
       #navigation {
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      #navigation.no-transition {
-        transition: none !important;
-      }
 
       /* Force scrollbar always visible so it never causes layout shift on load */
       html {
@@ -553,7 +550,7 @@
           </div>
         </section>
 
-        <nav class="navigation nav-pinned-bottom no-transition" id="navigation">
+        <nav class="navigation" id="navigation">
           <div class="scroll-down d-none d-xl-flex">
             <div class="scroll-anim"><span></span></div>
             <p>Scroll Down</p>
@@ -1304,20 +1301,5 @@
     })();
     </script>
 
-    <script>
-      // Prevent browser scroll restoration on refresh which causes
-      // the scrollbar thumb and nav to flash/overshoot on load
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-      // Re-enable nav transition after first paint so initial position
-      // is set instantly with no animated jump
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          var nav = document.getElementById('navigation');
-          if (nav) nav.classList.remove('no-transition');
-        });
-      });
-    </script>
   </body>
 </html>
