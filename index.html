@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- FIX: Add js-loading class synchronously before any CSS or scripts
+         load. This prevents transitions and GSAP from firing on first paint. -->
+    <script>document.documentElement.classList.add('js-loading');</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Omar Kaykhusraw</title>
@@ -18,6 +21,7 @@
       }
 
       section.hero .next-chapter { padding-top: 40px !important; padding-bottom: 20px !important; }
+
       /* Nav anchored to bottom on initial load */
       .nav-pinned-bottom {
         position: fixed !important;
@@ -27,8 +31,23 @@
         right: 0 !important;
         z-index: 49;
       }
-      #navigation {
+
+      /* FIX: transition is only active AFTER js-loading is removed.
+         On first load the nav snaps instantly into position so there
+         is no slide animation and no scrollbar layout-shift overshoot. */
+      html:not(.js-loading) #navigation {
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* FIX: freeze every element that GSAP or transitions touch during
+         the load window. Removed as soon as DOMContentLoaded fires. */
+      html.js-loading #navigation,
+      html.js-loading .img-wrapper,
+      html.js-loading .hero-img {
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
       }
 
       /* Zoom fix */
@@ -129,15 +148,13 @@
       #research .service-list li { display: block !important; }
       #research .service-card { position: relative; }
 
-      
-#research {
-  scroll-margin-top: 100px;
-}
+      #research {
+        scroll-margin-top: 100px;
+      }
 
-#teaching {
-  scroll-margin-top: 50px;
-}
-
+      #teaching {
+        scroll-margin-top: 50px;
+      }
 
       .card-full-link { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
 
@@ -343,13 +360,10 @@
       }
 
       .section-title h2,
-.section-title h4 {
-  min-height: 1.2em;
-}
+      .section-title h4 {
+        min-height: 1.2em;
+      }
 
-      /* Same motion-blur treatment as the hero name vestaboard: a hint of
-         softening while each character is flipping, snapping crisp the
-         moment it lands on its final letter. */
       .section-title h2 span,
       .section-title h4 span {
         transition: filter 0.05s ease-out;
@@ -395,31 +409,14 @@
         right: 0;
       }
 
-      /* Hero name: click to vestaboard the whole name into its IPA
-         pronunciation; click again to flip back. The h4's width is locked
-         to the IPA (longer) state on load and white-space: nowrap keeps it
-         on one line — so nothing shifts horizontally or vertically. The
-         resting state renders in full caps via the underlying
-         text-uppercase class. Spans inherit text-transform from the parent
-         so they go through the SAME OpenType uppercasing pipeline as the
-         resting text node — keeping kerning/spacing identical between the
-         two states. The .is-ipa-char class is the targeted opt-out for IPA
-         and lowercase cycle characters that need to render as written. */
       .freelancer {
         white-space: nowrap;
         transition: opacity 0.7s ease;
         cursor: pointer;
         user-select: none;
-        /* GSAP-neutralisation overrides applied individually, so we can
-           still set our own visibility/opacity below without being trumped
-           by the multi-selector !important block above. */
         opacity: 1 !important;
         transform: none !important;
         animation: none !important;
-        /* Hidden until lockWidth runs and sets the final layout, so the
-           user never sees a brief unstyled flash of the title at narrower
-           plain-text spacing. The script removes this by setting
-           visibility: visible once the spans-based render is in place. */
         visibility: hidden;
       }
       .freelancer.is-ipa {
@@ -427,19 +424,12 @@
       }
       .freelancer span {
         display: inline-block;
-        /* Equidistant spacing between every character pair. Applies to
-           every span (including the space span) so word gaps widen by the
-           same amount. */
         margin-right: 0.05em;
         transition: filter 0.05s ease-out;
       }
       .freelancer span:last-child {
         margin-right: 0;
       }
-      /* Pairs that look awkwardly spread without natural kerning across
-         inline-block boxes. AY in particular sits too wide because
-         normally an A's diagonal and Y's left arm interlock. Tightening
-         this pair pulls Y (and everything after it) closer to A. */
       .freelancer span.tight-right {
         margin-right: -0.04em;
       }
@@ -451,8 +441,6 @@
       }
 
       /* ── Custom scrollbar ── */
-
-      /* WebKit: Chrome, Edge, Safari */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -486,15 +474,6 @@
       * {
         scrollbar-width: thin;
         scrollbar-color: rgb(var(--black)) rgb(var(--primary));
-      }
-
-      /* ── FIX 1: Prevent GSAP nav --height flash on every reload.
-         GSAP runs gsapWithCSS.to(".navigation", { "--height": "100%", ... })
-         which animates the nav line from 0% → 100% on every page load.
-         Pre-setting --height to 100% means GSAP animates 100% → 100%,
-         so there is no visible change. ── */
-      #navigation {
-        --height: 100% !important;
       }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -1310,14 +1289,20 @@
     </script>
 
     <!--
-      FIX 2: Kill the GSAP .from(".img-wrapper", { opacity: 0, scale: 1.5, ... }) tween
-      that fires on every page load. GSAP's deferred script sets inline opacity/transform
-      immediately, overriding any CSS !important rules. This runs after window.load
-      (after all deferred scripts have executed) and clears those inline styles.
+      FIX: Remove js-loading at DOMContentLoaded — which fires after all
+      deferred scripts (including app.js) have executed but before the
+      browser paints. This means:
+        1. The nav transition is re-enabled after its initial snap,
+           so scrolling still animates the nav correctly thereafter.
+        2. GSAP tweens on .img-wrapper and .navigation are killed before
+           first paint, clearing the inline styles they set immediately.
     -->
     <script>
-    window.addEventListener('load', function () {
+    document.addEventListener('DOMContentLoaded', function () {
+      document.documentElement.classList.remove('js-loading');
+
       if (window.gsap) {
+        gsap.killTweensOf('.navigation');
         gsap.killTweensOf('.img-wrapper');
         gsap.set('.img-wrapper', { clearProps: 'all' });
       }
