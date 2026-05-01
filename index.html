@@ -461,17 +461,9 @@
         border-radius: 999px;
       }
 
-      /* Full-height separator line flush with the left edge of the nav bar */
-      body::after {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: var(--nav-left, 9999px);
-        width: 1px;
-        height: 100vh;
-        background: rgba(0,0,0,0.1);
-        pointer-events: none;
-        z-index: 9999;
+      /* Separator line flush with the left edge of the nav bar */
+      #navigation {
+        border-left: 1px solid rgba(0,0,0,0.1);
       }
       ::-webkit-scrollbar-thumb {
         background: rgb(var(--black));
@@ -1300,18 +1292,5 @@
     })();
     </script>
 
-    <script>
-      (function() {
-        var nav = document.getElementById('navigation');
-        if (!nav) return;
-        function setNavLine() {
-          var rect = nav.getBoundingClientRect();
-          document.documentElement.style.setProperty('--nav-left', rect.left + 'px');
-        }
-        setNavLine();
-        window.addEventListener('resize', setNavLine, { passive: true });
-        window.addEventListener('scroll', setNavLine, { passive: true });
-      })();
-    </script>
   </body>
 </html>
