@@ -466,7 +466,7 @@
         content: '';
         position: fixed;
         top: 0;
-        right: 8px;
+        right: var(--nav-line-right, 673px);
         width: 1px;
         height: 100%;
         background: rgba(0,0,0,0.1);
@@ -1300,5 +1300,19 @@
     })();
     </script>
 
+    <script>
+      (function() {
+        var nav = document.getElementById('navigation');
+        if (!nav) return;
+        function updateLine() {
+          if (nav.classList.contains('nav-pinned-bottom')) return;
+          var right = window.innerWidth - nav.getBoundingClientRect().left;
+          document.documentElement.style.setProperty('--nav-line-right', right + 'px');
+        }
+        updateLine();
+        window.addEventListener('resize', updateLine, { passive: true });
+        window.addEventListener('scroll', updateLine, { passive: true });
+      })();
+    </script>
   </body>
 </html>
