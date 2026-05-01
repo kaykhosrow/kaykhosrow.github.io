@@ -466,7 +466,7 @@
         content: '';
         position: fixed;
         top: 0;
-        right: var(--nav-line-right, 1px);
+        right: 1px;
         width: 1px;
         height: 100%;
         background: rgba(0,0,0,0.1);
@@ -1300,28 +1300,5 @@
     })();
     </script>
 
-    <script>
-      (function() {
-        var nav = document.getElementById('navigation');
-        if (!nav) return;
-
-        function updateLine() {
-          if (nav.classList.contains('nav-pinned-bottom')) return;
-          var right = window.innerWidth - nav.getBoundingClientRect().left;
-          if (right > 0 && right < window.innerWidth) {
-            document.documentElement.style.setProperty('--nav-line-right', right + 'px');
-            // Remove scroll listener — position is locked from here on
-            window.removeEventListener('scroll', onScroll);
-          }
-        }
-
-        function onScroll() { setTimeout(updateLine, 50); }
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', function() {
-          setTimeout(updateLine, 50);
-        }, { passive: true });
-      })();
-    </script>
   </body>
 </html>
