@@ -350,7 +350,7 @@
         to { opacity: 1; transform: translateY(0); }
       }
 
-      /* ── Split-flap: neutralise GSAP's slide-from-right on section titles ── */
+      /* Split-flap: neutralise GSAP's slide-from-right on section titles */
       .section-title,
       .section-title h4,
       .section-title h2 {
@@ -381,7 +381,6 @@
         visibility: visible !important;
       }
 
-      /* Clip the timeline line at 100% so it animates but doesn't overshoot */
       #conferences .experience-wrapper {
         position: relative;
         overflow: hidden;
@@ -440,7 +439,7 @@
         filter: blur(0.0125em);
       }
 
-      /* ── Custom scrollbar ── */
+      /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -449,7 +448,6 @@
         border-radius: 999px;
       }
 
-      /* Separator line */
       body::after {
         content: '';
         position: fixed;
@@ -470,14 +468,11 @@
         background: rgba(var(--black), 0.72);
       }
 
-      /* Firefox */
       * {
         scrollbar-width: thin;
         scrollbar-color: rgb(var(--black)) rgb(var(--primary));
       }
     </style>
-    <!-- FIX: preload the about photo so it arrives before first paint,
-         preventing the page-height jump that causes scrollbar overshoot. -->
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
@@ -540,8 +535,6 @@
           </div>
         </section>
 
-        <!-- nav-pinned-bottom baked in so the nav renders in the correct
-             position from frame 1, eliminating the positional jump/twitch. -->
         <nav class="navigation nav-pinned-bottom" id="navigation">
           <div class="scroll-down d-none d-xl-flex">
             <div class="scroll-anim"><span></span></div>
@@ -1057,7 +1050,9 @@
         if (!nav) return;
 
         function update() {
-          if (window.scrollY < 60) {
+          // FIX 1: threshold reduced from 60 to 5px — eliminates the dead
+          // zone at the top where the nav stayed pinned despite scrolling.
+          if (window.scrollY < 5) {
             nav.classList.add('nav-pinned-bottom');
           } else {
             nav.classList.remove('nav-pinned-bottom');
@@ -1071,14 +1066,17 @@
           link.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            window.scrollTo(0, 0);
+            // FIX 2: smooth scroll instead of instant jump — the nav now
+            // transitions gracefully as the page scrolls back to the top
+            // rather than snapping the moment scrollY crosses the threshold.
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             history.replaceState(null, '', window.location.pathname);
           });
         });
       })();
     </script>
 
-    <!-- ── Split-flap / Vestaboard reveal for section titles ── -->
+    <!-- Split-flap / Vestaboard reveal for section titles -->
     <script>
     (function () {
       var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
@@ -1149,7 +1147,7 @@
     })();
     </script>
 
-    <!-- ── Toggle IPA effect on hero name (whole name, locked width) ── -->
+    <!-- Toggle IPA effect on hero name -->
     <script>
     (function () {
       var h4 = document.querySelector('h4.freelancer[data-ipa]');
