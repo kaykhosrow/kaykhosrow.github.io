@@ -461,15 +461,15 @@
         border-radius: 999px;
       }
 
-      /* Separator line flush with the left edge of the nav bar */
+      /* Separator line */
       body::after {
         content: '';
         position: fixed;
         top: 0;
-        left: var(--nav-line-left, -1px);
+        right: 8px;
         width: 1px;
-        height: 100vh;
-        background: rgba(0,0,0,0.15);
+        height: 100%;
+        background: rgba(0,0,0,0.1);
         pointer-events: none;
         z-index: 9999;
       }
@@ -1300,27 +1300,5 @@
     })();
     </script>
 
-    <script>
-      (function() {
-        var nav = document.getElementById('navigation');
-        if (!nav) return;
-        var set = false;
-        function positionLine() {
-          if (nav.classList.contains('nav-pinned-bottom')) return;
-          var left = nav.getBoundingClientRect().left;
-          document.documentElement.style.setProperty('--nav-line-left', left + 'px');
-          set = true;
-        }
-        window.addEventListener('scroll', function() {
-          if (!set) positionLine();
-        }, { passive: true });
-        window.addEventListener('resize', function() {
-          set = false;
-          positionLine();
-        }, { passive: true });
-        // Try immediately in case page loads already scrolled
-        positionLine();
-      })();
-    </script>
   </body>
 </html>
