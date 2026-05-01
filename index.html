@@ -31,8 +31,7 @@
         z-index: 49;
       }
 
-      /* Nav transition only re-enabled after js-loading is removed,
-         so the initial snap (from HTML class) is always instant. */
+      /* Nav transition only re-enabled after js-loading is removed */
       html:not(.js-loading) #navigation {
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
@@ -222,10 +221,14 @@
         color: #fff !important;
       }
 
-      /* About image ground shadow */
+      /* About image ground shadow.
+         FIX: min-height: 480px reserves the image's space in the layout
+         before the image file has loaded, preventing the page-height jump
+         that causes the scrollbar thumb to overshoot on refresh. */
       .about-img-wrap {
         position: relative;
         display: inline-block;
+        min-height: 480px;
       }
       .about-img-wrap::after {
         content: '';
@@ -473,6 +476,9 @@
         scrollbar-color: rgb(var(--black)) rgb(var(--primary));
       }
     </style>
+    <!-- FIX: preload the about photo so it arrives before first paint,
+         preventing the page-height jump that causes scrollbar overshoot. -->
+    <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg">
@@ -534,13 +540,8 @@
           </div>
         </section>
 
-        <!--
-          THE KEY FIX: nav-pinned-bottom is baked directly into the class
-          attribute here. The nav now renders in the correct initial position
-          from the very first frame — before any script or CSS has run.
-          The JS update() function will re-add it at scrollY<60 (no-op)
-          or remove it when the user scrolls past 60px.
-        -->
+        <!-- nav-pinned-bottom baked in so the nav renders in the correct
+             position from frame 1, eliminating the positional jump/twitch. -->
         <nav class="navigation nav-pinned-bottom" id="navigation">
           <div class="scroll-down d-none d-xl-flex">
             <div class="scroll-anim"><span></span></div>
@@ -1292,8 +1293,7 @@
     })();
     </script>
 
-    <!-- Remove js-loading at DOMContentLoaded (after deferred app.js has run,
-         before first paint) to re-enable nav transitions and kill GSAP tweens. -->
+    <!-- Remove js-loading at DOMContentLoaded and kill GSAP tweens -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.documentElement.classList.remove('js-loading');
