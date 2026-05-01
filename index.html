@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Suppress all transitions/animations before first paint -->
+    <!-- Suppress all transitions/animations before first paint.
+         visibility:hidden means the page renders and settles (scroll
+         restoration, GSAP ScrollTrigger refresh, layout shifts) while
+         invisible — it becomes visible at DOMContentLoaded already in
+         its correct final state, so no jitter is ever seen. -->
     <script>document.documentElement.classList.add('js-loading');</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,8 +13,6 @@
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
-      /* Hero */
-
       /* Hero centering */
       section.hero {
         display: flex;
@@ -36,7 +38,15 @@
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      /* Everything frozen during js-loading window */
+      /* Hide the entire page while it settles on load.
+         visibility:hidden (not display:none / opacity:0) so the browser
+         still performs layout, scroll restoration, and GSAP init normally —
+         it just doesn't show any of it until js-loading is removed. */
+      html.js-loading {
+        visibility: hidden;
+      }
+
+      /* Everything else frozen during js-loading window */
       html.js-loading #navigation,
       html.js-loading .img-wrapper,
       html.js-loading .hero-img {
@@ -144,16 +154,10 @@
       #research .service-list li { display: block !important; }
       #research .service-card { position: relative; }
 
-      #research {
-        scroll-margin-top: 100px;
-      }
-
-      #teaching {
-        scroll-margin-top: 50px;
-      }
+      #research { scroll-margin-top: 100px; }
+      #teaching { scroll-margin-top: 50px; }
 
       .card-full-link { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
-
       .research-sub-heading { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; opacity: 0.55; margin-bottom: 1.25rem; margin-top: 0; }
 
       /* Left bar social icon borders */
@@ -172,15 +176,7 @@
         from { transform: scale(1.02); opacity: 0.5; }
         to   { transform: scale(1.6); opacity: 0; }
       }
-      .card-ripple {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        border: 1px solid rgb(var(--black));
-        pointer-events: none;
-        opacity: 0;
-        animation: none;
-      }
+      .card-ripple { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgb(var(--black)); pointer-events: none; opacity: 0; animation: none; }
       .service-card:hover .card-ripple { animation: vacRippleCard 2.5s linear infinite; }
       .service-card:hover .card-ripple:nth-child(2) { animation-delay: 0.625s; }
       .service-card:hover .card-ripple:nth-child(3) { animation-delay: 1.25s; }
@@ -193,15 +189,7 @@
         from { transform: scale(1.05); opacity: 0.6; }
         to   { transform: scale(1.5); opacity: 0; }
       }
-      .vac-ripple {
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        border: 1px solid currentColor;
-        animation: vacRipple 2.5s linear infinite;
-        pointer-events: none;
-        transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      }
+      .vac-ripple { position: absolute; inset: 0; border-radius: 50%; border: 1px solid currentColor; animation: vacRipple 2.5s linear infinite; pointer-events: none; }
       .vac-ripple:nth-child(2) { animation-delay: 0.833s; }
       .vac-ripple:nth-child(3) { animation-delay: 1.667s; }
       .vac-arrow:hover .vac-ripple { opacity: 0 !important; }
@@ -209,22 +197,12 @@
       .contact-form .submit-btn:hover .vac-ripple { opacity: 0 !important; }
 
       /* Code section buttons */
-      .code-btn {
-        font-size: 0.82rem;
-        padding: 0.3rem 0.7rem;
-        border-radius: 4px !important;
-        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
-      }
-      .code-btn:hover {
-        background-color: #000 !important;
-        border-color: #000 !important;
-        color: #fff !important;
-      }
+      .code-btn { font-size: 0.82rem; padding: 0.3rem 0.7rem; border-radius: 4px !important; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important; }
+      .code-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
 
-      /* About image ground shadow.
-         FIX: min-height: 480px reserves the image's space in the layout
-         before the image file has loaded, preventing the page-height jump
-         that causes the scrollbar thumb to overshoot on refresh. */
+      /* About image — min-height reserves layout space before the image
+         loads from GitHub, preventing the page-height jump that causes
+         the scrollbar thumb to shrink/overshoot on refresh. */
       .about-img-wrap {
         position: relative;
         display: inline-block;
@@ -246,60 +224,18 @@
         pointer-events: none;
         z-index: 2;
       }
-      .about-img-wrap:hover::after {
-        opacity: 1;
-        bottom: -46px;
-        width: 88%;
-      }
-      .about-img-wrap .about-img {
-        transition: transform 0.4s ease;
-        display: block;
-      }
-      .about-img-wrap:hover .about-img {
-        transform: translateY(-6px);
-      }
+      .about-img-wrap:hover::after { opacity: 1; bottom: -46px; width: 88%; }
+      .about-img-wrap .about-img { transition: transform 0.4s ease; display: block; }
+      .about-img-wrap:hover .about-img { transform: translateY(-6px); }
 
       /* Gallery swiper */
-      .gallery-swiper { width: 100%; overflow: hidden; }
-      .gallery-swiper { max-width: 680px; margin: 0 auto; overflow: hidden; padding-bottom: 40px; }
-      .gallery-video-wrapper {
-        position: relative;
-        width: 100%;
-        padding-bottom: 177.78%;
-        height: 0;
-        overflow: hidden;
-        border-radius: 6px;
-      }
-      .gallery-thumb {
-        position: absolute;
-        inset: 0;
-        background-size: cover;
-        background-position: center;
-        cursor: pointer;
-        z-index: 2;
-      }
-      .gallery-thumb::after {
-        content: '';
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        width: 52px; height: 52px;
-        background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' stroke='white' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat;
-        border-radius: 50%;
-        transition: background-color 0.2s;
-      }
+      .gallery-swiper { width: 100%; overflow: hidden; max-width: 680px; margin: 0 auto; padding-bottom: 40px; }
+      .gallery-video-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 6px; }
+      .gallery-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; z-index: 2; }
+      .gallery-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 52px; height: 52px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' stroke='white' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; transition: background-color 0.2s; }
       .gallery-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
-      .gallery-pagination .swiper-pagination-bullet {
-        width: 8px; height: 8px;
-        background: transparent;
-        border: 2.5px solid rgba(0,0,0,0.5);
-        opacity: 1;
-      }
-      .gallery-pagination .swiper-pagination-bullet-active {
-        background: #000;
-        border-color: #000;
-        transform: scale(1.25);
-      }
+      .gallery-pagination .swiper-pagination-bullet { width: 8px; height: 8px; background: transparent; border: 2.5px solid rgba(0,0,0,0.5); opacity: 1; }
+      .gallery-pagination .swiper-pagination-bullet-active { background: #000; border-color: #000; transform: scale(1.25); }
 
       /* Video gallery */
       .vid-gallery { overflow: hidden; width: 100%; user-select: none; }
@@ -333,151 +269,46 @@
 
       /* Hide template images/portify content in mobile nav */
       @media (max-width: 1200px) {
-        .navigation img,
-        .navigation .nav-logo,
-        .navigation .logo,
-        .navigation > img,
-        .navigation .contact { display: none !important; }
+        .navigation img, .navigation .nav-logo, .navigation .logo,
+        .navigation > img, .navigation .contact { display: none !important; }
       }
 
       /* Hero next-chapter fade in */
-      .hero .next-chapter {
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeUpIn 1s ease 3s forwards;
-      }
-      @keyframes fadeUpIn {
-        to { opacity: 1; transform: translateY(0); }
-      }
+      .hero .next-chapter { opacity: 0; transform: translateY(20px); animation: fadeUpIn 1s ease 3s forwards; }
+      @keyframes fadeUpIn { to { opacity: 1; transform: translateY(0); } }
 
-      /* ── Split-flap: neutralise GSAP's slide-from-right on section titles ── */
-      .section-title,
-      .section-title h4,
-      .section-title h2 {
-        transform: none !important;
-        opacity: 1 !important;
-        animation: none !important;
-      }
-
-      .section-title h2,
-      .section-title h4 {
-        min-height: 1.2em;
-      }
-
-      .section-title h2 span,
-      .section-title h4 span {
-        transition: filter 0.05s ease-out;
-      }
-      .section-title h2 span.is-cycling,
-      .section-title h4 span.is-cycling {
-        filter: blur(0.01em);
-      }
+      /* Split-flap: neutralise GSAP's slide-from-right on section titles */
+      .section-title, .section-title h4, .section-title h2 { transform: none !important; opacity: 1 !important; animation: none !important; }
+      .section-title h2, .section-title h4 { min-height: 1.2em; }
+      .section-title h2 span, .section-title h4 span { transition: filter 0.05s ease-out; }
+      .section-title h2 span.is-cycling, .section-title h4 span.is-cycling { filter: blur(0.01em); }
 
       /* Conferences: static, no animation */
-      #conferences .experience-item {
-        transform: none !important;
-        animation: none !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-      }
-
-      /* Clip the timeline line at 100% so it animates but doesn't overshoot */
-      #conferences .experience-wrapper {
-        position: relative;
-        overflow: hidden;
-      }
+      #conferences .experience-item { transform: none !important; animation: none !important; opacity: 1 !important; visibility: visible !important; }
+      #conferences .experience-wrapper { position: relative; overflow: hidden; }
 
       /* Hover underline animation on inline body text links */
-      section p a:not(.btn) {
-        position: relative;
-        text-decoration: none;
-        transition: color .5s ease-out;
-      }
-      section p a:not(.btn)::after {
-        content: "";
-        position: absolute;
-        border-radius: 1em;
-        border-top: .1em solid #000;
-        right: 100%;
-        bottom: -.15em;
-        left: 0;
-        transition: right .5s cubic-bezier(0,.5,0,1),
-                    border-color .5s ease-out;
-      }
-      section p a:not(.btn):hover::after,
-      section p .link-pair:hover a:not(.btn)::after {
-        right: 0;
-      }
+      section p a:not(.btn) { position: relative; text-decoration: none; transition: color .5s ease-out; }
+      section p a:not(.btn)::after { content: ""; position: absolute; border-radius: 1em; border-top: .1em solid #000; right: 100%; bottom: -.15em; left: 0; transition: right .5s cubic-bezier(0,.5,0,1), border-color .5s ease-out; }
+      section p a:not(.btn):hover::after, section p .link-pair:hover a:not(.btn)::after { right: 0; }
 
-      .freelancer {
-        white-space: nowrap;
-        transition: opacity 0.7s ease;
-        cursor: pointer;
-        user-select: none;
-        opacity: 1 !important;
-        transform: none !important;
-        animation: none !important;
-        visibility: hidden;
-      }
-      .freelancer.is-ipa {
-        opacity: 0.5 !important;
-      }
-      .freelancer span {
-        display: inline-block;
-        margin-right: 0.05em;
-        transition: filter 0.05s ease-out;
-      }
-      .freelancer span:last-child {
-        margin-right: 0;
-      }
-      .freelancer span.tight-right {
-        margin-right: -0.04em;
-      }
-      .freelancer span.is-ipa-char {
-        text-transform: none !important;
-      }
-      .freelancer span.is-cycling {
-        filter: blur(0.0125em);
-      }
+      .freelancer { white-space: nowrap; transition: opacity 0.7s ease; cursor: pointer; user-select: none; opacity: 1 !important; transform: none !important; animation: none !important; visibility: hidden; }
+      .freelancer.is-ipa { opacity: 0.5 !important; }
+      .freelancer span { display: inline-block; margin-right: 0.05em; transition: filter 0.05s ease-out; }
+      .freelancer span:last-child { margin-right: 0; }
+      .freelancer span.tight-right { margin-right: -0.04em; }
+      .freelancer span.is-ipa-char { text-transform: none !important; }
+      .freelancer span.is-cycling { filter: blur(0.0125em); }
 
-      /* ── Custom scrollbar ── */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: rgb(var(--primary));
-        border-radius: 999px;
-      }
-
-      /* Separator line */
-      body::after {
-        content: '';
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 1px;
-        height: 100%;
-        background: rgba(0,0,0,0.1);
-        pointer-events: none;
-        z-index: 9999;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: rgb(var(--black));
-        border-radius: 999px;
-        border: 2px solid rgb(var(--primary));
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: rgba(var(--black), 0.72);
-      }
-
-      /* Firefox */
-      * {
-        scrollbar-width: thin;
-        scrollbar-color: rgb(var(--black)) rgb(var(--primary));
-      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: rgb(var(--primary)); border-radius: 999px; }
+      body::after { content: ''; position: fixed; top: 0; right: 0; width: 1px; height: 100%; background: rgba(0,0,0,0.1); pointer-events: none; z-index: 9999; }
+      ::-webkit-scrollbar-thumb { background: rgb(var(--black)); border-radius: 999px; border: 2px solid rgb(var(--primary)); }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
+      * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
     </style>
-    <!-- FIX: preload the about photo so it arrives before first paint,
-         preventing the page-height jump that causes scrollbar overshoot. -->
+    <!-- Preload about photo to reduce layout shift from late-loading image -->
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
@@ -497,11 +328,7 @@
       <div class="container d-flex align-items-center justify-content-between">
         <a href="index.html" class="d-xl-none"></a>
         <button class="bg-transparent border-0 d-xl-none">
-          <div class="nav-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+          <div class="nav-icon"><span></span><span></span><span></span></div>
         </button>
       </div>
     </header>
@@ -541,7 +368,7 @@
         </section>
 
         <!-- nav-pinned-bottom baked in so the nav renders in the correct
-             position from frame 1, eliminating the positional jump/twitch. -->
+             position from frame 1, eliminating any positional jump. -->
         <nav class="navigation nav-pinned-bottom" id="navigation">
           <div class="scroll-down d-none d-xl-flex">
             <div class="scroll-anim"><span></span></div>
@@ -581,7 +408,7 @@
               </div>
               <div class="about-desc mb-4 mb-lg-5">
                 <p class="desc" style="text-align: justify;">
-                 Welcome to my page. I am currently an Assistant Professor / Lecturer in Economics with research interests in empirical macroeconomics and macroeconometrics. I hold a PhD in Economics from <a href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused primarily on the natural rate of interest. Prior to my doctorate, I read Economics at the <span class="link-pair"><a href="https://www.cam.ac.uk/" target="_blank">University</a> <a href="https://www.cam.ac.uk/" target="_blank">of Cambridge</a></span> and Philosophy, Politics and Economics at the <a href="https://london.ac.uk/" target="_blank">University of London</a>. 
+                  Welcome to my page. I am currently an Assistant Professor / Lecturer in Economics with research interests in empirical macroeconomics and macroeconometrics. I hold a PhD in Economics from <a href="https://www.kcl.ac.uk/" target="_blank">King's College London</a> and my thesis focused primarily on the natural rate of interest. Prior to my doctorate, I read Economics at the <span class="link-pair"><a href="https://www.cam.ac.uk/" target="_blank">University</a> <a href="https://www.cam.ac.uk/" target="_blank">of Cambridge</a></span> and Philosophy, Politics and Economics at the <a href="https://london.ac.uk/" target="_blank">University of London</a>.
                 </p>
                 <div class="d-flex gap-3 mt-4 flex-wrap">
                   <a href="#" class="btn btn-outline-secondary about-new-btn">Curriculum Vitae</a>
@@ -633,10 +460,9 @@
           <h5 class="research-sub-heading">Working Papers</h5>
           <div dir="ltr" class="swiper service-swiper">
             <div class="swiper-wrapper">
-
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
-                  <a href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank" class="card-full-link" aria-label="Equilibrium Real Interest Rates and Monetary Policy (Mis)perceptions"></a>
+                  <a href="https://kaykhosrow.github.io/CKK2025.pdf" target="_blank" class="card-full-link"></a>
                   <div class="card-inner"></div>
                   <div class="content">
                     <div class="number-circle">
@@ -651,10 +477,9 @@
                   </div>
                 </div>
               </div>
-
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
-                  <a href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank" class="card-full-link" aria-label="Measuring the Market Perceived Neutral Rate"></a>
+                  <a href="https://kaykhosrow.github.io/CKS2026.pdf" target="_blank" class="card-full-link"></a>
                   <div class="card-inner"></div>
                   <div class="content">
                     <div class="number-circle">
@@ -669,7 +494,6 @@
                   </div>
                 </div>
               </div>
-
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
                   <div class="card-inner"></div>
@@ -686,10 +510,9 @@
                   </div>
                 </div>
               </div>
-
               <div class="swiper-slide overflow-visible p-3">
                 <div class="service-card">
-                  <a href="https://kaykhosrow.github.io/CK2024.pdf" target="_blank" class="card-full-link" aria-label="Falling Stars in Small Open Economies"></a>
+                  <a href="https://kaykhosrow.github.io/CK2024.pdf" target="_blank" class="card-full-link"></a>
                   <div class="card-inner"></div>
                   <div class="content">
                     <div class="number-circle">
@@ -703,7 +526,6 @@
                   </div>
                 </div>
               </div>
-
             </div>
             <div class="swiper-pagination"></div>
           </div>
@@ -724,7 +546,6 @@
             <h4>Academic instruction</h4>
             <h2>Teaching</h2>
           </div>
-
           <div style="margin-bottom: 2.5rem;">
             <h4 style="text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.85rem;">Current</h4>
             <div class="teaching-item">
@@ -732,7 +553,6 @@
               <p class="inst"><a href="https://www.northeastern.edu/" target="_blank">Northeastern University (London-Boston)</a></p>
             </div>
           </div>
-
           <div style="margin-bottom: 2.5rem;">
             <h4 style="text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.85rem;">Previous</h4>
             <div class="teaching-item">
@@ -740,7 +560,6 @@
               <p class="inst"><a href="https://www.qmul.ac.uk/" target="_blank">Queen Mary University of London</a></p>
             </div>
           </div>
-
           <div class="col-12">
             <a href="#conferences" class="d-flex gap-4 align-items-center next-chapter">
               <span class="page">04/08</span>
@@ -760,31 +579,24 @@
           <div class="row pb-60">
             <div class="col-lg-10 col-xl-8">
               <div class="experience-wrapper d-flex flex-column">
-
                 <div class="experience-item">
                   <h5><strong>2026</strong></h5>
                   <p>Scheduled: Annual Conference of the Royal Economic Society; International Conference on Applied Theory, Macro and Empirical Finance; Spring Midwest Macroeconomics Meeting; European Economics and Finance Society Conference.</p>
                 </div>
-
                 <div class="experience-item">
                   <h5><strong>2024</strong></h5>
                   <p>Meeting of the European Economic Association and the European Meeting of the Econometric Society; Annual Meeting of the Society for Economic Dynamics; Bank of England; Annual Conference of the Economic History Society.</p>
                 </div>
-
                 <div class="experience-item">
                   <h5><strong>2023</strong></h5>
                   <p>Annual Conference of the Royal Economic Society; Annual Conference of the Money, Macro and Finance Society; International Conference on Applied Theory, Macro and Empirical Finance; 15th WU-FIW Conference on International Economics; Annual Conference of the Southern Economic Association; Annual Conference of the Eastern Economic Association; Annual Meeting of the Society for Economic Dynamics.</p>
                 </div>
-
               </div>
-
               <a href="conferences.html" class="view-all-code">
                 <span>View All Conferences</span>
                 <span class="vac-line"></span>
                 <span class="vac-arrow">
-                  <div class="vac-ripple"></div>
-                  <div class="vac-ripple"></div>
-                  <div class="vac-ripple"></div>
+                  <div class="vac-ripple"></div><div class="vac-ripple"></div><div class="vac-ripple"></div>
                   <i class="ph ph-arrow-right"></i>
                 </span>
               </a>
@@ -806,36 +618,29 @@
             <h4>Tools &amp; Replication</h4>
             <h2>Code</h2>
           </div>
-
           <div class="code-item">
             <h5>Time-Varying Phillips Curves</h5>
             <p>This tool presents time-varying estimates of the Phillips curve across multiple regions.<br> Using kernel-weighted regression methods, it traces the relationship between inflation<br> and unemployment over time, capturing structural shifts that static models often miss.</p>
             <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/site&gt;</a>
           </div>
-
           <div class="code-item">
             <h5>Unobserved Components Model</h5>
             <p>This function implements the Stock and Watson (2007) unobserved components<br> model with stochastic volatilities. It employs a gamma random variable generator<br> function and can be used to extract the trend of any given univariate time series.</p>
             <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/code&gt;</a>
           </div>
-
           <div class="code-item">
             <h5>VAR Historical Decomposition</h5>
             <p>This function takes in the output from the VAR function (refer to the vars package)<br> and computes the vector autoregression historical decomposition. It is an abridged<br> translation of Cesa-Bianchi's MATLAB code (see the VAR-Toolbox) designed for R.</p>
             <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/code&gt;</a>
           </div>
-
           <div class="view-all-code">
             <span>View All Code</span>
             <span class="vac-line"></span>
             <a href="code.html" class="vac-arrow">
-              <div class="vac-ripple"></div>
-              <div class="vac-ripple"></div>
-              <div class="vac-ripple"></div>
+              <div class="vac-ripple"></div><div class="vac-ripple"></div><div class="vac-ripple"></div>
               <i class="ph ph-arrow-right"></i>
             </a>
           </div>
-
           <div class="col-12">
             <a href="#gallery" class="d-flex gap-4 align-items-center next-chapter">
               <span class="page">06/08</span>
@@ -852,7 +657,6 @@
             <h4>Aerial Cinematography</h4>
             <h2>Gallery</h2>
           </div>
-
           <div class="vid-gallery-wrap">
             <div class="vid-gallery">
               <div class="vid-track" id="vidTrack">
@@ -868,71 +672,20 @@
             <div class="vid-dots" id="vidDots"></div>
             <button class="vid-next" id="vidNext"><span class="vid-bar"></span><span class="vid-arrow"><i class="ph ph-arrow-right"></i></span></button>
           </div>
-
           <script>
           (function() {
-            var track   = document.getElementById('vidTrack');
-            var dotsEl  = document.getElementById('vidDots');
-            var total   = track.querySelectorAll('.vid-slide').length;
-            var visible = 2;
-            var maxIdx  = total - visible;
-            var current = 0;
-            var dots    = [];
-
-            for (var i = 0; i <= maxIdx; i++) {
-              var d = document.createElement('div');
-              d.className = 'vid-dot';
-              (function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
-              dotsEl.appendChild(d);
-              dots.push(d);
-            }
-
-            function sw() { return track.parentElement.offsetWidth / visible; }
-
-            function stopAllVideos() {
-              track.querySelectorAll('iframe').forEach(function(f) {
-                try { f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}), '*'); } catch(e){}
-              });
-            }
-
-            function goTo(idx) {
-              current = Math.max(0, Math.min(idx, maxIdx));
-              track.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
-              track.style.transform  = 'translateX(-' + (current * sw()) + 'px)';
-              dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
-            }
-
-            track.addEventListener('click', function(e) {
-              var thumb = e.target.closest('.vid-thumb');
-              if (!thumb) return;
-              var wrapper = thumb.parentNode;
-              var id = thumb.getAttribute('data-id');
-              thumb.style.display = 'none';
-              var iframe = document.createElement('iframe');
-              iframe.setAttribute('allowfullscreen','');
-              iframe.setAttribute('allow','autoplay');
-              iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';
-              iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160&hd=1';
-              iframe.addEventListener('load', function() {
-                var setQ = function() {
-                  try {
-                    iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'setPlaybackQualityRange',args:['hd2160','hd2160']}), '*');
-                    iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'setPlaybackQuality',args:['hd2160']}), '*');
-                  } catch(e) {}
-                };
-                setTimeout(setQ, 800);
-                setTimeout(setQ, 2500);
-              });
-              wrapper.appendChild(iframe);
-            });
-
-            document.getElementById('vidPrev').addEventListener('click', function() { stopAllVideos(); goTo(current - 1); });
-            document.getElementById('vidNext').addEventListener('click', function() { stopAllVideos(); goTo(current + 1); });
-            window.addEventListener('resize', function() { goTo(current); });
+            var track=document.getElementById('vidTrack'),dotsEl=document.getElementById('vidDots'),total=track.querySelectorAll('.vid-slide').length,visible=2,maxIdx=total-visible,current=0,dots=[];
+            for(var i=0;i<=maxIdx;i++){var d=document.createElement('div');d.className='vid-dot';(function(idx){d.addEventListener('click',function(){goTo(idx);})})(i);dotsEl.appendChild(d);dots.push(d);}
+            function sw(){return track.parentElement.offsetWidth/visible;}
+            function stopAllVideos(){track.querySelectorAll('iframe').forEach(function(f){try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'*');}catch(e){}});}
+            function goTo(idx){current=Math.max(0,Math.min(idx,maxIdx));track.style.transition='transform 0.4s cubic-bezier(0.4,0,0.2,1)';track.style.transform='translateX(-'+(current*sw())+'px)';dots.forEach(function(d,i){d.classList.toggle('active',i===current);});}
+            track.addEventListener('click',function(e){var thumb=e.target.closest('.vid-thumb');if(!thumb)return;var wrapper=thumb.parentNode,id=thumb.getAttribute('data-id');thumb.style.display='none';var iframe=document.createElement('iframe');iframe.setAttribute('allowfullscreen','');iframe.setAttribute('allow','autoplay');iframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';iframe.src='https://www.youtube.com/embed/'+id+'?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160&hd=1';iframe.addEventListener('load',function(){var setQ=function(){try{iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'setPlaybackQualityRange',args:['hd2160','hd2160']}),'*');iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'setPlaybackQuality',args:['hd2160']}),'*');}catch(e){}};setTimeout(setQ,800);setTimeout(setQ,2500);});wrapper.appendChild(iframe);});
+            document.getElementById('vidPrev').addEventListener('click',function(){stopAllVideos();goTo(current-1);});
+            document.getElementById('vidNext').addEventListener('click',function(){stopAllVideos();goTo(current+1);});
+            window.addEventListener('resize',function(){goTo(current);});
             goTo(0);
           })();
           </script>
-
           <div class="col-12" style="margin-top: 2rem;">
             <a href="#contact" class="d-flex gap-4 align-items-center next-chapter">
               <span class="page">07/08</span>
@@ -979,24 +732,18 @@
         <script>
           document.getElementById('mail-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            var name    = document.getElementById('mail_name').value.trim();
-            var message = document.getElementById('mail_message').value.trim();
-            var subject = encodeURIComponent('Message from ' + name);
-            var body    = encodeURIComponent(message);
-            var a = document.createElement('a');
-            a.href = 'mailto:omar.kaykhusraw@gmail.com?subject=' + subject + '&body=' + body;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            var name=document.getElementById('mail_name').value.trim();
+            var message=document.getElementById('mail_message').value.trim();
+            var a=document.createElement('a');
+            a.href='mailto:omar.kaykhusraw@gmail.com?subject='+encodeURIComponent('Message from '+name)+'&body='+encodeURIComponent(message);
+            document.body.appendChild(a);a.click();document.body.removeChild(a);
           });
         </script>
 
         <footer>
           <div class="container">
             <div class="row">
-              <div class="col-12">
-                <p>Copyright &copy; Omar Kaykhusraw</p>
-              </div>
+              <div class="col-12"><p>Copyright &copy; Omar Kaykhusraw</p></div>
             </div>
           </div>
         </footer>
@@ -1014,290 +761,151 @@
         document.getElementById('settingsOptions').classList.toggle('open');
       });
       document.getElementById('grainToggleBtn').addEventListener('click', function() {
-        var cb = document.querySelector('.grained-checkbox');
-        cb.checked = !cb.checked;
+        var cb=document.querySelector('.grained-checkbox');
+        cb.checked=!cb.checked;
         cb.dispatchEvent(new Event('change'));
         this.classList.toggle('active');
       });
       document.addEventListener('DOMContentLoaded', function() {
-        var researchSwiper = document.querySelector('#research .service-swiper');
-        if (researchSwiper && researchSwiper.swiper) {
-          researchSwiper.swiper.autoplay.stop();
-        }
+        var s=document.querySelector('#research .service-swiper');
+        if(s&&s.swiper)s.swiper.autoplay.stop();
       });
     </script>
 
     <script>
       (function() {
-        var link = document.querySelector('.view-all-code');
-        if (!link) return;
-        var arrow = link.querySelector('.vac-arrow');
-        if (!arrow) return;
-        var submitBtn = document.getElementById('mail-submit-btn');
-        if (submitBtn) {
-          submitBtn.addEventListener('mouseenter', function() {
-            submitBtn.querySelectorAll('.vac-ripple').forEach(function(r) { r.style.opacity = '0'; });
-          });
-          submitBtn.addEventListener('mouseleave', function() {
-            submitBtn.querySelectorAll('.vac-ripple').forEach(function(r) { r.style.opacity = ''; });
-          });
+        var link=document.querySelector('.view-all-code');
+        if(!link)return;
+        var arrow=link.querySelector('.vac-arrow');
+        if(!arrow)return;
+        var submitBtn=document.getElementById('mail-submit-btn');
+        if(submitBtn){
+          submitBtn.addEventListener('mouseenter',function(){submitBtn.querySelectorAll('.vac-ripple').forEach(function(r){r.style.opacity='0';});});
+          submitBtn.addEventListener('mouseleave',function(){submitBtn.querySelectorAll('.vac-ripple').forEach(function(r){r.style.opacity='';});});
         }
-        arrow.addEventListener('mouseenter', function() {
-          arrow.querySelectorAll('.vac-ripple').forEach(function(w) { w.style.opacity = '0'; });
-        });
-        arrow.addEventListener('mouseleave', function() {
-          arrow.querySelectorAll('.vac-ripple').forEach(function(w) { w.style.opacity = ''; });
-        });
+        arrow.addEventListener('mouseenter',function(){arrow.querySelectorAll('.vac-ripple').forEach(function(w){w.style.opacity='0';});});
+        arrow.addEventListener('mouseleave',function(){arrow.querySelectorAll('.vac-ripple').forEach(function(w){w.style.opacity='';});});
       })();
     </script>
 
     <script>
       (function() {
-        var nav = document.getElementById('navigation');
-        if (!nav) return;
-
-        function update() {
-          if (window.scrollY < 60) {
-            nav.classList.add('nav-pinned-bottom');
-          } else {
-            nav.classList.remove('nav-pinned-bottom');
-          }
+        var nav=document.getElementById('navigation');
+        if(!nav)return;
+        function update(){
+          if(window.scrollY<60){nav.classList.add('nav-pinned-bottom');}
+          else{nav.classList.remove('nav-pinned-bottom');}
         }
-
         update();
-        window.addEventListener('scroll', update, { passive: true });
-
-        document.querySelectorAll('a[href="#home"]').forEach(function(link) {
-          link.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.scrollTo(0, 0);
-            history.replaceState(null, '', window.location.pathname);
+        window.addEventListener('scroll',update,{passive:true});
+        document.querySelectorAll('a[href="#home"]').forEach(function(link){
+          link.addEventListener('click',function(e){
+            e.preventDefault();e.stopPropagation();
+            window.scrollTo(0,0);
+            history.replaceState(null,'',window.location.pathname);
           });
         });
       })();
     </script>
 
-    <!-- ── Split-flap / Vestaboard reveal for section titles ── -->
+    <!-- Split-flap reveal for section titles -->
     <script>
-    (function () {
-      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
-
-      function splitFlap(el) {
-        var original = el.textContent.trim();
-        var isH2     = (el.tagName === 'H2');
-        var display  = isH2 ? original.toUpperCase() : original;
-
-        el.innerHTML = '';
-        var chars = display.split('').map(function (ch) {
-          var span           = document.createElement('span');
-          span.style.display = 'inline-block';
-          if (ch === ' ') {
-            span.style.minWidth = '0.35em';
-            span.textContent    = '\u00a0';
-          } else {
-            span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-          }
-          el.appendChild(span);
-          return { span: span, final: ch, space: ch === ' ' };
+    (function(){
+      var CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
+      function splitFlap(el){
+        var original=el.textContent.trim(),isH2=(el.tagName==='H2'),display=isH2?original.toUpperCase():original;
+        el.innerHTML='';
+        var chars=display.split('').map(function(ch){
+          var span=document.createElement('span');span.style.display='inline-block';
+          if(ch===' '){span.style.minWidth='0.35em';span.textContent='\u00a0';}
+          else{span.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];}
+          el.appendChild(span);return{span:span,final:ch,space:ch===' '};
         });
-
-        var stagger   = 52;
-        var flipSpeed = 40;
-        var flipCount = 13;
-
-        var wordIdx = 0;
-        chars.forEach(function (c) {
-          if (c.space) { wordIdx = 0; return; }
-          var delayBase    = wordIdx * stagger;
-          var initialDelay = delayBase % flipSpeed;
-          var landAt       = delayBase + flipCount * flipSpeed;
-          wordIdx++;
-          c.span.classList.add('is-cycling');
-          var startTime = Date.now();
-          setTimeout(function tick() {
-            if (Date.now() - startTime >= landAt) {
-              c.span.textContent = c.final;
-              c.span.classList.remove('is-cycling');
-            } else {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              setTimeout(tick, flipSpeed);
-            }
-          }, initialDelay);
+        var stagger=52,flipSpeed=40,flipCount=13,wordIdx=0;
+        chars.forEach(function(c){
+          if(c.space){wordIdx=0;return;}
+          var delayBase=wordIdx*stagger,initialDelay=delayBase%flipSpeed,landAt=delayBase+flipCount*flipSpeed;
+          wordIdx++;c.span.classList.add('is-cycling');
+          var startTime=Date.now();
+          setTimeout(function tick(){
+            if(Date.now()-startTime>=landAt){c.span.textContent=c.final;c.span.classList.remove('is-cycling');}
+            else{c.span.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];setTimeout(tick,flipSpeed);}
+          },initialDelay);
         });
       }
-
-      var selectors = [
-        '#about', '#research', '#teaching',
-        '#conferences', '#code', '#gallery', '#contact'
-      ].map(function (id) {
-        return id + ' .section-title h2, ' + id + ' .section-title h4';
-      }).join(', ');
-
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            splitFlap(entry.target);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.4 });
-
-      document.querySelectorAll(selectors).forEach(function (el) {
-        observer.observe(el);
-      });
+      var selectors=['#about','#research','#teaching','#conferences','#code','#gallery','#contact'].map(function(id){return id+' .section-title h2, '+id+' .section-title h4';}).join(', ');
+      var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){splitFlap(entry.target);observer.unobserve(entry.target);}});},{threshold:0.4});
+      document.querySelectorAll(selectors).forEach(function(el){observer.observe(el);});
     })();
     </script>
 
-    <!-- ── Toggle IPA effect on hero name (whole name, locked width) ── -->
+    <!-- IPA toggle on hero name -->
     <script>
-    (function () {
-      var h4 = document.querySelector('h4.freelancer[data-ipa]');
-      if (!h4) return;
-
-      var CHARS     =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-        'abcdefghijklmnopqrstuvwxyz' +
-        '0123456789$€£#@%&?!';
-      var stagger   = 44;
-      var flipSpeed = 40;
-      var flipCount = 8;
-
-      var origText = h4.dataset.original;
-      var ipaText  = h4.dataset.ipa;
-
-      function paint(text, useFinal) {
-        h4.innerHTML = '';
-        var isIpaTarget = (text === ipaText);
-        var allChars    = text.split('');
-        return allChars.map(function (ch, i) {
-          var span = document.createElement('span');
-          span.style.display = 'inline-block';
-          if (!useFinal || isIpaTarget) {
-            span.classList.add('is-ipa-char');
-          }
-          if (!isIpaTarget) {
-            var nextCh = allChars[i + 1];
-            if (ch && ch.toLowerCase() === 'a' &&
-                nextCh && nextCh.toLowerCase() === 'y') {
-              span.classList.add('tight-right');
-            }
-          }
-          if (ch === ' ') {
-            span.style.minWidth = '0.35em';
-            span.textContent    = '\u00a0';
-          } else {
-            span.textContent = useFinal
-              ? ch
-              : CHARS[Math.floor(Math.random() * CHARS.length)];
-          }
-          h4.appendChild(span);
-          return { span: span, final: ch, space: ch === ' ', ipa: isIpaTarget };
+    (function(){
+      var h4=document.querySelector('h4.freelancer[data-ipa]');
+      if(!h4)return;
+      var CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$€£#@%&?!';
+      var stagger=44,flipSpeed=40,flipCount=8;
+      var origText=h4.dataset.original,ipaText=h4.dataset.ipa;
+      function paint(text,useFinal){
+        h4.innerHTML='';
+        var isIpaTarget=(text===ipaText),allChars=text.split('');
+        return allChars.map(function(ch,i){
+          var span=document.createElement('span');span.style.display='inline-block';
+          if(!useFinal||isIpaTarget)span.classList.add('is-ipa-char');
+          if(!isIpaTarget){var nextCh=allChars[i+1];if(ch&&ch.toLowerCase()==='a'&&nextCh&&nextCh.toLowerCase()==='y')span.classList.add('tight-right');}
+          if(ch===' '){span.style.minWidth='0.35em';span.textContent='\u00a0';}
+          else{span.textContent=useFinal?ch:CHARS[Math.floor(Math.random()*CHARS.length)];}
+          h4.appendChild(span);return{span:span,final:ch,space:ch===' ',ipa:isIpaTarget};
         });
       }
-
-      function lockWidth() {
-        var prevDisplay = h4.style.display;
-        h4.style.display    = 'inline-block';
-        h4.style.whiteSpace = 'nowrap';
-        paint(ipaText, true);
-        var ipaWidth = h4.getBoundingClientRect().width;
-        h4.style.display = prevDisplay;
-        h4.style.minWidth = ipaWidth + 'px';
-        paint(origText, true);
-        h4.style.visibility = 'visible';
+      function lockWidth(){
+        h4.style.display='inline-block';h4.style.whiteSpace='nowrap';
+        paint(ipaText,true);
+        var ipaWidth=h4.getBoundingClientRect().width;
+        h4.style.display='';h4.style.minWidth=ipaWidth+'px';
+        paint(origText,true);h4.style.visibility='visible';
       }
-
       lockWidth();
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(lockWidth);
-      }
-
-      function splitFlapTo(targetText) {
-        var chars = paint(targetText, false);
-        var wordIdx = 0;
-        chars.forEach(function (c) {
-          if (c.space) { wordIdx = 0; return; }
-          var delayBase    = wordIdx * stagger;
-          var initialDelay = delayBase % flipSpeed;
-          var landAt       = delayBase + flipCount * flipSpeed;
-          wordIdx++;
-          c.span.classList.add('is-cycling');
-          var startTime = Date.now();
-          setTimeout(function tick() {
-            if (Date.now() - startTime >= landAt) {
-              c.span.textContent = c.final;
-              if (!c.ipa) c.span.classList.remove('is-ipa-char');
-              c.span.classList.remove('is-cycling');
-            } else {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              setTimeout(tick, flipSpeed);
-            }
-          }, initialDelay);
+      if(document.fonts&&document.fonts.ready)document.fonts.ready.then(lockWidth);
+      function splitFlapTo(targetText){
+        var chars=paint(targetText,false),wordIdx=0;
+        chars.forEach(function(c){
+          if(c.space){wordIdx=0;return;}
+          var delayBase=wordIdx*stagger,initialDelay=delayBase%flipSpeed,landAt=delayBase+flipCount*flipSpeed;
+          wordIdx++;c.span.classList.add('is-cycling');
+          var startTime=Date.now();
+          setTimeout(function tick(){
+            if(Date.now()-startTime>=landAt){c.span.textContent=c.final;if(!c.ipa)c.span.classList.remove('is-ipa-char');c.span.classList.remove('is-cycling');}
+            else{c.span.textContent=CHARS[Math.floor(Math.random()*CHARS.length)];setTimeout(tick,flipSpeed);}
+          },initialDelay);
         });
       }
-
-      function computeCycleMs(text) {
-        var maxWord = 0, w = 0;
-        for (var i = 0; i < text.length; i++) {
-          if (text.charAt(i) === ' ') {
-            if (w > maxWord) maxWord = w;
-            w = 0;
-          } else {
-            w++;
-          }
-        }
-        if (w > maxWord) maxWord = w;
-        return (maxWord - 1) * stagger + flipCount * flipSpeed;
+      function computeCycleMs(text){var maxWord=0,w=0;for(var i=0;i<text.length;i++){if(text.charAt(i)===' '){if(w>maxWord)maxWord=w;w=0;}else{w++;}}if(w>maxWord)maxWord=w;return(maxWord-1)*stagger+flipCount*flipSpeed;}
+      var ipaCycleMs=computeCycleMs(ipaText),origCycleMs=computeCycleMs(origText);
+      var showingIpa=false,isAnimating=false;
+      function revertToOriginal(){
+        if(!showingIpa||isAnimating)return;
+        showingIpa=false;isAnimating=true;
+        h4.style.transitionDuration=origCycleMs+'ms';h4.classList.remove('is-ipa');
+        splitFlapTo(origText);setTimeout(function(){isAnimating=false;},origCycleMs);
       }
-      var ipaCycleMs  = computeCycleMs(ipaText);
-      var origCycleMs = computeCycleMs(origText);
-
-      var showingIpa  = false;
-      var isAnimating = false;
-
-      function revertToOriginal() {
-        if (!showingIpa || isAnimating) return;
-        showingIpa = false;
-        isAnimating = true;
-        h4.style.transitionDuration = origCycleMs + 'ms';
-        h4.classList.remove('is-ipa');
-        splitFlapTo(origText);
-        setTimeout(function () { isAnimating = false; }, origCycleMs);
-      }
-
-      h4.addEventListener('click', function () {
-        if (isAnimating) return;
-
-        if (!showingIpa) {
-          showingIpa = true;
-          isAnimating = true;
-          h4.style.transitionDuration = ipaCycleMs + 'ms';
-          h4.classList.add('is-ipa');
-          splitFlapTo(ipaText);
-          setTimeout(function () { isAnimating = false; }, ipaCycleMs);
-        } else {
-          revertToOriginal();
-        }
+      h4.addEventListener('click',function(){
+        if(isAnimating)return;
+        if(!showingIpa){showingIpa=true;isAnimating=true;h4.style.transitionDuration=ipaCycleMs+'ms';h4.classList.add('is-ipa');splitFlapTo(ipaText);setTimeout(function(){isAnimating=false;},ipaCycleMs);}
+        else{revertToOriginal();}
       });
-
-      window.addEventListener('scroll', function () {
-        if (showingIpa && window.scrollY > 40) {
-          revertToOriginal();
-        }
-      }, { passive: true });
-
-      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', revertToOriginal);
-      });
+      window.addEventListener('scroll',function(){if(showingIpa&&window.scrollY>40)revertToOriginal();},{passive:true});
+      document.querySelectorAll('a[href^="#"]').forEach(function(link){link.addEventListener('click',revertToOriginal);});
     })();
     </script>
 
-    <!-- Remove js-loading at DOMContentLoaded and kill GSAP tweens -->
+    <!-- Remove js-loading at DOMContentLoaded — after deferred app.js has
+         run and all layout/scroll is settled — making the page visible in
+         its final correct state with no jitter ever seen. -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.documentElement.classList.remove('js-loading');
-
       if (window.gsap) {
         gsap.killTweensOf('.navigation');
         gsap.killTweensOf('.img-wrapper');
