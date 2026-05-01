@@ -1304,20 +1304,21 @@
       (function() {
         var nav = document.getElementById('navigation');
         if (!nav) return;
-        var set = false;
+
         function updateLine() {
           if (nav.classList.contains('nav-pinned-bottom')) return;
           var right = window.innerWidth - nav.getBoundingClientRect().left;
           if (right > 0 && right < window.innerWidth) {
             document.documentElement.style.setProperty('--nav-line-right', right + 'px');
-            set = true;
+            // Remove scroll listener — position is locked from here on
+            window.removeEventListener('scroll', onScroll);
           }
         }
-        window.addEventListener('scroll', function() {
-          if (!set) setTimeout(updateLine, 50);
-        }, { passive: true });
+
+        function onScroll() { setTimeout(updateLine, 50); }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('resize', function() {
-          set = false;
           setTimeout(updateLine, 50);
         }, { passive: true });
       })();
