@@ -487,6 +487,15 @@
         scrollbar-width: thin;
         scrollbar-color: rgb(var(--black)) rgb(var(--primary));
       }
+
+      /* ── FIX 1: Prevent GSAP nav --height flash on every reload.
+         GSAP runs gsapWithCSS.to(".navigation", { "--height": "100%", ... })
+         which animates the nav line from 0% → 100% on every page load.
+         Pre-setting --height to 100% means GSAP animates 100% → 100%,
+         so there is no visible change. ── */
+      #navigation {
+        --height: 100% !important;
+      }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
@@ -1298,6 +1307,21 @@
         link.addEventListener('click', revertToOriginal);
       });
     })();
+    </script>
+
+    <!--
+      FIX 2: Kill the GSAP .from(".img-wrapper", { opacity: 0, scale: 1.5, ... }) tween
+      that fires on every page load. GSAP's deferred script sets inline opacity/transform
+      immediately, overriding any CSS !important rules. This runs after window.load
+      (after all deferred scripts have executed) and clears those inline styles.
+    -->
+    <script>
+    window.addEventListener('load', function () {
+      if (window.gsap) {
+        gsap.killTweensOf('.img-wrapper');
+        gsap.set('.img-wrapper', { clearProps: 'all' });
+      }
+    });
     </script>
 
   </body>
