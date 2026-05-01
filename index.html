@@ -31,8 +31,9 @@
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      /* Zoom fix */
+      /* Force scrollbar always visible so it never causes layout shift on load */
       html {
+        overflow-y: scroll;
         zoom: 100%;
         -ms-text-size-adjust: 100%;
         -webkit-text-size-adjust: 100%;
@@ -472,11 +473,6 @@
         background: rgba(0,0,0,0.1);
         pointer-events: none;
         z-index: 9999;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-      body.nav-ready::after {
-        opacity: 1;
       }
       ::-webkit-scrollbar-thumb {
         background: rgb(var(--black));
@@ -1305,12 +1301,5 @@
     })();
     </script>
 
-    <script>
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          document.body.classList.add('nav-ready');
-        }, 800);
-      });
-    </script>
   </body>
 </html>
