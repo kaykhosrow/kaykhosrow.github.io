@@ -461,18 +461,17 @@
         border-radius: 999px;
       }
 
-      /* Full-height separator line to the left of the scrollbar,
-         matching the nav bar's border-left: 1px solid rgba(0,0,0,0.1) */
-      body::after {
+      /* Full-height separator line anchored to the left edge of the nav bar,
+         matching its own border style: 1px solid rgba(0,0,0,0.1) */
+      #navigation::before {
         content: '';
-        position: fixed;
+        position: absolute;
         top: 0;
-        right: 8px; /* same as scrollbar width */
+        left: -1px;
         width: 1px;
-        height: 100%;
+        height: 100vh;
         background: rgba(0,0,0,0.1);
         pointer-events: none;
-        z-index: 9999;
       }
       ::-webkit-scrollbar-thumb {
         background: rgb(var(--black));
