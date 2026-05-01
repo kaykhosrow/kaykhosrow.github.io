@@ -472,6 +472,11 @@
         background: rgba(0,0,0,0.1);
         pointer-events: none;
         z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      body.nav-ready::after {
+        opacity: 1;
       }
       ::-webkit-scrollbar-thumb {
         background: rgb(var(--black));
@@ -1300,5 +1305,12 @@
     })();
     </script>
 
+    <script>
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          document.body.classList.add('nav-ready');
+        }, 800);
+      });
+    </script>
   </body>
 </html>
