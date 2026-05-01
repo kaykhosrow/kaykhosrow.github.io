@@ -31,9 +31,8 @@
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      /* Force scrollbar always visible so it never causes layout shift on load */
+      /* Zoom fix */
       html {
-        overflow-y: scroll;
         zoom: 100%;
         -ms-text-size-adjust: 100%;
         -webkit-text-size-adjust: 100%;
@@ -1301,10 +1300,5 @@
     })();
     </script>
 
-    <script>
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-    </script>
   </body>
 </html>
