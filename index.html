@@ -449,6 +449,31 @@
       .freelancer span.is-cycling {
         filter: blur(0.0125em);
       }
+
+      /* ── Custom scrollbar ── */
+
+      /* WebKit: Chrome, Edge, Safari */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgb(var(--primary));
+        border-radius: 999px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgb(var(--black));
+        border-radius: 999px;
+        border: 2px solid rgb(var(--primary));
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(var(--black), 0.72);
+      }
+
+      /* Firefox */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(var(--black)) rgb(var(--primary));
+      }
     </style>
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
@@ -1078,10 +1103,6 @@
         var wordIdx = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
-          // Phase-offset each char's flips so the cycling cascades
-          // left-to-right in a rolling wave, while running continuously to
-          // the land time so no character sits frozen on a single random
-          // letter waiting for its turn.
           var delayBase    = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
           var landAt       = delayBase + flipCount * flipSpeed;
@@ -1128,11 +1149,6 @@
       var h4 = document.querySelector('h4.freelancer[data-ipa]');
       if (!h4) return;
 
-      // Cycling pool: uppercase Latin + lowercase Latin + digits + symbols.
-      // The mixed case visually bridges the uppercase resting title
-      // ("OMAR KAYKHUSRAW") and the lowercase IPA, so neither end of the
-      // transition feels like an abrupt case-jump. Section-title cycling
-      // pool is separate and stays uppercase-only.
       var CHARS     =
         'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
         'abcdefghijklmnopqrstuvwxyz' +
@@ -1141,16 +1157,9 @@
       var flipSpeed = 40;
       var flipCount = 8;
 
-      var origText = h4.dataset.original;        // "Omar Kaykhusraw"
+      var origText = h4.dataset.original;
       var ipaText  = h4.dataset.ipa;
 
-      // ── Painting the spans ──
-      // Spans inherit the parent's text-uppercase by default, so the resting
-      // "Omar Kaykhusraw" goes through the SAME OpenType uppercase pipeline
-      // as the initial text node — keeping kerning identical between the
-      // first paint and post-animation paint. Lowercase / IPA characters
-      // that need to render as written get tagged with .is-ipa-char which
-      // overrides text-transform: none.
       function paint(text, useFinal) {
         h4.innerHTML = '';
         var isIpaTarget = (text === ipaText);
@@ -1158,16 +1167,9 @@
         return allChars.map(function (ch, i) {
           var span = document.createElement('span');
           span.style.display = 'inline-block';
-          // Cycling spans (random pool) and final IPA spans both opt out of
-          // uppercasing. Final original spans inherit text-uppercase from
-          // the parent so they look identical to the initial text.
           if (!useFinal || isIpaTarget) {
             span.classList.add('is-ipa-char');
           }
-          // Tighten AY pair spacing for the original-text target (in both
-          // cycling and final states, so the spacing stays consistent
-          // throughout the animation). Skipped for the IPA target, which
-          // has its own natural lowercase spacing.
           if (!isIpaTarget) {
             var nextCh = allChars[i + 1];
             if (ch && ch.toLowerCase() === 'a' &&
@@ -1196,20 +1198,10 @@
         var ipaWidth = h4.getBoundingClientRect().width;
         h4.style.display = prevDisplay;
         h4.style.minWidth = ipaWidth + 'px';
-        // Paint the resting state as spans so it matches the post-animation
-        // rendering exactly.
         paint(origText, true);
-        // Reveal the title now that its final layout is in place — avoids
-        // any visible reflow between the initial plain-text render and the
-        // spans-based render.
         h4.style.visibility = 'visible';
       }
 
-      // Run lockWidth as early as possible so the title becomes visible
-      // immediately. Calling it synchronously here means it executes the
-      // moment the browser parses this script (which is at end-of-body, so
-      // the h4 already exists in the DOM). We then re-run after fonts.ready
-      // to refine the locked width if web fonts shift letter widths.
       lockWidth();
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(lockWidth);
@@ -1220,10 +1212,6 @@
         var wordIdx = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
-          // Phase-offset each char's flips so the cycling cascades
-          // left-to-right in a rolling wave, while running continuously to
-          // the land time so no character sits frozen on a single random
-          // letter waiting for its turn.
           var delayBase    = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
           var landAt       = delayBase + flipCount * flipSpeed;
@@ -1233,8 +1221,6 @@
           setTimeout(function tick() {
             if (Date.now() - startTime >= landAt) {
               c.span.textContent = c.final;
-              // For original-target finals, drop .is-ipa-char so the
-              // parent's text-uppercase takes over.
               if (!c.ipa) c.span.classList.remove('is-ipa-char');
               c.span.classList.remove('is-cycling');
             } else {
@@ -1245,9 +1231,6 @@
         });
       }
 
-      // Compute the cycle length for any given target string — driven by
-      // the longest "word" between spaces, since the per-word stagger
-      // resets at each space.
       function computeCycleMs(text) {
         var maxWord = 0, w = 0;
         for (var i = 0; i < text.length; i++) {
@@ -1264,13 +1247,6 @@
       var ipaCycleMs  = computeCycleMs(ipaText);
       var origCycleMs = computeCycleMs(origText);
 
-      // Toggle: each click flips the title between the original and IPA
-      // states. The reverse animation only triggers on a SECOND click —
-      // i.e. the IPA state holds indefinitely until the user clicks again.
-      // Clicks during a running animation are ignored so we don't get a
-      // tangled mid-flap state. The IPA state also auto-reverts when the
-      // user scrolls past the hero or navigates to another section, so
-      // the phonetic isn't left dangling on screen as they move on.
       var showingIpa  = false;
       var isAnimating = false;
 
@@ -1288,8 +1264,6 @@
         if (isAnimating) return;
 
         if (!showingIpa) {
-          // Forward: original → IPA. Opacity fades 100% → 50% over the
-          // same window the chars are vestaboarding.
           showingIpa = true;
           isAnimating = true;
           h4.style.transitionDuration = ipaCycleMs + 'ms';
@@ -1301,18 +1275,12 @@
         }
       });
 
-      // Scrolling away from the hero reverts the title. A small threshold
-      // (40 px) avoids reverting on accidental wheel-flicks or trackpad
-      // jitter while the user is reading the hero.
       window.addEventListener('scroll', function () {
         if (showingIpa && window.scrollY > 40) {
           revertToOriginal();
         }
       }, { passive: true });
 
-      // Clicking any in-page nav link also reverts. Catches the section
-      // nav, the "Next Chapter" links, and the hero's About/Contact
-      // buttons — anything pointing at an in-page anchor.
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
         link.addEventListener('click', revertToOriginal);
       });
