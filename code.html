@@ -12,31 +12,16 @@
       .code-item:last-child { border-bottom: none; }
       .code-item h5 { font-weight: 600; margin-bottom: 0.5rem; }
       .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
-      .back-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 2rem; opacity: 0.7; transition: opacity 0.2s; }
+      .back-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 2rem; opacity: 0.7; transition: opacity 0.2s; cursor: pointer; }
       .back-link:hover { opacity: 1; }
-
-      /* Code section buttons */
-      .code-btn {
-        font-size: 0.82rem;
-        padding: 0.3rem 0.7rem;
-        border-radius: 4px !important;
-        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
-      }
-      .code-btn:hover {
-        background-color: #000 !important;
-        border-color: #000 !important;
-        color: #fff !important;
-      }
-      /* Nav fixed to top — desktop only */
+      .code-btn { font-size: 0.82rem; padding: 0.3rem 0.7rem; border-radius: 4px !important; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important; }
+      .code-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
       @media (min-width: 1200px) {
         .navigation { position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; margin-left: 81px; }
         main { padding-top: 50px; }
       }
-      /* Match index.html left bar icon borders */
       .left-bar ul li a { border: 2px solid rgba(0,0,0,0.35); border-radius: 4px; }
-      /* Prevent nav transition flash on load/resize */
       .navigation.no-trans { transition: none !important; }
-      /* Settings bar */
       .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-left: 1px solid rgba(0,0,0,0.1); }
       .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
       .settings-options.open { max-width: 200px; opacity: 1; }
@@ -46,24 +31,10 @@
       .grain-swatch.active { border-color: rgba(0,0,0,0.5); }
       .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.3); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
       .settings-gear-btn.open { transform: rotate(90deg); }
-
-      /* Ensure the last code item can clear the fixed footer */
       #code.section { padding-bottom: 140px; }
-
-      /* Two-column grid for code items, collapses to one on narrow screens */
-      .code-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem 3rem;
-      }
-      @media (max-width: 768px) {
-        .code-grid { grid-template-columns: 1fr; }
-      }
-      .code-grid .code-item {
-        border-bottom: none;
-        margin-bottom: 0;
-        padding-bottom: 0;
-      }
+      .code-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem 3rem; }
+      @media (max-width: 768px) { .code-grid { grid-template-columns: 1fr; } }
+      .code-grid .code-item { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
       .code-grid .code-item p { margin-bottom: 1.5rem; }
     </style>
     <link rel="icon" type="image/png" href="images/o.png">
@@ -78,14 +49,9 @@
 
     <header class="header">
       <div class="container d-flex align-items-center justify-content-between">
-        <a href="index.html" class="d-xl-none">
-        </a>
+        <a href="index.html" class="d-xl-none"></a>
         <button class="bg-transparent border-0 d-xl-none">
-          <div class="nav-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+          <div class="nav-icon"><span></span><span></span><span></span></div>
         </button>
       </div>
     </header>
@@ -129,7 +95,6 @@
         </nav>
         <div class="nav-overlay d-xl-none"></div>
 
-        <!-- Code Archive -->
         <section id="code" class="about section container">
           <span class="section-title-overlay-text">Code</span>
           <div class="section-title text-capitalize">
@@ -137,7 +102,7 @@
             <h2>CODE</h2>
           </div>
 
-          <a href="index.html#code" class="back-link">
+          <a class="back-link" id="backLink">
             <i class="ph ph-arrow-left"></i> Back
           </a>
 
@@ -168,7 +133,6 @@
             </div>
 
           </div>
-
         </section>
 
         <footer style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 49; background: linear-gradient(rgba(0,0,0,0.06), rgba(0,0,0,0.06)), rgb(255,219,103);">
@@ -188,8 +152,17 @@
     <button class="ltr" style="display:none" aria-hidden="true"></button>
     <button class="rtl" style="display:none" aria-hidden="true"></button>
 
-<script>
-      // Hamburger toggle fallback
+    <script>
+      document.getElementById('backLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (history.length > 1) {
+          history.back();
+        } else {
+          window.location.href = 'index.html';
+        }
+      });
+    </script>
+    <script>
       document.addEventListener('DOMContentLoaded', function() {
         var btn = document.querySelector('.nav-icon');
         var nav = document.getElementById('navigation');
@@ -211,8 +184,6 @@
       (function() {
         var nav = document.getElementById('navigation');
         if (!nav) return;
-
-        // Suppress transition on load and resize to prevent flash
         var t;
         function freeze() {
           nav.classList.add('no-trans');
@@ -221,8 +192,6 @@
         }
         freeze();
         window.addEventListener('resize', freeze);
-
-        // Reliable hamburger toggle fallback
         var btn = document.querySelector('.nav-icon');
         var overlay = document.querySelector('.nav-overlay');
         if (btn) {
