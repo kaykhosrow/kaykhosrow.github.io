@@ -1048,7 +1048,7 @@
         if (!nav) return;
 
         function update() {
-          if (window.scrollY < 5) {
+          if (window.scrollY < 1) {
             nav.classList.add('nav-pinned-bottom');
           } else {
             nav.classList.remove('nav-pinned-bottom');
@@ -1305,7 +1305,7 @@
           var target = document.getElementById('about');
           var nav    = document.getElementById('navigation');
           if (!target) return;
-          var offset = window.scrollY < 5 ? 0 : (nav ? nav.offsetHeight : 60);
+          var offset = window.scrollY < 1 ? 0 : (nav ? nav.offsetHeight : 60);
           var top = target.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
