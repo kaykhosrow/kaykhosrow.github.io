@@ -4,6 +4,7 @@
     <script>
       history.scrollRestoration = 'manual';
 
+      // Strip hash after any in-page nav click so refresh never sees a hash
       window.addEventListener('hashchange', function() {
         history.replaceState(null, '', location.pathname);
       });
@@ -13,21 +14,24 @@
         var isReload = nav ? nav.type === 'reload' : false;
 
         if (location.hash && !isReload) {
+          // Navigated here from a subpage with a hash — scroll to that section
           var target = document.querySelector(location.hash);
           if (target) target.scrollIntoView();
           history.replaceState(null, '', location.pathname);
         } else {
+          // Reload or no hash — go to top and clear any stale hash
           history.replaceState(null, '', location.pathname);
           window.scrollTo(0, 0);
         }
       });
 
+      // Clear GSAP scroll memory so it doesn't restore a previous position
       window.addEventListener('load', function() {
         var ST = window.gsap && window.gsap.core && window.gsap.core.globals().ScrollTrigger;
         if (ST) ST.clearScrollMemory();
       });
     </script>
-
+    
     <script>document.documentElement.classList.add('js-loading');</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -35,6 +39,9 @@
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
+      
+
+      
       section.hero {
         display: flex;
         flex-direction: column;
@@ -44,6 +51,7 @@
 
       section.hero .next-chapter { padding-top: 40px !important; padding-bottom: 20px !important; }
 
+      
       .nav-pinned-bottom {
         position: fixed !important;
         bottom: 0 !important;
@@ -53,10 +61,12 @@
         z-index: 49;
       }
 
+      
       html:not(.js-loading) #navigation {
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
+      
       html.js-loading #navigation,
       html.js-loading .img-wrapper,
       html.js-loading .hero-img {
@@ -66,12 +76,14 @@
         animation: none !important;
       }
 
+      
       html {
         zoom: 100%;
         -ms-text-size-adjust: 100%;
         -webkit-text-size-adjust: 100%;
       }
 
+      
       .hero-content,
       .hero-content > div,
       #typewriter,
@@ -87,6 +99,7 @@
         visibility: visible !important;
       }
 
+      
       #typewriter {
         overflow: visible !important;
         white-space: nowrap;
@@ -95,6 +108,7 @@
         display: block;
       }
 
+      
       .research-block { margin-bottom: 2.5rem; }
       .research-block p { margin-bottom: 0.75rem; line-height: 1.7; }
       .research-item { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -103,20 +117,24 @@
       .research-item .paper-meta { opacity: 0.7; font-size: 0.92em; margin-bottom: 0.3rem; }
       .research-item .paper-status { opacity: 0.55; font-size: 0.88em; font-style: italic; }
 
+      
       .about-social { display: flex; gap: 1.2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
       .about-social a { font-size: 1.3rem; opacity: 0.75; transition: opacity 0.2s; }
       .about-social a:hover { opacity: 1; }
 
+      
       .teaching-item { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .teaching-item:last-child { border-bottom: none; }
       .teaching-item .role { font-weight: 600; margin-bottom: 0.25rem; }
       .teaching-item .inst { opacity: 0.7; font-size: 0.92em; }
 
+      
       .code-item { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .code-item:last-child { border-bottom: none; }
       .code-item h5 { font-weight: 600; margin-bottom: 0.5rem; }
       .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 1.5rem; }
 
+      
       .gallery-carousel { overflow: hidden; width: 100%; max-width: 460px; margin: 0 auto; }
       .gallery-track { display: flex; flex-direction: row; will-change: transform; }
       .gallery-slide { flex: 0 0 80%; width: 80%; box-sizing: border-box; padding: 0 10px; opacity: 0.3; transition: opacity 0.4s ease; }
@@ -135,6 +153,7 @@
       .gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; border: 2.5px solid rgba(0,0,0,0.5); cursor: pointer; transition: background 0.3s, border-color 0.3s, transform 0.3s; }
       .gallery-dot.active { background: #000; border: 2.5px solid #000; transform: scale(1.25); }
 
+      
       .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-left: 1px solid rgba(0,0,0,0.1); }
       .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
       .settings-options.open { max-width: 200px; opacity: 1; }
@@ -145,24 +164,36 @@
       .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.3); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
       .settings-gear-btn.open { transform: rotate(90deg); }
 
+      
       .hero .btn { border-radius: 4px !important; }
 
+      
       #research .service-swiper .swiper-wrapper { align-items: stretch; }
       #research .service-swiper .swiper-slide { height: auto; display: flex; }
       #research .service-swiper .service-card { height: 100%; width: 100%; }
       #research .service-list li { display: block !important; }
       #research .service-card { position: relative; }
-      #research { scroll-margin-top: 100px; }
-      #teaching { scroll-margin-top: 50px; }
+
+      #research {
+        scroll-margin-top: 100px;
+      }
+
+      #teaching {
+        scroll-margin-top: 50px;
+      }
 
       .card-full-link { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
+
       .research-sub-heading { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; opacity: 0.55; margin-bottom: 1.25rem; margin-top: 0; }
 
+      
       .left-bar ul li a { border: 2px solid rgba(0,0,0,0.35); border-radius: 4px; }
 
+      
       .about-new-btn { border-radius: 4px !important; transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease !important; }
       .about-new-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
 
+      
       .view-all-code { display: inline-flex; align-items: center; gap: 20px; margin-top: 2.5rem; margin-bottom: 0.5rem; color: rgb(var(--black)); font-weight: 500; font-size: 1.1rem; cursor: default; }
       .view-all-code .vac-line { display: block; width: 100px; height: 1px; background: currentColor; flex-shrink: 0; }
       .view-all-code .vac-arrow { width: 52px; height: 52px; border-radius: 50%; border: 1px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; transition: background 0.3s, color 0.3s; flex-shrink: 0; position: relative; }
@@ -171,7 +202,15 @@
         from { transform: scale(1.02); opacity: 0.5; }
         to   { transform: scale(1.6); opacity: 0; }
       }
-      .card-ripple { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgb(var(--black)); pointer-events: none; opacity: 0; animation: none; }
+      .card-ripple {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 1px solid rgb(var(--black));
+        pointer-events: none;
+        opacity: 0;
+        animation: none;
+      }
       .service-card:hover .card-ripple { animation: vacRippleCard 2.5s linear infinite; }
       .service-card:hover .card-ripple:nth-child(2) { animation-delay: 0.625s; }
       .service-card:hover .card-ripple:nth-child(3) { animation-delay: 1.25s; }
@@ -184,31 +223,112 @@
         from { transform: scale(1.05); opacity: 0.6; }
         to   { transform: scale(1.5); opacity: 0; }
       }
-      .vac-ripple { position: absolute; inset: 0; border-radius: 50%; border: 1px solid currentColor; animation: vacRipple 2.5s linear infinite; pointer-events: none; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+      .vac-ripple {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 1px solid currentColor;
+        animation: vacRipple 2.5s linear infinite;
+        pointer-events: none;
+        transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
       .vac-ripple:nth-child(2) { animation-delay: 0.833s; }
       .vac-ripple:nth-child(3) { animation-delay: 1.667s; }
       .vac-arrow:hover .vac-ripple { opacity: 0 !important; }
       .contact-form .submit-btn .vac-ripple { animation-name: vacRippleSubmit; }
       .contact-form .submit-btn:hover .vac-ripple { opacity: 0 !important; }
 
-      .code-btn { font-size: 0.82rem; padding: 0.3rem 0.7rem; border-radius: 4px !important; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important; }
-      .code-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
+      
+      .code-btn {
+        font-size: 0.82rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 4px !important;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+      }
+      .code-btn:hover {
+        background-color: #000 !important;
+        border-color: #000 !important;
+        color: #fff !important;
+      }
 
-      .about-img-wrap { position: relative; display: inline-block; min-height: 480px; }
-      .about-img-wrap::after { content: ''; position: absolute; bottom: -52px; left: 50%; transform: translateX(-50%); width: 78%; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at center top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%); filter: blur(12px); transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease; opacity: 0; pointer-events: none; z-index: 2; }
-      .about-img-wrap:hover::after { opacity: 1; bottom: -46px; width: 88%; }
-      .about-img-wrap .about-img { transition: transform 0.4s ease; display: block; }
-      .about-img-wrap:hover .about-img { transform: translateY(-6px); }
+      
+      .about-img-wrap {
+        position: relative;
+        display: inline-block;
+        min-height: 480px;
+      }
+      .about-img-wrap::after {
+        content: '';
+        position: absolute;
+        bottom: -52px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 78%;
+        height: 26px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%);
+        filter: blur(12px);
+        transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .about-img-wrap:hover::after {
+        opacity: 1;
+        bottom: -46px;
+        width: 88%;
+      }
+      .about-img-wrap .about-img {
+        transition: transform 0.4s ease;
+        display: block;
+      }
+      .about-img-wrap:hover .about-img {
+        transform: translateY(-6px);
+      }
 
+      
       .gallery-swiper { width: 100%; overflow: hidden; }
       .gallery-swiper { max-width: 680px; margin: 0 auto; overflow: hidden; padding-bottom: 40px; }
-      .gallery-video-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 6px; }
-      .gallery-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; z-index: 2; }
-      .gallery-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 52px; height: 52px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' stroke='white' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; transition: background-color 0.2s; }
+      .gallery-video-wrapper {
+        position: relative;
+        width: 100%;
+        padding-bottom: 177.78%;
+        height: 0;
+        overflow: hidden;
+        border-radius: 6px;
+      }
+      .gallery-thumb {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        cursor: pointer;
+        z-index: 2;
+      }
+      .gallery-thumb::after {
+        content: '';
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 52px; height: 52px;
+        background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' stroke='white' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat;
+        border-radius: 50%;
+        transition: background-color 0.2s;
+      }
       .gallery-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
-      .gallery-pagination .swiper-pagination-bullet { width: 8px; height: 8px; background: transparent; border: 2.5px solid rgba(0,0,0,0.5); opacity: 1; }
-      .gallery-pagination .swiper-pagination-bullet-active { background: #000; border-color: #000; transform: scale(1.25); }
+      .gallery-pagination .swiper-pagination-bullet {
+        width: 8px; height: 8px;
+        background: transparent;
+        border: 2.5px solid rgba(0,0,0,0.5);
+        opacity: 1;
+      }
+      .gallery-pagination .swiper-pagination-bullet-active {
+        background: #000;
+        border-color: #000;
+        transform: scale(1.25);
+      }
 
+      
       .vid-gallery { overflow: hidden; width: 100%; user-select: none; }
       .vid-gallery:active { cursor: grabbing; }
       .vid-track { display: flex; will-change: transform; }
@@ -230,6 +350,7 @@
       .vid-prev:hover .vid-bar, .vid-next:hover .vid-bar { background: rgba(0,0,0,0.8); }
       .vid-arrow { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
 
+      
       #conferences .experience-wrapper { padding-bottom: 0 !important; }
       #conferences .experience-item p { font-size: 0.97rem; }
       #conferences .view-all-code { margin-top: 4rem; margin-bottom: 0.5rem; }
@@ -237,40 +358,147 @@
       #conferences .next-chapter { padding-top: 30px; }
       #teaching .next-chapter { padding-top: 45px; }
 
+      
       @media (max-width: 1200px) {
-        .navigation img, .navigation .nav-logo, .navigation .logo,
-        .navigation > img, .navigation .contact { display: none !important; }
+        .navigation img,
+        .navigation .nav-logo,
+        .navigation .logo,
+        .navigation > img,
+        .navigation .contact { display: none !important; }
       }
 
-      .hero .next-chapter { opacity: 0; transform: translateY(20px); animation: fadeUpIn 1s ease 3s forwards; }
-      @keyframes fadeUpIn { to { opacity: 1; transform: translateY(0); } }
+      
+      .hero .next-chapter {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUpIn 1s ease 3s forwards;
+      }
+      @keyframes fadeUpIn {
+        to { opacity: 1; transform: translateY(0); }
+      }
 
-      .section-title, .section-title h4, .section-title h2 { transform: none !important; opacity: 1 !important; animation: none !important; }
-      .section-title h2, .section-title h4 { min-height: 1.2em; }
-      .section-title h2 span, .section-title h4 span { transition: filter 0.05s ease-out; }
-      .section-title h2 span.is-cycling, .section-title h4 span.is-cycling { filter: blur(0.01em); }
+      
+      .section-title,
+      .section-title h4,
+      .section-title h2 {
+        transform: none !important;
+        opacity: 1 !important;
+        animation: none !important;
+      }
 
-      #conferences .experience-item { transform: none !important; animation: none !important; opacity: 1 !important; visibility: visible !important; }
-      #conferences .experience-wrapper { position: relative; overflow: hidden; }
+      .section-title h2,
+      .section-title h4 {
+        min-height: 1.2em;
+      }
 
-      section p a:not(.btn) { position: relative; text-decoration: none; transition: color .5s ease-out; }
-      section p a:not(.btn)::after { content: ""; position: absolute; border-radius: 1em; border-top: .1em solid #000; right: 100%; bottom: -.15em; left: 0; transition: right .5s cubic-bezier(0,.5,0,1), border-color .5s ease-out; }
-      section p a:not(.btn):hover::after, section p .link-pair:hover a:not(.btn)::after { right: 0; }
+      .section-title h2 span,
+      .section-title h4 span {
+        transition: filter 0.05s ease-out;
+      }
+      .section-title h2 span.is-cycling,
+      .section-title h4 span.is-cycling {
+        filter: blur(0.01em);
+      }
 
-      .freelancer { white-space: nowrap; transition: opacity 0.7s ease; cursor: pointer; user-select: none; opacity: 1 !important; transform: none !important; animation: none !important; visibility: hidden; }
-      .freelancer.is-ipa { opacity: 0.5 !important; }
-      .freelancer span { display: inline-block; margin-right: 0.05em; transition: filter 0.05s ease-out; }
-      .freelancer span:last-child { margin-right: 0; }
-      .freelancer span.tight-right { margin-right: -0.04em; }
-      .freelancer span.is-ipa-char { text-transform: none !important; }
-      .freelancer span.is-cycling { filter: blur(0.0125em); }
+      
+      #conferences .experience-item {
+        transform: none !important;
+        animation: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
 
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: rgb(var(--primary)); border-radius: 999px; }
-      body::after { content: ''; position: fixed; top: 0; right: 0; width: 1px; height: 100%; background: rgba(0,0,0,0.1); pointer-events: none; z-index: 9999; }
-      ::-webkit-scrollbar-thumb { background: rgb(var(--black)); border-radius: 999px; border: 2px solid rgb(var(--primary)); }
-      ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
-      * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
+      #conferences .experience-wrapper {
+        position: relative;
+        overflow: hidden;
+      }
+
+      
+      section p a:not(.btn) {
+        position: relative;
+        text-decoration: none;
+        transition: color .5s ease-out;
+      }
+      section p a:not(.btn)::after {
+        content: "";
+        position: absolute;
+        border-radius: 1em;
+        border-top: .1em solid #000;
+        right: 100%;
+        bottom: -.15em;
+        left: 0;
+        transition: right .5s cubic-bezier(0,.5,0,1),
+                    border-color .5s ease-out;
+      }
+      section p a:not(.btn):hover::after,
+      section p .link-pair:hover a:not(.btn)::after {
+        right: 0;
+      }
+
+      .freelancer {
+        white-space: nowrap;
+        transition: opacity 0.7s ease;
+        cursor: pointer;
+        user-select: none;
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        visibility: hidden;
+      }
+      .freelancer.is-ipa {
+        opacity: 0.5 !important;
+      }
+      .freelancer span {
+        display: inline-block;
+        margin-right: 0.05em;
+        transition: filter 0.05s ease-out;
+      }
+      .freelancer span:last-child {
+        margin-right: 0;
+      }
+      .freelancer span.tight-right {
+        margin-right: -0.04em;
+      }
+      .freelancer span.is-ipa-char {
+        text-transform: none !important;
+      }
+      .freelancer span.is-cycling {
+        filter: blur(0.0125em);
+      }
+
+      
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgb(var(--primary));
+        border-radius: 999px;
+      }
+
+      body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 1px;
+        height: 100%;
+        background: rgba(0,0,0,0.1);
+        pointer-events: none;
+        z-index: 9999;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgb(var(--black));
+        border-radius: 999px;
+        border: 2px solid rgb(var(--primary));
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(var(--black), 0.72);
+      }
+
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(var(--black)) rgb(var(--primary));
+      }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -311,6 +539,7 @@
     <main>
       <div class="col-12">
 
+        
         <section id="home" class="hero container">
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
@@ -361,6 +590,7 @@
         </nav>
         <div class="nav-overlay d-xl-none"></div>
 
+        
         <section id="about" class="about section container">
           <span class="section-title-overlay-text">About</span>
           <div class="row align-items-start">
@@ -398,6 +628,7 @@
           </div>
         </section>
 
+        
         <section id="research" class="services section position-relative container">
           <span class="section-title-overlay-text">Research</span>
           <div class="section-title text-capitalize">
@@ -506,6 +737,7 @@
           </div>
         </section>
 
+        
         <section id="teaching" class="about section container">
           <span class="section-title-overlay-text">Teaching</span>
           <div class="section-title text-capitalize">
@@ -538,6 +770,7 @@
           </div>
         </section>
 
+        
         <section id="conferences" class="experience section position-relative container">
           <span class="section-title-overlay-text">Conferences</span>
           <div class="section-title text-capitalize">
@@ -586,6 +819,7 @@
           </div>
         </section>
 
+        
         <section id="code" class="about section container">
           <span class="section-title-overlay-text">Code</span>
           <div class="section-title text-capitalize">
@@ -631,6 +865,7 @@
           </div>
         </section>
 
+        
         <section id="gallery" class="about section container">
           <span class="section-title-overlay-text">Gallery</span>
           <div class="section-title text-capitalize">
@@ -727,6 +962,7 @@
           </div>
         </section>
 
+        
         <section id="contact" class="contact section position-relative container">
           <span class="section-title-overlay-text">Contact</span>
           <div class="section-title text-capitalize">
@@ -862,7 +1098,7 @@
       })();
     </script>
 
-    <!-- Section title vestaboard — original, IntersectionObserver unchanged -->
+    
     <script>
     (function () {
       var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
@@ -933,7 +1169,7 @@
     })();
     </script>
 
-    <!-- IPA name animation — unchanged -->
+    
     <script>
     (function () {
       var h4 = document.querySelector('h4.freelancer[data-ipa]');
@@ -1052,6 +1288,7 @@
 
       h4.addEventListener('click', function () {
         if (isAnimating) return;
+
         if (!showingIpa) {
           showingIpa = true;
           isAnimating = true;
@@ -1076,12 +1313,10 @@
     })();
     </script>
 
+    
     <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.documentElement.classList.remove('js-loading');
-      // Hide nav before vestaboard animation so it fades in with the reveal.
-      var _nav = document.getElementById('navigation');
-      if (_nav) _nav.style.opacity = '0';
 
       if (window.gsap) {
         gsap.killTweensOf('.navigation');
@@ -1120,120 +1355,11 @@
     })();
     </script>
 
-    <!-- Nav link vestaboard — fires on page load.
-         Only textContent changes per tick (no transforms, no style mutations)
-         which eliminates GPU compositing flashes. The parent <a> min-width is
-         locked before touching anything so the nav bar never reflows or twitches. -->
     <script>
     (function () {
+      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
       var stagger = 52, flipSpeed = 40, flipCount = 13;
-
-      // Same-case random char — keeps width variation small without any scaling.
-      function randChar(finalCh) {
-        var letters = (finalCh >= 'A' && finalCh <= 'Z')
-          ? 'ABCDEFGHJKLMNOPQRSTUVWXYZ'
-          : 'abcdefghijklmnopqrstuvwxyz';
-        var pool = letters + '123456789';
-        return pool[Math.floor(Math.random() * pool.length)];
-      }
-
-      function init() {
-        var els = Array.from(document.querySelectorAll('#navigation ul .nav-link a .text'));
-        if (!els.length) return;
-
-        // Lock every <a> parent's min-width BEFORE touching the DOM so no
-        // ancestor ever reflows during animation — stops the nav twitching.
-        els.forEach(function (el) {
-          var a = el.parentElement;
-          if (a) a.style.minWidth = a.offsetWidth + 'px';
-        });
-
-        // PHASE 1: build spans with final chars (batch writes)
-        var elData = els.map(function (el) {
-          var text = el.textContent.trim();
-          el.innerHTML        = '';
-          el.style.whiteSpace = 'nowrap';
-          var chars = text.split('').map(function (ch) {
-            var s = document.createElement('span');
-            s.style.display = 'inline-block';
-            s.textContent   = ch;
-            el.appendChild(s);
-            return { span: s, final: ch };
-          });
-          return { el: el, chars: chars };
-        });
-
-        // PHASE 2: batch-read all slot widths (one reflow)
-        var allWidths = elData.map(function (d) {
-          return d.chars.map(function (c) { return c.span.offsetWidth; });
-        });
-
-        // PHASE 3: lock slots, scramble, animate — all in one rAF.
-        // Also fade the nav in, timed so opacity reaches 1 as the last char lands.
-        var _longestWord = elData.reduce(function (mx, d) { return Math.max(mx, d.chars.length); }, 0);
-        var _animMs  = (_longestWord - 1) * stagger + flipCount * flipSpeed; // ~1040ms
-        var _fadeMs  = _animMs + 60; // tiny buffer so reveal and full opacity coincide
-
-        requestAnimationFrame(function () {
-          // Start fade-in. Preserve the existing bottom/top scroll transitions.
-          var _nav = document.getElementById('navigation');
-          if (_nav) {
-            _nav.style.transition = 'opacity ' + _fadeMs + 'ms ease'
-              + ', bottom 0.5s cubic-bezier(0.4,0,0.2,1)'
-              + ', top 0.5s cubic-bezier(0.4,0,0.2,1)';
-            _nav.style.opacity = '1';
-            // Once the fade is done, hand transition control back to CSS.
-            setTimeout(function () {
-              _nav.style.transition = '';
-              _nav.style.opacity    = '';
-            }, _fadeMs + 100);
-          }
-
-          elData.forEach(function (d, i) {
-            var widths = allWidths[i];
-
-            // Fix slot width; center the char; overflow stays visible (default)
-            // so chars render naturally with no clipping or scaling.
-            d.chars.forEach(function (c, j) {
-              c.span.style.width     = widths[j] + 'px';
-              c.span.style.textAlign = 'center';
-              c.span.textContent     = randChar(c.final);
-            });
-
-            // Animate — only textContent changes inside the tick.
-            d.chars.forEach(function (c, idx) {
-              var delayBase    = idx * stagger;
-              var initialDelay = delayBase % flipSpeed;
-              var landAt       = delayBase + flipCount * flipSpeed;
-              c.span.classList.add('is-cycling');
-              var startTime = Date.now();
-              setTimeout(function tick() {
-                if (Date.now() - startTime >= landAt) {
-                  c.span.textContent = c.final;
-                  c.span.classList.remove('is-cycling');
-                } else {
-                  c.span.textContent = randChar(c.final);
-                  setTimeout(tick, flipSpeed);
-                }
-              }, initialDelay);
-            });
-          });
-        });
-      }
-
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(init);
-      } else {
-        init();
-      }
-    })();
-    </script>
-
-    <!-- Scroll-down vestaboard — only textContent changes per tick, no transforms. -->
-    <script>
-    (function () {
-      var stagger = 52, flipSpeed = 40, flipCount = 13;
-      var p    = document.querySelector('.scroll-down p');
+      var p = document.querySelector('.scroll-down p');
       var anim = document.querySelector('.scroll-anim');
       if (!p) return;
 
@@ -1242,64 +1368,40 @@
 
       p.style.whiteSpace = 'nowrap';
 
-      function randChar(finalCh) {
-        var letters = (finalCh >= 'A' && finalCh <= 'Z')
-          ? 'ABCDEFGHJKLMNOPQRSTUVWXYZ'
-          : 'abcdefghijklmnopqrstuvwxyz';
-        var pool = letters + '123456789';
-        return pool[Math.floor(Math.random() * pool.length)];
-      }
-
+      // Lock width using span-rendered version so it matches animated state exactly
       function lockWidth() {
         p.style.width = 'auto';
-        p.innerHTML   = '';
-        'Scroll Down'.split('').forEach(function (ch) {
+        p.innerHTML = 'Scroll ';
+        'Down'.split('').forEach(function(ch) {
           var s = document.createElement('span');
           s.style.display = 'inline-block';
-          if (ch === ' ') { s.style.minWidth = '0.35em'; s.textContent = '\u00a0'; }
-          else { s.textContent = ch; }
+          s.textContent = ch;
           p.appendChild(s);
         });
         p.style.width = p.offsetWidth + 'px';
+      }
+      lockWidth();
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(lockWidth);
       }
 
       function splitFlapTo(text) {
         if (animating) return;
         animating = true;
-
-        // Build spans with final chars so slot widths are measured correctly.
-        p.innerHTML = '';
-        var chars = text.split('').map(function (ch) {
+        var chars = text.split('').map(function(ch) {
           var span = document.createElement('span');
           span.style.display = 'inline-block';
-          if (ch === ' ') {
-            span.style.minWidth = '0.35em';
-            span.textContent    = '\u00a0';
-          } else {
-            span.textContent = ch;
-          }
-          p.appendChild(span);
-          return { span: span, final: ch, space: ch === ' ' };
+          span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+          return { span: span, final: ch };
         });
+        p.innerHTML = 'Scroll ';
+        chars.forEach(function(c) { p.appendChild(c.span); });
 
-        // Batch-read widths (one reflow), then lock slots and scramble.
-        var widths = chars.map(function (c) { return c.space ? null : c.span.offsetWidth; });
-
-        chars.forEach(function (c, i) {
-          if (!c.space) {
-            c.span.style.width     = widths[i] + 'px';
-            c.span.style.textAlign = 'center';
-            c.span.textContent     = randChar(c.final);
-          }
-        });
-
-        // Animate — only textContent changes inside the tick.
         var wordIdx = 0;
-        chars.forEach(function (c, i) {
-          if (c.space) { wordIdx = 0; return; }
-          var delayBase    = wordIdx * stagger;
+        chars.forEach(function(c) {
+          var delayBase = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
-          var landAt       = delayBase + flipCount * flipSpeed;
+          var landAt = delayBase + flipCount * flipSpeed;
           wordIdx++;
           c.span.classList.add('is-cycling');
           var startTime = Date.now();
@@ -1308,55 +1410,45 @@
               c.span.textContent = c.final;
               c.span.classList.remove('is-cycling');
             } else {
-              c.span.textContent = randChar(c.final);
+              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
               setTimeout(tick, flipSpeed);
             }
           }, initialDelay);
         });
 
-        var totalMs = 5 * stagger + flipCount * flipSpeed;
-        setTimeout(function () { animating = false; }, totalMs);
+        var totalMs = (chars.length - 1) * stagger + flipCount * flipSpeed;
+        setTimeout(function() { animating = false; }, totalMs);
       }
 
       function setUp() {
         if (showingUp) return;
         showingUp = true;
-        splitFlapTo('Scroll Up');
+        splitFlapTo('Up');
         if (anim) anim.style.transform = 'rotate(180deg)';
       }
 
       function setDown() {
         if (!showingUp) return;
         showingUp = false;
-        splitFlapTo('Scroll Down');
+        splitFlapTo('Down');
         if (anim) anim.style.transform = '';
       }
 
-      function init() {
-        lockWidth();
-        if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(function () {
-            lockWidth();
-            splitFlapTo('Scroll Down');
-          });
-        } else {
-          splitFlapTo('Scroll Down');
-        }
-      }
-
-      init();
-
       var contact = document.getElementById('contact');
-      var offset  = 0.35;
+      var offset = 0.35;
 
-      window.addEventListener('scroll', function () {
+      window.addEventListener('scroll', function() {
         if (!contact) return;
         var top = contact.getBoundingClientRect().top;
-        if (top <= window.innerHeight * offset) setUp();
-        else setDown();
+        if (top <= window.innerHeight * offset) {
+          setUp();
+        } else {
+          setDown();
+        }
       }, { passive: true });
     })();
     </script>
+
     <script>
     (function () {
       document.querySelectorAll('a[href="#about"]').forEach(function (link) {
