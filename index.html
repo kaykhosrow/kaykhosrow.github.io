@@ -1079,6 +1079,9 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.documentElement.classList.remove('js-loading');
+      // Hide nav before vestaboard animation so it fades in with the reveal.
+      var _nav = document.getElementById('navigation');
+      if (_nav) _nav.style.opacity = '0';
 
       if (window.gsap) {
         gsap.killTweensOf('.navigation');
@@ -1127,9 +1130,10 @@
 
       // Same-case random char — keeps width variation small without any scaling.
       function randChar(finalCh) {
-        var pool = (finalCh >= 'A' && finalCh <= 'Z')
+        var letters = (finalCh >= 'A' && finalCh <= 'Z')
           ? 'ABCDEFGHJKLMNOPQRSTUVWXYZ'
           : 'abcdefghijklmnopqrstuvwxyz';
+        var pool = letters + '123456789';
         return pool[Math.floor(Math.random() * pool.length)];
       }
 
@@ -1164,8 +1168,27 @@
           return d.chars.map(function (c) { return c.span.offsetWidth; });
         });
 
-        // PHASE 3: lock slots, scramble, animate — all in one rAF
+        // PHASE 3: lock slots, scramble, animate — all in one rAF.
+        // Also fade the nav in, timed so opacity reaches 1 as the last char lands.
+        var _longestWord = elData.reduce(function (mx, d) { return Math.max(mx, d.chars.length); }, 0);
+        var _animMs  = (_longestWord - 1) * stagger + flipCount * flipSpeed; // ~1040ms
+        var _fadeMs  = _animMs + 60; // tiny buffer so reveal and full opacity coincide
+
         requestAnimationFrame(function () {
+          // Start fade-in. Preserve the existing bottom/top scroll transitions.
+          var _nav = document.getElementById('navigation');
+          if (_nav) {
+            _nav.style.transition = 'opacity ' + _fadeMs + 'ms ease'
+              + ', bottom 0.5s cubic-bezier(0.4,0,0.2,1)'
+              + ', top 0.5s cubic-bezier(0.4,0,0.2,1)';
+            _nav.style.opacity = '1';
+            // Once the fade is done, hand transition control back to CSS.
+            setTimeout(function () {
+              _nav.style.transition = '';
+              _nav.style.opacity    = '';
+            }, _fadeMs + 100);
+          }
+
           elData.forEach(function (d, i) {
             var widths = allWidths[i];
 
@@ -1220,9 +1243,10 @@
       p.style.whiteSpace = 'nowrap';
 
       function randChar(finalCh) {
-        var pool = (finalCh >= 'A' && finalCh <= 'Z')
+        var letters = (finalCh >= 'A' && finalCh <= 'Z')
           ? 'ABCDEFGHJKLMNOPQRSTUVWXYZ'
           : 'abcdefghijklmnopqrstuvwxyz';
+        var pool = letters + '123456789';
         return pool[Math.floor(Math.random() * pool.length)];
       }
 
