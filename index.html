@@ -1366,22 +1366,8 @@
       var animating = false;
       var showingUp = false;
 
-      // Lock width using span-rendered version so it matches animated state exactly
-      function lockWidth() {
-        p.style.width = 'auto';
-        p.innerHTML = 'Scroll ';
-        'Down'.split('').forEach(function(ch) {
-          var s = document.createElement('span');
-          s.style.display = 'inline-block';
-          s.textContent = ch;
-          p.appendChild(s);
-        });
-        p.style.width = p.offsetWidth + 'px';
-      }
-      lockWidth();
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(lockWidth);
-      }
+      // Lock width to 'Down' so the word change never causes layout shift
+      p.style.minWidth = p.offsetWidth + 'px';
 
       function splitFlapTo(text) {
         if (animating) return;
