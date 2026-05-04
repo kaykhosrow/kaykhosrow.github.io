@@ -301,29 +301,27 @@
 
 
       .nav-arr {
-        position: absolute;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: opacity 0.35s ease;
+        transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .nav-arr-down { opacity: 1; }
-      .nav-arr-up   { opacity: 0; }
-      .nav-arrow-btn.is-up .nav-arr-down { opacity: 0; }
-      .nav-arrow-btn.is-up .nav-arr-up   { opacity: 1; }
+      .nav-arrow-btn.is-up .nav-arr {
+        transform: rotate(180deg);
+      }
 
       @keyframes navBounceDown {
         0%, 100% { transform: translateY(0); }
         50%       { transform: translateY(3px); }
       }
       @keyframes navBounceUp {
-        0%, 100% { transform: translateY(0); }
-        50%       { transform: translateY(-3px); }
+        0%, 100% { transform: translateY(0) rotate(180deg); }
+        50%       { transform: translateY(-3px) rotate(180deg); }
       }
-      .nav-arrow-btn:not(.is-up) .nav-arr-down {
+      .nav-arrow-btn:not(.is-up) .nav-arr {
         animation: navBounceDown 1.4s ease-in-out infinite;
       }
-      .nav-arrow-btn.is-up .nav-arr-up {
+      .nav-arrow-btn.is-up .nav-arr {
         animation: navBounceUp 1.4s ease-in-out infinite;
       }
 
@@ -392,8 +390,7 @@
         <nav class="navigation nav-pinned-bottom" id="navigation">
           <div class="nav-arrow-wrap d-none d-xl-flex">
             <button class="nav-arrow-btn" id="navArrowBtn" aria-label="Navigate to next section">
-              <span class="nav-arr nav-arr-down"><i class="ph ph-arrow-down"></i></span>
-              <span class="nav-arr nav-arr-up"><i class="ph ph-arrow-up"></i></span>
+              <span class="nav-arr"><i class="ph ph-arrow-down"></i></span>
             </button>
           </div>
           <ul>
