@@ -281,11 +281,8 @@
         padding: 0 16px 0 20px;
         flex-shrink: 0;
         cursor: pointer;
-        transition: background 0.25s ease;
       }
-      .nav-arrow-wrap:hover {
-        background: rgb(var(--black));
-      }
+
       .nav-arrow-btn {
         width: 32px;
         height: 32px;
@@ -300,12 +297,8 @@
         position: relative;
         flex-shrink: 0;
         padding: 0;
-        transition: color 0.25s ease;
       }
-      .nav-arrow-wrap:hover .nav-arrow-btn,
-      .nav-arrow-wrap:hover .nav-arr {
-        color: #fff;
-      }
+
 
       .nav-arr {
         position: absolute;
@@ -943,7 +936,7 @@
           span.style.display = 'inline-block';
           if (ch === ' ') {
             span.style.minWidth = '0.35em';
-            span.textContent    = ' ';
+            span.textContent    = '\u00a0';
           } else {
             span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
           }
