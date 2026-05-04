@@ -271,6 +271,67 @@
       ::-webkit-scrollbar-thumb { background: rgb(var(--black)); border-radius: 999px; border: 2px solid rgb(var(--primary)); }
       ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
       * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
+
+      /* ── Nav arrow button ─────────────────────────────────────────────── */
+      .nav-arrow-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px 0 12px;
+        border-right: 1px solid rgba(0,0,0,0.1);
+        flex-shrink: 0;
+      }
+      .nav-arrow-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid currentColor;
+        background: transparent;
+        color: rgb(var(--black));
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        position: relative;
+        transition: background 0.3s ease, color 0.3s ease;
+        flex-shrink: 0;
+        padding: 0;
+      }
+      .nav-arrow-btn:hover {
+        background: rgb(var(--black));
+        color: rgb(var(--primary));
+      }
+      .nav-arr {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.35s ease;
+      }
+      .nav-arr-down { opacity: 1; }
+      .nav-arr-up   { opacity: 0; }
+      .nav-arrow-btn.is-up .nav-arr-down { opacity: 0; }
+      .nav-arrow-btn.is-up .nav-arr-up   { opacity: 1; }
+
+      @keyframes navBounceDown {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(3px); }
+      }
+      @keyframes navBounceUp {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(-3px); }
+      }
+      .nav-arrow-btn:not(.is-up) .nav-arr-down {
+        animation: navBounceDown 1.4s ease-in-out infinite;
+      }
+      .nav-arrow-btn.is-up .nav-arr-up {
+        animation: navBounceUp 1.4s ease-in-out infinite;
+      }
+      .nav-arrow-btn:hover .nav-arr-down,
+      .nav-arrow-btn:hover .nav-arr-up {
+        animation-play-state: paused;
+      }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -334,9 +395,11 @@
         </section>
 
         <nav class="navigation nav-pinned-bottom" id="navigation">
-          <div class="scroll-down d-none d-xl-flex">
-            <div class="scroll-anim"><span></span></div>
-            <p>Scroll Down</p>
+          <div class="nav-arrow-wrap d-none d-xl-flex">
+            <button class="nav-arrow-btn" id="navArrowBtn" aria-label="Navigate to next section">
+              <span class="nav-arr nav-arr-down"><i class="ph ph-arrow-down"></i></span>
+              <span class="nav-arr nav-arr-up"><i class="ph ph-arrow-up"></i></span>
+            </button>
           </div>
           <ul>
             <li class="nav-link"><a href="#home" class="active"><span class="text">top</span></a></li>
@@ -863,352 +926,7 @@
     </script>
 
     <!-- Section title vestaboard — original, IntersectionObserver unchanged -->
-    <script>
-    (function () {
-      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
 
-      function splitFlap(el) {
-        var original = el.textContent.trim();
-        var isH2     = (el.tagName === 'H2');
-        var display  = isH2 ? original.toUpperCase() : original;
-
-        el.innerHTML = '';
-        var chars = display.split('').map(function (ch) {
-          var span           = document.createElement('span');
-          span.style.display = 'inline-block';
-          if (ch === ' ') {
-            span.style.minWidth = '0.35em';
-            span.textContent    = '\u00a0';
-          } else {
-            span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-          }
-          el.appendChild(span);
-          return { span: span, final: ch, space: ch === ' ' };
-        });
-
-        var stagger   = 52;
-        var flipSpeed = 40;
-        var flipCount = 13;
-
-        var wordIdx = 0;
-        chars.forEach(function (c) {
-          if (c.space) { wordIdx = 0; return; }
-          var delayBase    = wordIdx * stagger;
-          var initialDelay = delayBase % flipSpeed;
-          var landAt       = delayBase + flipCount * flipSpeed;
-          wordIdx++;
-          c.span.classList.add('is-cycling');
-          var startTime = Date.now();
-          setTimeout(function tick() {
-            if (Date.now() - startTime >= landAt) {
-              c.span.textContent = c.final;
-              c.span.classList.remove('is-cycling');
-            } else {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              setTimeout(tick, flipSpeed);
-            }
-          }, initialDelay);
-        });
-      }
-
-      var selectors = [
-        '#about', '#research', '#teaching',
-        '#conferences', '#code', '#gallery', '#contact'
-      ].map(function (id) {
-        return id + ' .section-title h2, ' + id + ' .section-title h4';
-      }).join(', ');
-
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            splitFlap(entry.target);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.4 });
-
-      document.querySelectorAll(selectors).forEach(function (el) {
-        observer.observe(el);
-      });
-    })();
-    </script>
-
-    <!-- IPA name animation — unchanged -->
-    <script>
-    (function () {
-      var h4 = document.querySelector('h4.freelancer[data-ipa]');
-      if (!h4) return;
-
-      var CHARS     =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-        'abcdefghijklmnopqrstuvwxyz' +
-        '0123456789$€£#@%&?!';
-      var stagger   = 44;
-      var flipSpeed = 40;
-      var flipCount = 8;
-
-      var origText = h4.dataset.original;
-      var ipaText  = h4.dataset.ipa;
-
-      function paint(text, useFinal) {
-        h4.innerHTML = '';
-        var isIpaTarget = (text === ipaText);
-        var allChars    = text.split('');
-        return allChars.map(function (ch, i) {
-          var span = document.createElement('span');
-          span.style.display = 'inline-block';
-          if (!useFinal || isIpaTarget) {
-            span.classList.add('is-ipa-char');
-          }
-          if (!isIpaTarget) {
-            var nextCh = allChars[i + 1];
-            if (ch && ch.toLowerCase() === 'a' &&
-                nextCh && nextCh.toLowerCase() === 'y') {
-              span.classList.add('tight-right');
-            }
-          }
-          if (ch === ' ') {
-            span.style.minWidth = '0.35em';
-            span.textContent    = '\u00a0';
-          } else {
-            span.textContent = useFinal
-              ? ch
-              : CHARS[Math.floor(Math.random() * CHARS.length)];
-          }
-          h4.appendChild(span);
-          return { span: span, final: ch, space: ch === ' ', ipa: isIpaTarget };
-        });
-      }
-
-      function lockWidth() {
-        var prevDisplay = h4.style.display;
-        h4.style.display    = 'inline-block';
-        h4.style.whiteSpace = 'nowrap';
-        paint(ipaText, true);
-        var ipaWidth = h4.getBoundingClientRect().width;
-        h4.style.display = prevDisplay;
-        h4.style.minWidth = ipaWidth + 'px';
-        paint(origText, true);
-        h4.style.visibility = 'visible';
-      }
-
-      lockWidth();
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(lockWidth);
-      }
-
-      function splitFlapTo(targetText) {
-        var chars = paint(targetText, false);
-        var wordIdx = 0;
-        chars.forEach(function (c) {
-          if (c.space) { wordIdx = 0; return; }
-          var delayBase    = wordIdx * stagger;
-          var initialDelay = delayBase % flipSpeed;
-          var landAt       = delayBase + flipCount * flipSpeed;
-          wordIdx++;
-          c.span.classList.add('is-cycling');
-          var startTime = Date.now();
-          setTimeout(function tick() {
-            if (Date.now() - startTime >= landAt) {
-              c.span.textContent = c.final;
-              if (!c.ipa) c.span.classList.remove('is-ipa-char');
-              c.span.classList.remove('is-cycling');
-            } else {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              setTimeout(tick, flipSpeed);
-            }
-          }, initialDelay);
-        });
-      }
-
-      function computeCycleMs(text) {
-        var maxWord = 0, w = 0;
-        for (var i = 0; i < text.length; i++) {
-          if (text.charAt(i) === ' ') {
-            if (w > maxWord) maxWord = w;
-            w = 0;
-          } else {
-            w++;
-          }
-        }
-        if (w > maxWord) maxWord = w;
-        return (maxWord - 1) * stagger + flipCount * flipSpeed;
-      }
-      var ipaCycleMs  = computeCycleMs(ipaText);
-      var origCycleMs = computeCycleMs(origText);
-
-      var showingIpa  = false;
-      var isAnimating = false;
-
-      function revertToOriginal() {
-        if (!showingIpa || isAnimating) return;
-        showingIpa = false;
-        isAnimating = true;
-        h4.style.transitionDuration = origCycleMs + 'ms';
-        h4.classList.remove('is-ipa');
-        splitFlapTo(origText);
-        setTimeout(function () { isAnimating = false; }, origCycleMs);
-      }
-
-      h4.addEventListener('click', function () {
-        if (isAnimating) return;
-        if (!showingIpa) {
-          showingIpa = true;
-          isAnimating = true;
-          h4.style.transitionDuration = ipaCycleMs + 'ms';
-          h4.classList.add('is-ipa');
-          splitFlapTo(ipaText);
-          setTimeout(function () { isAnimating = false; }, ipaCycleMs);
-        } else {
-          revertToOriginal();
-        }
-      });
-
-      window.addEventListener('scroll', function () {
-        if (showingIpa && window.scrollY > 40) {
-          revertToOriginal();
-        }
-      }, { passive: true });
-
-      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', revertToOriginal);
-      });
-    })();
-    </script>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      document.documentElement.classList.remove('js-loading');
-
-      if (window.gsap) {
-        gsap.killTweensOf('.navigation');
-        gsap.killTweensOf('.img-wrapper');
-        gsap.set('.img-wrapper', { clearProps: 'all' });
-      }
-    });
-    </script>
-
-    <script>
-    (function () {
-      var sections = ['home','about','research','teaching','conferences','code','gallery','contact'];
-      var offset = 0.35;
-
-      function getActive() {
-        var mid = window.innerHeight * offset;
-        var active = sections[0];
-        sections.forEach(function(id) {
-          var el = document.getElementById(id);
-          if (!el) return;
-          if (el.getBoundingClientRect().top <= mid) active = id;
-        });
-        return active;
-      }
-
-      function update() {
-        var active = getActive();
-        document.querySelectorAll('#navigation ul .nav-link a').forEach(function(a) {
-          var href = a.getAttribute('href');
-          a.classList.toggle('active', href === '#' + active);
-        });
-      }
-
-      window.addEventListener('scroll', update, { passive: true });
-      update();
-    })();
-    </script>
-
-    <script>
-    (function () {
-      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
-      var stagger = 52, flipSpeed = 40, flipCount = 13;
-      var p = document.querySelector('.scroll-down p');
-      var anim = document.querySelector('.scroll-anim');
-      if (!p) return;
-
-      var animating = false;
-      var showingUp = false;
-
-      p.style.whiteSpace = 'nowrap';
-
-      function lockWidth() {
-        p.style.width = 'auto';
-        p.innerHTML = 'Scroll ';
-        'Down'.split('').forEach(function(ch) {
-          var s = document.createElement('span');
-          s.style.display = 'inline-block';
-          s.textContent = ch;
-          p.appendChild(s);
-        });
-        p.style.width = p.offsetWidth + 'px';
-      }
-      lockWidth();
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(lockWidth);
-      }
-
-      function splitFlapTo(text) {
-        if (animating) return;
-        animating = true;
-        var chars = text.split('').map(function(ch) {
-          var span = document.createElement('span');
-          span.style.display = 'inline-block';
-          span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-          return { span: span, final: ch };
-        });
-        p.innerHTML = 'Scroll ';
-        chars.forEach(function(c) { p.appendChild(c.span); });
-
-        var wordIdx = 0;
-        chars.forEach(function(c) {
-          var delayBase = wordIdx * stagger;
-          var initialDelay = delayBase % flipSpeed;
-          var landAt = delayBase + flipCount * flipSpeed;
-          wordIdx++;
-          c.span.classList.add('is-cycling');
-          var startTime = Date.now();
-          setTimeout(function tick() {
-            if (Date.now() - startTime >= landAt) {
-              c.span.textContent = c.final;
-              c.span.classList.remove('is-cycling');
-            } else {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              setTimeout(tick, flipSpeed);
-            }
-          }, initialDelay);
-        });
-
-        var totalMs = (chars.length - 1) * stagger + flipCount * flipSpeed;
-        setTimeout(function() { animating = false; }, totalMs);
-      }
-
-      function setUp() {
-        if (showingUp) return;
-        showingUp = true;
-        splitFlapTo('Up');
-        if (anim) anim.style.transform = 'rotate(180deg)';
-      }
-
-      function setDown() {
-        if (!showingUp) return;
-        showingUp = false;
-        splitFlapTo('Down');
-        if (anim) anim.style.transform = '';
-      }
-
-      var contact = document.getElementById('contact');
-      var offset = 0.35;
-
-      window.addEventListener('scroll', function() {
-        if (!contact) return;
-        var top = contact.getBoundingClientRect().top;
-        if (top <= window.innerHeight * offset) {
-          setUp();
-        } else {
-          setDown();
-        }
-      }, { passive: true });
-    })();
-    </script>
     <script>
     (function () {
       document.querySelectorAll('a[href="#about"]').forEach(function (link) {
@@ -1222,6 +940,62 @@
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
       });
+    })();
+    </script>
+    <script>
+    (function () {
+      var SECTIONS = ['home','about','research','teaching','conferences','code','gallery','contact'];
+      var btn = document.getElementById('navArrowBtn');
+      if (!btn) return;
+
+      var isUp = false;
+
+      function getActiveIdx() {
+        var mid = window.innerHeight * 0.35;
+        var idx = 0;
+        SECTIONS.forEach(function (id, i) {
+          var el = document.getElementById(id);
+          if (el && el.getBoundingClientRect().top <= mid) idx = i;
+        });
+        return idx;
+      }
+
+      function scrollToSection(id) {
+        if (id === 'home') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+        var target = document.getElementById(id);
+        if (!target) return;
+        var nav  = document.getElementById('navigation');
+        var navH = (nav && window.scrollY >= 1) ? nav.offsetHeight : 0;
+        var top  = target.getBoundingClientRect().top + window.scrollY - navH;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+
+      btn.addEventListener('click', function () {
+        var idx = getActiveIdx();
+        if (!isUp) {
+          scrollToSection(SECTIONS[Math.min(idx + 1, SECTIONS.length - 1)]);
+        } else {
+          scrollToSection('home');
+        }
+      });
+
+      var contact = document.getElementById('contact');
+
+      function update() {
+        var atEnd = contact
+          ? contact.getBoundingClientRect().top <= window.innerHeight * 0.35
+          : false;
+        if (atEnd !== isUp) {
+          isUp = atEnd;
+          btn.classList.toggle('is-up', isUp);
+        }
+      }
+
+      window.addEventListener('scroll', update, { passive: true });
+      update();
     })();
     </script>
   </body>
