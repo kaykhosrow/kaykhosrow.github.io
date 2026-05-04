@@ -1117,40 +1117,31 @@
     })();
     </script>
 
-    <!-- Nav link vestaboard — fires on page load, A-Z only, simultaneous with scroll-down -->
+    <!-- Nav link vestaboard — fires on page load, A-Z only, simultaneous with scroll-down.
+         Reads all widths in one batch, then writes in a single rAF to avoid layout thrashing
+         and the nav-transition twitch that per-span getBoundingClientRect() loops cause. -->
     <script>
     (function () {
       var CHARS     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       var stagger   = 52, flipSpeed = 40, flipCount = 13;
 
-      function vestaboardEl(el) {
+      function animateEl(el, containerWidth) {
         var text = el.textContent.trim();
 
-        // Render final chars as spans first so each span's width is
-        // based on the actual glyph before we ever show a scrambled char.
-        el.innerHTML = '';
+        // Lock the container to its measured width — one number, no per-span reflow.
+        el.style.display    = 'inline-block';
         el.style.whiteSpace = 'nowrap';
+        el.style.minWidth   = containerWidth + 'px';
+
+        el.innerHTML = '';
         var chars = text.split('').map(function (ch) {
           var span = document.createElement('span');
           span.style.display = 'inline-block';
-          span.textContent   = ch;
+          span.textContent   = CHARS[Math.floor(Math.random() * CHARS.length)];
           el.appendChild(span);
           return { span: span, final: ch };
         });
 
-        // Lock each span to its measured pixel width — zero layout shift.
-        chars.forEach(function (c) {
-          var w = c.span.getBoundingClientRect().width;
-          c.span.style.width     = Math.ceil(w) + 'px';
-          c.span.style.textAlign = 'center';
-        });
-
-        // Scramble to random A-Z.
-        chars.forEach(function (c) {
-          c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-        });
-
-        // Animate back to final.
         var wordIdx = 0;
         chars.forEach(function (c) {
           var delayBase    = wordIdx * stagger;
@@ -1172,7 +1163,16 @@
       }
 
       function init() {
-        document.querySelectorAll('#navigation ul .nav-link a .text').forEach(vestaboardEl);
+        var els = Array.from(document.querySelectorAll('#navigation ul .nav-link a .text'));
+
+        // BATCH READ — one reflow for all elements.
+        var widths = els.map(function (el) { return el.offsetWidth; });
+
+        // BATCH WRITE in the next animation frame — no overlap with any
+        // in-progress layout or transition on the nav bar.
+        requestAnimationFrame(function () {
+          els.forEach(function (el, i) { animateEl(el, widths[i]); });
+        });
       }
 
       if (document.fonts && document.fonts.ready) {
@@ -1185,7 +1185,8 @@
 
     <!-- Scroll-down vestaboard — two changes from original:
          1. CHARS is A-Z only (avoids width variance during cycling)
-         2. init() calls splitFlapTo('Down') on page load as well as on scroll -->
+         2. Full "Scroll Down" / "Scroll Up" text animates (not just the suffix)
+         3. Fires on page load via fonts.ready as well as scroll-triggered -->
     <script>
     (function () {
       var CHARS     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -1199,32 +1200,42 @@
 
       p.style.whiteSpace = 'nowrap';
 
+      // Lock width to the longer text ("Scroll Down") so it never reflows
+      // when switching to "Scroll Up".
       function lockWidth() {
         p.style.width = 'auto';
-        p.innerHTML = 'Scroll ';
-        'Down'.split('').forEach(function(ch) {
+        p.innerHTML = '';
+        'Scroll Down'.split('').forEach(function (ch) {
           var s = document.createElement('span');
           s.style.display = 'inline-block';
-          s.textContent = ch;
+          if (ch === ' ') { s.style.minWidth = '0.35em'; s.textContent = '\u00a0'; }
+          else { s.textContent = ch; }
           p.appendChild(s);
         });
         p.style.width = p.offsetWidth + 'px';
       }
 
+      // Animate the full text — both words cycle through random A-Z chars.
       function splitFlapTo(text) {
         if (animating) return;
         animating = true;
-        var chars = text.split('').map(function(ch) {
+        p.innerHTML = '';
+        var chars = text.split('').map(function (ch) {
           var span = document.createElement('span');
           span.style.display = 'inline-block';
-          span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-          return { span: span, final: ch };
+          if (ch === ' ') {
+            span.style.minWidth = '0.35em';
+            span.textContent   = '\u00a0';
+          } else {
+            span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+          }
+          p.appendChild(span);
+          return { span: span, final: ch, space: ch === ' ' };
         });
-        p.innerHTML = 'Scroll ';
-        chars.forEach(function(c) { p.appendChild(c.span); });
 
         var wordIdx = 0;
-        chars.forEach(function(c) {
+        chars.forEach(function (c) {
+          if (c.space) { wordIdx = 0; return; }
           var delayBase    = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
           var landAt       = delayBase + flipCount * flipSpeed;
@@ -1242,33 +1253,34 @@
           }, initialDelay);
         });
 
-        var totalMs = (chars.length - 1) * stagger + flipCount * flipSpeed;
-        setTimeout(function() { animating = false; }, totalMs);
+        // "Scroll" is the longest word (6 chars), so it governs the total time.
+        var totalMs = 5 * stagger + flipCount * flipSpeed;
+        setTimeout(function () { animating = false; }, totalMs);
       }
 
       function setUp() {
         if (showingUp) return;
         showingUp = true;
-        splitFlapTo('Up');
+        splitFlapTo('Scroll Up');
         if (anim) anim.style.transform = 'rotate(180deg)';
       }
 
       function setDown() {
         if (!showingUp) return;
         showingUp = false;
-        splitFlapTo('Down');
+        splitFlapTo('Scroll Down');
         if (anim) anim.style.transform = '';
       }
 
       function init() {
         lockWidth();
         if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(function() {
+          document.fonts.ready.then(function () {
             lockWidth();
-            splitFlapTo('Down');
+            splitFlapTo('Scroll Down');
           });
         } else {
-          splitFlapTo('Down');
+          splitFlapTo('Scroll Down');
         }
       }
 
@@ -1277,7 +1289,7 @@
       var contact = document.getElementById('contact');
       var offset  = 0.35;
 
-      window.addEventListener('scroll', function() {
+      window.addEventListener('scroll', function () {
         if (!contact) return;
         var top = contact.getBoundingClientRect().top;
         if (top <= window.innerHeight * offset) {
@@ -1288,7 +1300,6 @@
       }, { passive: true });
     })();
     </script>
-
     <script>
     (function () {
       document.querySelectorAll('a[href="#about"]').forEach(function (link) {
