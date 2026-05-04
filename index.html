@@ -1,14 +1,15 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script>history.scrollRestoration = 'manual';</script>
+    <script>
+      history.scrollRestoration = 'manual';
+      if (!location.hash) window.scrollTo(0, 0);
+    </script>
     <script>
       window.addEventListener('pageshow', function() {
         if (location.hash) {
           var target = document.querySelector(location.hash);
           if (target) target.scrollIntoView();
-        } else {
-          window.scrollTo(0, 0);
         }
       });
     </script>
