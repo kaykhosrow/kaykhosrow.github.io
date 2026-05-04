@@ -915,7 +915,7 @@
         '#about', '#research', '#teaching',
         '#conferences', '#code', '#gallery', '#contact'
       ].map(function (id) {
-        return id + ' .section-title h2, ' + id + ' .section-title h4, ' + id + ' .section-title-overlay-text';
+        return id + ' .section-title h2, ' + id + ' .section-title h4';
       }).join(', ');
 
       var observer = new IntersectionObserver(function (entries) {
