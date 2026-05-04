@@ -1167,10 +1167,8 @@
       }
 
       function update() {
+        if (window._contactVisible) return; // observer handles it
         var active = getActive();
-        // If within 2px of the page bottom, force contact active
-        var atBottom = (window.scrollY + window.innerHeight) >= (document.documentElement.scrollHeight - 2);
-        if (atBottom) active = 'contact';
         document.querySelectorAll('#navigation ul .nav-link a').forEach(function(a) {
           var href = a.getAttribute('href');
           a.classList.toggle('active', href === '#' + active);
@@ -1180,22 +1178,18 @@
       window.addEventListener('scroll', update, { passive: true });
       update();
 
-      // IntersectionObserver for contact — highlights as soon as it enters view
+      // IntersectionObserver for contact — takes priority over scroll logic
       var contactEl = document.getElementById('contact');
       if (contactEl) {
-        var contactObs = new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
-            document.querySelectorAll('#navigation ul .nav-link a').forEach(function (a) {
-              if (a.getAttribute('href') === '#contact') {
-                if (entry.isIntersecting) a.classList.add('active');
-              } else {
-                if (entry.isIntersecting) a.classList.remove('active');
-              }
-            });
+        new IntersectionObserver(function (entries) {
+          window._contactVisible = entries[0].isIntersecting;
+          document.querySelectorAll('#navigation ul .nav-link a').forEach(function (a) {
+            a.classList.toggle('active', a.getAttribute('href') === '#contact' && entries[0].isIntersecting);
           });
-        }, { threshold: 0.05 });
-        contactObs.observe(contactEl);
+          if (!entries[0].isIntersecting) update();
+        }, { threshold: 0.05 }).observe(contactEl);
       }
+
     })();
     </script>
 
