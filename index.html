@@ -6,8 +6,9 @@
       if (!location.hash) {
         window.scrollTo(0, 0);
         window.addEventListener('load', function() {
-          setTimeout(function() { window.scrollTo(0, 0); }, 0);
-          setTimeout(function() { window.scrollTo(0, 0); }, 100);
+          var ST = window.gsap && window.gsap.core && window.gsap.core.globals().ScrollTrigger;
+          if (ST) ST.clearScrollMemory();
+          window.scrollTo(0, 0);
         });
       }
     </script>
