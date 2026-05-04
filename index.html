@@ -1200,9 +1200,12 @@
         link.addEventListener('click', function (e) {
           e.preventDefault();
           e.stopPropagation();
-          requestAnimationFrame(function () {
-            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-          });
+          window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+          setTimeout(function () {
+            document.querySelectorAll('#navigation ul .nav-link a').forEach(function (a) {
+              a.classList.toggle('active', a.getAttribute('href') === '#contact');
+            });
+          }, 700);
         });
       });
     })();
