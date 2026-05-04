@@ -1168,6 +1168,9 @@
 
       function update() {
         var active = getActive();
+        // If within 2px of the page bottom, force contact active
+        var atBottom = (window.scrollY + window.innerHeight) >= (document.documentElement.scrollHeight - 2);
+        if (atBottom) active = 'contact';
         document.querySelectorAll('#navigation ul .nav-link a').forEach(function(a) {
           var href = a.getAttribute('href');
           a.classList.toggle('active', href === '#' + active);
@@ -1193,14 +1196,13 @@
         });
       });
 
-      var heroContactBtn = document.querySelector('.contact-btn');
-      if (heroContactBtn) {
-        heroContactBtn.addEventListener('click', function (e) {
+      document.querySelectorAll('a[href="#contact"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
           e.preventDefault();
-          var navContact = document.querySelector('#navigation a[href="#contact"]');
-          if (navContact) navContact.click();
+          var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+          window.scrollTo({ top: maxScroll, behavior: 'smooth' });
         });
-      }
+      });
     })();
     </script>
     <script>
