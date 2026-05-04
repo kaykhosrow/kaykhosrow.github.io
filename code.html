@@ -12,7 +12,7 @@
       .code-item:last-child { border-bottom: none; }
       .code-item h5 { font-weight: 600; margin-bottom: 0.5rem; }
       .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 0.75rem; }
-      .back-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 2rem; opacity: 0.7; transition: opacity 0.2s; cursor: pointer; }
+      .back-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; margin-bottom: 2rem; opacity: 0.7; transition: opacity 0.2s; text-decoration: none; color: inherit; cursor: pointer; }
       .back-link:hover { opacity: 1; }
       .code-btn { font-size: 0.82rem; padding: 0.3rem 0.7rem; border-radius: 4px !important; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important; }
       .code-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
@@ -102,7 +102,7 @@
             <h2>CODE</h2>
           </div>
 
-          <a class="back-link" id="backLink">
+          <a class="back-link" href="https://kaykhosrow.github.io/index.html#code">
             <i class="ph ph-arrow-left"></i> Back
           </a>
 
@@ -152,16 +152,6 @@
     <button class="ltr" style="display:none" aria-hidden="true"></button>
     <button class="rtl" style="display:none" aria-hidden="true"></button>
 
-    <script>
-      document.getElementById('backLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (history.length > 1) {
-          history.back();
-        } else {
-          window.location.href = 'index.html';
-        }
-      });
-    </script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         var btn = document.querySelector('.nav-icon');
