@@ -1210,7 +1210,7 @@
       document.querySelectorAll('a[href="#contact"]').forEach(function (link) {
         link.addEventListener('click', function (e) {
           e.preventDefault();
-          window.scrollBy({ top: 99999, behavior: 'smooth' });
+          document.querySelector('footer').scrollIntoView({ behavior: 'smooth', block: 'end' });
         });
       });
     })();
