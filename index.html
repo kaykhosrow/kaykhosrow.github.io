@@ -563,10 +563,6 @@
         </section>
 
         <nav class="navigation nav-pinned-bottom" id="navigation">
-          <div class="scroll-down d-none d-xl-flex">
-            <div class="scroll-anim"><span></span></div>
-            <p>Scroll Down</p>
-          </div>
           <ul>
             <li class="nav-link"><a href="#home" class="active"><span class="text">top</span></a></li>
             <li class="nav-link"><a href="#about"><span class="text">about</span></a></li>
@@ -1357,95 +1353,10 @@
 
     <script>
     (function () {
-      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
-      var stagger = 52, flipSpeed = 40, flipCount = 13;
-      var p = document.querySelector('.scroll-down p');
-      var anim = document.querySelector('.scroll-anim');
-      if (!p) return;
-
-      var animating = false;
-      var showingUp = false;
-
-      p.style.whiteSpace = 'nowrap';
-
-      // Lock width using span-rendered version so it matches animated state exactly
-      function lockWidth() {
-        p.style.width = 'auto';
-        p.innerHTML = 'Scroll ';
-        'Down'.split('').forEach(function(ch) {
-          var s = document.createElement('span');
-          s.style.display = 'inline-block';
-          s.textContent = ch;
-          p.appendChild(s);
-        });
-        p.style.width = p.offsetWidth + 'px';
-      }
-      lockWidth();
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(lockWidth);
-      }
-
-      function splitFlapTo(text) {
-        if (animating) return;
-        animating = true;
-        var chars = text.split('').map(function(ch) {
-          var span = document.createElement('span');
-          span.style.display = 'inline-block';
-          span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-          return { span: span, final: ch };
-        });
-        p.innerHTML = 'Scroll ';
-        chars.forEach(function(c) { p.appendChild(c.span); });
-
-        var wordIdx = 0;
-        chars.forEach(function(c) {
-          var delayBase = wordIdx * stagger;
-          var initialDelay = delayBase % flipSpeed;
-          var landAt = delayBase + flipCount * flipSpeed;
-          wordIdx++;
-          c.span.classList.add('is-cycling');
-          var startTime = Date.now();
-          setTimeout(function tick() {
-            if (Date.now() - startTime >= landAt) {
-              c.span.textContent = c.final;
-              c.span.classList.remove('is-cycling');
-            } else {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              setTimeout(tick, flipSpeed);
-            }
-          }, initialDelay);
-        });
-
-        var totalMs = (chars.length - 1) * stagger + flipCount * flipSpeed;
-        setTimeout(function() { animating = false; }, totalMs);
-      }
-
-      function setUp() {
-        if (showingUp) return;
-        showingUp = true;
-        splitFlapTo('Up');
-        if (anim) anim.style.transform = 'rotate(180deg)';
-      }
-
-      function setDown() {
-        if (!showingUp) return;
-        showingUp = false;
-        splitFlapTo('Down');
-        if (anim) anim.style.transform = '';
-      }
-
       var contact = document.getElementById('contact');
       var offset = 0.35;
 
-      window.addEventListener('scroll', function() {
-        if (!contact) return;
-        var top = contact.getBoundingClientRect().top;
-        if (top <= window.innerHeight * offset) {
-          setUp();
-        } else {
-          setDown();
-        }
-      }, { passive: true });
+      window.addEventListener('scroll', function() {}, { passive: true });
     })();
     </script>
 
