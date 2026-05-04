@@ -1036,12 +1036,10 @@
       }
 
       function lockWidth() {
-        var prevDisplay = h4.style.display;
         h4.style.display    = 'inline-block';
         h4.style.whiteSpace = 'nowrap';
         paint(ipaText, true);
         var ipaWidth = h4.getBoundingClientRect().width;
-        h4.style.display = prevDisplay;
         h4.style.minWidth = ipaWidth + 'px';
         h4.style.maxWidth = ipaWidth + 'px';
         h4.style.overflow  = 'hidden';
