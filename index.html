@@ -1366,6 +1366,9 @@
       var animating = false;
       var showingUp = false;
 
+      // Lock width to 'Down' so the word change never causes layout shift
+      p.style.minWidth = p.offsetWidth + 'px';
+
       function splitFlapTo(text) {
         if (animating) return;
         animating = true;
