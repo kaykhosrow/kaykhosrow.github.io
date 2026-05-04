@@ -1024,7 +1024,7 @@
           }
           if (ch === ' ') {
             span.style.minWidth = '0.35em';
-            span.textContent    = ' ';
+            span.textContent    = ' ';
           } else {
             span.textContent = useFinal
               ? ch
@@ -1056,22 +1056,7 @@
       }
 
       function splitFlapTo(targetText) {
-        // Measure every character's final rendered width (spaces included)
-        // so each slot is locked and nothing shifts during cycling.
-        var measured = paint(targetText, true);
-        var widths   = measured.map(function (c) {
-          return c.span.getBoundingClientRect().width;
-        });
-
-        // Re-paint with random chars, pinning each span to its measured width.
         var chars = paint(targetText, false);
-        chars.forEach(function (c, i) {
-          c.span.style.width     = widths[i] + 'px';
-          c.span.style.textAlign = 'center';
-          // No overflow:hidden per-span — wide random chars bleed naturally;
-          // the h4's overflow:hidden handles the outer edges.
-        });
-
         var wordIdx = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
@@ -1084,8 +1069,6 @@
           setTimeout(function tick() {
             if (Date.now() - startTime >= landAt) {
               c.span.textContent = c.final;
-              c.span.style.width     = '';
-              c.span.style.textAlign = '';
               if (!c.ipa) c.span.classList.remove('is-ipa-char');
               c.span.classList.remove('is-cycling');
             } else {
