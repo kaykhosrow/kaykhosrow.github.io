@@ -508,7 +508,7 @@
     </div>
 
     <main>
-      <div class="col-12" data-bs-spy="scroll" data-bs-target="#navigation">
+      <div class="col-12">
 
         
         <section id="home" class="hero container">
@@ -1295,6 +1295,35 @@
         gsap.set('.img-wrapper', { clearProps: 'all' });
       }
     });
+    </script>
+
+    <script>
+    (function () {
+      var sections = ['home','about','research','teaching','conferences','code','gallery','contact'];
+      var offset = 0.35;
+
+      function getActive() {
+        var mid = window.innerHeight * offset;
+        var active = sections[0];
+        sections.forEach(function(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          if (el.getBoundingClientRect().top <= mid) active = id;
+        });
+        return active;
+      }
+
+      function update() {
+        var active = getActive();
+        document.querySelectorAll('#navigation ul .nav-link a').forEach(function(a) {
+          var href = a.getAttribute('href');
+          a.classList.toggle('active', href === '#' + active);
+        });
+      }
+
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
     </script>
 
     <script>
