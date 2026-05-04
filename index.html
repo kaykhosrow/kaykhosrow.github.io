@@ -3,21 +3,32 @@
   <head>
     <script>
       history.scrollRestoration = 'manual';
-      if (!location.hash) {
-        window.scrollTo(0, 0);
-        window.addEventListener('load', function() {
-          var ST = window.gsap && window.gsap.core && window.gsap.core.globals().ScrollTrigger;
-          if (ST) ST.clearScrollMemory();
-          window.scrollTo(0, 0);
-        });
-      }
-    </script>
-    <script>
+
+      // Strip hash after any in-page nav click so refresh never sees a hash
+      window.addEventListener('hashchange', function() {
+        history.replaceState(null, '', location.pathname);
+      });
+
       window.addEventListener('pageshow', function() {
-        if (location.hash) {
+        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        var isReload = nav ? nav.type === 'reload' : false;
+
+        if (location.hash && !isReload) {
+          // Navigated here from a subpage with a hash — scroll to that section
           var target = document.querySelector(location.hash);
           if (target) target.scrollIntoView();
+          history.replaceState(null, '', location.pathname);
+        } else {
+          // Reload or no hash — go to top and clear any stale hash
+          history.replaceState(null, '', location.pathname);
+          window.scrollTo(0, 0);
         }
+      });
+
+      // Clear GSAP scroll memory so it doesn't restore a previous position
+      window.addEventListener('load', function() {
+        var ST = window.gsap && window.gsap.core && window.gsap.core.globals().ScrollTrigger;
+        if (ST) ST.clearScrollMemory();
       });
     </script>
     
