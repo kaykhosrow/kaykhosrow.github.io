@@ -1107,9 +1107,16 @@
         h4.style.transitionDuration = origCycleMs + 'ms';
         h4.classList.remove('is-ipa');
         splitFlapTo(origText);
+        // Spread the name chars evenly across ipaWidthPx so nothing condenses
+        h4.style.display        = 'inline-flex';
+        h4.style.justifyContent = 'space-between';
+        h4.querySelectorAll('span').forEach(function (s) { s.style.marginRight = '0'; });
         setTimeout(function () {
           isAnimating = false;
-          h4.style.textAlign = '';   // restore left-anchor once name has settled
+          // Restore normal inline-block layout once name has settled
+          h4.style.display        = 'inline-block';
+          h4.style.justifyContent = '';
+          h4.querySelectorAll('span').forEach(function (s) { s.style.marginRight = ''; });
         }, origCycleMs);
       }
 
@@ -1118,17 +1125,15 @@
         if (!showingIpa) {
           showingIpa = true;
           isAnimating = true;
+          // Ensure we're back to normal block layout before forward animation
+          h4.style.display        = 'inline-block';
+          h4.style.justifyContent = '';
           h4.style.minWidth = ipaWidthPx + 'px';
           h4.style.maxWidth = ipaWidthPx + 'px';
-          h4.style.textAlign = '';
           h4.style.transitionDuration = ipaCycleMs + 'ms';
           h4.classList.add('is-ipa');
           splitFlapTo(ipaText);
-          // After IPA is fully revealed, switch to right-anchor for the reverse
-          setTimeout(function () {
-            isAnimating = false;
-            h4.style.textAlign = 'center';
-          }, ipaCycleMs);
+          setTimeout(function () { isAnimating = false; }, ipaCycleMs);
         } else {
           revertToOriginal();
         }
