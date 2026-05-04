@@ -91,7 +91,7 @@
             <h2>CONFERENCES</h2>
           </div>
 
-          <a class="back-link" id="backLink">
+          <a class="back-link" href="https://kaykhosrow.github.io/index.html#conferences">
             <i class="ph ph-arrow-left"></i> Back
           </a>
 
@@ -137,16 +137,6 @@
     <button class="ltr" style="display:none" aria-hidden="true"></button>
     <button class="rtl" style="display:none" aria-hidden="true"></button>
 
-    <script>
-      document.getElementById('backLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (history.length > 1) {
-          history.back();
-        } else {
-          window.location.href = 'index.html';
-        }
-      });
-    </script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         var btn = document.querySelector('.nav-icon');
