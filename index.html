@@ -3,7 +3,10 @@
   <head>
     <script>
       history.scrollRestoration = 'manual';
-      if (!location.hash) window.scrollTo(0, 0);
+      if (!location.hash) {
+        window.scrollTo(0, 0);
+        window.addEventListener('load', function() { window.scrollTo(0, 0); });
+      }
     </script>
     <script>
       window.addEventListener('pageshow', function() {
