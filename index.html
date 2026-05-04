@@ -1128,9 +1128,9 @@
       // Same-case random char — keeps width variation small without any scaling.
       function randChar(finalCh) {
         var pool = (finalCh >= 'A' && finalCh <= 'Z')
-          ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+          ? 'ABCDEFGHJKLMNOPQRSTUVWXYZ'
           : 'abcdefghijklmnopqrstuvwxyz';
-        return pool[Math.floor(Math.random() * 26)];
+        return pool[Math.floor(Math.random() * pool.length)];
       }
 
       function init() {
@@ -1221,9 +1221,9 @@
 
       function randChar(finalCh) {
         var pool = (finalCh >= 'A' && finalCh <= 'Z')
-          ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+          ? 'ABCDEFGHJKLMNOPQRSTUVWXYZ'
           : 'abcdefghijklmnopqrstuvwxyz';
-        return pool[Math.floor(Math.random() * 26)];
+        return pool[Math.floor(Math.random() * pool.length)];
       }
 
       function lockWidth() {
