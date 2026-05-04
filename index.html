@@ -277,9 +277,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        align-self: stretch;
         padding: 0 16px 0 20px;
         flex-shrink: 0;
-        border-radius: 4px;
+        cursor: pointer;
         transition: background 0.25s ease;
       }
       .nav-arrow-wrap:hover {
@@ -288,11 +289,9 @@
       .nav-arrow-btn {
         width: 32px;
         height: 32px;
-        border-radius: 50%;
         border: none;
         background: transparent;
         color: rgb(var(--black));
-        transition: color 0.25s ease;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -301,8 +300,10 @@
         position: relative;
         flex-shrink: 0;
         padding: 0;
+        transition: color 0.25s ease;
       }
-      .nav-arrow-wrap:hover .nav-arrow-btn {
+      .nav-arrow-wrap:hover .nav-arrow-btn,
+      .nav-arrow-wrap:hover .nav-arr {
         color: #fff;
       }
 
