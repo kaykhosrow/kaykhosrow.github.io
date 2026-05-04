@@ -1102,8 +1102,8 @@
         if (!showingIpa || isAnimating) return;
         showingIpa = false;
         isAnimating = true;
-        h4.style.minWidth = origWidthPx + 'px';
-        h4.style.maxWidth = origWidthPx + 'px';
+        h4.style.minWidth = ipaWidthPx + 'px';
+        h4.style.maxWidth = ipaWidthPx + 'px';
         h4.style.transitionDuration = origCycleMs + 'ms';
         h4.classList.remove('is-ipa');
         splitFlapTo(origText);
