@@ -1186,7 +1186,85 @@
       // Animate on first load
       window.addEventListener('load', function() {
         lockWidth();
-        setTimeout(function() { splitFlapTo('Down'); }, 300);
+
+        // Animate each nav link text with staggered split-flap on load
+        var NAVCHARS = 'ABCDEFGHJKLMNOPQRSTUVWXYZ';
+        var navItems = document.querySelectorAll('#navigation ul .nav-link a .text');
+        navItems.forEach(function(el, i) {
+          var original = el.textContent.trim();
+          // Lock the element width so it never shifts
+          el.style.display = 'inline-block';
+          el.style.whiteSpace = 'nowrap';
+          el.style.minWidth = el.offsetWidth + 'px';
+
+          setTimeout(function() {
+            var chars = original.split('').map(function(ch) {
+              var span = document.createElement('span');
+              span.style.display = 'inline-block';
+              span.textContent = NAVCHARS[Math.floor(Math.random() * NAVCHARS.length)];
+              return { span: span, final: ch };
+            });
+            el.innerHTML = '';
+            chars.forEach(function(c) { el.appendChild(c.span); });
+
+            var wIdx = 0;
+            chars.forEach(function(c) {
+              var delayBase = wIdx * stagger;
+              var landAt = delayBase + flipCount * flipSpeed;
+              wIdx++;
+              c.span.classList.add('is-cycling');
+              var startTime = Date.now();
+              setTimeout(function tick() {
+                if (Date.now() - startTime >= landAt) {
+                  c.span.textContent = c.final;
+                  c.span.classList.remove('is-cycling');
+                } else {
+                  c.span.textContent = NAVCHARS[Math.floor(Math.random() * NAVCHARS.length)];
+                  setTimeout(tick, flipSpeed);
+                }
+              }, delayBase % flipSpeed);
+            });
+          }, 300 + i * 120);
+        });
+
+        // Animate full "Scroll Down" phrase on load
+        var navTotalDelay = 300 + navItems.length * 120;
+        setTimeout(function() {
+          var fullText = 'Scroll Down';
+          var chars = fullText.split('').map(function(ch) {
+            var span = document.createElement('span');
+            span.style.cssText = ch === ' '
+              ? 'display:inline-block;width:0.35em;'
+              : 'display:inline-block;width:' + getCharWidth(ch) + 'px;text-align:center;';
+            span.textContent = ch === ' ' ? '\u00a0' : CHARS[Math.floor(Math.random() * CHARS.length)];
+            return { span: span, final: ch };
+          });
+          p.innerHTML = '';
+          chars.forEach(function(c) { p.appendChild(c.span); });
+
+          var wIdx = 0;
+          chars.forEach(function(c) {
+            if (c.final === ' ') return;
+            var delayBase = wIdx * stagger;
+            var landAt = delayBase + flipCount * flipSpeed;
+            wIdx++;
+            c.span.classList.add('is-cycling');
+            var startTime = Date.now();
+            setTimeout(function tick() {
+              if (Date.now() - startTime >= landAt) {
+                c.span.textContent = c.final;
+                c.span.classList.remove('is-cycling');
+              } else {
+                c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+                setTimeout(tick, flipSpeed);
+              }
+            }, delayBase % flipSpeed);
+          });
+
+          // After full phrase lands, switch to the standard layout (static "Scroll " + word spans)
+          var totalMs = (fullText.replace(' ', '').length - 1) * stagger + flipCount * flipSpeed;
+          setTimeout(function() { renderFinal('Down'); }, totalMs + 50);
+        }, navTotalDelay);
       });
 
       function setUp() {
