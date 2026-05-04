@@ -1187,7 +1187,7 @@
             a.classList.toggle('active', a.getAttribute('href') === '#contact' && entries[0].isIntersecting);
           });
           if (!entries[0].isIntersecting) update();
-        }, { threshold: 0.25 }).observe(contactEl);
+        }, { threshold: 0.5 }).observe(contactEl);
       }
 
     })();
