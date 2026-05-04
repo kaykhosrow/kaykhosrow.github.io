@@ -1118,35 +1118,14 @@
     </script>
 
     <!-- Nav link vestaboard — fires on page load.
-         Measures every letter's rendered width once (matching the nav font),
-         then scales each random char to fill its slot exactly via scaleX.
-         No clipping, no overflow bleed, no darker edges at slot boundaries. -->
+         Only textContent changes per tick (no transforms, no style mutations)
+         which eliminates GPU compositing flashes. The parent <a> min-width is
+         locked before touching anything so the nav bar never reflows or twitches. -->
     <script>
     (function () {
       var stagger = 52, flipSpeed = 40, flipCount = 13;
 
-      function buildCharMap(refEl) {
-        var cs    = window.getComputedStyle(refEl);
-        var probe = document.createElement('span');
-        probe.setAttribute('aria-hidden', 'true');
-        probe.style.cssText       = 'position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap;';
-        probe.style.fontFamily    = cs.fontFamily;
-        probe.style.fontSize      = cs.fontSize;
-        probe.style.fontWeight    = cs.fontWeight;
-        probe.style.fontStyle     = cs.fontStyle;
-        probe.style.letterSpacing = cs.letterSpacing;
-        probe.style.textTransform = cs.textTransform;
-        document.body.appendChild(probe);
-        var map = {};
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('').forEach(function (ch) {
-          probe.textContent = ch;
-          map[ch] = probe.offsetWidth || 1;
-        });
-        document.body.removeChild(probe);
-        return map;
-      }
-
-      // Same-case random char keeps width ratios sensible and scaleX distortion minimal.
+      // Same-case random char — keeps width variation small without any scaling.
       function randChar(finalCh) {
         var pool = (finalCh >= 'A' && finalCh <= 'Z')
           ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -1158,45 +1137,48 @@
         var els = Array.from(document.querySelectorAll('#navigation ul .nav-link a .text'));
         if (!els.length) return;
 
-        var charMap = buildCharMap(els[0]);
+        // Lock every <a> parent's min-width BEFORE touching the DOM so no
+        // ancestor ever reflows during animation — stops the nav twitching.
+        els.forEach(function (el) {
+          var a = el.parentElement;
+          if (a) a.style.minWidth = a.offsetWidth + 'px';
+        });
 
-        // PHASE 1: build all spans with final chars (batch writes)
+        // PHASE 1: build spans with final chars (batch writes)
         var elData = els.map(function (el) {
           var text = el.textContent.trim();
           el.innerHTML        = '';
-          el.style.display    = 'inline-block';
           el.style.whiteSpace = 'nowrap';
           var chars = text.split('').map(function (ch) {
             var s = document.createElement('span');
-            s.style.display         = 'inline-block';
-            s.style.transformOrigin = '50% 50%';
-            s.textContent = ch;
+            s.style.display = 'inline-block';
+            s.textContent   = ch;
             el.appendChild(s);
             return { span: s, final: ch };
           });
           return { el: el, chars: chars };
         });
 
-        // PHASE 2: batch-read all final widths (one reflow total)
+        // PHASE 2: batch-read all slot widths (one reflow)
         var allWidths = elData.map(function (d) {
           return d.chars.map(function (c) { return c.span.offsetWidth; });
         });
 
-        // PHASE 3: lock slots, scramble with scaleX-fitted chars, animate — all in rAF
+        // PHASE 3: lock slots, scramble, animate — all in one rAF
         requestAnimationFrame(function () {
           elData.forEach(function (d, i) {
             var widths = allWidths[i];
 
+            // Fix slot width; center the char; overflow stays visible (default)
+            // so chars render naturally with no clipping or scaling.
             d.chars.forEach(function (c, j) {
-              var fw  = widths[j];
-              var rch = randChar(c.final);
-              c.span.style.width     = fw + 'px';
-              c.span.style.transform = 'scaleX(' + (fw / (charMap[rch] || fw)) + ')';
-              c.span.textContent     = rch;
+              c.span.style.width     = widths[j] + 'px';
+              c.span.style.textAlign = 'center';
+              c.span.textContent     = randChar(c.final);
             });
 
+            // Animate — only textContent changes inside the tick.
             d.chars.forEach(function (c, idx) {
-              var fw           = widths[idx];
               var delayBase    = idx * stagger;
               var initialDelay = delayBase % flipSpeed;
               var landAt       = delayBase + flipCount * flipSpeed;
@@ -1204,13 +1186,10 @@
               var startTime = Date.now();
               setTimeout(function tick() {
                 if (Date.now() - startTime >= landAt) {
-                  c.span.style.transform = '';
-                  c.span.textContent     = c.final;
+                  c.span.textContent = c.final;
                   c.span.classList.remove('is-cycling');
                 } else {
-                  var rch = randChar(c.final);
-                  c.span.style.transform = 'scaleX(' + (fw / (charMap[rch] || fw)) + ')';
-                  c.span.textContent     = rch;
+                  c.span.textContent = randChar(c.final);
                   setTimeout(tick, flipSpeed);
                 }
               }, initialDelay);
@@ -1227,7 +1206,7 @@
     })();
     </script>
 
-    <!-- Scroll-down vestaboard — same scaleX + font-measurement approach as nav links. -->
+    <!-- Scroll-down vestaboard — only textContent changes per tick, no transforms. -->
     <script>
     (function () {
       var stagger = 52, flipSpeed = 40, flipCount = 13;
@@ -1237,28 +1216,8 @@
 
       var animating = false;
       var showingUp = false;
-      var charMap   = {};
 
       p.style.whiteSpace = 'nowrap';
-
-      function buildCharMap() {
-        var cs    = window.getComputedStyle(p);
-        var probe = document.createElement('span');
-        probe.setAttribute('aria-hidden', 'true');
-        probe.style.cssText       = 'position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap;';
-        probe.style.fontFamily    = cs.fontFamily;
-        probe.style.fontSize      = cs.fontSize;
-        probe.style.fontWeight    = cs.fontWeight;
-        probe.style.fontStyle     = cs.fontStyle;
-        probe.style.letterSpacing = cs.letterSpacing;
-        probe.style.textTransform = cs.textTransform;
-        document.body.appendChild(probe);
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('').forEach(function (ch) {
-          probe.textContent = ch;
-          charMap[ch] = probe.offsetWidth || 1;
-        });
-        document.body.removeChild(probe);
-      }
 
       function randChar(finalCh) {
         var pool = (finalCh >= 'A' && finalCh <= 'Z')
@@ -1284,7 +1243,7 @@
         if (animating) return;
         animating = true;
 
-        // Build spans with final chars for accurate width measurement.
+        // Build spans with final chars so slot widths are measured correctly.
         p.innerHTML = '';
         var chars = text.split('').map(function (ch) {
           var span = document.createElement('span');
@@ -1293,32 +1252,27 @@
             span.style.minWidth = '0.35em';
             span.textContent    = '\u00a0';
           } else {
-            span.style.transformOrigin = '50% 50%';
             span.textContent = ch;
           }
           p.appendChild(span);
           return { span: span, final: ch, space: ch === ' ' };
         });
 
-        // Batch-read final widths (one reflow).
+        // Batch-read widths (one reflow), then lock slots and scramble.
         var widths = chars.map(function (c) { return c.space ? null : c.span.offsetWidth; });
 
-        // Lock slots + scramble with scaleX-fitted chars (batch writes).
         chars.forEach(function (c, i) {
           if (!c.space) {
-            var fw  = widths[i];
-            var rch = randChar(c.final);
-            c.span.style.width     = fw + 'px';
-            c.span.style.transform = 'scaleX(' + (fw / (charMap[rch] || fw)) + ')';
-            c.span.textContent     = rch;
+            c.span.style.width     = widths[i] + 'px';
+            c.span.style.textAlign = 'center';
+            c.span.textContent     = randChar(c.final);
           }
         });
 
-        // Animate each char back.
+        // Animate — only textContent changes inside the tick.
         var wordIdx = 0;
         chars.forEach(function (c, i) {
           if (c.space) { wordIdx = 0; return; }
-          var fw           = widths[i];
           var delayBase    = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
           var landAt       = delayBase + flipCount * flipSpeed;
@@ -1327,19 +1281,15 @@
           var startTime = Date.now();
           setTimeout(function tick() {
             if (Date.now() - startTime >= landAt) {
-              c.span.style.transform = '';
-              c.span.textContent     = c.final;
+              c.span.textContent = c.final;
               c.span.classList.remove('is-cycling');
             } else {
-              var rch = randChar(c.final);
-              c.span.style.transform = 'scaleX(' + (fw / (charMap[rch] || fw)) + ')';
-              c.span.textContent     = rch;
+              c.span.textContent = randChar(c.final);
               setTimeout(tick, flipSpeed);
             }
           }, initialDelay);
         });
 
-        // "Scroll" (6 chars) governs total duration.
         var totalMs = 5 * stagger + flipCount * flipSpeed;
         setTimeout(function () { animating = false; }, totalMs);
       }
@@ -1359,11 +1309,9 @@
       }
 
       function init() {
-        buildCharMap();
         lockWidth();
         if (document.fonts && document.fonts.ready) {
           document.fonts.ready.then(function () {
-            buildCharMap();
             lockWidth();
             splitFlapTo('Scroll Down');
           });
