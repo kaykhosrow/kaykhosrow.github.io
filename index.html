@@ -1052,8 +1052,28 @@
         document.fonts.ready.then(lockWidth);
       }
 
+      // Measure the pixel width of each character in targetText as it will finally render.
+      function measureCharWidths(targetText) {
+        var savedHTML = h4.innerHTML;
+        var chars = paint(targetText, true);
+        var widths = chars.map(function (c) {
+          return c.space ? null : c.span.getBoundingClientRect().width;
+        });
+        h4.innerHTML = savedHTML;
+        return widths;
+      }
+
       function splitFlapTo(targetText) {
-        var chars = paint(targetText, false);
+        // Lock each span to its final character's width so nothing shifts during cycling.
+        var widths = measureCharWidths(targetText);
+        var chars  = paint(targetText, false);
+        chars.forEach(function (c, i) {
+          if (!c.space && widths[i]) {
+            c.span.style.width      = widths[i] + 'px';
+            c.span.style.textAlign  = 'center';
+            c.span.style.overflow   = 'hidden';
+          }
+        });
         var wordIdx = 0;
         chars.forEach(function (c) {
           if (c.space) { wordIdx = 0; return; }
@@ -1066,6 +1086,10 @@
           setTimeout(function tick() {
             if (Date.now() - startTime >= landAt) {
               c.span.textContent = c.final;
+              // Remove locked width so the final char renders at its natural width.
+              c.span.style.width     = '';
+              c.span.style.textAlign = '';
+              c.span.style.overflow  = '';
               if (!c.ipa) c.span.classList.remove('is-ipa-char');
               c.span.classList.remove('is-cycling');
             } else {
