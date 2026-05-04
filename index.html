@@ -325,23 +325,6 @@
         animation: navBounceUp 1.4s ease-in-out infinite;
       }
 
-
-      /* ── Hero name glitch effect ─────────────────────────────────────── */
-      @keyframes freelancerGlitch {
-        0%   { transform: none; }
-        16%  { transform: translate(-2px, 0) skewX(-0.8deg); }
-        33%  { transform: translate(2px, 0)  skewX( 0.5deg); }
-        50%  { transform: translate(-1px, 0); }
-        66%  { transform: translate( 1px, 0) skewX(-0.3deg); }
-        83%  { transform: translate(-1px, 0); }
-        100% { transform: none; }
-      }
-      .freelancer.glitching {
-        animation: freelancerGlitch 0.07s steps(1) infinite;
-      }
-      .freelancer.glitching span {
-        text-shadow: 1.5px 0 rgba(255,30,80,0.7), -1.5px 0 rgba(0,200,240,0.7);
-      }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -1005,124 +988,153 @@
     })();
     </script>
 
-    <!-- Hero name glitch animation -->
+    <!-- IPA name animation — unchanged -->
     <script>
     (function () {
       var h4 = document.querySelector('h4.freelancer[data-ipa]');
       if (!h4) return;
 
-      var GLITCH =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' +
-        '0123456789!@#$%^&*<>/|\\';
+      var CHARS     =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+        'abcdefghijklmnopqrstuvwxyz' +
+        '0123456789$€£#@%&?!';
+      var stagger   = 44;
+      var flipSpeed = 50;
+      var flipCount = 5;
 
-      var origText   = h4.dataset.original;
-      var ipaText    = h4.dataset.ipa;
-      var ipaWidthPx = 0;
-      var showingIpa = false;
-      var isAnimating = false;
+      var origText = h4.dataset.original;
+      var ipaText  = h4.dataset.ipa;
 
-      function rnd() {
-        return GLITCH[Math.floor(Math.random() * GLITCH.length)];
-      }
-
-      function buildSpans(text, useFinal) {
+      function paint(text, useFinal) {
         h4.innerHTML = '';
-        return text.split('').map(function (ch) {
+        var isIpaTarget = (text === ipaText);
+        var allChars    = text.split('');
+        return allChars.map(function (ch, i) {
           var span = document.createElement('span');
           span.style.display = 'inline-block';
-          span.classList.add('is-ipa-char');
+          if (!useFinal || isIpaTarget) {
+            span.classList.add('is-ipa-char');
+          }
+          if (!isIpaTarget) {
+            var nextCh = allChars[i + 1];
+            if (ch && ch.toLowerCase() === 'a' &&
+                nextCh && nextCh.toLowerCase() === 'y') {
+              span.classList.add('tight-right');
+            }
+          }
           if (ch === ' ') {
             span.style.minWidth = '0.35em';
-            span.textContent    = '\u00a0';
+            span.textContent    = ' ';
           } else {
-            span.textContent = useFinal ? ch : rnd();
+            span.textContent = useFinal
+              ? ch
+              : CHARS[Math.floor(Math.random() * CHARS.length)];
           }
           h4.appendChild(span);
-          return { span: span, final: ch, space: ch === ' ' };
+          return { span: span, final: ch, space: ch === ' ', ipa: isIpaTarget };
         });
       }
+
+      var ipaWidthPx = 0, origWidthPx = 0;
 
       function lockWidth() {
         h4.style.display    = 'inline-block';
         h4.style.whiteSpace = 'nowrap';
-        buildSpans(ipaText, true);
-        ipaWidthPx        = h4.getBoundingClientRect().width;
-        h4.style.width    = ipaWidthPx + 'px';
-        h4.style.overflow = 'hidden';
-        buildSpans(origText, true);
+        paint(ipaText, true);
+        ipaWidthPx = h4.getBoundingClientRect().width;
+        paint(origText, true);
+        origWidthPx = h4.getBoundingClientRect().width;
+        h4.style.minWidth = ipaWidthPx + 'px';
+        h4.style.maxWidth = ipaWidthPx + 'px';
+        h4.style.overflow  = 'hidden';
         h4.style.visibility = 'visible';
       }
+
       lockWidth();
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(lockWidth);
       }
 
-      function glitchTo(targetText) {
-        var duration = 300;   // total ms
-        var tickRate = 35;    // ms per frame
-        var start    = Date.now();
-        var spans    = buildSpans(targetText, false);
-
-        // Each non-space char gets a random resolve threshold: 40–100 % through
-        spans.forEach(function (c) {
-          c.resolveAt = c.space ? 0 : (0.40 + Math.random() * 0.60);
+      function splitFlapTo(targetText) {
+        var chars = paint(targetText, false);
+        var wordIdx = 0;
+        chars.forEach(function (c) {
+          if (c.space) { wordIdx = 0; return; }
+          var delayBase    = wordIdx * stagger;
+          var initialDelay = delayBase % flipSpeed;
+          var landAt       = delayBase + flipCount * flipSpeed;
+          wordIdx++;
+          c.span.classList.add('is-cycling');
+          var startTime = Date.now();
+          setTimeout(function tick() {
+            if (Date.now() - startTime >= landAt) {
+              c.span.textContent = c.final;
+              if (!c.ipa) c.span.classList.remove('is-ipa-char');
+              c.span.classList.remove('is-cycling');
+            } else {
+              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+              setTimeout(tick, flipSpeed);
+            }
+          }, initialDelay);
         });
+      }
 
-        h4.classList.add('glitching');
-
-        function tick() {
-          var progress = (Date.now() - start) / duration;
-          spans.forEach(function (c) {
-            if (c.space) return;
-            c.span.textContent = (progress >= c.resolveAt) ? c.final : rnd();
-          });
-          if (progress >= 1) {
-            spans.forEach(function (c) { if (!c.space) c.span.textContent = c.final; });
-            h4.classList.remove('glitching');
-            isAnimating = false;
-            return;
+      function computeCycleMs(text) {
+        var maxWord = 0, w = 0;
+        for (var i = 0; i < text.length; i++) {
+          if (text.charAt(i) === ' ') {
+            if (w > maxWord) maxWord = w;
+            w = 0;
+          } else {
+            w++;
           }
-          setTimeout(tick, tickRate);
         }
-        setTimeout(tick, tickRate);
+        if (w > maxWord) maxWord = w;
+        return (maxWord - 1) * stagger + flipCount * flipSpeed;
+      }
+      var ipaCycleMs  = computeCycleMs(ipaText);
+      var origCycleMs = computeCycleMs(origText);
+
+      var showingIpa  = false;
+      var isAnimating = false;
+
+      function revertToOriginal() {
+        if (!showingIpa || isAnimating) return;
+        showingIpa = false;
+        isAnimating = true;
+        h4.style.minWidth = origWidthPx + 'px';
+        h4.style.maxWidth = origWidthPx + 'px';
+        h4.style.transitionDuration = origCycleMs + 'ms';
+        h4.classList.remove('is-ipa');
+        splitFlapTo(origText);
+        setTimeout(function () { isAnimating = false; }, origCycleMs);
       }
 
       h4.addEventListener('click', function () {
         if (isAnimating) return;
-        isAnimating = true;
         if (!showingIpa) {
           showingIpa = true;
+          isAnimating = true;
+          h4.style.minWidth = ipaWidthPx + 'px';
+          h4.style.maxWidth = ipaWidthPx + 'px';
+          h4.style.transitionDuration = ipaCycleMs + 'ms';
           h4.classList.add('is-ipa');
-          glitchTo(ipaText);
+          splitFlapTo(ipaText);
+          setTimeout(function () { isAnimating = false; }, ipaCycleMs);
         } else {
-          showingIpa = false;
-          h4.classList.remove('is-ipa');
-          glitchTo(origText);
+          revertToOriginal();
         }
       });
 
       window.addEventListener('scroll', function () {
-        if (showingIpa && !isAnimating && window.scrollY > 40) {
-          isAnimating = true;
-          showingIpa  = false;
-          h4.classList.remove('is-ipa');
-          glitchTo(origText);
+        if (showingIpa && window.scrollY > 40) {
+          revertToOriginal();
         }
       }, { passive: true });
 
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', function () {
-          if (showingIpa && !isAnimating) {
-            isAnimating = true;
-            showingIpa  = false;
-            h4.classList.remove('is-ipa');
-            glitchTo(origText);
-          }
-        });
+        link.addEventListener('click', revertToOriginal);
       });
-    })();
-    </script>
-
     })();
     </script>
 
