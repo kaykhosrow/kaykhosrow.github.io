@@ -278,14 +278,15 @@
         align-items: center;
         justify-content: center;
         align-self: stretch;
-        padding: 0 26px 0 22px;
+        padding: 0 22px 0 28px;
         flex-shrink: 0;
         cursor: pointer;
+        position: relative;
       }
 
       .nav-arrow-btn {
-        width: 100%;
-        align-self: stretch;
+        position: absolute;
+        inset: 0;
         border: none;
         background: transparent;
         color: rgb(var(--black));
@@ -294,8 +295,6 @@
         align-items: center;
         justify-content: center;
         font-size: 1.25rem;
-        position: relative;
-        flex-shrink: 0;
         padding: 0;
       }
 
