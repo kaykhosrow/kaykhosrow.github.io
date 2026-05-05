@@ -1214,7 +1214,7 @@
           var target = document.getElementById('contact');
           var nav    = document.getElementById('navigation');
           if (!target) return;
-          var offset = (nav ? nav.offsetHeight : 60) + 24;
+          var offset = (nav ? nav.offsetHeight : 60) - 24;
           var top = target.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
