@@ -153,8 +153,9 @@
       #research .service-swiper .service-card { height: 100%; width: 100%; }
       #research .service-list li { display: block !important; }
       #research .service-card { position: relative; }
+      section { scroll-margin-top: 60px; }
       #research { scroll-margin-top: 100px; }
-      #teaching { scroll-margin-top: 50px; }
+      #teaching { scroll-margin-top: 60px; }
 
       .card-full-link { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
       .research-sub-heading { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; opacity: 0.55; margin-bottom: 1.25rem; margin-top: 0; }
@@ -1205,7 +1206,19 @@
           var target = document.getElementById('about');
           var nav    = document.getElementById('navigation');
           if (!target) return;
-          var offset = window.scrollY < 1 ? 0 : (nav ? nav.offsetHeight : 60);
+          var offset = nav ? nav.offsetHeight : 60;
+          var top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        });
+      });
+
+      document.querySelectorAll('a[href="#contact"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          var target = document.getElementById('contact');
+          var nav    = document.getElementById('navigation');
+          if (!target) return;
+          var offset = nav ? nav.offsetHeight : 60;
           var top = target.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
