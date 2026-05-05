@@ -153,9 +153,8 @@
       #research .service-swiper .service-card { height: 100%; width: 100%; }
       #research .service-list li { display: block !important; }
       #research .service-card { position: relative; }
-      section { scroll-margin-top: 60px; }
       #research { scroll-margin-top: 100px; }
-      #teaching { scroll-margin-top: 60px; }
+      #teaching { scroll-margin-top: 50px; }
 
       .card-full-link { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
       .research-sub-heading { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; opacity: 0.55; margin-bottom: 1.25rem; margin-top: 0; }
@@ -1174,7 +1173,6 @@
       }
 
       function update() {
-        if (window._contactVisible) return;
         var active = getActive();
         document.querySelectorAll('#navigation ul .nav-link a').forEach(function(a) {
           var href = a.getAttribute('href');
@@ -1184,17 +1182,6 @@
 
       window.addEventListener('scroll', update, { passive: true });
       update();
-
-      var contactEl = document.getElementById('contact');
-      if (contactEl) {
-        new IntersectionObserver(function (entries) {
-          window._contactVisible = entries[0].isIntersecting;
-          document.querySelectorAll('#navigation ul .nav-link a').forEach(function (a) {
-            a.classList.toggle('active', a.getAttribute('href') === '#contact' && entries[0].isIntersecting);
-          });
-          if (!entries[0].isIntersecting) update();
-        }, { threshold: 0.5 }).observe(contactEl);
-      }
     })();
     </script>
 
@@ -1206,21 +1193,35 @@
           var target = document.getElementById('about');
           var nav    = document.getElementById('navigation');
           if (!target) return;
-          var offset = nav ? nav.offsetHeight : 60;
+          var offset = window.scrollY < 1 ? 0 : (nav ? nav.offsetHeight : 60);
           var top = target.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
       });
 
+      function scrollToBottomClean() {
+        var getBottom = function () {
+          return document.documentElement.scrollHeight - window.innerHeight;
+        };
+        window.scrollTo({ top: getBottom(), behavior: 'smooth' });
+        var timeout;
+        var onScroll = function () {
+          clearTimeout(timeout);
+          timeout = setTimeout(function () {
+            window.scrollTo({ top: getBottom(), behavior: 'auto' });
+            window.removeEventListener('scroll', onScroll);
+            history.replaceState(null, '', window.location.pathname);
+          }, 120);
+        };
+        window.addEventListener('scroll', onScroll);
+      }
+
       document.querySelectorAll('a[href="#contact"]').forEach(function (link) {
         link.addEventListener('click', function (e) {
           e.preventDefault();
-          // Instant scroll — smooth gets cancelled by the nav bottom→top CSS transition
-          window.scrollTo(0, document.documentElement.scrollHeight - window.innerHeight);
-          history.replaceState(null, '', window.location.pathname);
+          scrollToBottomClean();
         });
       });
-
     })();
     </script>
     <script>
