@@ -260,8 +260,6 @@
 
       .freelancer { position: relative; white-space: nowrap; transition: opacity 0.7s ease; cursor: pointer; user-select: none; opacity: 1 !important; transform: none !important; animation: none !important; visibility: hidden; }
       .freelancer.is-ipa { opacity: 0.5 !important; }
-      .freelancer::after { content: ''; position: absolute; top: 0; right: 0; width: 14%; height: 100%; background: linear-gradient(to right, transparent, rgb(var(--primary))); opacity: 0; pointer-events: none; transition: opacity 0.18s ease; }
-      .freelancer.reveal-fading::after { opacity: 1; }
       .freelancer span { display: inline-block; margin-right: 0.05em; transition: filter 0.05s ease-out; }
       .freelancer span:last-child { margin-right: 0; }
       .freelancer span.tight-right { margin-right: -0.04em; }
@@ -1121,12 +1119,8 @@
           h4.style.maxWidth = ipaWidthPx + 'px';
           h4.style.transitionDuration = ipaCycleMs + 'ms';
           h4.classList.add('is-ipa');
-          h4.classList.add('reveal-fading');
           splitFlapTo(ipaText);
-          setTimeout(function () {
-            isAnimating = false;
-            h4.classList.remove('reveal-fading');
-          }, ipaCycleMs);
+          setTimeout(function () { isAnimating = false; }, ipaCycleMs);
         } else {
           revertToOriginal();
         }
@@ -1173,6 +1167,7 @@
       }
 
       function update() {
+        if (window._contactVisible) return; // observer handles it
         var active = getActive();
         document.querySelectorAll('#navigation ul .nav-link a').forEach(function(a) {
           var href = a.getAttribute('href');
@@ -1182,6 +1177,19 @@
 
       window.addEventListener('scroll', update, { passive: true });
       update();
+
+      // IntersectionObserver for contact — takes priority over scroll logic
+      var contactEl = document.getElementById('contact');
+      if (contactEl) {
+        new IntersectionObserver(function (entries) {
+          window._contactVisible = entries[0].isIntersecting;
+          document.querySelectorAll('#navigation ul .nav-link a').forEach(function (a) {
+            a.classList.toggle('active', a.getAttribute('href') === '#contact' && entries[0].isIntersecting);
+          });
+          if (!entries[0].isIntersecting) update();
+        }, { threshold: 0.5 }).observe(contactEl);
+      }
+
     })();
     </script>
 
@@ -1196,6 +1204,13 @@
           var offset = window.scrollY < 1 ? 0 : (nav ? nav.offsetHeight : 60);
           var top = target.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top: top, behavior: 'smooth' });
+        });
+      });
+
+      document.querySelectorAll('a[href="#contact"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelector('footer').scrollIntoView({ behavior: 'smooth', block: 'end' });
         });
       });
     })();
