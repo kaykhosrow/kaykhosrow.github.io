@@ -323,18 +323,16 @@
       #about.section { margin-top: 100px; }
       #contact.section { margin-bottom: 100px; }
 
-      /* ── Pronunciation reveal ─────────────────────────────────────────── */
+      /* ── Per-word pronunciation reveal ───────────────────────────────── */
 
-      /* ── Per-word pronunciation reveal ───────────────────────────── */
-
-      /* Flex row so each word is independent with the same gap as
-         the natural word-space between them */
+      /* Flex row — gap matches the natural word-space of the original h4 */
       #heroNameWrap {
         display: flex;
         gap: 0.3em;
         align-items: flex-start;
       }
 
+      /* Each word is an independent clickable column */
       .name-word {
         cursor: pointer;
         user-select: none;
@@ -342,7 +340,7 @@
         flex-shrink: 0;
       }
 
-      /* Hide: slight delay (0.1s) so pron starts fading before name returns */
+      /* Hide: 0.1s delay so pron starts fading before name returns */
       .name-word-text {
         display: block;
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
@@ -354,6 +352,7 @@
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
+      /* Zero-height container — no layout impact at rest */
       .name-pron-spacer {
         height: 0;
         overflow: visible;
@@ -369,29 +368,23 @@
         text-transform: none !important;
         transform: translateY(-2.6rem);
         white-space: nowrap;
-        /* Hide: fade out immediately */
+        /* Hide: fade immediately */
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
       }
 
       .name-pron.visible {
         opacity: 0.5;
-        /* Reveal: wait for name slide to near-finish then fade in */
+        /* Reveal: wait for name to near-finish, then fade in */
         transition: opacity 0.3s ease 0.375s;
       }
 
-      /* Omar pronunciation: right-aligned so it ends at OMAR's right edge */
-      #omarPron {
-        text-align: right;
-        width: 100%;
-      }
+      /* Omar: right-aligned so it ends flush with OMAR's right edge */
+      #omarPron { text-align: right; width: 100%; }
 
-      /* Kaykhusraw pronunciation: left-aligned so gap between
-         the two pronunciations mirrors the gap between the names */
-      #kaykPron {
-        text-align: left;
-        width: 100%;
-      }
+      /* Kaykhusraw: left-aligned — gap between pronunciations mirrors
+         the gap between the names */
+      #kaykPron { text-align: left; width: 100%; }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -1053,7 +1046,7 @@
     })();
     </script>
 
-    <!-- Pronunciation reveal — per word -->
+    <!-- Per-word pronunciation reveal -->
     <script>
     (function () {
       var words = [
