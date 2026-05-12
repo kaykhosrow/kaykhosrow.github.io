@@ -369,6 +369,8 @@
 
       #heroPron.visible {
         opacity: 0.625;
+        pointer-events: auto;
+        cursor: pointer;
         transform: translateY(-2.6rem);
         /* Reveal: name slides for 0.5s — start fading in at 0.4s so
            pronunciation appears just as the name is settling. */
@@ -432,7 +434,7 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
                   <div id="pronSpacer">
-                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:10px;cursor:pointer;opacity:0.35;vertical-align:middle;line-height:1;transition:opacity 0.2s;color:inherit;pointer-events:auto;"><svg width="13" height="11" viewBox="0 0 13 11" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;"><rect x="0" y="3.5" width="2" height="4" rx="1"/><rect x="3.5" y="1" width="2" height="9" rx="1"/><rect x="7" y="3.5" width="2" height="4" rx="1"/><rect x="10.5" y="2" width="2" height="7" rx="1"/></svg></button></h4>
+                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<span id="pronounceIcon" aria-hidden="true" style="display:inline-block;margin-left:9px;vertical-align:middle;position:relative;top:-1px;"><svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="3.5" width="2.8" height="5" rx="0.5" fill="currentColor"/><path d="M2.8 2L7 0.5V11.5L2.8 10Z" fill="currentColor"/><path d="M9 4C10.2 5 10.2 7 9 8" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/><path d="M11 2.5C13.8 4.5 13.8 7.5 11 9.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg></span></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1039,8 +1041,9 @@
     <!-- Pronunciation reveal with directional motion blur -->
     <script>
     (function () {
-      var wrap = document.getElementById('heroNameWrap');
-      var pron = document.getElementById('heroPron');
+      var wrap  = document.getElementById('heroNameWrap');
+      var pron  = document.getElementById('heroPron');
+      var audio = document.getElementById('pronounceAudio');
       var feBlur = document.getElementById('heroNameBlurFe');
       if (!wrap || !pron || !feBlur) return;
 
@@ -1089,8 +1092,26 @@
         pron.classList.remove('visible');
       }
 
-      wrap.addEventListener('click', function () {
+      // Name click: toggle reveal — ignore clicks inside the pronunciation
+      wrap.addEventListener('click', function (e) {
+        if (pron.contains(e.target)) return;
         revealed ? hide() : reveal();
+      });
+
+      // Pronunciation click: play audio, never toggles reveal
+      pron.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (!audio) return;
+        if (!audio.paused) { audio.pause(); audio.currentTime = 0; }
+        else { audio.play(); }
+      });
+
+      // Hover: darken whole pronunciation row
+      pron.addEventListener('mouseenter', function () {
+        if (revealed) pron.style.opacity = '0.85';
+      });
+      pron.addEventListener('mouseleave', function () {
+        if (revealed) pron.style.opacity = '';
       });
 
       window.addEventListener('scroll', function () {
@@ -1098,9 +1119,7 @@
       }, { passive: true });
 
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', function () {
-          if (revealed) hide();
-        });
+        link.addEventListener('click', function () { if (revealed) hide(); });
       });
     })();
     </script>
@@ -1241,32 +1260,6 @@
 
       window.addEventListener('scroll', update, { passive: true });
       update();
-    })();
-    </script>
-    <script>
-    (function () {
-      var btn   = document.getElementById('pronounceBtn');
-      var audio = document.getElementById('pronounceAudio');
-      if (!btn || !audio) return;
-
-      btn.addEventListener('mouseenter', function () { btn.style.opacity = '0.75'; });
-      btn.addEventListener('mouseleave', function () { btn.style.opacity = audio.paused ? '0.35' : '0.75'; });
-
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation(); // don't toggle the pronunciation reveal
-        if (!audio.paused) {
-          audio.pause();
-          audio.currentTime = 0;
-          btn.style.opacity = '0.35';
-        } else {
-          audio.play();
-          btn.style.opacity = '1';
-        }
-      });
-
-      audio.addEventListener('ended', function () {
-        btn.style.opacity = '0.35';
-      });
     })();
     </script>
   </body>
