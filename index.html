@@ -332,18 +332,17 @@
       }
 
       /*
-       * REVEAL  (class added): transition defined on .revealed rule fires —
-       *   name slides up immediately with no delay.
-       * HIDE (class removed): transition defined here fires —
-       *   name waits 0.22s (for pronunciation to fade out first), then slides back.
+       * REVEAL  (.revealed added)  → transition on .revealed rule fires: 0s delay, slides up.
+       * HIDE    (.revealed removed) → transition on base rule fires: 0s delay, slides back down
+       *                               in sync with the pronunciation fading out.
        */
       #heroName {
         display: block;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.22s;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
       #heroNameWrap.revealed #heroName {
-        transform: translateY(-1.6em);
+        transform: translateY(-2.2em);
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
@@ -353,29 +352,30 @@
       }
 
       /*
-       * HIDE (class removed): this transition fires — fade + drift out fast,
-       *   no delay, so it's gone before the name slides back down.
-       * REVEAL (class added): transition defined on .visible rule fires —
-       *   fades in with a slight delay after the name has started moving.
+       * font-size: 1rem  → matches About / Contact button text exactly.
+       * translateY base uses rem so it stays stable regardless of h4 font size.
+       * -2.5rem lifts it well clear of the typewriter h1.
        *
-       * font-size: 0.72em makes it noticeably smaller than the name h4.
+       * HIDE transition (base rule): same 0.5s cubic as the name returning —
+       *   both fade and slide back in perfect lockstep.
+       * REVEAL transition (.visible rule): fades in slightly after name starts moving.
        */
       #heroPron {
         margin: 0 !important;
         padding: 0;
         opacity: 0;
-        font-size: 0.72em;
+        font-size: 1rem;
         font-style: normal !important;
         text-transform: none !important;
-        transform: translateY(calc(-1.5em + 10px));
-        transition: opacity 0.2s ease 0s,
-                    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+        transform: translateY(calc(-2.5rem + 10px));
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s,
+                    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
         pointer-events: none;
       }
 
       #heroPron.visible {
         opacity: 0.5;
-        transform: translateY(-1.5em);
+        transform: translateY(-2.5rem);
         transition: opacity 0.45s ease 0.18s,
                     transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.12s;
       }
