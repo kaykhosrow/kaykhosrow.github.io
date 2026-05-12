@@ -276,7 +276,6 @@
       ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
       * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
 
-      /* ── Nav arrow button ─────────────────────────────────────────────── */
       .nav-arrow-wrap {
         display: flex;
         align-items: center;
@@ -327,47 +326,46 @@
         animation: navBounceUp 1.4s ease-in-out infinite;
       }
 
-      #about.section {
-        margin-top: 100px;
-      }
-
-      #contact.section {
-        margin-bottom: 100px;
-      }
+      #about.section { margin-top: 100px; }
+      #contact.section { margin-bottom: 100px; }
 
       /* ── Pronunciation reveal ─────────────────────────────────────────── */
+
+      /* Pointer on the whole block; no layout side-effects */
       #heroNameWrap {
         cursor: pointer;
         user-select: none;
         display: block;
       }
 
+      /* Name: smooth upward slide on reveal, otherwise sits exactly where it
+         always was — translateY only, zero layout impact */
       #heroName {
         display: block;
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-bottom: 0 !important;
       }
 
       #heroNameWrap.revealed #heroName {
-        transform: translateY(-1rem);
+        transform: translateY(-1.6em);
       }
 
+      /* Zero-height container — the page layout is identical at rest.
+         overflow:visible lets the child h4 paint out-of-flow below. */
       #pronSpacer {
-        height: 2rem;
-        display: flex;
-        align-items: center;
+        height: 0;
         overflow: visible;
       }
 
+      /* Pronunciation h4: same element + same classes as #heroName, so font
+         size, weight, letter-spacing, and text-transform all match exactly.
+         Hidden at rest; fades and lifts into the gap on reveal. */
       #heroPron {
         margin: 0;
         opacity: 0;
-        transform: translateY(5px);
-        transition: opacity 0.45s ease 0.12s,
-                    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.08s;
-        font-style: italic;
-        letter-spacing: 0.04em;
-        font-size: 0.82em;
+        transform: translateY(6px);
+        font-style: normal !important;
+        transition: opacity 0.45s ease 0.15s,
+                    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
         pointer-events: none;
       }
 
@@ -424,7 +422,9 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
                   <div id="pronSpacer">
-                    <p id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</p>
+                    <!-- Same element type and classes as #heroName — size, weight, and
+                         text-transform all inherit identically from the theme. -->
+                    <h4 class="text-uppercase" id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
