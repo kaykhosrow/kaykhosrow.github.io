@@ -97,10 +97,11 @@
         visibility: visible !important;
       }
 
+      #heroNameWrap { margin-left: -2px; }
       #typewriter {
         overflow: visible !important;
         white-space: nowrap;
-        margin-left: -3px;
+        margin-left: -6px;
         min-height: 1.2em;
         display: block;
       }
@@ -323,69 +324,59 @@
       #about.section { margin-top: 100px; }
       #contact.section { margin-bottom: 100px; }
 
-      /* ── Per-word pronunciation reveal ───────────────────────────────── */
+      /* ── Pronunciation reveal ─────────────────────────────────────────── */
 
       #heroNameWrap {
-        display: flex;
-        gap: 0.3em;
-        align-items: flex-start;
-      }
-
-      .name-word {
         cursor: pointer;
         user-select: none;
         display: block;
-        flex-shrink: 0;
       }
 
-      .name-word-text {
+      /*
+       * Transform: plain CSS transition — smooth, zero jank.
+       * Blur: SVG feGaussianBlur stdDeviation="0 N" (Y-axis only,
+       * matches vertical direction of travel). Animated via rAF
+       * in the pronunciation script — no CSS keyframes needed.
+       */
+      #heroName {
         display: block;
+        filter: url(#heroNameBlur);
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
       }
 
-      .name-word.revealed .name-word-text {
+      #heroNameWrap.revealed #heroName {
         transform: translateY(-1.5em);
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
-      .name-pron-spacer {
+      #pronSpacer {
         height: 0;
         overflow: visible;
       }
 
-      .name-pron {
-        margin: 0 0 0 6px !important;
+      #heroPron {
+        margin: 0 0 0 5px !important;
         padding: 0;
         opacity: 0;
         font-size: 1.15rem;
         font-style: normal !important;
         text-transform: none !important;
         transform: translateY(-2.6rem);
-        white-space: nowrap;
+        /* Hide: fade out immediately so name can then slide back */
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
       }
 
-      .name-pron.visible {
-        opacity: 0.5;
-        transition: opacity 0.3s ease 0.375s;
-      }
+      #pronounceBtn:hover { opacity: 0.82 !important; }
+      #pronounceBtn:hover .spk-body { fill: currentColor; }
+      #pronounceBtn[disabled] { pointer-events: none; opacity: 0 !important; }
 
-      #omarPron { text-align: right; width: 100%; }
-      #kaykPron { text-align: left; width: 100%; }
-
-      /* Single pronunciation trigger icon — sits after the full name */
-      .name-pron-icon {
-        font-size: 0.9rem;
-        opacity: 0.82;
-        margin-left: 0.35em;
-        align-self: flex-start;
-        padding-top: 0.15em;
-        display: block;
-        flex-shrink: 0;
-        transition: opacity 0.2s ease;
-        pointer-events: none;
-        color: inherit;
+      #heroPron.visible {
+        opacity: 0.625;
+        transform: translateY(-2.6rem);
+        /* Reveal: name slides for 0.5s — start fading in at 0.4s so
+           pronunciation appears just as the name is settling. */
+        transition: opacity 0.3s ease 0.25s;
       }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
@@ -400,6 +391,15 @@
     <link rel="apple-touch-icon" href="images/o.png">
   </head>
   <body>
+    <!-- Directional motion blur filter (Y-axis only) -->
+    <svg style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <filter id="heroNameBlur" x="-10%" y="-50%" width="120%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="0 0" id="heroNameBlurFe"/>
+        </filter>
+      </defs>
+    </svg>
+    <audio id="pronounceAudio" src="assets/audio/pronounce.mp3" preload="none"></audio>
     <div id="grain"></div>
     <div class="color-switcher" style="display:none">
       <button class="color-switcher-btn"></button>
@@ -434,22 +434,9 @@
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
                 <div id="heroNameWrap">
-                  <div class="name-word" id="omarWrap">
-                    <h4 class="text-uppercase name-word-text" id="heroOmar">Omar</h4>
-                    <div class="name-pron-spacer">
-                      <h4 class="name-pron" id="omarPron">/ˈoʊmɑːr/</h4>
-                    </div>
-                  </div>
-                  <div class="name-word" id="kaykWrap">
-                    <h4 class="text-uppercase name-word-text" id="heroKayk">Kaykhusraw</h4>
-                    <div class="name-pron-spacer">
-                      <h4 class="name-pron" id="kaykPron">/ˈkeɪkhuːsrɑːw/</h4>
-                    </div>
-                  </div>
-                  <i class="ph ph-waveform name-pron-icon" aria-hidden="true"></i>
-                    <div class="name-pron-spacer">
-                      <h4 class="name-pron" id="kaykPron">/ˈkeɪkhuːsrɑːw/</h4>
-                    </div>
+                  <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
+                  <div id="pronSpacer">
+                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:11px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-2px;opacity:0.38;transition:opacity 0.18s ease;"><svg id="pronounceSvg" width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="spk-body" d="M0 4.5H2.5L7.5 1V12L2.5 8.5H0V4.5Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="miter" fill="none" style="transition:fill 0.15s ease;"/><path class="spk-wave" d="M10 5Q11.8 6.5 10 8" stroke="currentColor" stroke-width="1.1" stroke-linecap="square" fill="none"/><path class="spk-wave" d="M12 3Q16 6.5 12 10" stroke="currentColor" stroke-width="1.1" stroke-linecap="square" fill="none"/></svg></button></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -998,7 +985,7 @@
           span.style.display = 'inline-block';
           if (ch === ' ') {
             span.style.minWidth = '0.35em';
-            span.textContent    = ' ';
+            span.textContent    = '\u00a0';
           } else {
             span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
           }
@@ -1053,35 +1040,99 @@
     })();
     </script>
 
-    <!-- Per-word pronunciation reveal -->
+    <!-- Pronunciation reveal with directional motion blur -->
     <script>
     (function () {
-      var words = [
-        { wrap: document.getElementById('omarWrap'), pron: document.getElementById('omarPron') },
-        { wrap: document.getElementById('kaykWrap'), pron: document.getElementById('kaykPron') }
-      ];
+      var wrap  = document.getElementById('heroNameWrap');
+      var pron  = document.getElementById('heroPron');
+      var audio = document.getElementById('pronounceAudio');
+      var feBlur = document.getElementById('heroNameBlurFe');
+      if (!wrap || !pron || !feBlur) return;
 
-      words.forEach(function (w) {
-        w.wrap.addEventListener('click', function () {
-          var on = w.wrap.classList.contains('revealed');
-          w.wrap.classList.toggle('revealed', !on);
-          w.pron.classList.toggle('visible', !on);
-        });
+      var revealed  = false;
+      var rafId     = null;
+      var PEAK      = 0.25;   // max stdDeviation in Y (px)
+      var DURATION  = 400;   // ms, slightly shorter so blur clears before text fully settles
+
+      // Smooth bell curve: sin(π·t) peaks at t=0.5, zero at t=0 and t=1
+      function animateBlur() {
+        if (rafId) cancelAnimationFrame(rafId);
+        var start = null;
+        function frame(ts) {
+          if (!start) start = ts;
+          var t = Math.min((ts - start) / DURATION, 1);
+          // Asymmetric bell matching cubic-bezier(0.4,0,0.2,1):
+          // peaks early at t=0.3 (fast acceleration), decays slowly (deceleration)
+          function smoothstep(x) { return x * x * (3 - 2 * x); }
+          var PEAK_T = 0.3;
+          var half = t < PEAK_T
+            ? smoothstep(t / PEAK_T)
+            : 1 - smoothstep((t - PEAK_T) / (1 - PEAK_T));
+          var val = PEAK * half;
+          feBlur.setAttribute('stdDeviation', '0 ' + val.toFixed(4));
+          if (t < 1) {
+            rafId = requestAnimationFrame(frame);
+          } else {
+            feBlur.setAttribute('stdDeviation', '0 0');
+            rafId = null;
+          }
+        }
+        rafId = requestAnimationFrame(frame);
+      }
+
+      function reveal() {
+        revealed = true;
+        animateBlur();
+        wrap.classList.add('revealed');
+        pron.classList.add('visible');
+      }
+
+      function hide() {
+        revealed = false;
+        animateBlur();
+        wrap.classList.remove('revealed');
+        pron.classList.remove('visible');
+      }
+
+      var btn = document.getElementById('pronounceBtn');
+      if (btn) btn.setAttribute('disabled', '');
+
+      // Name click: toggle reveal
+      wrap.addEventListener('click', function () {
+        revealed ? hide() : reveal();
       });
 
-      function resetAll() {
-        words.forEach(function (w) {
-          w.wrap.classList.remove('revealed');
-          w.pron.classList.remove('visible');
+      // Speaker button: play audio — only when pronunciation is visible
+      if (btn && audio) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (!revealed) return;
+          if (!audio.paused) { audio.pause(); audio.currentTime = 0; }
+          else { audio.play(); }
+        });
+        audio.addEventListener('ended', function () {
+          btn.style.opacity = '0.38';
         });
       }
 
+      // Enable/disable button with reveal state
+      var _origReveal = reveal, _origHide = hide;
+      reveal = function () {
+        _origReveal();
+        if (btn) { btn.removeAttribute('disabled'); btn.style.opacity = '0.38'; }
+      };
+      hide = function () {
+        _origHide();
+        if (btn) { btn.setAttribute('disabled', ''); }
+        if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0; }
+      };
+
       window.addEventListener('scroll', function () {
-        if (window.scrollY > 60) resetAll();
+        if (revealed && window.scrollY > 60) hide();
       }, { passive: true });
 
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', resetAll);
+        link.addEventListener('click', function () { if (revealed) hide(); });
       });
     })();
     </script>
