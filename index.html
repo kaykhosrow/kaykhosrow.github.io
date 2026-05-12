@@ -373,8 +373,8 @@
         flex: 1;
         height: 1.5px;
         background: currentColor;
-        opacity: 0.25;
-        margin-left: 12px;
+        opacity: 0.55;
+        margin-left: 18px;
         position: relative;
         border-radius: 1px;
         min-width: 20px;
@@ -457,7 +457,7 @@
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
                 <div id="heroNameWrap">
-                  <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
+                  <h4 class="text-uppercase" id="heroName"><span id="heroNameInner">Omar Kaykhusraw</span></h4>
                   <div id="pronSpacer">
                     <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:14px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-1px;opacity:0.68;transition:opacity 0.18s ease;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;opacity:inherit;"></button><span id="pronProgressBar"><span id="pronProgressFill"></span></span></h4>
                   </div>
@@ -1158,8 +1158,9 @@
       var heroPronEl   = document.getElementById('heroPron');
 
       function syncPronWidth() {
-        if (heroNameEl && heroPronEl) {
-          heroPronEl.style.width = heroNameEl.offsetWidth + 'px';
+        var inner = document.getElementById('heroNameInner');
+        if (inner && heroPronEl) {
+          heroPronEl.style.width = inner.offsetWidth + 'px';
         }
       }
       syncPronWidth();
