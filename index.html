@@ -339,8 +339,9 @@
        */
       #heroName {
         display: block;
-        /* Hide: wait 0.3s for pronunciation to fully fade before returning */
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+        /* Hide: pron fades over 0.3s — name starts at 0.2s, overlapping
+           the last 0.1s of the pron fade, mirroring the reveal overlap. */
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
       }
 
       #heroNameWrap.revealed #heroName {
@@ -383,9 +384,9 @@
       #heroPron.visible {
         opacity: 0.5;
         transform: translateY(-2.6rem);
-        /* Reveal: name slides for 0.5s — start fading in at 0.42s so
+        /* Reveal: name slides for 0.5s — start fading in at 0.4s so
            pronunciation appears just as the name is settling. */
-        transition: opacity 0.3s ease 0.42s;
+        transition: opacity 0.3s ease 0.4s;
       }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
