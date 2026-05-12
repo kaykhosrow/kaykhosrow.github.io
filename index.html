@@ -332,18 +332,20 @@
       }
 
       /*
-       * Name slide distance is -1.5em — reduced from -2.2em so the name
-       * doesn't shoot too far up, keeping it closer to the pronunciation.
-       * Both reveal and hide use the same 0.5s cubic, 0s delay so
-       * they animate in perfect lockstep with #heroPron.
+       * REVEAL: name slides up (0.5s, 0s delay), then pron fades in
+       *   after a 0.5s delay — starts exactly when name finishes.
+       * HIDE:   pron fades out first (0.3s, 0s delay), then name slides
+       *   back down after a 0.3s delay — starts when pron is gone.
        */
       #heroName {
         display: block;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+        /* Hide: wait 0.3s for pronunciation to fully fade before returning */
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
       }
 
       #heroNameWrap.revealed #heroName {
         transform: translateY(-1.5em);
+        /* Reveal: slide up immediately */
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
@@ -372,19 +374,18 @@
         font-size: 1.15rem;
         font-style: normal !important;
         text-transform: none !important;
-        /* Fixed position — no movement, only opacity animates */
-        transform: translateY(-2.75rem);
-        /* Hide: fades out in lockstep with name sliding back down */
-        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+        transform: translateY(-2.6rem);
+        /* Hide: fade out immediately so name can then slide back */
+        transition: opacity 0.3s ease 0s;
         pointer-events: none;
       }
 
       #heroPron.visible {
         opacity: 0.5;
-        transform: translateY(-2.75rem);
-        /* Reveal: waits until name has mostly slid up (0.35s delay),
-           then fades in over 0.28s — no upward drift, pure opacity. */
-        transition: opacity 0.28s ease 0.35s;
+        transform: translateY(-2.6rem);
+        /* Reveal: name's slide is 0.5s — wait for it to fully finish,
+           then fade in over 0.3s. Pure opacity, no movement. */
+        transition: opacity 0.3s ease 0.5s;
       }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
