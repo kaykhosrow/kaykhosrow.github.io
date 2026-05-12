@@ -374,20 +374,19 @@
       #omarPron { text-align: right; width: 100%; }
       #kaykPron { text-align: left; width: 100%; }
 
-      /* Pronunciation trigger icon */
+      /* Single pronunciation trigger icon — sits after the full name */
       .name-pron-icon {
-        font-size: 0.52em;
+        font-size: 0.9rem;
         opacity: 0.82;
-        margin-left: 0.25em;
-        vertical-align: middle;
-        display: inline-block;
-        position: relative;
-        top: -0.08em;
+        margin-left: 0.35em;
+        align-self: flex-start;
+        padding-top: 0.15em;
+        display: block;
+        flex-shrink: 0;
         transition: opacity 0.2s ease;
         pointer-events: none;
+        color: inherit;
       }
-      .name-word:hover .name-pron-icon { opacity: 1; }
-      .name-word.revealed .name-pron-icon { opacity: 0.3; }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -436,13 +435,18 @@
               <div>
                 <div id="heroNameWrap">
                   <div class="name-word" id="omarWrap">
-                    <h4 class="text-uppercase name-word-text" id="heroOmar">Omar<i class="ph ph-waveform name-pron-icon" aria-hidden="true"></i></h4>
+                    <h4 class="text-uppercase name-word-text" id="heroOmar">Omar</h4>
                     <div class="name-pron-spacer">
                       <h4 class="name-pron" id="omarPron">/ˈoʊmɑːr/</h4>
                     </div>
                   </div>
                   <div class="name-word" id="kaykWrap">
-                    <h4 class="text-uppercase name-word-text" id="heroKayk">Kaykhusraw<i class="ph ph-waveform name-pron-icon" aria-hidden="true"></i></h4>
+                    <h4 class="text-uppercase name-word-text" id="heroKayk">Kaykhusraw</h4>
+                    <div class="name-pron-spacer">
+                      <h4 class="name-pron" id="kaykPron">/ˈkeɪkhuːsrɑːw/</h4>
+                    </div>
+                  </div>
+                  <i class="ph ph-waveform name-pron-icon" aria-hidden="true"></i>
                     <div class="name-pron-spacer">
                       <h4 class="name-pron" id="kaykPron">/ˈkeɪkhuːsrɑːw/</h4>
                     </div>
