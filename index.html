@@ -331,7 +331,7 @@
         display: block;
       }
 
-      /* Name slides up on click — pure visual, zero layout reflow */
+      /* Name slides up on click */
       #heroName {
         display: block;
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -341,27 +341,30 @@
         transform: translateY(-1.6em);
       }
 
-      /* Zero-height wrapper so nothing shifts at rest.
-         overflow:visible lets #heroPron paint into the space below. */
+      /* Zero-height container — layout identical at rest */
       #pronSpacer {
         height: 0;
         overflow: visible;
       }
 
-      /* Pronunciation text:
-         - margin:0 strips the h4's default top/bottom margins that were
-           pushing it down into the typewriter area
-         - text-transform:none keeps it lowercase (no uppercase class on element)
-         - font-style:normal — not italic
-         - opacity target is 0.5 to match the original IPA vestaboard style
-      */
+      /*
+       * The spacer sits right at the h4's layout bottom, which is also where
+       * the h1 typewriter starts. So #heroPron must be shifted UP by roughly
+       * its own line-height to land in the visual gap above the typewriter.
+       *
+       * translateY base = -1.5em  →  pronunciation sits ~halfway between
+       * the name's revealed position and the typewriter.
+       * The extra +10px in the hidden state is the entry animation travel.
+       *
+       * opacity 0 → 0.5 matches the original IPA vestaboard style.
+       */
       #heroPron {
         margin: 0 !important;
         padding: 0;
         opacity: 0;
-        transform: translateY(6px);
         font-style: normal !important;
         text-transform: none !important;
+        transform: translateY(calc(-1.5em + 10px));
         transition: opacity 0.45s ease 0.15s,
                     transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
         pointer-events: none;
@@ -369,7 +372,7 @@
 
       #heroPron.visible {
         opacity: 0.5;
-        transform: translateY(0);
+        transform: translateY(-1.5em);
       }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
@@ -420,8 +423,6 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
                   <div id="pronSpacer">
-                    <!-- No text-uppercase class — stays lowercase.
-                         Same h4 element for identical font size/weight. -->
                     <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</h4>
                   </div>
                 </div>
