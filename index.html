@@ -323,68 +323,70 @@
       #about.section { margin-top: 100px; }
       #contact.section { margin-bottom: 100px; }
 
-      /* ── Per-word pronunciation reveal ───────────────────────────────── */
+      /* ── Pronunciation reveal ─────────────────────────────────────────── */
 
-      /* Flex row — gap matches the natural word-space of the original h4 */
       #heroNameWrap {
-        display: flex;
-        gap: 0.3em;
-        align-items: flex-start;
-      }
-
-      /* Each word is an independent clickable column */
-      .name-word {
         cursor: pointer;
         user-select: none;
         display: block;
-        flex-shrink: 0;
       }
 
-      /* Hide: 0.1s delay so pron starts fading before name returns */
-      .name-word-text {
+      /*
+       * REVEAL: name slides up (0.5s, 0s delay), then pron fades in
+       *   after a 0.5s delay — starts exactly when name finishes.
+       * HIDE:   pron fades out first (0.3s, 0s delay), then name slides
+       *   back down after a 0.3s delay — starts when pron is gone.
+       */
+      #heroName {
         display: block;
+        /* Hide: reduced delay before name slides back */
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
       }
 
-      /* Reveal: slide up immediately on click */
-      .name-word.revealed .name-word-text {
+      #heroNameWrap.revealed #heroName {
         transform: translateY(-1.5em);
+        /* Reveal: slide up immediately */
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
-      /* Zero-height container — no layout impact at rest */
-      .name-pron-spacer {
+      #pronSpacer {
         height: 0;
         overflow: visible;
       }
 
-      /* Shared pronunciation styles */
-      .name-pron {
-        margin: 0 !important;
+      /*
+       * font-size: 1.15rem — a notch above button text (1rem).
+       *
+       * translateY target: -1.75rem
+       *   The pronunciation height at 1.15rem ≈ 22px.
+       *   The name slides up 1.5em; if the h4 is ~22px that's ~33px.
+       *   Centering: (33px gap) / 2 ≈ 16.5px from each edge.
+       *   Pronunciation top = -(16.5 + 22) ≈ -38.5px ≈ -1.75rem (28px/rem × 1.375).
+       *   At 16px/rem: -1.75rem = -28px … adjust with the hidden +10px travel.
+       *
+       * Hide transition (base): matches name exactly — 0.5s cubic, 0s delay.
+       * Reveal transition (.visible): fades in 0.18s after name starts.
+       */
+      #heroPron {
+        margin: 0 0 0 6px !important;
         padding: 0;
         opacity: 0;
         font-size: 1.15rem;
         font-style: normal !important;
         text-transform: none !important;
         transform: translateY(-2.6rem);
-        white-space: nowrap;
-        /* Hide: fade immediately */
+        /* Hide: fade out immediately so name can then slide back */
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
       }
 
-      .name-pron.visible {
+      #heroPron.visible {
         opacity: 0.5;
-        /* Reveal: wait for name to near-finish, then fade in */
+        transform: translateY(-2.6rem);
+        /* Reveal: name slides for 0.5s — start fading in at 0.4s so
+           pronunciation appears just as the name is settling. */
         transition: opacity 0.3s ease 0.375s;
       }
-
-      /* Omar: right-aligned so it ends flush with OMAR's right edge */
-      #omarPron { text-align: right; width: 100%; }
-
-      /* Kaykhusraw: left-aligned — gap between pronunciations mirrors
-         the gap between the names */
-      #kaykPron { text-align: left; width: 100%; }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -432,17 +434,9 @@
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
                 <div id="heroNameWrap">
-                  <div class="name-word" id="omarWrap">
-                    <h4 class="text-uppercase name-word-text" id="heroOmar">Omar</h4>
-                    <div class="name-pron-spacer">
-                      <h4 class="name-pron" id="omarPron">/ˈoʊmɑːr/</h4>
-                    </div>
-                  </div>
-                  <div class="name-word" id="kaykWrap">
-                    <h4 class="text-uppercase name-word-text" id="heroKayk">Kaykhusraw</h4>
-                    <div class="name-pron-spacer">
-                      <h4 class="name-pron" id="kaykPron">/ˈkeɪkhuːsrɑːw/</h4>
-                    </div>
+                  <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
+                  <div id="pronSpacer">
+                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1046,35 +1040,37 @@
     })();
     </script>
 
-    <!-- Per-word pronunciation reveal -->
+    <!-- Pronunciation reveal -->
     <script>
     (function () {
-      var words = [
-        { wrap: document.getElementById('omarWrap'), pron: document.getElementById('omarPron') },
-        { wrap: document.getElementById('kaykWrap'), pron: document.getElementById('kaykPron') }
-      ];
+      var wrap = document.getElementById('heroNameWrap');
+      var pron = document.getElementById('heroPron');
+      if (!wrap || !pron) return;
 
-      words.forEach(function (w) {
-        w.wrap.addEventListener('click', function () {
-          var on = w.wrap.classList.contains('revealed');
-          w.wrap.classList.toggle('revealed', !on);
-          w.pron.classList.toggle('visible', !on);
-        });
-      });
+      var revealed = false;
 
-      function resetAll() {
-        words.forEach(function (w) {
-          w.wrap.classList.remove('revealed');
-          w.pron.classList.remove('visible');
-        });
+      function reveal() {
+        revealed = true;
+        wrap.classList.add('revealed');
+        pron.classList.add('visible');
       }
 
+      function hide() {
+        revealed = false;
+        wrap.classList.remove('revealed');
+        pron.classList.remove('visible');
+      }
+
+      wrap.addEventListener('click', function () {
+        revealed ? hide() : reveal();
+      });
+
       window.addEventListener('scroll', function () {
-        if (window.scrollY > 60) resetAll();
+        if (revealed && window.scrollY > 60) hide();
       }, { passive: true });
 
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', resetAll);
+        link.addEventListener('click', hide);
       });
     })();
     </script>
