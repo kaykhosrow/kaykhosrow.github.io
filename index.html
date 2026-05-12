@@ -372,9 +372,9 @@
       #pronProgressBar {
         flex: 1;
         height: 1.5px;
-        background: currentColor;
-        opacity: 0.55;
-        margin-left: 18px;
+        background: rgba(0, 0, 0, 0.3);
+        opacity: 1;
+        margin-left: 26px;
         position: relative;
         border-radius: 1px;
         min-width: 20px;
@@ -387,9 +387,8 @@
         height: 100%;
         width: 0%;
         background: currentColor;
-        opacity: 1;
+        opacity: 0.75;
         border-radius: 1px;
-        transition: width 0.1s linear;
       }
 
       /* PATCH 1: opacity raised from 0.38 → 0.68 for visibility */
@@ -1160,22 +1159,42 @@
       function syncPronWidth() {
         var inner = document.getElementById('heroNameInner');
         if (inner && heroPronEl) {
-          heroPronEl.style.width = inner.offsetWidth + 'px';
+          heroPronEl.style.width = (inner.offsetWidth - 18) + 'px';
         }
       }
       syncPronWidth();
       window.addEventListener('resize', syncPronWidth);
       document.fonts && document.fonts.ready.then(syncPronWidth);
 
-      // Update progress bar as audio plays
-      if (audio && progressFill) {
-        audio.addEventListener('timeupdate', function () {
-          if (audio.duration) {
-            progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
-          }
+      // Smooth progress via requestAnimationFrame instead of timeupdate
+      var rafProgress = null;
+
+      function tickProgress() {
+        if (audio && progressFill && audio.duration) {
+          var pct = Math.min(audio.currentTime / audio.duration, 1) * 100;
+          progressFill.style.width = pct + '%';
+        }
+        if (audio && !audio.paused && !audio.ended) {
+          rafProgress = requestAnimationFrame(tickProgress);
+        }
+      }
+
+      if (audio) {
+        audio.addEventListener('play', function () {
+          if (rafProgress) cancelAnimationFrame(rafProgress);
+          rafProgress = requestAnimationFrame(tickProgress);
+        });
+        audio.addEventListener('pause', function () {
+          if (rafProgress) { cancelAnimationFrame(rafProgress); rafProgress = null; }
         });
         audio.addEventListener('ended', function () {
-          progressFill.style.width = '0%';
+          if (rafProgress) { cancelAnimationFrame(rafProgress); rafProgress = null; }
+          // Hard reset with no transition
+          if (progressFill) {
+            progressFill.style.transition = 'none';
+            progressFill.style.width = '0%';
+            setTimeout(function () { progressFill.style.transition = ''; }, 50);
+          }
         });
       }
     })();
