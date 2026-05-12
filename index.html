@@ -331,48 +331,53 @@
         display: block;
       }
 
-      /* Name slides up on click */
+      /*
+       * REVEAL  (class added): transition defined on .revealed rule fires —
+       *   name slides up immediately with no delay.
+       * HIDE (class removed): transition defined here fires —
+       *   name waits 0.22s (for pronunciation to fade out first), then slides back.
+       */
       #heroName {
         display: block;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.22s;
       }
 
       #heroNameWrap.revealed #heroName {
         transform: translateY(-1.6em);
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
-      /* Zero-height container — layout identical at rest */
       #pronSpacer {
         height: 0;
         overflow: visible;
       }
 
       /*
-       * The spacer sits right at the h4's layout bottom, which is also where
-       * the h1 typewriter starts. So #heroPron must be shifted UP by roughly
-       * its own line-height to land in the visual gap above the typewriter.
+       * HIDE (class removed): this transition fires — fade + drift out fast,
+       *   no delay, so it's gone before the name slides back down.
+       * REVEAL (class added): transition defined on .visible rule fires —
+       *   fades in with a slight delay after the name has started moving.
        *
-       * translateY base = -1.5em  →  pronunciation sits ~halfway between
-       * the name's revealed position and the typewriter.
-       * The extra +10px in the hidden state is the entry animation travel.
-       *
-       * opacity 0 → 0.5 matches the original IPA vestaboard style.
+       * font-size: 0.72em makes it noticeably smaller than the name h4.
        */
       #heroPron {
         margin: 0 !important;
         padding: 0;
         opacity: 0;
+        font-size: 0.72em;
         font-style: normal !important;
         text-transform: none !important;
         transform: translateY(calc(-1.5em + 10px));
-        transition: opacity 0.45s ease 0.15s,
-                    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+        transition: opacity 0.2s ease 0s,
+                    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0s;
         pointer-events: none;
       }
 
       #heroPron.visible {
         opacity: 0.5;
         transform: translateY(-1.5em);
+        transition: opacity 0.45s ease 0.18s,
+                    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.12s;
       }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
