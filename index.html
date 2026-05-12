@@ -432,7 +432,7 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
                   <div id="pronSpacer">
-                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:6px;cursor:pointer;opacity:0.5;vertical-align:middle;line-height:1;transition:opacity 0.2s;"><i class="ph ph-speaker-simple-high" style="font-size:0.95em;"></i></button></h4>
+                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:10px;cursor:pointer;opacity:0.35;vertical-align:middle;line-height:1;transition:opacity 0.2s;color:inherit;pointer-events:auto;"><svg width="13" height="11" viewBox="0 0 13 11" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;"><rect x="0" y="3.5" width="2" height="4" rx="1"/><rect x="3.5" y="1" width="2" height="9" rx="1"/><rect x="7" y="3.5" width="2" height="4" rx="1"/><rect x="10.5" y="2" width="2" height="7" rx="1"/></svg></button></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1249,15 +1249,15 @@
       var audio = document.getElementById('pronounceAudio');
       if (!btn || !audio) return;
 
-      btn.addEventListener('mouseenter', function () { btn.style.opacity = '1'; });
-      btn.addEventListener('mouseleave', function () { btn.style.opacity = audio.paused ? '0.5' : '1'; });
+      btn.addEventListener('mouseenter', function () { btn.style.opacity = '0.75'; });
+      btn.addEventListener('mouseleave', function () { btn.style.opacity = audio.paused ? '0.35' : '0.75'; });
 
       btn.addEventListener('click', function (e) {
         e.stopPropagation(); // don't toggle the pronunciation reveal
         if (!audio.paused) {
           audio.pause();
           audio.currentTime = 0;
-          btn.style.opacity = '0.5';
+          btn.style.opacity = '0.35';
         } else {
           audio.play();
           btn.style.opacity = '1';
@@ -1265,7 +1265,7 @@
       });
 
       audio.addEventListener('ended', function () {
-        btn.style.opacity = '0.5';
+        btn.style.opacity = '0.35';
       });
     })();
     </script>
