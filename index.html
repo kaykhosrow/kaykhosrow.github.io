@@ -336,7 +336,7 @@
         display: block;
         filter: url(#heroNameBlur);
         position: relative;
-        top: -5px;
+        top: -2.5px;
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
       }
 
@@ -362,7 +362,7 @@
         font-style: normal !important;
         text-transform: none !important;
         white-space: nowrap;
-        transform: translateY(-2.6rem);
+        transform: translateY(calc(-2.6rem - 2.5px));
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
       }
@@ -373,7 +373,7 @@
 
       #heroPron.visible {
         opacity: 0.625;
-        transform: translateY(-2.6rem);
+        transform: translateY(calc(-2.6rem - 2.5px));
         transition: opacity 0.3s ease 0.25s;
       }
     </style>
