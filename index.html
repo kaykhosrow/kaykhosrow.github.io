@@ -331,30 +331,21 @@
         display: block;
       }
 
-      /* ── Motion blur: filter-only keyframe, separate from the transform ── */
-      @keyframes blurFlash {
-        0%   { filter: blur(0px); }
-        35%  { filter: blur(0.25px); }
-        100% { filter: blur(0px); }
-      }
-
       /*
-       * Transform is handled by a plain CSS transition — smooth, zero jank.
-       * The blur-flash class fires a completely separate animation on filter
-       * only, so the two never conflict.
+       * Transform: plain CSS transition — smooth, zero jank.
+       * Blur: SVG feGaussianBlur stdDeviation="0 N" (Y-axis only,
+       * matches vertical direction of travel). Animated via rAF
+       * in the pronunciation script — no CSS keyframes needed.
        */
       #heroName {
         display: block;
+        filter: url(#heroNameBlur);
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
       }
 
       #heroNameWrap.revealed #heroName {
         transform: translateY(-1.5em);
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
-      }
-
-      #heroName.blur-flash {
-        animation: blurFlash 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
       }
 
       #pronSpacer {
@@ -395,6 +386,14 @@
     <link rel="apple-touch-icon" href="images/o.png">
   </head>
   <body>
+    <!-- Directional motion blur filter (Y-axis only) -->
+    <svg style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <filter id="heroNameBlur" x="-10%" y="-50%" width="120%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="0 0" id="heroNameBlurFe"/>
+        </filter>
+      </defs>
+    </svg>
     <div id="grain"></div>
     <div class="color-switcher" style="display:none">
       <button class="color-switcher-btn"></button>
@@ -1035,36 +1034,48 @@
     })();
     </script>
 
-    <!-- Pronunciation reveal with motion blur -->
+    <!-- Pronunciation reveal with directional motion blur -->
     <script>
     (function () {
       var wrap = document.getElementById('heroNameWrap');
-      var name = document.getElementById('heroName');
       var pron = document.getElementById('heroPron');
-      if (!wrap || !name || !pron) return;
+      var feBlur = document.getElementById('heroNameBlurFe');
+      if (!wrap || !pron || !feBlur) return;
 
-      var revealed = false;
+      var revealed  = false;
+      var rafId     = null;
+      var PEAK      = 0.5;   // max stdDeviation in Y (px)
+      var DURATION  = 500;   // ms, matches the CSS transition
 
-      function triggerBlur() {
-        name.classList.remove('blur-flash');
-        void name.offsetWidth; // force reflow so animation restarts cleanly
-        name.classList.add('blur-flash');
-        name.addEventListener('animationend', function handler() {
-          name.classList.remove('blur-flash');
-          name.removeEventListener('animationend', handler);
-        });
+      // Smooth bell curve: sin(π·t) peaks at t=0.5, zero at t=0 and t=1
+      function animateBlur() {
+        if (rafId) cancelAnimationFrame(rafId);
+        var start = null;
+        function frame(ts) {
+          if (!start) start = ts;
+          var t = Math.min((ts - start) / DURATION, 1);
+          var val = PEAK * Math.sin(Math.PI * t);
+          feBlur.setAttribute('stdDeviation', '0 ' + val.toFixed(4));
+          if (t < 1) {
+            rafId = requestAnimationFrame(frame);
+          } else {
+            feBlur.setAttribute('stdDeviation', '0 0');
+            rafId = null;
+          }
+        }
+        rafId = requestAnimationFrame(frame);
       }
 
       function reveal() {
         revealed = true;
-        triggerBlur();
+        animateBlur();
         wrap.classList.add('revealed');
         pron.classList.add('visible');
       }
 
       function hide() {
         revealed = false;
-        triggerBlur();
+        animateBlur();
         wrap.classList.remove('revealed');
         pron.classList.remove('visible');
       }
