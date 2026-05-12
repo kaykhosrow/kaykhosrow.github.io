@@ -33,11 +33,9 @@
     <meta name="google-site-verification" content="abXGnAT6wX18T4MTo4wzg69o7ZRQHnc9bHM9nOhm3-g" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- SEO: page title & description -->
     <title>Omar Kaykhusraw</title>
     <meta name="description" content="Welcome to my page. I am a research economist with interests in empirical macroeconomics. I hold a DPhil in Economics from King's College London and my thesis focused primarily on the natural rate of interest. Prior to my doctorate, I read Economics at the University of Cambridge and Philosophy, Politics and Economics at the University of London.">
 
-    <!-- Open Graph (social media & rich previews) -->
     <meta property="og:title" content="Omar Kaykhusraw">
     <meta property="og:description" content="Welcome to my page. I am a research economist with interests in empirical macroeconomics. I hold a DPhil in Economics from King's College London and my thesis focused primarily on the natural rate of interest. Prior to my doctorate, I read Economics at the University of Cambridge and Philosophy, Politics and Economics at the University of London.">
     <meta property="og:image" content="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/google.png">
@@ -163,7 +161,7 @@
 
       #research .service-swiper .swiper-wrapper { align-items: stretch; }
       #research .service-swiper .swiper-slide { height: auto; display: flex; }
-      #research .service-swiper .service-card { height: 100%; width: 100%; }
+      #research .service-swiper .swiper-slide .service-card { height: 100%; width: 100%; }
       #research .service-list li { display: block !important; }
       #research .service-card { position: relative; }
       #research { scroll-margin-top: 100px; }
@@ -271,14 +269,6 @@
       section p a:not(.btn)::after { content: ""; position: absolute; border-radius: 1em; border-top: .1em solid #000; right: 100%; bottom: -.15em; left: 0; transition: right .5s cubic-bezier(0,.5,0,1), border-color .5s ease-out; }
       section p a:not(.btn):hover::after, section p .link-pair:hover a:not(.btn)::after { right: 0; }
 
-      .freelancer { position: relative; white-space: nowrap; transition: opacity 0.7s ease; cursor: pointer; user-select: none; opacity: 1 !important; transform: none !important; animation: none !important; visibility: hidden; }
-      .freelancer.is-ipa { opacity: 0.5 !important; }
-      .freelancer span { display: inline-block; margin-right: 0.05em; transition: filter 0.05s ease-out; }
-      .freelancer span:last-child { margin-right: 0; }
-      .freelancer span.tight-right { margin-right: -0.04em; }
-      .freelancer span.is-ipa-char { text-transform: none !important; }
-      .freelancer span.is-cycling { filter: blur(0.0125em); }
-
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: rgb(var(--primary)); border-radius: 999px; }
       body::after { content: ''; position: fixed; top: 0; right: 0; width: 1px; height: 100%; background: rgba(0,0,0,0.1); pointer-events: none; z-index: 9999; }
@@ -312,7 +302,6 @@
         padding: 0 0 0 1px;
       }
 
-
       .nav-arr {
         display: flex;
         align-items: center;
@@ -338,14 +327,54 @@
         animation: navBounceUp 1.4s ease-in-out infinite;
       }
 
-#about.section {
-  margin-top: 100px;
-}
+      #about.section {
+        margin-top: 100px;
+      }
 
       #contact.section {
-  margin-bottom: 100px;
-}
+        margin-bottom: 100px;
+      }
 
+      /* ── Pronunciation reveal ─────────────────────────────────────────── */
+      #heroNameWrap {
+        cursor: pointer;
+        user-select: none;
+        display: block;
+      }
+
+      #heroName {
+        display: block;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 0 !important;
+      }
+
+      #heroNameWrap.revealed #heroName {
+        transform: translateY(-1rem);
+      }
+
+      #pronSpacer {
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        overflow: visible;
+      }
+
+      #heroPron {
+        margin: 0;
+        opacity: 0;
+        transform: translateY(5px);
+        transition: opacity 0.45s ease 0.12s,
+                    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.08s;
+        font-style: italic;
+        letter-spacing: 0.04em;
+        font-size: 0.82em;
+        pointer-events: none;
+      }
+
+      #heroPron.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -353,7 +382,6 @@
     <link rel="preload" as="image" href="https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg">
 
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="images/o.png">
     <link rel="icon" type="image/png" sizes="48x48" href="images/o.png">
@@ -393,7 +421,12 @@
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
-                <h4 class="text-uppercase freelancer" data-original="Omar Kaykhusraw" data-ipa="/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/">Omar Kaykhusraw</h4>
+                <div id="heroNameWrap">
+                  <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
+                  <div id="pronSpacer">
+                    <p id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</p>
+                  </div>
+                </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
               </div>
               <div class="d-flex gap-4">
@@ -583,7 +616,7 @@
             </div>
           </div>
 
-   <div style="margin-bottom: 2.5rem;">
+          <div style="margin-bottom: 2.5rem;">
             <h4 style="text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.85rem;">Previous</h4>
             <div class="teaching-item">
               <p class="role">Teaching Fellow in Economics</p>
@@ -924,7 +957,7 @@
       })();
     </script>
 
-    <!-- Section title vestaboard — original, IntersectionObserver unchanged -->
+    <!-- Section title vestaboard -->
     <script>
     (function () {
       var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
@@ -995,152 +1028,39 @@
     })();
     </script>
 
-    <!-- IPA name animation — unchanged -->
+    <!-- Pronunciation reveal -->
     <script>
     (function () {
-      var h4 = document.querySelector('h4.freelancer[data-ipa]');
-      if (!h4) return;
+      var wrap = document.getElementById('heroNameWrap');
+      var pron = document.getElementById('heroPron');
+      if (!wrap || !pron) return;
 
-      var CHARS     =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-        'abcdefghijklmnopqrstuvwxyz' +
-        '0123456789$€£#@%&?!';
-      var stagger   = 44;
-      var flipSpeed = 50;
-      var flipCount = 7;
+      var revealed = false;
 
-      var origText = h4.dataset.original;
-      var ipaText  = h4.dataset.ipa;
-
-      function paint(text, useFinal) {
-        h4.innerHTML = '';
-        var isIpaTarget = (text === ipaText);
-        var allChars    = text.split('');
-        return allChars.map(function (ch, i) {
-          var span = document.createElement('span');
-          span.style.display = 'inline-block';
-          if (!useFinal || isIpaTarget) {
-            span.classList.add('is-ipa-char');
-          }
-          if (!isIpaTarget) {
-            var nextCh = allChars[i + 1];
-            if (ch && ch.toLowerCase() === 'a' &&
-                nextCh && nextCh.toLowerCase() === 'y') {
-              span.classList.add('tight-right');
-            }
-          }
-          if (ch === ' ') {
-            span.style.minWidth = '0.35em';
-            span.textContent    = ' ';
-          } else {
-            span.textContent = useFinal
-              ? ch
-              : CHARS[Math.floor(Math.random() * CHARS.length)];
-          }
-          h4.appendChild(span);
-          return { span: span, final: ch, space: ch === ' ', ipa: isIpaTarget };
-        });
+      function reveal() {
+        revealed = true;
+        wrap.classList.add('revealed');
+        pron.classList.add('visible');
       }
 
-      var ipaWidthPx = 0, origWidthPx = 0;
-
-      function lockWidth() {
-        h4.style.display    = 'inline-block';
-        h4.style.whiteSpace = 'nowrap';
-        paint(ipaText, true);
-        ipaWidthPx = h4.getBoundingClientRect().width;
-        paint(origText, true);
-        origWidthPx = h4.getBoundingClientRect().width;
-        h4.style.minWidth = ipaWidthPx + 'px';
-        h4.style.maxWidth = ipaWidthPx + 'px';
-        h4.style.overflow  = 'hidden';
-        h4.style.visibility = 'visible';
+      function hide() {
+        revealed = false;
+        wrap.classList.remove('revealed');
+        pron.classList.remove('visible');
       }
 
-      lockWidth();
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(lockWidth);
-      }
-
-      function splitFlapTo(targetText) {
-        var chars = paint(targetText, false);
-        var wordIdx = 0;
-        chars.forEach(function (c) {
-          if (c.space) { wordIdx = 0; return; }
-          var delayBase    = wordIdx * stagger;
-          var initialDelay = delayBase % flipSpeed;
-          var landAt       = delayBase + flipCount * flipSpeed;
-          wordIdx++;
-          c.span.classList.add('is-cycling');
-          var startTime = Date.now();
-          setTimeout(function tick() {
-            if (Date.now() - startTime >= landAt) {
-              c.span.textContent = c.final;
-              if (!c.ipa) c.span.classList.remove('is-ipa-char');
-              c.span.classList.remove('is-cycling');
-            } else {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              setTimeout(tick, flipSpeed);
-            }
-          }, initialDelay);
-        });
-      }
-
-      function computeCycleMs(text) {
-        var maxWord = 0, w = 0;
-        for (var i = 0; i < text.length; i++) {
-          if (text.charAt(i) === ' ') {
-            if (w > maxWord) maxWord = w;
-            w = 0;
-          } else {
-            w++;
-          }
-        }
-        if (w > maxWord) maxWord = w;
-        return (maxWord - 1) * stagger + flipCount * flipSpeed;
-      }
-      var ipaCycleMs  = computeCycleMs(ipaText);
-      var origCycleMs = computeCycleMs(origText);
-
-      var showingIpa  = false;
-      var isAnimating = false;
-
-      function revertToOriginal() {
-        if (!showingIpa || isAnimating) return;
-        showingIpa = false;
-        isAnimating = true;
-        h4.style.minWidth = origWidthPx + 'px';
-        h4.style.maxWidth = origWidthPx + 'px';
-        h4.style.transitionDuration = origCycleMs + 'ms';
-        h4.classList.remove('is-ipa');
-        splitFlapTo(origText);
-        setTimeout(function () { isAnimating = false; }, origCycleMs);
-      }
-
-      h4.addEventListener('click', function () {
-        if (isAnimating) return;
-        if (!showingIpa) {
-          showingIpa = true;
-          isAnimating = true;
-          h4.style.minWidth = ipaWidthPx + 'px';
-          h4.style.maxWidth = ipaWidthPx + 'px';
-          h4.style.transitionDuration = ipaCycleMs + 'ms';
-          h4.classList.add('is-ipa');
-          splitFlapTo(ipaText);
-          setTimeout(function () { isAnimating = false; }, ipaCycleMs);
-        } else {
-          revertToOriginal();
-        }
+      wrap.addEventListener('click', function () {
+        revealed ? hide() : reveal();
       });
 
+      /* Auto-hide on scroll away from top */
       window.addEventListener('scroll', function () {
-        if (showingIpa && window.scrollY > 40) {
-          revertToOriginal();
-        }
+        if (revealed && window.scrollY > 60) hide();
       }, { passive: true });
 
+      /* Auto-hide when nav links are clicked */
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', revertToOriginal);
+        link.addEventListener('click', hide);
       });
     })();
     </script>
@@ -1174,7 +1094,7 @@
       }
 
       function update() {
-        if (window._contactVisible) return; // observer handles it
+        if (window._contactVisible) return;
         var active = getActive();
         document.querySelectorAll('#navigation ul .nav-link a').forEach(function(a) {
           var href = a.getAttribute('href');
@@ -1185,7 +1105,6 @@
       window.addEventListener('scroll', update, { passive: true });
       update();
 
-      // IntersectionObserver for contact — takes priority over scroll logic
       var contactEl = document.getElementById('contact');
       if (contactEl) {
         new IntersectionObserver(function (entries) {
@@ -1214,7 +1133,6 @@
         });
       });
 
-      // ── FIXED: scroll to #contact section with nav offset, not footer bottom ──
       document.querySelectorAll('a[href="#contact"]').forEach(function (link) {
         link.addEventListener('click', function (e) {
           e.preventDefault();
@@ -1228,6 +1146,7 @@
       });
     })();
     </script>
+
     <script>
     (function () {
       var SECTIONS = ['home','about','research','teaching','conferences','code','gallery','contact'];
