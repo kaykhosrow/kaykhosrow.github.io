@@ -344,17 +344,22 @@
       }
 
       #pronSpacer {
+        position: relative;
         height: 0;
         overflow: visible;
       }
 
       #heroPron {
+        position: absolute;
+        top: 0;
+        left: 0;
         margin: 0 0 0 5px !important;
         padding: 0;
         opacity: 0;
         font-size: 1.15rem;
         font-style: normal !important;
         text-transform: none !important;
+        white-space: nowrap;
         transform: translateY(-2.6rem);
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
