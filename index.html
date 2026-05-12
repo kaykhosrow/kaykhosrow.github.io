@@ -331,22 +331,35 @@
         display: block;
       }
 
-      /*
-       * REVEAL: name slides up (0.5s, 0s delay), then pron fades in
-       *   after a 0.5s delay — starts exactly when name finishes.
-       * HIDE:   pron fades out first (0.3s, 0s delay), then name slides
-       *   back down after a 0.3s delay — starts when pron is gone.
-       */
-      #heroName {
-        display: block;
-        /* Hide: reduced delay before name slides back */
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+      /* ── Motion-blur keyframes for name slide ─────────────────────────── */
+      @keyframes nameSlideUp {
+        0%   { transform: translateY(0);       filter: blur(0px); }
+        45%  { transform: translateY(-0.85em); filter: blur(4px); }
+        100% { transform: translateY(-1.5em);  filter: blur(0px); }
       }
 
-      #heroNameWrap.revealed #heroName {
+      @keyframes nameSlideDown {
+        0%   { transform: translateY(-1.5em);  filter: blur(0px); }
+        45%  { transform: translateY(-0.65em); filter: blur(4px); }
+        100% { transform: translateY(0);       filter: blur(0px); }
+      }
+
+      #heroName {
+        display: block;
+        /* No transition — animation classes take over on click */
+      }
+
+      #heroName.anim-up {
+        animation: nameSlideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+
+      #heroName.anim-down {
+        animation: nameSlideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+
+      /* Keep the revealed resting position for when no animation is running */
+      #heroNameWrap.revealed #heroName:not(.anim-up):not(.anim-down) {
         transform: translateY(-1.5em);
-        /* Reveal: slide up immediately */
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
       #pronSpacer {
@@ -354,19 +367,6 @@
         overflow: visible;
       }
 
-      /*
-       * font-size: 1.15rem — a notch above button text (1rem).
-       *
-       * translateY target: -1.75rem
-       *   The pronunciation height at 1.15rem ≈ 22px.
-       *   The name slides up 1.5em; if the h4 is ~22px that's ~33px.
-       *   Centering: (33px gap) / 2 ≈ 16.5px from each edge.
-       *   Pronunciation top = -(16.5 + 22) ≈ -38.5px ≈ -1.75rem (28px/rem × 1.375).
-       *   At 16px/rem: -1.75rem = -28px … adjust with the hidden +10px travel.
-       *
-       * Hide transition (base): matches name exactly — 0.5s cubic, 0s delay.
-       * Reveal transition (.visible): fades in 0.18s after name starts.
-       */
       #heroPron {
         margin: 0 0 0 6px !important;
         padding: 0;
@@ -381,7 +381,7 @@
       }
 
       #heroPron.visible {
-        opacity: 0.5;
+        opacity: 0.75; /* was 0.5 */
         transform: translateY(-2.6rem);
         /* Reveal: name slides for 0.5s — start fading in at 0.4s so
            pronunciation appears just as the name is settling. */
@@ -1040,23 +1040,28 @@
     })();
     </script>
 
-    <!-- Pronunciation reveal -->
+    <!-- Pronunciation reveal with motion blur -->
     <script>
     (function () {
       var wrap = document.getElementById('heroNameWrap');
+      var name = document.getElementById('heroName');
       var pron = document.getElementById('heroPron');
-      if (!wrap || !pron) return;
+      if (!wrap || !name || !pron) return;
 
       var revealed = false;
 
       function reveal() {
         revealed = true;
+        name.classList.remove('anim-down');
+        name.classList.add('anim-up');
         wrap.classList.add('revealed');
         pron.classList.add('visible');
       }
 
       function hide() {
         revealed = false;
+        name.classList.remove('anim-up');
+        name.classList.add('anim-down');
         wrap.classList.remove('revealed');
         pron.classList.remove('visible');
       }
@@ -1070,7 +1075,9 @@
       }, { passive: true });
 
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', hide);
+        link.addEventListener('click', function () {
+          if (revealed) hide();
+        });
       });
     })();
     </script>
