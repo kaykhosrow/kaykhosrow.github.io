@@ -339,14 +339,14 @@
        */
       #heroName {
         display: block;
-        /* Hide: 0.35s delay before name slides back */
-        transition: transform 0.5s cubic-bezier(0.55, 0, 0.2, 1) 0.375s;
+        /* Hide: reduced delay before name slides back */
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
       }
 
       #heroNameWrap.revealed #heroName {
         transform: translateY(-1.5em);
         /* Reveal: slide up immediately */
-        transition: transform 0.5s cubic-bezier(0.55, 0, 0.2, 1) 0s;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
       #pronSpacer {
