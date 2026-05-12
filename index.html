@@ -331,35 +331,30 @@
         display: block;
       }
 
-      /* ── Motion-blur keyframes for name slide ─────────────────────────── */
-      @keyframes nameSlideUp {
-        0%   { transform: translateY(0);       filter: blur(0px); }
-        45%  { transform: translateY(-0.85em); filter: blur(4px); }
-        100% { transform: translateY(-1.5em);  filter: blur(0px); }
+      /* ── Motion blur: filter-only keyframe, separate from the transform ── */
+      @keyframes blurFlash {
+        0%   { filter: blur(0px); }
+        35%  { filter: blur(1px); }
+        100% { filter: blur(0px); }
       }
 
-      @keyframes nameSlideDown {
-        0%   { transform: translateY(-1.5em);  filter: blur(0px); }
-        45%  { transform: translateY(-0.65em); filter: blur(4px); }
-        100% { transform: translateY(0);       filter: blur(0px); }
-      }
-
+      /*
+       * Transform is handled by a plain CSS transition — smooth, zero jank.
+       * The blur-flash class fires a completely separate animation on filter
+       * only, so the two never conflict.
+       */
       #heroName {
         display: block;
-        /* No transition — animation classes take over on click */
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
       }
 
-      #heroName.anim-up {
-        animation: nameSlideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      }
-
-      #heroName.anim-down {
-        animation: nameSlideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      }
-
-      /* Keep the revealed resting position for when no animation is running */
-      #heroNameWrap.revealed #heroName:not(.anim-up):not(.anim-down) {
+      #heroNameWrap.revealed #heroName {
         transform: translateY(-1.5em);
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+      }
+
+      #heroName.blur-flash {
+        animation: blurFlash 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
       }
 
       #pronSpacer {
@@ -1050,18 +1045,26 @@
 
       var revealed = false;
 
+      function triggerBlur() {
+        name.classList.remove('blur-flash');
+        void name.offsetWidth; // force reflow so animation restarts cleanly
+        name.classList.add('blur-flash');
+        name.addEventListener('animationend', function handler() {
+          name.classList.remove('blur-flash');
+          name.removeEventListener('animationend', handler);
+        });
+      }
+
       function reveal() {
         revealed = true;
-        name.classList.remove('anim-down');
-        name.classList.add('anim-up');
+        triggerBlur();
         wrap.classList.add('revealed');
         pron.classList.add('visible');
       }
 
       function hide() {
         revealed = false;
-        name.classList.remove('anim-up');
-        name.classList.add('anim-down');
+        triggerBlur();
         wrap.classList.remove('revealed');
         pron.classList.remove('visible');
       }
