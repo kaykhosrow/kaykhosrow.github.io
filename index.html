@@ -307,9 +307,7 @@
         justify-content: center;
         transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .nav-arrow-btn.is-up .nav-arr {
-        transform: rotate(180deg);
-      }
+      .nav-arrow-btn.is-up .nav-arr { transform: rotate(180deg); }
 
       @keyframes navBounceDown {
         0%, 100% { transform: translateY(0); }
@@ -319,27 +317,21 @@
         0%, 100% { transform: translateY(0) rotate(180deg); }
         50%       { transform: translateY(-3px) rotate(180deg); }
       }
-      .nav-arrow-btn:not(.is-up) .nav-arr {
-        animation: navBounceDown 1.4s ease-in-out infinite;
-      }
-      .nav-arrow-btn.is-up .nav-arr {
-        animation: navBounceUp 1.4s ease-in-out infinite;
-      }
+      .nav-arrow-btn:not(.is-up) .nav-arr { animation: navBounceDown 1.4s ease-in-out infinite; }
+      .nav-arrow-btn.is-up .nav-arr { animation: navBounceUp 1.4s ease-in-out infinite; }
 
       #about.section { margin-top: 100px; }
       #contact.section { margin-bottom: 100px; }
 
       /* ── Pronunciation reveal ─────────────────────────────────────────── */
 
-      /* Pointer on the whole block; no layout side-effects */
       #heroNameWrap {
         cursor: pointer;
         user-select: none;
         display: block;
       }
 
-      /* Name: smooth upward slide on reveal, otherwise sits exactly where it
-         always was — translateY only, zero layout impact */
+      /* Name slides up on click — pure visual, zero layout reflow */
       #heroName {
         display: block;
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -349,28 +341,34 @@
         transform: translateY(-1.6em);
       }
 
-      /* Zero-height container — the page layout is identical at rest.
-         overflow:visible lets the child h4 paint out-of-flow below. */
+      /* Zero-height wrapper so nothing shifts at rest.
+         overflow:visible lets #heroPron paint into the space below. */
       #pronSpacer {
         height: 0;
         overflow: visible;
       }
 
-      /* Pronunciation h4: same element + same classes as #heroName, so font
-         size, weight, letter-spacing, and text-transform all match exactly.
-         Hidden at rest; fades and lifts into the gap on reveal. */
+      /* Pronunciation text:
+         - margin:0 strips the h4's default top/bottom margins that were
+           pushing it down into the typewriter area
+         - text-transform:none keeps it lowercase (no uppercase class on element)
+         - font-style:normal — not italic
+         - opacity target is 0.5 to match the original IPA vestaboard style
+      */
       #heroPron {
-        margin: 0;
+        margin: 0 !important;
+        padding: 0;
         opacity: 0;
         transform: translateY(6px);
         font-style: normal !important;
+        text-transform: none !important;
         transition: opacity 0.45s ease 0.15s,
                     transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
         pointer-events: none;
       }
 
       #heroPron.visible {
-        opacity: 1;
+        opacity: 0.5;
         transform: translateY(0);
       }
     </style>
@@ -422,9 +420,9 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
                   <div id="pronSpacer">
-                    <!-- Same element type and classes as #heroName — size, weight, and
-                         text-transform all inherit identically from the theme. -->
-                    <h4 class="text-uppercase" id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</h4>
+                    <!-- No text-uppercase class — stays lowercase.
+                         Same h4 element for identical font size/weight. -->
+                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1053,12 +1051,10 @@
         revealed ? hide() : reveal();
       });
 
-      /* Auto-hide on scroll away from top */
       window.addEventListener('scroll', function () {
         if (revealed && window.scrollY > 60) hide();
       }, { passive: true });
 
-      /* Auto-hide when nav links are clicked */
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
         link.addEventListener('click', hide);
       });
