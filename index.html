@@ -383,9 +383,9 @@
       #heroPron.visible {
         opacity: 0.5;
         transform: translateY(-2.6rem);
-        /* Reveal: name's slide is 0.5s — wait for it to fully finish,
-           then fade in over 0.3s. Pure opacity, no movement. */
-        transition: opacity 0.3s ease 0.5s;
+        /* Reveal: name slides for 0.5s — start fading in at 0.42s so
+           pronunciation appears just as the name is settling. */
+        transition: opacity 0.3s ease 0.42s;
       }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
