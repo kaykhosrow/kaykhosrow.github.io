@@ -332,12 +332,6 @@
         display: block;
       }
 
-      /*
-       * Transform: plain CSS transition — smooth, zero jank.
-       * Blur: SVG feGaussianBlur stdDeviation="0 N" (Y-axis only,
-       * matches vertical direction of travel). Animated via rAF
-       * in the pronunciation script — no CSS keyframes needed.
-       */
       #heroName {
         display: block;
         filter: url(#heroNameBlur);
@@ -362,20 +356,17 @@
         font-style: normal !important;
         text-transform: none !important;
         transform: translateY(-2.6rem);
-        /* Hide: fade out immediately so name can then slide back */
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
       }
 
-      #pronounceBtn:hover { opacity: 0.82 !important; }
-      #pronounceBtn:hover .spk-body { fill: currentColor; }
+      /* PATCH 1: opacity raised from 0.38 → 0.68 for visibility */
+      #pronounceBtn:hover { opacity: 1 !important; }
       #pronounceBtn[disabled] { pointer-events: none; opacity: 0 !important; }
 
       #heroPron.visible {
         opacity: 0.625;
         transform: translateY(-2.6rem);
-        /* Reveal: name slides for 0.5s — start fading in at 0.4s so
-           pronunciation appears just as the name is settling. */
         transition: opacity 0.3s ease 0.25s;
       }
     </style>
@@ -436,7 +427,7 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
                   <div id="pronSpacer">
-                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:11px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-2px;opacity:0.38;transition:opacity 0.18s ease;"><svg id="pronounceSvg" width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="spk-body" d="M0 4.5H2.5L7.5 1V12L2.5 8.5H0V4.5Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="miter" fill="none" style="transition:fill 0.15s ease;"/><path class="spk-wave" d="M10 5Q11.8 6.5 10 8" stroke="currentColor" stroke-width="1.1" stroke-linecap="square" fill="none"/><path class="spk-wave" d="M12 3Q16 6.5 12 10" stroke="currentColor" stroke-width="1.1" stroke-linecap="square" fill="none"/></svg></button></h4>
+                    <h4 id="heroPron">/\u02c8o\u028am\u0251\u02d0r \u02c8ke\u026akhu\u02d0sr\u0251\u02d0w/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:10px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-1px;opacity:0.68;transition:opacity 0.18s ease;"><i class="ph ph-speaker-simple-high" style="font-size:1.05em;display:block;line-height:1;"></i></button></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -624,7 +615,7 @@
             <div class="teaching-item">
               <p class="role">Assistant Professor in Economics</p>
               <p class="inst"><a href="https://www.northeastern.edu/" target="_blank">Northeastern University (London-Boston)</a></p>
-              <p class="teaching-modules">ECON5213 &nbsp;·&nbsp; ECON5214 &nbsp;·&nbsp; ECON6214</p>
+              <p class="teaching-modules">ECON5213 &nbsp;\u00b7&nbsp; ECON5214 &nbsp;\u00b7&nbsp; ECON6214</p>
             </div>
           </div>
 
@@ -972,7 +963,7 @@
     <!-- Section title vestaboard -->
     <script>
     (function () {
-      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
+      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$\u20ac\u00a3#@%&?!';
 
       function splitFlap(el) {
         var original = el.textContent.trim();
@@ -1051,18 +1042,15 @@
 
       var revealed  = false;
       var rafId     = null;
-      var PEAK      = 0.25;   // max stdDeviation in Y (px)
-      var DURATION  = 400;   // ms, slightly shorter so blur clears before text fully settles
+      var PEAK      = 0.25;
+      var DURATION  = 400;
 
-      // Smooth bell curve: sin(π·t) peaks at t=0.5, zero at t=0 and t=1
       function animateBlur() {
         if (rafId) cancelAnimationFrame(rafId);
         var start = null;
         function frame(ts) {
           if (!start) start = ts;
           var t = Math.min((ts - start) / DURATION, 1);
-          // Asymmetric bell matching cubic-bezier(0.4,0,0.2,1):
-          // peaks early at t=0.3 (fast acceleration), decays slowly (deceleration)
           function smoothstep(x) { return x * x * (3 - 2 * x); }
           var PEAK_T = 0.3;
           var half = t < PEAK_T
@@ -1097,12 +1085,10 @@
       var btn = document.getElementById('pronounceBtn');
       if (btn) btn.setAttribute('disabled', '');
 
-      // Name click: toggle reveal
       wrap.addEventListener('click', function () {
         revealed ? hide() : reveal();
       });
 
-      // Speaker button: play audio — only when pronunciation is visible
       if (btn && audio) {
         btn.addEventListener('click', function (e) {
           e.stopPropagation();
@@ -1111,15 +1097,14 @@
           else { audio.play(); }
         });
         audio.addEventListener('ended', function () {
-          btn.style.opacity = '0.38';
+          btn.style.opacity = '0.68';
         });
       }
 
-      // Enable/disable button with reveal state
       var _origReveal = reveal, _origHide = hide;
       reveal = function () {
         _origReveal();
-        if (btn) { btn.removeAttribute('disabled'); btn.style.opacity = '0.38'; }
+        if (btn) { btn.removeAttribute('disabled'); btn.style.opacity = '0.68'; }
       };
       hide = function () {
         _origHide();
