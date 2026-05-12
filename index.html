@@ -362,9 +362,34 @@
         font-style: normal !important;
         text-transform: none !important;
         white-space: nowrap;
-        transform: translateY(calc(-2.6rem - 5px));
+        display: flex;
+        align-items: center;
+        transform: translateY(calc(-2.6rem - 5.75px));
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
+      }
+
+      #pronProgressBar {
+        flex: 1;
+        height: 1.5px;
+        background: currentColor;
+        opacity: 0.25;
+        margin-left: 12px;
+        position: relative;
+        border-radius: 1px;
+        min-width: 20px;
+      }
+
+      #pronProgressFill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0%;
+        background: currentColor;
+        opacity: 1;
+        border-radius: 1px;
+        transition: width 0.1s linear;
       }
 
       /* PATCH 1: opacity raised from 0.38 → 0.68 for visibility */
@@ -373,7 +398,7 @@
 
       #heroPron.visible {
         opacity: 0.625;
-        transform: translateY(calc(-2.6rem - 5px));
+        transform: translateY(calc(-2.6rem - 5.75px));
         transition: opacity 0.3s ease 0.25s;
       }
     </style>
@@ -434,7 +459,7 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
                   <div id="pronSpacer">
-                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:22px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-1px;opacity:0.68;transition:opacity 0.18s ease;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;opacity:inherit;"></button></h4>
+                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:14px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-1px;opacity:0.68;transition:opacity 0.18s ease;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;opacity:inherit;"></button><span id="pronProgressBar"><span id="pronProgressFill"></span></span></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1126,6 +1151,32 @@
       document.querySelectorAll('a[href^="#"]').forEach(function (link) {
         link.addEventListener('click', function () { if (revealed) hide(); });
       });
+
+      // Sync heroPron width to heroName so progress bar reaches the name's right edge
+      var progressFill = document.getElementById('pronProgressFill');
+      var heroNameEl   = document.getElementById('heroName');
+      var heroPronEl   = document.getElementById('heroPron');
+
+      function syncPronWidth() {
+        if (heroNameEl && heroPronEl) {
+          heroPronEl.style.width = heroNameEl.offsetWidth + 'px';
+        }
+      }
+      syncPronWidth();
+      window.addEventListener('resize', syncPronWidth);
+      document.fonts && document.fonts.ready.then(syncPronWidth);
+
+      // Update progress bar as audio plays
+      if (audio && progressFill) {
+        audio.addEventListener('timeupdate', function () {
+          if (audio.duration) {
+            progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+          }
+        });
+        audio.addEventListener('ended', function () {
+          progressFill.style.width = '0%';
+        });
+      }
     })();
     </script>
 
