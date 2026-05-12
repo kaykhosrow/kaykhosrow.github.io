@@ -339,8 +339,8 @@
        */
       #heroName {
         display: block;
-        /* Hide: same 0.25s delay as reveal — name waits while pron fades */
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.25s;
+        /* Hide: name slides back immediately while pron fades — no delay */
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
       }
 
       #heroNameWrap.revealed #heroName {
