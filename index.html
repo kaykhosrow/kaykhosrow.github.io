@@ -367,10 +367,12 @@
         pointer-events: none;
       }
 
+      #pronounceBtn:hover { opacity: 0.82 !important; }
+      #pronounceBtn:hover .spk-body { fill: currentColor; }
+      #pronounceBtn[disabled] { pointer-events: none; opacity: 0 !important; }
+
       #heroPron.visible {
         opacity: 0.625;
-        pointer-events: auto;
-        cursor: pointer;
         transform: translateY(-2.6rem);
         /* Reveal: name slides for 0.5s — start fading in at 0.4s so
            pronunciation appears just as the name is settling. */
@@ -434,7 +436,7 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
                   <div id="pronSpacer">
-                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<span id="pronounceIcon" aria-hidden="true" style="display:inline-block;margin-left:9px;vertical-align:middle;position:relative;top:-1px;"><svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="3.5" width="2.8" height="5" rx="0.5" fill="currentColor"/><path d="M2.8 2L7 0.5V11.5L2.8 10Z" fill="currentColor"/><path d="M9 4C10.2 5 10.2 7 9 8" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/><path d="M11 2.5C13.8 4.5 13.8 7.5 11 9.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/></svg></span></h4>
+                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:11px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-2px;opacity:0.38;transition:opacity 0.18s ease;"><svg id="pronounceSvg" width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path class="spk-body" d="M0 4.5H2.5L7.5 1V12L2.5 8.5H0V4.5Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="miter" fill="none" style="transition:fill 0.15s ease;"/><path class="spk-wave" d="M10 5Q11.8 6.5 10 8" stroke="currentColor" stroke-width="1.1" stroke-linecap="square" fill="none"/><path class="spk-wave" d="M12 3Q16 6.5 12 10" stroke="currentColor" stroke-width="1.1" stroke-linecap="square" fill="none"/></svg></button></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1092,27 +1094,38 @@
         pron.classList.remove('visible');
       }
 
-      // Name click: toggle reveal — ignore clicks inside the pronunciation
-      wrap.addEventListener('click', function (e) {
-        if (pron.contains(e.target)) return;
+      var btn = document.getElementById('pronounceBtn');
+      if (btn) btn.setAttribute('disabled', '');
+
+      // Name click: toggle reveal
+      wrap.addEventListener('click', function () {
         revealed ? hide() : reveal();
       });
 
-      // Pronunciation click: play audio, never toggles reveal
-      pron.addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (!audio) return;
-        if (!audio.paused) { audio.pause(); audio.currentTime = 0; }
-        else { audio.play(); }
-      });
+      // Speaker button: play audio — only when pronunciation is visible
+      if (btn && audio) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (!revealed) return;
+          if (!audio.paused) { audio.pause(); audio.currentTime = 0; }
+          else { audio.play(); }
+        });
+        audio.addEventListener('ended', function () {
+          btn.style.opacity = '0.38';
+        });
+      }
 
-      // Hover: darken whole pronunciation row
-      pron.addEventListener('mouseenter', function () {
-        if (revealed) pron.style.opacity = '0.85';
-      });
-      pron.addEventListener('mouseleave', function () {
-        if (revealed) pron.style.opacity = '';
-      });
+      // Enable/disable button with reveal state
+      var _origReveal = reveal, _origHide = hide;
+      reveal = function () {
+        _origReveal();
+        if (btn) { btn.removeAttribute('disabled'); btn.style.opacity = '0.38'; }
+      };
+      hide = function () {
+        _origHide();
+        if (btn) { btn.setAttribute('disabled', ''); }
+        if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0; }
+      };
 
       window.addEventListener('scroll', function () {
         if (revealed && window.scrollY > 60) hide();
