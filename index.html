@@ -395,6 +395,7 @@
         </filter>
       </defs>
     </svg>
+    <audio id="pronounceAudio" src="assets/audio/pronounce.mp3" preload="none"></audio>
     <div id="grain"></div>
     <div class="color-switcher" style="display:none">
       <button class="color-switcher-btn"></button>
@@ -431,7 +432,7 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName">Omar Kaykhusraw</h4>
                   <div id="pronSpacer">
-                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</h4>
+                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:6px;cursor:pointer;opacity:0.5;vertical-align:middle;line-height:1;transition:opacity 0.2s;"><i class="ph ph-speaker-simple-high" style="font-size:0.95em;"></i></button></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1240,6 +1241,32 @@
 
       window.addEventListener('scroll', update, { passive: true });
       update();
+    })();
+    </script>
+    <script>
+    (function () {
+      var btn   = document.getElementById('pronounceBtn');
+      var audio = document.getElementById('pronounceAudio');
+      if (!btn || !audio) return;
+
+      btn.addEventListener('mouseenter', function () { btn.style.opacity = '1'; });
+      btn.addEventListener('mouseleave', function () { btn.style.opacity = audio.paused ? '0.5' : '1'; });
+
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation(); // don't toggle the pronunciation reveal
+        if (!audio.paused) {
+          audio.pause();
+          audio.currentTime = 0;
+          btn.style.opacity = '0.5';
+        } else {
+          audio.play();
+          btn.style.opacity = '1';
+        }
+      });
+
+      audio.addEventListener('ended', function () {
+        btn.style.opacity = '0.5';
+      });
     })();
     </script>
   </body>
