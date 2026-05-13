@@ -364,7 +364,7 @@
         white-space: nowrap;
         display: flex;
         align-items: center;
-        transform: translateY(calc(-2.6rem - 6.25px));
+        transform: translateY(calc(-2.6rem - 6.75px));
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
       }
@@ -372,7 +372,7 @@
       #pronProgressBar {
         flex: 1;
         height: 1.5px;
-        background: rgba(0, 0, 0, 0.25);
+        background: rgba(0, 0, 0, 0.625);
         opacity: 1;
         margin-left: 18px;
         position: relative;
@@ -385,10 +385,13 @@
         left: 0;
         top: 0;
         height: 100%;
-        width: 0%;
+        width: 100%;
+        transform: scaleX(0);
+        transform-origin: left center;
         background: currentColor;
         opacity: 1;
         border-radius: 1px;
+        will-change: transform;
       }
 
       /* PATCH 1: opacity raised from 0.38 → 0.68 for visibility */
@@ -461,7 +464,7 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName"><span id="heroNameInner">Omar Kaykhusraw</span></h4>
                   <div id="pronSpacer">
-                    <h4 id="heroPron"><span id="pronText">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</span><button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:14px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-1px;opacity:0.68;transition:opacity 0.18s ease;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;opacity:inherit;"></button><span id="pronProgressBar"><span id="pronProgressFill"></span></span></h4>
+                    <h4 id="heroPron"><span id="pronText">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</span><button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:14px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-1px;opacity:0.625;transition:opacity 0.18s ease;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;opacity:inherit;"></button><span id="pronProgressBar"><span id="pronProgressFill"></span></span></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1131,14 +1134,14 @@
           else { audio.play(); }
         });
         audio.addEventListener('ended', function () {
-          btn.style.opacity = '0.68';
+          btn.style.opacity = '0.625';
         });
       }
 
       var _origReveal = reveal, _origHide = hide;
       reveal = function () {
         _origReveal();
-        if (btn) { btn.removeAttribute('disabled'); btn.style.opacity = '0.68'; }
+        if (btn) { btn.removeAttribute('disabled'); btn.style.opacity = '0.625'; }
       };
       hide = function () {
         _origHide();
@@ -1162,7 +1165,7 @@
       function syncPronWidth() {
         var inner = document.getElementById('heroNameInner');
         if (inner && heroPronEl) {
-          heroPronEl.style.width = (inner.offsetWidth - 10) + 'px';
+          heroPronEl.style.width = (inner.offsetWidth - 9) + 'px';
         }
       }
       syncPronWidth();
@@ -1174,13 +1177,13 @@
 
         function setupProgress() {
           if (!audio.duration || isNaN(audio.duration)) return;
-          var startPct = (audio.currentTime / audio.duration * 100);
-          var remaining = audio.duration - audio.currentTime;
+          var startScale = audio.currentTime / audio.duration;
+          var remaining  = audio.duration - audio.currentTime;
           progressFill.style.transition = 'none';
-          progressFill.style.width = startPct + '%';
+          progressFill.style.transform  = 'scaleX(' + startScale + ')';
           progressFill.offsetWidth;
-          progressFill.style.transition = 'width ' + remaining + 's linear';
-          progressFill.style.width = '100%';
+          progressFill.style.transition = 'transform ' + remaining + 's linear';
+          progressFill.style.transform  = 'scaleX(1)';
         }
 
         // Register upfront — may fire before or after play on first load
@@ -1206,19 +1209,18 @@
         audio.addEventListener('pause', function () {
           playPending = false;
           if (audio.duration && !isNaN(audio.duration)) {
-            var pct = (audio.currentTime / audio.duration * 100);
             progressFill.style.transition = 'none';
-            progressFill.style.width = pct + '%';
+            progressFill.style.transform  = 'scaleX(' + (audio.currentTime / audio.duration) + ')';
           }
         });
 
         audio.addEventListener('ended', function () {
           playPending = false;
           progressFill.style.transition = 'none';
-          progressFill.style.width = '100%';
+          progressFill.style.transform  = 'scaleX(1)';
           progressFill.offsetWidth;
-          progressFill.style.transition = 'width 0.5s ease-in-out';
-          progressFill.style.width = '0%';
+          progressFill.style.transition = 'transform 0.5s ease-in-out';
+          progressFill.style.transform  = 'scaleX(0)';
         });
       }
     })();
