@@ -252,31 +252,36 @@
 
       html, body { min-width: 1200px; }
 
-      /* ── Lock all Bootstrap responsive classes to xl desktop values ── */
+      /* ── Lock Bootstrap responsive classes — grid and display only ── */
 
-      /* Grid columns — always use their named width */
+      /* Grid columns — always use named widths except about image (let it stack) */
       .col-md-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
       .col-xl-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
       .col-lg-7  { flex: 0 0 58.3333% !important; max-width: 58.3333% !important; width: 58.3333% !important; }
-      .col-lg-5  { flex: 0 0 41.6667% !important; max-width: 41.6667% !important; width: 41.6667% !important; }
       .col-lg-10 { flex: 0 0 83.3333% !important; max-width: 83.3333% !important; width: 83.3333% !important; }
       .col-xl-8  { flex: 0 0 66.6667% !important; max-width: 66.6667% !important; width: 66.6667% !important; }
       .col-sm-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
 
-      /* Display utilities — always behave as xl */
-      .d-xl-none  { display: none  !important; }
+      /* Nav elements — always show at xl */
       .d-none.d-xl-flex  { display: flex  !important; }
       .d-none.d-xl-block { display: block !important; }
 
-      /* Spacing utilities — always use lg/xl values */
-      .mt-5.mt-lg-0    { margin-top: 0    !important; }
-      .mb-4.mb-lg-5    { margin-bottom: 3rem !important; }
-      .mb-lg-5         { margin-bottom: 3rem !important; }
+      /* Hamburger — fixed top right, always accessible */
+      .header {
+        position: fixed !important;
+        top: 16px !important;
+        right: 20px !important;
+        left: auto !important;
+        width: auto !important;
+        background: transparent !important;
+        z-index: 200 !important;
+        padding: 0 !important;
+      }
+      .header .container {
+        padding: 0 !important;
+      }
 
-      /* Alignment utilities — always use lg values */
-      .justify-content-center.justify-content-lg-end { justify-content: flex-end !important; }
-
-      /* Never show mobile nav overlay or hamburger */
+      /* Never show mobile nav overlay behind content */
       .nav-overlay { display: none !important; }
 
       /* responsive breakpoint removed — desktop layout always enforced */
