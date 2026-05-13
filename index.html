@@ -1170,21 +1170,42 @@
       document.fonts && document.fonts.ready.then(syncPronWidth);
 
       // CSS-transition approach: set transition duration = remaining audio time
-      // This gives perfectly smooth, frame-native progress that ends exactly with the audio
       if (audio && progressFill) {
-        audio.addEventListener('play', function () {
-          if (!audio.duration) return;
+
+        function setupProgress() {
+          if (!audio.duration || isNaN(audio.duration)) return;
           var startPct = (audio.currentTime / audio.duration * 100);
           var remaining = audio.duration - audio.currentTime;
           progressFill.style.transition = 'none';
           progressFill.style.width = startPct + '%';
-          progressFill.offsetWidth; // force reflow
+          progressFill.offsetWidth;
           progressFill.style.transition = 'width ' + remaining + 's linear';
           progressFill.style.width = '100%';
+        }
+
+        // Register upfront — may fire before or after play on first load
+        var metaReady = false;
+        var playPending = false;
+
+        audio.addEventListener('loadedmetadata', function () {
+          metaReady = true;
+          if (playPending && !audio.paused) {
+            setupProgress();
+            playPending = false;
+          }
+        });
+
+        audio.addEventListener('play', function () {
+          if (metaReady) {
+            setupProgress();
+          } else {
+            playPending = true;
+          }
         });
 
         audio.addEventListener('pause', function () {
-          if (audio.duration) {
+          playPending = false;
+          if (audio.duration && !isNaN(audio.duration)) {
             var pct = (audio.currentTime / audio.duration * 100);
             progressFill.style.transition = 'none';
             progressFill.style.width = pct + '%';
@@ -1192,10 +1213,10 @@
         });
 
         audio.addEventListener('ended', function () {
-          // Snap to exactly 100% first (close any tiny gap), then transition back to 0
+          playPending = false;
           progressFill.style.transition = 'none';
           progressFill.style.width = '100%';
-          progressFill.offsetWidth; // force reflow
+          progressFill.offsetWidth;
           progressFill.style.transition = 'width 0.5s ease-in-out';
           progressFill.style.width = '0%';
         });
