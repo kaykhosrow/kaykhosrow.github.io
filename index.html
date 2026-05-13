@@ -279,6 +279,27 @@
       .mb-4.mb-lg-5 { margin-bottom: 3rem !important; }
       .justify-content-center.justify-content-lg-end { justify-content: flex-end !important; }
 
+      /* Lock section title overlay text to desktop size */
+      .section-title-overlay-text {
+        font-size: 150px !important;
+        letter-spacing: normal !important;
+        white-space: nowrap !important;
+      }
+
+      /* Lock section padding to desktop values */
+      .section {
+        padding-top: 100px !important;
+        padding-bottom: 100px !important;
+      }
+
+      /* Lock headings — prevent theme responsive font scaling */
+      h1 { font-size: var(--bs-body-font-size, inherit) !important; }
+      .section-title h2 { font-size: inherit !important; }
+
+      /* Lock experience/swiper wrappers */
+      .experience-wrapper,
+      .swiper-wrapper { width: 100% !important; }
+
       .nav-overlay { display: none !important; }
 
       /* Hamburger — fixed top right */
