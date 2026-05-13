@@ -56,19 +56,16 @@
 
       section.hero .next-chapter { padding-top: 40px !important; padding-bottom: 20px !important; }
 
+      /* ── CHANGED: use transform instead of bottom/top so the transition
+         is the same property in both states and animates smoothly both ways ── */
       .nav-pinned-bottom {
-        position: fixed !important;
-        bottom: 0 !important;
-        top: auto !important;
-        left: 0 !important;
-        right: 0 !important;
-        z-index: 49;
+        transform: translateY(calc(100vh - 100%)) !important;
       }
 
-      /* ── FIXED: only transition top, not bottom, so both directions animate smoothly ── */
       html:not(.js-loading) #navigation {
-        transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
+      /* ── end change ── */
 
       html.js-loading #navigation,
       html.js-loading .img-wrapper,
@@ -256,12 +253,8 @@
       html { min-width: 1200px; }
       body { min-width: 1200px; overflow-x: visible !important; }
 
-      /* ── Fully lock Bootstrap — no reflow, horizontal scroll only ── */
-
-      /* Container never shrinks below xl width but can grow on large screens */
       .container { min-width: 1140px !important; }
 
-      /* Grid columns — always desktop widths */
       .col-md-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
       .col-xl-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
       .col-lg-5  { flex: 0 0 41.6667% !important; max-width: 41.6667% !important; width: 41.6667% !important; }
@@ -270,21 +263,17 @@
       .col-xl-8  { flex: 0 0 66.6667% !important; max-width: 66.6667% !important; width: 66.6667% !important; }
       .col-sm-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
 
-      /* Row gutters */
       .g-xl-5 { --bs-gutter-x: 3rem !important; --bs-gutter-y: 3rem !important; }
 
-      /* Display utilities */
       .d-none.d-xl-flex  { display: flex  !important; }
       .d-none.d-xl-block { display: block !important; }
 
-      /* Spacing */
       .mt-5.mt-lg-0 { margin-top: 0 !important; }
       .mb-4.mb-lg-5 { margin-bottom: 3rem !important; }
       .justify-content-center.justify-content-lg-end { justify-content: flex-end !important; }
 
       .nav-overlay { display: none !important; }
 
-      /* Hamburger — fixed top right */
       .header {
         position: fixed !important;
         top: 28px !important;
@@ -366,8 +355,6 @@
       #about.section { margin-top: 100px; }
       #contact.section { margin-bottom: 100px; }
 
-      /* ── Pronunciation reveal ─────────────────────────────────────────── */
-
       #heroNameWrap {
         cursor: pointer;
         user-select: none;
@@ -439,10 +426,8 @@
         will-change: transform;
       }
 
-      /* Pronunciation button */
       #pronounceBtn { opacity: 0.625; pointer-events: none; transition: opacity 0.3s ease; }
       #pronounceBtn:hover { opacity: 1 !important; }
-      /* Disabled = no pointer-events only; opacity handled by parent fade */
       #pronounceBtn[disabled] { pointer-events: none !important; }
 
       #heroPron.visible {
@@ -451,12 +436,10 @@
         transition: opacity 0.3s ease 0.25s;
       }
 
-      /* Clickable elements when visible */
       #heroPron.visible #pronounceBtn:not([disabled]) { pointer-events: auto; }
       #heroPron.visible #pronProgressBar { pointer-events: auto; cursor: pointer; }
       #heroPron.visible #pronText { pointer-events: auto; cursor: pointer; }
 
-      /* Hover on pronunciation row → all items go full opacity */
       #heroPron.visible #pronText:hover,
       #heroPron.visible #pronounceBtn:hover { opacity: 1; }      #pronText {
         opacity: 0.625;
@@ -477,7 +460,6 @@
     <link rel="apple-touch-icon" href="images/o.png">
   </head>
   <body>
-    <!-- Directional motion blur filter (Y-axis only) -->
     <svg style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <filter id="heroNameBlur" x="-10%" y="-50%" width="120%" height="200%">
@@ -542,7 +524,7 @@
           </div>
         </section>
 
-        <nav class="navigation" id="navigation">
+        <nav class="navigation nav-pinned-bottom" id="navigation">
           <div class="nav-arrow-wrap d-none d-xl-flex">
             <button class="nav-arrow-btn" id="navArrowBtn" aria-label="Navigate to next section">
               <span class="nav-arr"><i class="ph ph-arrow-down"></i></span>
@@ -1028,7 +1010,6 @@
       })();
     </script>
 
-    <!-- ── FIXED: nav uses style.top for both states so CSS can interpolate smoothly in both directions ── -->
     <script>
       (function() {
         var nav = document.getElementById('navigation');
@@ -1036,23 +1017,14 @@
 
         function update() {
           if (window.scrollY < 1) {
-            nav.style.top = (window.innerHeight - nav.offsetHeight) + 'px';
+            nav.classList.add('nav-pinned-bottom');
           } else {
-            nav.style.top = '0px';
+            nav.classList.remove('nav-pinned-bottom');
           }
         }
 
-        // Set initial position without triggering a transition flash
-        nav.style.transition = 'none';
         update();
-        requestAnimationFrame(function() {
-          requestAnimationFrame(function() {
-            nav.style.transition = '';
-          });
-        });
-
         window.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update);
 
         document.querySelectorAll('a[href="#home"]').forEach(function(link) {
           link.addEventListener('click', function(e) {
@@ -1190,7 +1162,6 @@
       var btn = document.getElementById('pronounceBtn');
       if (btn) btn.setAttribute('disabled', '');
 
-      // Reveal/hide also manage btn disabled for pointer-events
       var _origReveal = reveal, _origHide = hide;
       reveal = function () { _origReveal(); if (btn) btn.removeAttribute('disabled'); };
       hide   = function () {
@@ -1199,12 +1170,10 @@
         if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0; }
       };
 
-      // Name → reveal only; hide is reserved for pronunciation text click
       wrap.addEventListener('click', function () {
         if (!revealed) reveal();
       });
 
-      // Pronunciation text → hide on click
       var pronTextEl  = document.getElementById('pronText');
       var progressBar = document.getElementById('pronProgressBar');
 
@@ -1215,7 +1184,6 @@
         });
       }
 
-      // Play/pause audio helper — used by both icon and progress bar
       function toggleAudio(e) {
         e.stopPropagation();
         if (!revealed || !audio) return;
@@ -1226,9 +1194,7 @@
       if (btn)         btn.addEventListener('click', toggleAudio);
       if (progressBar) progressBar.addEventListener('click', toggleAudio);
 
-      // Sync heroPron width to heroName so progress bar reaches the name's right edge
       var progressFill = document.getElementById('pronProgressFill');
-      var heroNameEl   = document.getElementById('heroName');
       var heroPronEl   = document.getElementById('heroPron');
 
       function syncPronWidth() {
@@ -1241,7 +1207,6 @@
       window.addEventListener('resize', syncPronWidth);
       document.fonts && document.fonts.ready.then(syncPronWidth);
 
-      // CSS-transition approach: set transition duration = remaining audio time
       if (audio && progressFill) {
 
         function setupProgress() {
@@ -1255,7 +1220,6 @@
           progressFill.style.transform  = 'scaleX(1)';
         }
 
-        // Register upfront — may fire before or after play on first load
         var metaReady = false;
         var playPending = false;
 
