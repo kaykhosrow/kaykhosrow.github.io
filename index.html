@@ -56,8 +56,11 @@
 
       section.hero .next-chapter { padding-top: 40px !important; padding-bottom: 20px !important; }
 
-      /* ── CHANGED: use transform instead of bottom/top so the transition
-         is the same property in both states and animates smoothly both ways ── */
+      /*
+       * FIX: use transform instead of bottom/top so both states animate
+       * the same CSS property — no more anchor-point snap.
+       * The transition is suppressed on first paint via JS (see DOMContentLoaded).
+       */
       .nav-pinned-bottom {
         transform: translateY(calc(100vh - 100%)) !important;
       }
@@ -65,7 +68,6 @@
       html:not(.js-loading) #navigation {
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      /* ── end change ── */
 
       html.js-loading #navigation,
       html.js-loading .img-wrapper,
@@ -1259,9 +1261,23 @@
     })();
     </script>
 
+    <!--
+      FIX: suppress the nav transition briefly while js-loading is removed,
+      so the initial bottom position is painted instantly (no slide-on-load).
+      After two rAF frames the transition re-enables for all subsequent scrolls.
+    -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
+      var nav = document.getElementById('navigation');
+      if (nav) nav.style.transition = 'none';
+
       document.documentElement.classList.remove('js-loading');
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          if (nav) nav.style.transition = '';
+        });
+      });
 
       if (window.gsap) {
         gsap.killTweensOf('.navigation');
