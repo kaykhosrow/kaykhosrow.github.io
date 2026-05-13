@@ -371,20 +371,13 @@
 
       #pronProgressBar {
         flex: 1;
-        height: 2px;
+        height: 1.5px;
         background: currentColor;
-        opacity: 0.75;
+        opacity: 0.4;
         margin-left: 18px;
         position: relative;
-        border-radius: 999px;
+        border-radius: 1px;
         min-width: 20px;
-        clip-path: inset(0 100% 0 0 round 999px);
-        transition: clip-path 0s;
-      }
-
-      #heroPron.visible #pronProgressBar {
-        clip-path: inset(0 0% 0 0 round 999px);
-        transition: clip-path 0.85s cubic-bezier(0.7, 0, 0.85, 1) 0.35s;
       }
 
       #pronProgressFill {
@@ -395,7 +388,7 @@
         width: 0%;
         background: currentColor;
         opacity: 1;
-        border-radius: 999px;
+        border-radius: 1px;
       }
 
       /* PATCH 1: opacity raised from 0.38 → 0.68 for visibility */
