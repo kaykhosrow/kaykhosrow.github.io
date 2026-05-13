@@ -255,8 +255,8 @@
 
       /* ── Fully lock Bootstrap — no reflow, horizontal scroll only ── */
 
-      /* Container always at xl width */
-      .container { max-width: 1140px !important; }
+      /* Container never shrinks below xl width but can grow on large screens */
+      .container { min-width: 1140px !important; }
 
       /* Grid columns — always desktop widths */
       .col-md-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
