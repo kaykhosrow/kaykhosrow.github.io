@@ -341,7 +341,7 @@
       }
 
       /* Hovering the name (before reveal) hints it's clickable */
-      #heroName:hover { opacity: 0.625; }
+      #heroNameWrap:not(.revealed) #heroName:hover { opacity: 0.625; }
 
       #heroNameWrap.revealed #heroName {
         transform: translateY(-1.5em);
@@ -1148,9 +1148,9 @@
         if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0; }
       };
 
-      // Name → toggle reveal/hide
+      // Name → reveal only; hide is reserved for pronunciation text click
       wrap.addEventListener('click', function () {
-        revealed ? hide() : reveal();
+        if (!revealed) reveal();
       });
 
       // Pronunciation text → hide on click
