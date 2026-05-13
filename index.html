@@ -364,7 +364,7 @@
         white-space: nowrap;
         display: flex;
         align-items: center;
-        transform: translateY(calc(-2.6rem - 5.75px));
+        transform: translateY(calc(-2.6rem - 6.25px));
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
       }
@@ -396,9 +396,12 @@
       #pronounceBtn[disabled] { pointer-events: none; opacity: 0 !important; }
 
       #heroPron.visible {
-        opacity: 0.625;
-        transform: translateY(calc(-2.6rem - 5.75px));
+        opacity: 1;
         transition: opacity 0.3s ease 0.25s;
+      }
+
+      #pronText {
+        opacity: 0.625;
       }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
@@ -458,7 +461,7 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName"><span id="heroNameInner">Omar Kaykhusraw</span></h4>
                   <div id="pronSpacer">
-                    <h4 id="heroPron">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/<button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:14px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-1px;opacity:0.68;transition:opacity 0.18s ease;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;opacity:inherit;"></button><span id="pronProgressBar"><span id="pronProgressFill"></span></span></h4>
+                    <h4 id="heroPron"><span id="pronText">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</span><button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:14px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-1px;opacity:0.68;transition:opacity 0.18s ease;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;opacity:inherit;"></button><span id="pronProgressBar"><span id="pronProgressFill"></span></span></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1159,7 +1162,7 @@
       function syncPronWidth() {
         var inner = document.getElementById('heroNameInner');
         if (inner && heroPronEl) {
-          heroPronEl.style.width = inner.offsetWidth + 'px';
+          heroPronEl.style.width = (inner.offsetWidth - 12) + 'px';
         }
       }
       syncPronWidth();
