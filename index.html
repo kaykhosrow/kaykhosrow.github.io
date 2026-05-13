@@ -337,8 +337,11 @@
         filter: url(#heroNameBlur);
         position: relative;
         top: -2.5px;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, opacity 0.2s ease;
       }
+
+      /* Hovering the name (before reveal) hints it's clickable */
+      #heroNameWrap:hover #heroName { opacity: 0.625; }
 
       #heroNameWrap.revealed #heroName {
         transform: translateY(-1.5em);
@@ -395,19 +398,30 @@
         will-change: transform;
       }
 
-      /* PATCH 1: opacity raised from 0.38 → 0.68 for visibility */
+      /* Pronunciation button */
+      #pronounceBtn { opacity: 0.625; pointer-events: none; transition: opacity 0.3s ease; }
       #pronounceBtn:hover { opacity: 1 !important; }
-      #pronounceBtn[disabled] { pointer-events: none; opacity: 0 !important; }
+      /* Disabled = no pointer-events only; opacity handled by parent fade */
+      #pronounceBtn[disabled] { pointer-events: none !important; }
 
       #heroPron.visible {
         opacity: 1;
+        pointer-events: none;
         transition: opacity 0.3s ease 0.25s;
       }
 
-      #pronText {
+      /* Clickable elements when visible */
+      #heroPron.visible #pronounceBtn:not([disabled]) { pointer-events: auto; }
+      #heroPron.visible #pronProgressBar { pointer-events: auto; cursor: pointer; }
+      #heroPron.visible #pronText { pointer-events: auto; cursor: pointer; }
+
+      /* Hover on pronunciation row → all items go full opacity */
+      #heroPron.visible #pronText:hover,
+      #heroPron.visible #pronounceBtn:hover { opacity: 1; }      #pronText {
         opacity: 0.625;
         position: relative;
         top: -1px;
+        transition: opacity 0.2s ease;
       }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
@@ -467,7 +481,7 @@
                 <div id="heroNameWrap">
                   <h4 class="text-uppercase" id="heroName"><span id="heroNameInner">Omar Kaykhusraw</span></h4>
                   <div id="pronSpacer">
-                    <h4 id="heroPron"><span id="pronText">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</span><button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:14px;cursor:pointer;color:inherit;pointer-events:auto;display:inline-block;vertical-align:middle;position:relative;top:-1px;opacity:0.625;transition:opacity 0.18s ease;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;opacity:inherit;"></button><span id="pronProgressBar"><span id="pronProgressFill"></span></span></h4>
+                    <h4 id="heroPron"><span id="pronText">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</span><button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:14px;cursor:pointer;color:inherit;display:inline-block;vertical-align:middle;position:relative;top:-1px;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;"></button><span id="pronProgressBar"><span id="pronProgressFill"></span></span></h4>
                   </div>
                 </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
@@ -1074,16 +1088,16 @@
     <!-- Pronunciation reveal with directional motion blur -->
     <script>
     (function () {
-      var wrap  = document.getElementById('heroNameWrap');
-      var pron  = document.getElementById('heroPron');
-      var audio = document.getElementById('pronounceAudio');
+      var wrap   = document.getElementById('heroNameWrap');
+      var pron   = document.getElementById('heroPron');
+      var audio  = document.getElementById('pronounceAudio');
       var feBlur = document.getElementById('heroNameBlurFe');
       if (!wrap || !pron || !feBlur) return;
 
-      var revealed  = false;
-      var rafId     = null;
-      var PEAK      = 0.25;
-      var DURATION  = 400;
+      var revealed = false;
+      var rafId    = null;
+      var PEAK     = 0.25;
+      var DURATION = 400;
 
       function animateBlur() {
         if (rafId) cancelAnimationFrame(rafId);
@@ -1125,40 +1139,49 @@
       var btn = document.getElementById('pronounceBtn');
       if (btn) btn.setAttribute('disabled', '');
 
+      // Reveal/hide also manage btn disabled for pointer-events
+      var _origReveal = reveal, _origHide = hide;
+      reveal = function () { _origReveal(); if (btn) btn.removeAttribute('disabled'); };
+      hide   = function () {
+        _origHide();
+        if (btn) btn.setAttribute('disabled', '');
+        if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0; }
+      };
+
+      // Name → reveal only
       wrap.addEventListener('click', function () {
-        revealed ? hide() : reveal();
+        if (!revealed) reveal();
       });
 
-      if (btn && audio) {
-        btn.addEventListener('click', function (e) {
+      // Pronunciation text → hide on click
+      var pronTextEl  = document.getElementById('pronText');
+      var progressBar = document.getElementById('pronProgressBar');
+
+      if (pronTextEl) {
+        pronTextEl.addEventListener('click', function (e) {
           e.stopPropagation();
-          if (!revealed) return;
-          if (!audio.paused) { audio.pause(); audio.currentTime = 0; }
-          else { audio.play(); }
-        });
-        audio.addEventListener('ended', function () {
-          btn.style.opacity = '0.625';
+          if (revealed) hide();
         });
       }
 
-      var _origReveal = reveal, _origHide = hide;
-      reveal = function () {
-        _origReveal();
-        if (btn) { btn.removeAttribute('disabled'); btn.style.opacity = '0.625'; }
-      };
-      hide = function () {
-        _origHide();
-        if (btn) { btn.setAttribute('disabled', ''); }
-        if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0; }
-      };
+      // Play/pause audio helper — used by both icon and progress bar
+      function toggleAudio(e) {
+        e.stopPropagation();
+        if (!revealed || !audio) return;
+        if (!audio.paused) { audio.pause(); audio.currentTime = 0; }
+        else { audio.play(); }
+      }
+
+      if (btn)         btn.addEventListener('click', toggleAudio);
+      if (progressBar) progressBar.addEventListener('click', toggleAudio);
+
+      // Fade timing: btn opacity managed purely by parent heroPron fade
+      // so all items disappear at identical rate — no direct btn.style.opacity manipulation
 
       window.addEventListener('scroll', function () {
         if (revealed && window.scrollY > 60) hide();
       }, { passive: true });
-
-      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', function () { if (revealed) hide(); });
-      });
+      // Nav-away reset removed — pronunciation persists when scrolling to sections
 
       // Sync heroPron width to heroName so progress bar reaches the name's right edge
       var progressFill = document.getElementById('pronProgressFill');
@@ -1168,7 +1191,7 @@
       function syncPronWidth() {
         var inner = document.getElementById('heroNameInner');
         if (inner && heroPronEl) {
-          heroPronEl.style.width = (inner.offsetWidth - 8) + 'px';
+          heroPronEl.style.width = (inner.offsetWidth - 7.5) + 'px';
         }
       }
       syncPronWidth();
