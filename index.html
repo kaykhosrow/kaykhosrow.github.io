@@ -332,16 +332,15 @@
         display: block;
       }
 
+      #heroNameWrap.revealed { cursor: default; pointer-events: none; }
+
       #heroName {
         display: block;
         filter: url(#heroNameBlur);
         position: relative;
         top: -2.5px;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, opacity 0.2s ease;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
       }
-
-      /* Hovering the name (before reveal) hints it's clickable */
-      #heroNameWrap:not(.revealed) #heroName:hover { opacity: 0.625; }
 
       #heroNameWrap.revealed #heroName {
         transform: translateY(-1.5em);
