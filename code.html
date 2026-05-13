@@ -21,7 +21,10 @@
         main { padding-top: 50px; }
       }
       .left-bar ul li a { border: 2px solid rgba(0,0,0,0.35); border-radius: 4px; }
-      .navigation.no-trans { transition: none !important; }
+      @media (max-width: 1199px) {
+        .navigation { transition: none !important; animation: none !important; }
+        .navigation:not(.opened) { display: none !important; }
+      }
       .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-left: 1px solid rgba(0,0,0,0.1); }
       .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
       .settings-options.open { max-width: 200px; opacity: 1; }
@@ -36,6 +39,49 @@
       @media (max-width: 768px) { .code-grid { grid-template-columns: 1fr; } }
       .code-grid .code-item { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
       .code-grid .code-item p { margin-bottom: 1.5rem; }
+
+      /* ── Synced from index.html ── */
+      #navigation ul .nav-link a .text { letter-spacing: 0.05em; }
+
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: rgb(var(--primary)); border-radius: 999px; }
+      ::-webkit-scrollbar-thumb { background: rgb(var(--black)); border-radius: 999px; border: 2px solid rgb(var(--primary)); }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
+      * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
+
+      .nav-arrow-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        padding: 0 21px 0 41px;
+        flex-shrink: 0;
+        cursor: pointer;
+        position: relative;
+      }
+      .nav-arrow-btn {
+        position: absolute;
+        inset: 0;
+        border: none;
+        background: transparent;
+        color: rgb(var(--black));
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        padding: 0 0 0 1px;
+      }
+      .nav-arr {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      @keyframes navBounceLeft {
+        0%, 100% { transform: translateX(0); }
+        50%       { transform: translateX(-3px); }
+      }
+      .nav-arrow-btn .nav-arr { animation: navBounceLeft 1.4s ease-in-out infinite; }
     </style>
     <link rel="icon" type="image/png" href="images/o.png">
     <link rel="icon" type="image/png" sizes="48x48" href="images/o.png">
@@ -47,7 +93,7 @@
       <button class="color-switcher-btn"></button>
     </div>
 
-    <header class="header">
+    <header class="header" style="opacity:0;pointer-events:none;">
       <div class="container d-flex align-items-center justify-content-between">
         <a href="index.html" class="d-xl-none"></a>
         <button class="bg-transparent border-0 d-xl-none">
@@ -60,7 +106,7 @@
       <ul style="margin-bottom: 0px; margin-top: auto;">
         <li><a href="mailto:omar.kaykhusraw@gmail.com"><i class="ph ph-envelope"></i></a></li>
         <li><a href="https://www.linkedin.com/in/stochastic" target="_blank"><i class="ph ph-linkedin-logo"></i></a></li>
-        <li><a href="https://github.com/kaykhosrow" target="_blank"><i class="ph ph-github-logo"></i></a></li>
+        <li><a href="https://github.com/kaykhosrow" target="_blank" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:0.85em;height:0.85em;vertical-align:-0.1em;"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a></li>
       </ul>
     </div>
 
@@ -68,9 +114,10 @@
       <div class="col-12">
 
         <nav class="navigation" id="navigation">
-          <div class="scroll-down d-none d-xl-flex">
-            <div class="scroll-anim"><span></span></div>
-            <p>Scroll Down</p>
+          <div class="nav-arrow-wrap d-none d-xl-flex">
+            <button class="nav-arrow-btn" aria-label="Back to code" onclick="window.location.href='https://kaykhosrow.github.io/index.html#code'">
+              <span class="nav-arr"><i class="ph ph-arrow-left"></i></span>
+            </button>
           </div>
           <ul>
             <li class="nav-link"><a href="https://kaykhosrow.github.io/"><span class="text">home</span></a></li>
@@ -152,52 +199,6 @@
     <button class="ltr" style="display:none" aria-hidden="true"></button>
     <button class="rtl" style="display:none" aria-hidden="true"></button>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var btn = document.querySelector('.nav-icon');
-        var nav = document.getElementById('navigation');
-        var overlay = document.querySelector('.nav-overlay');
-        if (!btn || !nav) return;
-        btn.parentElement.addEventListener('click', function() {
-          btn.classList.toggle('open');
-          nav.classList.toggle('opened');
-        });
-        if (overlay) {
-          overlay.addEventListener('click', function() {
-            btn.classList.remove('open');
-            nav.classList.remove('opened');
-          });
-        }
-      });
-    </script>
-    <script>
-      (function() {
-        var nav = document.getElementById('navigation');
-        if (!nav) return;
-        var t;
-        function freeze() {
-          nav.classList.add('no-trans');
-          clearTimeout(t);
-          t = setTimeout(function() { nav.classList.remove('no-trans'); }, 100);
-        }
-        freeze();
-        window.addEventListener('resize', freeze);
-        var btn = document.querySelector('.nav-icon');
-        var overlay = document.querySelector('.nav-overlay');
-        if (btn) {
-          btn.closest('button').addEventListener('click', function(e) {
-            btn.classList.toggle('open');
-            nav.classList.toggle('opened');
-          });
-        }
-        if (overlay) {
-          overlay.addEventListener('click', function() {
-            if (btn) btn.classList.remove('open');
-            nav.classList.remove('opened');
-          });
-        }
-      })();
-    </script>
     <script>
       document.getElementById('settingsGearBtn').addEventListener('click', function() {
         this.classList.toggle('open');
