@@ -1032,11 +1032,46 @@
         var nav = document.getElementById('navigation');
         if (!nav) return;
 
+        var pinned   = false;
+        var animRaf  = null;
+
+        function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+        function animateTo(fromTop, toTop, duration, onDone) {
+          if (animRaf) cancelAnimationFrame(animRaf);
+          var start = null;
+          nav.classList.remove('nav-pinned-bottom');
+          nav.style.cssText = 'position:fixed!important;top:' + fromTop + 'px!important;left:0!important;right:0!important;bottom:auto!important;z-index:49!important;transition:none!important;';
+          function step(ts) {
+            if (!start) start = ts;
+            var t = Math.min((ts - start) / duration, 1);
+            nav.style.top = (fromTop + (toTop - fromTop) * easeInOut(t)) + 'px';
+            if (t < 1) {
+              animRaf = requestAnimationFrame(step);
+            } else {
+              animRaf = null;
+              nav.style.cssText = '';
+              if (onDone) onDone();
+            }
+          }
+          animRaf = requestAnimationFrame(step);
+        }
+
         function update() {
-          if (window.scrollY < 1) {
-            nav.classList.add('nav-pinned-bottom');
+          var shouldPin = window.scrollY < 1;
+          if (shouldPin === pinned) return;
+          pinned = shouldPin;
+          if (shouldPin) {
+            var fromTop = nav.getBoundingClientRect().top;
+            var toTop   = window.innerHeight - nav.offsetHeight;
+            animateTo(fromTop, toTop, 500, function() {
+              nav.classList.add('nav-pinned-bottom');
+            });
           } else {
-            nav.classList.remove('nav-pinned-bottom');
+            var fromTop2 = nav.getBoundingClientRect().top;
+            animateTo(fromTop2, 0, 500, function() {
+              nav.classList.remove('nav-pinned-bottom');
+            });
           }
         }
 
