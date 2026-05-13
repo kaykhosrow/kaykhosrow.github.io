@@ -1178,10 +1178,7 @@
       // Fade timing: btn opacity managed purely by parent heroPron fade
       // so all items disappear at identical rate — no direct btn.style.opacity manipulation
 
-      window.addEventListener('scroll', function () {
-        if (revealed && window.scrollY > 60) hide();
-      }, { passive: true });
-      // Nav-away reset removed — pronunciation persists when scrolling to sections
+      // Only hides on name click or pronunciation text click
 
       // Sync heroPron width to heroName so progress bar reaches the name's right edge
       var progressFill = document.getElementById('pronProgressFill');
