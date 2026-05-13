@@ -31,13 +31,11 @@
     <script>document.documentElement.classList.add('js-loading');</script>
     <meta charset="utf-8" />
     <meta name="google-site-verification" content="abXGnAT6wX18T4MTo4wzg69o7ZRQHnc9bHM9nOhm3-g" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=1200" />
 
-    <!-- SEO: page title & description -->
     <title>Omar Kaykhusraw</title>
     <meta name="description" content="Welcome to my page. I am a research economist with interests in empirical macroeconomics. I hold a DPhil in Economics from King's College London and my thesis focused primarily on the natural rate of interest. Prior to my doctorate, I read Economics at the University of Cambridge and Philosophy, Politics and Economics at the University of London.">
 
-    <!-- Open Graph (social media & rich previews) -->
     <meta property="og:title" content="Omar Kaykhusraw">
     <meta property="og:description" content="Welcome to my page. I am a research economist with interests in empirical macroeconomics. I hold a DPhil in Economics from King's College London and my thesis focused primarily on the natural rate of interest. Prior to my doctorate, I read Economics at the University of Cambridge and Philosophy, Politics and Economics at the University of London.">
     <meta property="og:image" content="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/google.png">
@@ -53,6 +51,8 @@
         justify-content: center;
         padding-bottom: 150px;
       }
+
+      section.hero .row { margin-top: 50px; }
 
       section.hero .next-chapter { padding-top: 40px !important; padding-bottom: 20px !important; }
 
@@ -99,10 +99,11 @@
         visibility: visible !important;
       }
 
+      #heroNameWrap { margin-left: -2px; }
       #typewriter {
         overflow: visible !important;
         white-space: nowrap;
-        margin-left: -3px;
+        margin-left: -6px;
         min-height: 1.2em;
         display: block;
       }
@@ -162,8 +163,8 @@
       .hero .btn { border-radius: 4px !important; }
 
       #research .service-swiper .swiper-wrapper { align-items: stretch; }
-      #research .service-swiper .swiper-slide { height: auto; display: flex; }
-      #research .service-swiper .service-card { height: 100%; width: 100%; }
+      #research .service-swiper .swiper-slide { height: auto; display: flex; transform: none !important; opacity: 1 !important; animation: none !important; visibility: visible !important; }
+      #research .service-swiper .swiper-slide .service-card { height: 100%; width: 100%; transform: none !important; animation: none !important; opacity: 1 !important; }
       #research .service-list li { display: block !important; }
       #research .service-card { position: relative; }
       #research { scroll-margin-top: 100px; }
@@ -251,10 +252,49 @@
       #conferences .next-chapter { padding-top: 30px; }
       #teaching .next-chapter { padding-top: 45px; }
 
-      @media (max-width: 1200px) {
-        .navigation img, .navigation .nav-logo, .navigation .logo,
-        .navigation > img, .navigation .contact { display: none !important; }
+      html { min-width: 1200px; }
+      body { min-width: 1200px; overflow-x: visible !important; }
+
+      /* ── Fully lock Bootstrap — no reflow, horizontal scroll only ── */
+
+      /* Container never shrinks below xl width but can grow on large screens */
+      .container { min-width: 1140px !important; }
+
+      /* Grid columns — always desktop widths */
+      .col-md-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
+      .col-xl-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
+      .col-lg-5  { flex: 0 0 41.6667% !important; max-width: 41.6667% !important; width: 41.6667% !important; }
+      .col-lg-7  { flex: 0 0 58.3333% !important; max-width: 58.3333% !important; width: 58.3333% !important; }
+      .col-lg-10 { flex: 0 0 83.3333% !important; max-width: 83.3333% !important; width: 83.3333% !important; }
+      .col-xl-8  { flex: 0 0 66.6667% !important; max-width: 66.6667% !important; width: 66.6667% !important; }
+      .col-sm-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
+
+      /* Row gutters */
+      .g-xl-5 { --bs-gutter-x: 3rem !important; --bs-gutter-y: 3rem !important; }
+
+      /* Display utilities */
+      .d-none.d-xl-flex  { display: flex  !important; }
+      .d-none.d-xl-block { display: block !important; }
+
+      /* Spacing */
+      .mt-5.mt-lg-0 { margin-top: 0 !important; }
+      .mb-4.mb-lg-5 { margin-bottom: 3rem !important; }
+      .justify-content-center.justify-content-lg-end { justify-content: flex-end !important; }
+
+      .nav-overlay { display: none !important; }
+
+      /* Hamburger — fixed top right */
+      .header {
+        position: fixed !important;
+        top: 28px !important;
+        right: 20px !important;
+        left: auto !important;
+        width: auto !important;
+        background: transparent !important;
+        z-index: 200 !important;
+        padding: 0 !important;
       }
+      .header .container { max-width: none !important; padding: 0 !important; }
 
       .hero .next-chapter { opacity: 0; transform: translateY(20px); animation: fadeUpIn 1s ease 3s forwards; }
       @keyframes fadeUpIn { to { opacity: 1; transform: translateY(0); } }
@@ -271,14 +311,6 @@
       section p a:not(.btn)::after { content: ""; position: absolute; border-radius: 1em; border-top: .1em solid #000; right: 100%; bottom: -.15em; left: 0; transition: right .5s cubic-bezier(0,.5,0,1), border-color .5s ease-out; }
       section p a:not(.btn):hover::after, section p .link-pair:hover a:not(.btn)::after { right: 0; }
 
-      .freelancer { position: relative; white-space: nowrap; transition: opacity 0.7s ease; cursor: pointer; user-select: none; opacity: 1 !important; transform: none !important; animation: none !important; visibility: hidden; }
-      .freelancer.is-ipa { opacity: 0.5 !important; }
-      .freelancer span { display: inline-block; margin-right: 0.05em; transition: filter 0.05s ease-out; }
-      .freelancer span:last-child { margin-right: 0; }
-      .freelancer span.tight-right { margin-right: -0.04em; }
-      .freelancer span.is-ipa-char { text-transform: none !important; }
-      .freelancer span.is-cycling { filter: blur(0.0125em); }
-
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: rgb(var(--primary)); border-radius: 999px; }
       body::after { content: ''; position: fixed; top: 0; right: 0; width: 1px; height: 100%; background: rgba(0,0,0,0.1); pointer-events: none; z-index: 9999; }
@@ -286,7 +318,6 @@
       ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
       * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
 
-      /* ── Nav arrow button ─────────────────────────────────────────────── */
       .nav-arrow-wrap {
         display: flex;
         align-items: center;
@@ -312,16 +343,13 @@
         padding: 0 0 0 1px;
       }
 
-
       .nav-arr {
         display: flex;
         align-items: center;
         justify-content: center;
         transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .nav-arrow-btn.is-up .nav-arr {
-        transform: rotate(180deg);
-      }
+      .nav-arrow-btn.is-up .nav-arr { transform: rotate(180deg); }
 
       @keyframes navBounceDown {
         0%, 100% { transform: translateY(0); }
@@ -331,13 +359,110 @@
         0%, 100% { transform: translateY(0) rotate(180deg); }
         50%       { transform: translateY(-3px) rotate(180deg); }
       }
-      .nav-arrow-btn:not(.is-up) .nav-arr {
-        animation: navBounceDown 1.4s ease-in-out infinite;
-      }
-      .nav-arrow-btn.is-up .nav-arr {
-        animation: navBounceUp 1.4s ease-in-out infinite;
+      .nav-arrow-btn:not(.is-up) .nav-arr { animation: navBounceDown 1.4s ease-in-out infinite; }
+      .nav-arrow-btn.is-up .nav-arr { animation: navBounceUp 1.4s ease-in-out infinite; }
+
+      #about.section { margin-top: 100px; }
+      #contact.section { margin-bottom: 100px; }
+
+      /* ── Pronunciation reveal ─────────────────────────────────────────── */
+
+      #heroNameWrap {
+        cursor: pointer;
+        user-select: none;
+        display: block;
       }
 
+      #heroNameWrap.revealed { cursor: default; pointer-events: none; }
+
+      #heroName {
+        display: block;
+        filter: url(#heroNameBlur);
+        position: relative;
+        top: -2.5px;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+      }
+
+      #heroNameWrap.revealed #heroName {
+        transform: translateY(-1.5em);
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+      }
+
+      #pronSpacer {
+        position: relative;
+        height: 0;
+        overflow: visible;
+      }
+
+      #heroPron {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0 0 0 5px !important;
+        padding: 0;
+        opacity: 0;
+        font-size: 1.15rem;
+        font-style: normal !important;
+        text-transform: none !important;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        transform: translateY(calc(-2.6rem - 7.5px));
+        transition: opacity 0.3s ease 0s;
+        pointer-events: none;
+      }
+
+      #pronProgressBar {
+        flex: 1;
+        height: 1.5px;
+        background: rgba(0, 0, 0, 0.25);
+        opacity: 1;
+        margin-left: 18px;
+        position: relative;
+        top: -1px;
+        border-radius: 1px;
+        min-width: 20px;
+      }
+
+      #pronProgressFill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        transform: scaleX(0);
+        transform-origin: left center;
+        background: currentColor;
+        opacity: 1;
+        border-radius: 1px;
+        will-change: transform;
+      }
+
+      /* Pronunciation button */
+      #pronounceBtn { opacity: 0.625; pointer-events: none; transition: opacity 0.3s ease; }
+      #pronounceBtn:hover { opacity: 1 !important; }
+      /* Disabled = no pointer-events only; opacity handled by parent fade */
+      #pronounceBtn[disabled] { pointer-events: none !important; }
+
+      #heroPron.visible {
+        opacity: 1;
+        pointer-events: none;
+        transition: opacity 0.3s ease 0.25s;
+      }
+
+      /* Clickable elements when visible */
+      #heroPron.visible #pronounceBtn:not([disabled]) { pointer-events: auto; }
+      #heroPron.visible #pronProgressBar { pointer-events: auto; cursor: pointer; }
+      #heroPron.visible #pronText { pointer-events: auto; cursor: pointer; }
+
+      /* Hover on pronunciation row → all items go full opacity */
+      #heroPron.visible #pronText:hover,
+      #heroPron.visible #pronounceBtn:hover { opacity: 1; }      #pronText {
+        opacity: 0.625;
+        position: relative;
+        top: -1px;
+        transition: opacity 0.2s ease;
+      }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -345,13 +470,21 @@
     <link rel="preload" as="image" href="https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg">
 
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="images/o.png">
     <link rel="icon" type="image/png" sizes="48x48" href="images/o.png">
     <link rel="apple-touch-icon" href="images/o.png">
   </head>
   <body>
+    <!-- Directional motion blur filter (Y-axis only) -->
+    <svg style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <filter id="heroNameBlur" x="-10%" y="-50%" width="120%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="0 0" id="heroNameBlurFe"/>
+        </filter>
+      </defs>
+    </svg>
+    <audio id="pronounceAudio" src="assets/audio/pronounce.mp3" preload="none"></audio>
     <div id="grain"></div>
     <div class="color-switcher" style="display:none">
       <button class="color-switcher-btn"></button>
@@ -385,7 +518,12 @@
           <div class="row gx-4 align-items-center">
             <div class="col-12 col-md-6 col-xl-6 hero-content">
               <div>
-                <h4 class="text-uppercase freelancer" data-original="Omar Kaykhusraw" data-ipa="/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/">Omar Kaykhusraw</h4>
+                <div id="heroNameWrap">
+                  <h4 class="text-uppercase" id="heroName"><span id="heroNameInner">Omar Kaykhusraw</span></h4>
+                  <div id="pronSpacer">
+                    <h4 id="heroPron"><span id="pronText">/ˈoʊmɑːr ˈkeɪkhuːsrɑːw/</span><button id="pronounceBtn" aria-label="Play pronunciation" style="background:none;border:none;padding:0;margin-left:14px;cursor:pointer;color:inherit;display:inline-block;vertical-align:middle;position:relative;top:-1px;"><img src="images/sound-waves.png" alt="" aria-hidden="true" style="width:36px;height:36px;display:block;"></button><span id="pronProgressBar"><span id="pronProgressFill"></span></span></h4>
+                  </div>
+                </div>
                 <h1 class="text-uppercase developer" id="typewriter"></h1>
               </div>
               <div class="d-flex gap-4">
@@ -575,7 +713,7 @@
             </div>
           </div>
 
-   <div style="margin-bottom: 2.5rem;">
+          <div style="margin-bottom: 2.5rem;">
             <h4 style="text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; opacity: 0.6; font-size: 0.85rem;">Previous</h4>
             <div class="teaching-item">
               <p class="role">Teaching Fellow in Economics</p>
@@ -604,17 +742,17 @@
 
                 <div class="experience-item">
                   <h5><strong>2026</strong></h5>
-                  <p>Scheduled: Annual Conference of the Royal Economic Society; International Conference on Applied Theory, Macro and Empirical Finance; Spring Midwest Macroeconomics Meeting; European Economics and Finance Society Conference.</p>
+                  <p>Scheduled: Annual Conference of the Royal Economic Society (RES); International Conference on Applied Theory, Macro and Empirical Finance (AMEF); Midwest Macroeconomics Meeting; Annual Meeting of the European Economics and Finance Society (EEFS).</p>
                 </div>
 
                 <div class="experience-item">
                   <h5><strong>2024</strong></h5>
-                  <p>Meeting of the European Economic Association and the European Meeting of the Econometric Society; Annual Meeting of the Society for Economic Dynamics; Bank of England; Annual Conference of the Economic History Society.</p>
+                  <p>Meeting of the European Economic Association (EEA) and the European Meeting of the Econometric Society (ESEM); Annual Meeting of the Society for Economic Dynamics (SED); Bank of England - Invited Seminar; Annual Conference of the Economic History Society (EHS).</p>
                 </div>
 
                 <div class="experience-item">
                   <h5><strong>2023</strong></h5>
-                  <p>Annual Conference of the Royal Economic Society; Annual Conference of the Money, Macro and Finance Society; International Conference on Applied Theory, Macro and Empirical Finance; 15th WU-FIW Conference on International Economics; Annual Conference of the Southern Economic Association; Annual Conference of the Eastern Economic Association; Annual Meeting of the Society for Economic Dynamics.</p>
+                  <p>Annual Conference of the Royal Economic Society (RES); Annual Conference of the Money, Macro and Finance (MMF) Society; International Conference on Applied Theory, Macro and Empirical Finance (AMEF); 15th WU-FIW Conference on International Economics; Annual Meeting of the Society for Economic Dynamics (SED).</p>
                 </div>
 
               </div>
@@ -916,10 +1054,10 @@
       })();
     </script>
 
-    <!-- Section title vestaboard — original, IntersectionObserver unchanged -->
+    <!-- Section title vestaboard -->
     <script>
     (function () {
-      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$€£#@%&?!';
+      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$\u20ac\u00a3#@%&?!';
 
       function splitFlap(el) {
         var original = el.textContent.trim();
@@ -987,153 +1125,167 @@
     })();
     </script>
 
-    <!-- IPA name animation — unchanged -->
+    <!-- Pronunciation reveal with directional motion blur -->
     <script>
     (function () {
-      var h4 = document.querySelector('h4.freelancer[data-ipa]');
-      if (!h4) return;
+      var wrap   = document.getElementById('heroNameWrap');
+      var pron   = document.getElementById('heroPron');
+      var audio  = document.getElementById('pronounceAudio');
+      var feBlur = document.getElementById('heroNameBlurFe');
+      if (!wrap || !pron || !feBlur) return;
 
-      var CHARS     =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-        'abcdefghijklmnopqrstuvwxyz' +
-        '0123456789$€£#@%&?!';
-      var stagger   = 44;
-      var flipSpeed = 50;
-      var flipCount = 7;
+      var revealed = false;
+      var rafId    = null;
+      var PEAK     = 0.25;
+      var DURATION = 400;
 
-      var origText = h4.dataset.original;
-      var ipaText  = h4.dataset.ipa;
-
-      function paint(text, useFinal) {
-        h4.innerHTML = '';
-        var isIpaTarget = (text === ipaText);
-        var allChars    = text.split('');
-        return allChars.map(function (ch, i) {
-          var span = document.createElement('span');
-          span.style.display = 'inline-block';
-          if (!useFinal || isIpaTarget) {
-            span.classList.add('is-ipa-char');
-          }
-          if (!isIpaTarget) {
-            var nextCh = allChars[i + 1];
-            if (ch && ch.toLowerCase() === 'a' &&
-                nextCh && nextCh.toLowerCase() === 'y') {
-              span.classList.add('tight-right');
-            }
-          }
-          if (ch === ' ') {
-            span.style.minWidth = '0.35em';
-            span.textContent    = ' ';
+      function animateBlur() {
+        if (rafId) cancelAnimationFrame(rafId);
+        var start = null;
+        function frame(ts) {
+          if (!start) start = ts;
+          var t = Math.min((ts - start) / DURATION, 1);
+          function smoothstep(x) { return x * x * (3 - 2 * x); }
+          var PEAK_T = 0.3;
+          var half = t < PEAK_T
+            ? smoothstep(t / PEAK_T)
+            : 1 - smoothstep((t - PEAK_T) / (1 - PEAK_T));
+          var val = PEAK * half;
+          feBlur.setAttribute('stdDeviation', '0 ' + val.toFixed(4));
+          if (t < 1) {
+            rafId = requestAnimationFrame(frame);
           } else {
-            span.textContent = useFinal
-              ? ch
-              : CHARS[Math.floor(Math.random() * CHARS.length)];
+            feBlur.setAttribute('stdDeviation', '0 0');
+            rafId = null;
           }
-          h4.appendChild(span);
-          return { span: span, final: ch, space: ch === ' ', ipa: isIpaTarget };
+        }
+        rafId = requestAnimationFrame(frame);
+      }
+
+      function reveal() {
+        revealed = true;
+        animateBlur();
+        wrap.classList.add('revealed');
+        pron.classList.add('visible');
+      }
+
+      function hide() {
+        revealed = false;
+        animateBlur();
+        wrap.classList.remove('revealed');
+        pron.classList.remove('visible');
+      }
+
+      var btn = document.getElementById('pronounceBtn');
+      if (btn) btn.setAttribute('disabled', '');
+
+      // Reveal/hide also manage btn disabled for pointer-events
+      var _origReveal = reveal, _origHide = hide;
+      reveal = function () { _origReveal(); if (btn) btn.removeAttribute('disabled'); };
+      hide   = function () {
+        _origHide();
+        if (btn) btn.setAttribute('disabled', '');
+        if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0; }
+      };
+
+      // Name → reveal only; hide is reserved for pronunciation text click
+      wrap.addEventListener('click', function () {
+        if (!revealed) reveal();
+      });
+
+      // Pronunciation text → hide on click
+      var pronTextEl  = document.getElementById('pronText');
+      var progressBar = document.getElementById('pronProgressBar');
+
+      if (pronTextEl) {
+        pronTextEl.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (revealed) hide();
         });
       }
 
-      var ipaWidthPx = 0, origWidthPx = 0;
-
-      function lockWidth() {
-        h4.style.display    = 'inline-block';
-        h4.style.whiteSpace = 'nowrap';
-        paint(ipaText, true);
-        ipaWidthPx = h4.getBoundingClientRect().width;
-        paint(origText, true);
-        origWidthPx = h4.getBoundingClientRect().width;
-        h4.style.minWidth = ipaWidthPx + 'px';
-        h4.style.maxWidth = ipaWidthPx + 'px';
-        h4.style.overflow  = 'hidden';
-        h4.style.visibility = 'visible';
+      // Play/pause audio helper — used by both icon and progress bar
+      function toggleAudio(e) {
+        e.stopPropagation();
+        if (!revealed || !audio) return;
+        if (!audio.paused) { audio.pause(); audio.currentTime = 0; }
+        else { audio.play(); }
       }
 
-      lockWidth();
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(lockWidth);
-      }
+      if (btn)         btn.addEventListener('click', toggleAudio);
+      if (progressBar) progressBar.addEventListener('click', toggleAudio);
 
-      function splitFlapTo(targetText) {
-        var chars = paint(targetText, false);
-        var wordIdx = 0;
-        chars.forEach(function (c) {
-          if (c.space) { wordIdx = 0; return; }
-          var delayBase    = wordIdx * stagger;
-          var initialDelay = delayBase % flipSpeed;
-          var landAt       = delayBase + flipCount * flipSpeed;
-          wordIdx++;
-          c.span.classList.add('is-cycling');
-          var startTime = Date.now();
-          setTimeout(function tick() {
-            if (Date.now() - startTime >= landAt) {
-              c.span.textContent = c.final;
-              if (!c.ipa) c.span.classList.remove('is-ipa-char');
-              c.span.classList.remove('is-cycling');
-            } else {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              setTimeout(tick, flipSpeed);
-            }
-          }, initialDelay);
+      // Fade timing: btn opacity managed purely by parent heroPron fade
+      // so all items disappear at identical rate — no direct btn.style.opacity manipulation
+
+      // Only hides on name click or pronunciation text click
+
+      // Sync heroPron width to heroName so progress bar reaches the name's right edge
+      var progressFill = document.getElementById('pronProgressFill');
+      var heroNameEl   = document.getElementById('heroName');
+      var heroPronEl   = document.getElementById('heroPron');
+
+      function syncPronWidth() {
+        var inner = document.getElementById('heroNameInner');
+        if (inner && heroPronEl) {
+          heroPronEl.style.width = (inner.offsetWidth - 7.5) + 'px';
+        }
+      }
+      syncPronWidth();
+      window.addEventListener('resize', syncPronWidth);
+      document.fonts && document.fonts.ready.then(syncPronWidth);
+
+      // CSS-transition approach: set transition duration = remaining audio time
+      if (audio && progressFill) {
+
+        function setupProgress() {
+          if (!audio.duration || isNaN(audio.duration)) return;
+          var startScale = audio.currentTime / audio.duration;
+          var remaining  = audio.duration - audio.currentTime;
+          progressFill.style.transition = 'none';
+          progressFill.style.transform  = 'scaleX(' + startScale + ')';
+          progressFill.offsetWidth;
+          progressFill.style.transition = 'transform ' + remaining + 's linear';
+          progressFill.style.transform  = 'scaleX(1)';
+        }
+
+        // Register upfront — may fire before or after play on first load
+        var metaReady = false;
+        var playPending = false;
+
+        audio.addEventListener('loadedmetadata', function () {
+          metaReady = true;
+          if (playPending && !audio.paused) {
+            setupProgress();
+            playPending = false;
+          }
+        });
+
+        audio.addEventListener('play', function () {
+          if (metaReady) {
+            setupProgress();
+          } else {
+            playPending = true;
+          }
+        });
+
+        audio.addEventListener('pause', function () {
+          playPending = false;
+          if (audio.duration && !isNaN(audio.duration)) {
+            progressFill.style.transition = 'none';
+            progressFill.style.transform  = 'scaleX(' + (audio.currentTime / audio.duration) + ')';
+          }
+        });
+
+        audio.addEventListener('ended', function () {
+          playPending = false;
+          progressFill.style.transition = 'none';
+          progressFill.style.transform  = 'scaleX(1)';
+          progressFill.offsetWidth;
+          progressFill.style.transition = 'transform 0.5s ease-in-out';
+          progressFill.style.transform  = 'scaleX(0)';
         });
       }
-
-      function computeCycleMs(text) {
-        var maxWord = 0, w = 0;
-        for (var i = 0; i < text.length; i++) {
-          if (text.charAt(i) === ' ') {
-            if (w > maxWord) maxWord = w;
-            w = 0;
-          } else {
-            w++;
-          }
-        }
-        if (w > maxWord) maxWord = w;
-        return (maxWord - 1) * stagger + flipCount * flipSpeed;
-      }
-      var ipaCycleMs  = computeCycleMs(ipaText);
-      var origCycleMs = computeCycleMs(origText);
-
-      var showingIpa  = false;
-      var isAnimating = false;
-
-      function revertToOriginal() {
-        if (!showingIpa || isAnimating) return;
-        showingIpa = false;
-        isAnimating = true;
-        h4.style.minWidth = origWidthPx + 'px';
-        h4.style.maxWidth = origWidthPx + 'px';
-        h4.style.transitionDuration = origCycleMs + 'ms';
-        h4.classList.remove('is-ipa');
-        splitFlapTo(origText);
-        setTimeout(function () { isAnimating = false; }, origCycleMs);
-      }
-
-      h4.addEventListener('click', function () {
-        if (isAnimating) return;
-        if (!showingIpa) {
-          showingIpa = true;
-          isAnimating = true;
-          h4.style.minWidth = ipaWidthPx + 'px';
-          h4.style.maxWidth = ipaWidthPx + 'px';
-          h4.style.transitionDuration = ipaCycleMs + 'ms';
-          h4.classList.add('is-ipa');
-          splitFlapTo(ipaText);
-          setTimeout(function () { isAnimating = false; }, ipaCycleMs);
-        } else {
-          revertToOriginal();
-        }
-      });
-
-      window.addEventListener('scroll', function () {
-        if (showingIpa && window.scrollY > 40) {
-          revertToOriginal();
-        }
-      }, { passive: true });
-
-      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-        link.addEventListener('click', revertToOriginal);
-      });
     })();
     </script>
 
@@ -1166,7 +1318,7 @@
       }
 
       function update() {
-        if (window._contactVisible) return; // observer handles it
+        if (window._contactVisible) return;
         var active = getActive();
         document.querySelectorAll('#navigation ul .nav-link a').forEach(function(a) {
           var href = a.getAttribute('href');
@@ -1177,7 +1329,6 @@
       window.addEventListener('scroll', update, { passive: true });
       update();
 
-      // IntersectionObserver for contact — takes priority over scroll logic
       var contactEl = document.getElementById('contact');
       if (contactEl) {
         new IntersectionObserver(function (entries) {
@@ -1206,7 +1357,6 @@
         });
       });
 
-      // ── FIXED: scroll to #contact section with nav offset, not footer bottom ──
       document.querySelectorAll('a[href="#contact"]').forEach(function (link) {
         link.addEventListener('click', function (e) {
           e.preventDefault();
@@ -1220,6 +1370,7 @@
       });
     })();
     </script>
+
     <script>
     (function () {
       var SECTIONS = ['home','about','research','teaching','conferences','code','gallery','contact'];
