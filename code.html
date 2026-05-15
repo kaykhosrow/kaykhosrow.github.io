@@ -41,8 +41,22 @@
       .code-grid .code-item { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
       .code-grid .code-item p { margin-bottom: 1.5rem; }
 
+      /* ── Fonts ── */
+      @font-face {
+        font-family: 'BaronNeue';
+        src: url('assets/fonts/Baron-Neue.otf') format('opentype');
+      }
+      @font-face {
+        font-family: 'InterRegular';
+        src: url('assets/fonts/Inter-Regular.otf') format('opentype');
+      }
+
       /* ── Synced from index.html ── */
-      #navigation ul .nav-link a .text { letter-spacing: 0.05em; }
+      #navigation ul .nav-link a .text { letter-spacing: 0.05em; font-family: 'InterRegular', sans-serif !important; text-shadow: 0.1px 0.1px 1.25px rgba(0, 0, 0, 0.5); }
+      .section-title h2, .section-title h4 { min-height: 1.2em; }
+      .section-title h2 { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1px rgba(0, 0, 0, 0.5); }
+      .section-title h4 { font-family: 'InterRegular', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); }
+      .section-title-overlay-text { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1px rgba(0, 0, 0, 0.5); }
 
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: rgb(var(--primary)); border-radius: 999px; }
@@ -72,6 +86,7 @@
         justify-content: center;
         font-size: 1.25rem;
         padding: 0 0 0 1px;
+        text-shadow: 0.1px 0.1px 1.25px rgba(0, 0, 0, 0.5);
       }
       .nav-arr {
         display: flex;
@@ -83,6 +98,8 @@
         50%       { transform: translateX(-3px); }
       }
       .nav-arrow-btn .nav-arr { animation: navBounceLeft 1.4s ease-in-out infinite; }
+      .section-title h2 span, .section-title h4 span { transition: filter 0.05s ease-out; }
+      .section-title h2 span.is-cycling, .section-title h4 span.is-cycling { filter: blur(0.01em); }
     </style>
     <link rel="icon" type="image/png" href="images/o.png">
     <link rel="icon" type="image/png" sizes="48x48" href="images/o.png">
@@ -211,6 +228,61 @@
         cb.dispatchEvent(new Event('change'));
         this.classList.toggle('active');
       });
+    </script>
+    <script>
+    (function () {
+      var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$\u20ac\u00a3#@%&?!';
+
+      function splitFlap(el) {
+        var original = el.textContent.trim();
+        var isH2     = (el.tagName === 'H2');
+        var display  = isH2 ? original.toUpperCase() : original;
+
+        el.innerHTML = '';
+        var chars = display.split('').map(function (ch) {
+          var span           = document.createElement('span');
+          span.style.display = 'inline-block';
+          if (ch === ' ') {
+            span.style.minWidth = '0.35em';
+            span.textContent    = '\u00a0';
+          } else {
+            span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+          }
+          el.appendChild(span);
+          return { span: span, final: ch, space: ch === ' ' };
+        });
+
+        var stagger   = 52;
+        var flipSpeed = 40;
+        var flipCount = 13;
+
+        var wordIdx = 0;
+        chars.forEach(function (c) {
+          if (c.space) { wordIdx = 0; return; }
+          var delayBase    = wordIdx * stagger;
+          var initialDelay = delayBase % flipSpeed;
+          var landAt       = delayBase + flipCount * flipSpeed;
+          wordIdx++;
+          c.span.classList.add('is-cycling');
+          var startTime = Date.now();
+          setTimeout(function tick() {
+            if (Date.now() - startTime >= landAt) {
+              c.span.textContent = c.final;
+              c.span.classList.remove('is-cycling');
+            } else {
+              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+              setTimeout(tick, flipSpeed);
+            }
+          }, initialDelay);
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+          document.querySelectorAll('.section-title h2, .section-title h4').forEach(function (el) {
+            splitFlap(el);
+          });
+      });
+    })();
     </script>
   </body>
 </html>
