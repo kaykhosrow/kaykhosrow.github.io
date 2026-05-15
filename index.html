@@ -302,7 +302,7 @@
       @keyframes fadeUpIn { to { opacity: 1; transform: translateY(0); } }
 
       .section-title, .section-title h4, .section-title h2 { transform: none !important; opacity: 1 !important; animation: none !important; }
-      .section-title h2, .section-title h4 { min-height: 1.2em; }
+      .section-title h2, .section-title h4 { min-height: 1.2em; text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); }
       .section-title h2 span, .section-title h4 span { transition: filter 0.05s ease-out; }
       .section-title h2 span.is-cycling, .section-title h4 span.is-cycling { filter: blur(0.01em); }
 
@@ -411,7 +411,7 @@
         white-space: nowrap;
         display: flex;
         align-items: center;
-        transform: translateY(calc(-2.6rem - 5px));
+        transform: translateY(calc(-2.6rem - 6.25px));
         transition: opacity 0.3s ease 0s;
         pointer-events: none;
       }
