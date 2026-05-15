@@ -45,6 +45,15 @@
     <script defer src="assets/js/app.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
+      @font-face {
+        font-family: 'BaronNeue';
+        src: url('/fonts/Baron-Neue.otf') format('opentype');
+      }
+
+      #typewriter {
+        font-family: 'BaronNeue', sans-serif;
+      }
+
       section.hero {
         display: flex;
         flex-direction: column;
@@ -987,54 +996,54 @@
     </script>
 
     <script>
-      (function() {
-        var link = document.querySelector('.view-all-code');
-        if (!link) return;
-        var arrow = link.querySelector('.vac-arrow');
-        if (!arrow) return;
-        var submitBtn = document.getElementById('mail-submit-btn');
-        if (submitBtn) {
-          submitBtn.addEventListener('mouseenter', function() {
-            submitBtn.querySelectorAll('.vac-ripple').forEach(function(r) { r.style.opacity = '0'; });
-          });
-          submitBtn.addEventListener('mouseleave', function() {
-            submitBtn.querySelectorAll('.vac-ripple').forEach(function(r) { r.style.opacity = ''; });
-          });
-        }
-        arrow.addEventListener('mouseenter', function() {
-          arrow.querySelectorAll('.vac-ripple').forEach(function(w) { w.style.opacity = '0'; });
+    (function () {
+      var link = document.querySelector('.view-all-code');
+      if (!link) return;
+      var arrow = link.querySelector('.vac-arrow');
+      if (!arrow) return;
+      var submitBtn = document.getElementById('mail-submit-btn');
+      if (submitBtn) {
+        submitBtn.addEventListener('mouseenter', function() {
+          submitBtn.querySelectorAll('.vac-ripple').forEach(function(r) { r.style.opacity = '0'; });
         });
-        arrow.addEventListener('mouseleave', function() {
-          arrow.querySelectorAll('.vac-ripple').forEach(function(w) { w.style.opacity = ''; });
+        submitBtn.addEventListener('mouseleave', function() {
+          submitBtn.querySelectorAll('.vac-ripple').forEach(function(r) { r.style.opacity = ''; });
         });
-      })();
+      }
+      arrow.addEventListener('mouseenter', function() {
+        arrow.querySelectorAll('.vac-ripple').forEach(function(w) { w.style.opacity = '0'; });
+      });
+      arrow.addEventListener('mouseleave', function() {
+        arrow.querySelectorAll('.vac-ripple').forEach(function(w) { w.style.opacity = ''; });
+      });
+    })();
     </script>
 
     <script>
-      (function() {
-        var nav = document.getElementById('navigation');
-        if (!nav) return;
+    (function() {
+      var nav = document.getElementById('navigation');
+      if (!nav) return;
 
-        function update() {
-          if (window.scrollY < 1) {
-            nav.classList.add('nav-pinned-bottom');
-          } else {
-            nav.classList.remove('nav-pinned-bottom');
-          }
+      function update() {
+        if (window.scrollY < 1) {
+          nav.classList.add('nav-pinned-bottom');
+        } else {
+          nav.classList.remove('nav-pinned-bottom');
         }
+      }
 
-        update();
-        window.addEventListener('scroll', update, { passive: true });
+      update();
+      window.addEventListener('scroll', update, { passive: true });
 
-        document.querySelectorAll('a[href="#home"]').forEach(function(link) {
-          link.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            history.replaceState(null, '', window.location.pathname);
-          });
+      document.querySelectorAll('a[href="#home"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          history.replaceState(null, '', window.location.pathname);
         });
-      })();
+      });
+    })();
     </script>
 
     <!-- Section title vestaboard -->
