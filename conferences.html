@@ -47,7 +47,7 @@
       /* ── Synced from index.html ── */
       #navigation ul .nav-link a .text { letter-spacing: 0.05em; font-family: 'InterRegular', sans-serif !important; text-shadow: 0.1px 0.1px 1.25px rgba(0, 0, 0, 0.5); }
       .section-title h2, .section-title h4 { min-height: 1.2em; }
-      .section-title h2 { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1.25px rgba(0, 0, 0, 0.5); }
+      .section-title h2 { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1px rgba(0, 0, 0, 0.5); }
       .section-title h4 { font-family: 'InterRegular', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); }
       .section-title-overlay-text { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1px rgba(0, 0, 0, 0.5); }
 
@@ -264,11 +264,9 @@
       }
 
       document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(function () {
           document.querySelectorAll('.section-title h2, .section-title h4').forEach(function (el) {
             splitFlap(el);
           });
-        }, 200);
       });
     })();
     </script>
