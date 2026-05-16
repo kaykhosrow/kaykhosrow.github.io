@@ -3,22 +3,53 @@ name: Update Last Updated Date
 on:
   push:
     branches: [main]
+    paths:
+      - index.html
+      - conferences.html
+      - code.html
 
 jobs:
-  update-date:
+  update-index:
+    if: contains(github.event.commits[0].modified, 'index.html')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set date
         run: |
           DATE=$(date +'%m/%Y')
           sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" index.html
-          sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" conferences.html
-          sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" code.html
-
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --quiet && echo "No changes" || (git add index.html conferences.html code.html && git commit -m "chore: update last-updated date" && git push)
+          git diff --quiet && echo "No changes" || (git add index.html && git commit -m "chore: update last-updated date (index)" && git push)
+
+  update-conferences:
+    if: contains(github.event.commits[0].modified, 'conferences.html')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set date
+        run: |
+          DATE=$(date +'%m/%Y')
+          sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" conferences.html
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet && echo "No changes" || (git add conferences.html && git commit -m "chore: update last-updated date (conferences)" && git push)
+
+  update-code:
+    if: contains(github.event.commits[0].modified, 'code.html')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set date
+        run: |
+          DATE=$(date +'%m/%Y')
+          sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" code.html
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet && echo "No changes" || (git add code.html && git commit -m "chore: update last-updated date (code)" && git push)
