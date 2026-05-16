@@ -10,32 +10,28 @@
  *     ╱ ╲  ╱ ╲  ╱ ╲
  *   ●────●────●────●
  *
- * Every dot is exactly D px from its neighbours (equilateral triangles).
- * Lines appear near the cursor; dots are always subtly visible.
- *
  * Add to index.html after app.js:
  *   <script defer src="assets/js/background.js"></script>
  */
 
 (function () {
-  'use strict';
 
   // ── Config ─────────────────────────────────────────────────────────────────
-  var D    = 45;                        // dot spacing in px  (keeps your preferred density)
-  var H    = D * Math.sqrt(3) / 2;     // row height ≈ 39 px  (makes triangles equilateral)
-  var R    = 2;                         // dot radius in px
+  var D = 45;                        // dot spacing in px
+  var H = D * Math.sqrt(3) / 2;     // row height ≈ 39 px  (equilateral triangles)
+  var R = 2;                         // dot radius in px
 
-  // Mouse-proximity thresholds (squared px — no Math.sqrt needed each frame)
-  var NEAR = 4000;    // ≈ 63 px
-  var MID  = 20000;   // ≈ 141 px
-  var FAR  = 40000;   // ≈ 200 px
+  // Mouse-proximity thresholds (squared px — no sqrt needed each frame)
+  var NEAR = 4000;   // ≈  63 px
+  var MID  = 20000;  // ≈ 141 px
+  var FAR  = 40000;  // ≈ 200 px
 
-  // Dot opacities — scaled down ~40% from previous version ("a bit fainter")
-  var DOT_FAR  = 0.15;   // always-visible resting state
-  var DOT_MID  = 0.25;   // medium proximity
-  var DOT_NEAR = 0.35;   // close to cursor
+  // Dot opacities (reduced ~40% from previous — "a bit fainter")
+  var DOT_FAR  = 0.15;
+  var DOT_MID  = 0.25;
+  var DOT_NEAR = 0.35;
 
-  // Line opacities — also reduced
+  // Line opacities
   var LINE_NEAR = 0.10;
   var LINE_MID  = 0.03;
   var LINE_FAR  = 0.008;
@@ -43,22 +39,18 @@
   // ── State ──────────────────────────────────────────────────────────────────
   var canvas, ctx, points, edges, rafId;
   var w, h;
-  var mouse = { x: -99999, y: -99999 }; // off-screen on load → nothing lit
+  var mouse = { x: -99999, y: -99999 };
 
   // ── Initialise ─────────────────────────────────────────────────────────────
   function init() {
-    /*
-     * z-index:-1 sits behind all page content, but would also disappear
-     * behind <body>'s background colour.  Fix: move the background from
-     * <body> onto <html> and make <body> transparent so the canvas shows
-     * through.  Uses your --primary CSS variable so colour-switching still
-     * works perfectly.
-     */
-    injectCSS(
-      'html{background:rgb(var(--primary))}' +
-      'body{background:transparent!important}'
-    );
+    // Move the page background from <body> to <html> so the canvas at
+    // z-index:-1 stays visible (otherwise body's bg would cover it).
+    // Uses your --primary CSS variable so colour-switching still works.
+    var s = document.createElement('style');
+    s.textContent = 'html{background:rgb(var(--primary))}body{background:transparent!important}';
+    document.head.appendChild(s);
 
+    // Create canvas and inject as the very first child of <body>
     canvas = document.createElement('canvas');
     canvas.id = 'grid-bg-canvas';
     canvas.style.cssText =
@@ -88,35 +80,24 @@
     });
   }
 
-  function injectCSS(css) {
-    var s = document.createElement('style');
-    s.textContent = css;
-    document.head.appendChild(s);
-  }
-
+  // ── Resize ─────────────────────────────────────────────────────────────────
   function resize() {
     w = canvas.width  = window.innerWidth;
     h = canvas.height = window.innerHeight;
   }
 
-  // ── Build the triangular lattice ────────────────────────────────────────────
+  // ── Build triangular lattice ────────────────────────────────────────────────
   //
   // Dot position for (col, row):
-  //   x = col * D  +  (row is odd ? D/2 : 0)   ← odd rows shift right by D/2
+  //   x = col * D + (odd row ? D/2 : 0)
   //   y = row * H
   //
-  // Every neighbouring pair is exactly D px apart, making every triangle
-  // in the mesh equilateral.
-  //
-  // Edges stored once per pair (no duplicates):
-  //   • Horizontal:  each dot → its right neighbour in the same row
-  //   • Downward-left  \  and  downward-right  /
-  //
-  //   Even row at col C  →  odd row at col C   (down-right ↘)
-  //   Even row at col C  →  odd row at col C-1 (down-left  ↙)
-  //
-  //   Odd row at col c   →  even row at col c   (down-left  ↙)
-  //   Odd row at col c   →  even row at col c+1 (down-right ↘)
+  // Edges (stored once each, no duplicates):
+  //   Horizontal  →   every dot to the one on its right
+  //   Even row ↘  →   pt(col,   row+1)   (down-right into odd row)
+  //   Even row ↙  →   pt(col-1, row+1)   (down-left  into odd row)
+  //   Odd  row ↙  →   pt(col,   row+1)   (down-left  into even row)
+  //   Odd  row ↘  →   pt(col+1, row+1)   (down-right into even row)
   //
   function buildGrid() {
     points = [];
@@ -124,9 +105,9 @@
 
     var cols = Math.ceil(w / D) + 2;
     var rows = Math.ceil(h / H) + 2;
-    var row, col, p, nb;
+    var col, row, p, nb;
 
-    // 1. Place every dot
+    // 1. Place dots
     for (row = 0; row < rows; row++) {
       for (col = 0; col < cols; col++) {
         points.push({
@@ -138,33 +119,31 @@
       }
     }
 
-    // Helper: retrieve a dot by grid address (returns null if out of range)
+    // Look up a dot by grid coordinates; null if out of bounds
     function pt(c, r) {
       if (c < 0 || c >= cols || r < 0 || r >= rows) return null;
       return points[r * cols + c];
     }
 
-    // 2. Build the edge list — each edge stored exactly once
+    // 2. Build edge list
     for (row = 0; row < rows; row++) {
       for (col = 0; col < cols; col++) {
         p = pt(col, row);
 
-        // ── Horizontal edge (→) ─────────────────────────────────────
+        // Horizontal →
         nb = pt(col + 1, row);
         if (nb) edges.push([p, nb]);
 
-        // ── Downward diagonal edges (to the next row) ────────────────
+        // Diagonals into next row
         if (row + 1 < rows) {
           if (row % 2 === 0) {
-            // Even row: odd row below is shifted right, so this dot's two
-            // downward neighbours are at col (↘) and col-1 (↙) in the odd row
-            nb = pt(col,     row + 1);  if (nb) edges.push([p, nb]);  // ↘
-            nb = pt(col - 1, row + 1);  if (nb) edges.push([p, nb]);  // ↙
+            // Even row → odd row below (odd row is shifted right by D/2)
+            nb = pt(col,     row + 1); if (nb) edges.push([p, nb]); // ↘
+            nb = pt(col - 1, row + 1); if (nb) edges.push([p, nb]); // ↙
           } else {
-            // Odd row: even row below has no shift, so this dot's two
-            // downward neighbours are at col (↙) and col+1 (↘) in even row
-            nb = pt(col,     row + 1);  if (nb) edges.push([p, nb]);  // ↙
-            nb = pt(col + 1, row + 1);  if (nb) edges.push([p, nb]);  // ↘
+            // Odd row → even row below (even row has no shift)
+            nb = pt(col,     row + 1); if (nb) edges.push([p, nb]); // ↙
+            nb = pt(col + 1, row + 1); if (nb) edges.push([p, nb]); // ↘
           }
         }
       }
@@ -176,14 +155,13 @@
     cancelAnimationFrame(rafId);
     ctx.clearRect(0, 0, w, h);
 
-    var i, ab, d, opacity;
+    var i, ab, d, opacity, p;  // ← all variables declared here (fixes strict-mode bug)
 
-    // ── Draw triangle edges first (behind the dots) ──────────────────────
+    // Draw edges behind dots
     for (i = 0; i < edges.length; i++) {
       ab = edges[i];
 
-      // Line opacity driven by the nearer of its two endpoints to the cursor.
-      // This means a line lights up as soon as EITHER of its dots is approached.
+      // Light up the line when the cursor is near EITHER of its endpoints
       d = Math.min(dist2(mouse, ab[0]), dist2(mouse, ab[1]));
 
       opacity = d < NEAR ? LINE_NEAR
@@ -191,7 +169,7 @@
               : d < FAR  ? LINE_FAR
               : 0;
 
-      if (opacity === 0) continue;  // skip invisible lines quickly
+      if (opacity === 0) continue;
 
       ctx.beginPath();
       ctx.moveTo(ab[0].x, ab[0].y);
@@ -200,7 +178,7 @@
       ctx.stroke();
     }
 
-    // ── Draw dots on top ─────────────────────────────────────────────────
+    // Draw dots on top of edges
     for (i = 0; i < points.length; i++) {
       p = points[i];
       d = dist2(mouse, p);
@@ -218,14 +196,14 @@
     rafId = requestAnimationFrame(loop);
   }
 
-  // ── Squared Euclidean distance (avoids Math.sqrt each frame) ───────────────
+  // ── Squared distance (avoids Math.sqrt each frame) ─────────────────────────
   function dist2(p1, p2) {
     var dx = p1.x - p2.x;
     var dy = p1.y - p2.y;
     return dx * dx + dy * dy;
   }
 
-  // ── Start when DOM is ready ─────────────────────────────────────────────────
+  // ── Start ───────────────────────────────────────────────────────────────────
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
