@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=1200" />
     <title>Omar Kaykhusraw</title>
     <script defer src="assets/js/app.js"></script>
+    <script defer src="assets/js/background.js"></script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
       html { zoom: 1; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; min-width: 1200px; }
@@ -27,29 +28,33 @@
         .navigation { transition: none !important; animation: none !important; }
         .navigation:not(.opened) { display: none !important; }
       }
-      .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 8px; border-left: 1px solid rgba(0,0,0,0.1); }
-      .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
-      .settings-options.open { max-width: 200px; opacity: 1; }
-      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s; }
-      .setting-swatch:hover { opacity: 0.85; }
-      .grain-swatch { background-image: radial-gradient(circle, #777 1px, transparent 1px), radial-gradient(circle, #777 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: #bbb; }
-      .grain-swatch.active { border-color: rgba(0,0,0,0.5); }
-      .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.3); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
-      .settings-gear-btn.open { transform: rotate(90deg); }
       #code.section { padding-bottom: 140px; }
       .code-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem 3rem; }
       .code-grid .code-item { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
       .code-grid .code-item p { margin-bottom: 1.5rem; }
 
+      /* ── Settings bar ── */
+      #navigation { z-index: 49 !important; overflow: visible !important; }
+      .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 4px; border-left: 1px solid rgba(0,0,0,0.1); }
+      .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
+      .settings-options.open { max-width: 240px; opacity: 1; }
+      .settings-divider { width: 1px; align-self: stretch; margin: 5px 0px; background: rgba(0,0,0,0.1); flex-shrink: 0; }
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease; }
+      .setting-swatch:hover { filter: brightness(0.93); }
+      .setting-swatch.active { filter: brightness(0.85); }
+      .grain-swatch { background-image: radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px), radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: rgb(var(--primary)); }
+      .lattice-swatch {
+        background-color: rgb(var(--primary));
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cg stroke='black' stroke-width='0.85' stroke-opacity='0.22' fill='none'%3E%3Cline x1='0' y1='0' x2='27' y2='0'/%3E%3Cline x1='4.5' y1='8' x2='22.5' y2='8'/%3E%3Cline x1='0' y1='16' x2='27' y2='16'/%3E%3Cline x1='4.5' y1='24' x2='22.5' y2='24'/%3E%3Cline x1='0' y1='0' x2='4.5' y2='8'/%3E%3Cline x1='9' y1='0' x2='4.5' y2='8'/%3E%3Cline x1='9' y1='0' x2='13.5' y2='8'/%3E%3Cline x1='18' y1='0' x2='13.5' y2='8'/%3E%3Cline x1='18' y1='0' x2='22.5' y2='8'/%3E%3Cline x1='27' y1='0' x2='22.5' y2='8'/%3E%3Cline x1='4.5' y1='8' x2='0' y2='16'/%3E%3Cline x1='4.5' y1='8' x2='9' y2='16'/%3E%3Cline x1='13.5' y1='8' x2='9' y2='16'/%3E%3Cline x1='13.5' y1='8' x2='18' y2='16'/%3E%3Cline x1='22.5' y1='8' x2='18' y2='16'/%3E%3Cline x1='22.5' y1='8' x2='27' y2='16'/%3E%3Cline x1='0' y1='16' x2='4.5' y2='24'/%3E%3Cline x1='9' y1='16' x2='4.5' y2='24'/%3E%3Cline x1='9' y1='16' x2='13.5' y2='24'/%3E%3Cline x1='18' y1='16' x2='13.5' y2='24'/%3E%3Cline x1='18' y1='16' x2='22.5' y2='24'/%3E%3Cline x1='27' y1='16' x2='22.5' y2='24'/%3E%3C/g%3E%3Cg fill='black' fill-opacity='0.32'%3E%3Ccircle cx='0' cy='0' r='1.3'/%3E%3Ccircle cx='9' cy='0' r='1.3'/%3E%3Ccircle cx='18' cy='0' r='1.3'/%3E%3Ccircle cx='27' cy='0' r='1.3'/%3E%3Ccircle cx='4.5' cy='8' r='1.3'/%3E%3Ccircle cx='13.5' cy='8' r='1.3'/%3E%3Ccircle cx='22.5' cy='8' r='1.3'/%3E%3Ccircle cx='0' cy='16' r='1.3'/%3E%3Ccircle cx='9' cy='16' r='1.3'/%3E%3Ccircle cx='18' cy='16' r='1.3'/%3E%3Ccircle cx='27' cy='16' r='1.3'/%3E%3Ccircle cx='4.5' cy='24' r='1.3'/%3E%3Ccircle cx='13.5' cy='24' r='1.3'/%3E%3Ccircle cx='22.5' cy='24' r='1.3'/%3E%3C/g%3E%3C/svg%3E");
+        background-size: cover;
+        background-position: center;
+      }
+      .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.3); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
+      .settings-gear-btn.open { transform: rotate(90deg); }
+
       /* ── Fonts ── */
-      @font-face {
-        font-family: 'BaronNeue';
-        src: url('assets/fonts/Baron-Neue.otf') format('opentype');
-      }
-      @font-face {
-        font-family: 'InterRegular';
-        src: url('assets/fonts/Inter-Regular.otf') format('opentype');
-      }
+      @font-face { font-family: 'BaronNeue'; src: url('assets/fonts/Baron-Neue.otf') format('opentype'); }
+      @font-face { font-family: 'InterRegular'; src: url('assets/fonts/Inter-Regular.otf') format('opentype'); }
 
       /* ── Synced from index.html ── */
       #navigation ul .nav-link a .text { letter-spacing: 0.05em; font-family: 'InterRegular', sans-serif !important; text-shadow: 0.1px 0.1px 1.25px rgba(0, 0, 0, 0.5); opacity: 0.75; }
@@ -64,40 +69,10 @@
       ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
       * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
 
-      .nav-arrow-wrap {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        align-self: stretch;
-        padding: 0 21px 0 41px;
-        flex-shrink: 0;
-        cursor: pointer;
-        position: relative;
-      }
-      .nav-arrow-btn {
-        position: absolute;
-        inset: 0;
-        border: none;
-        background: transparent;
-        color: rgb(var(--black));
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-        padding: 0 0 0 1px;
-        text-shadow: 0.1px 0.1px 1.25px rgba(0, 0, 0, 0.5);
-        opacity: 0.75;
-      }
-      .nav-arr {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      @keyframes navBounceLeft {
-        0%, 100% { transform: translateX(0); }
-        50%       { transform: translateX(-3px); }
-      }
+      .nav-arrow-wrap { display: flex; align-items: center; justify-content: center; align-self: stretch; padding: 0 21px 0 41px; flex-shrink: 0; cursor: pointer; position: relative; }
+      .nav-arrow-btn { position: absolute; inset: 0; border: none; background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; padding: 0 0 0 1px; text-shadow: 0.1px 0.1px 1.25px rgba(0, 0, 0, 0.5); opacity: 0.75; }
+      .nav-arr { display: flex; align-items: center; justify-content: center; }
+      @keyframes navBounceLeft { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-3px); } }
       .nav-arrow-btn .nav-arr { animation: navBounceLeft 1.4s ease-in-out infinite; }
       .section-title h2 span, .section-title h4 span { transition: filter 0.05s ease-out; }
       .section-title h2 span.is-cycling, .section-title h4 span.is-cycling { filter: blur(0.01em); }
@@ -150,8 +125,10 @@
           </ul>
           <div class="settings-bar d-none d-xl-flex">
             <div class="settings-options" id="settingsOptions">
-              <button style="background-color:#ffdb67" class="color-btn setting-swatch" data-color="255, 219, 103"></button>
-              <button style="background-color:#eee8aa" class="color-btn setting-swatch" data-color="238, 232, 170"></button>
+              <button style="background-color:#ffdb67" class="color-btn setting-swatch active" data-color="255, 219, 103" title="Yellow"></button>
+              <button style="background-color:#eee8aa" class="color-btn setting-swatch" data-color="238, 232, 170" title="Pale yellow"></button>
+              <div class="settings-divider"></div>
+              <button class="lattice-swatch setting-swatch active" id="latticeToggleBtn" title="Toggle Lattice"></button>
               <button class="grain-swatch setting-swatch" id="grainToggleBtn" title="Toggle Grain"></button>
             </div>
             <button class="settings-gear-btn" id="settingsGearBtn">
@@ -173,35 +150,30 @@
           </a>
 
           <div class="code-grid">
-            
             <div class="code-item">
               <h5>Time-Varying Phillips Curves</h5>
               <p>This tool presents time-varying estimates of the Phillips curve across multiple regions.<br> Using kernel-weighted regression methods, it traces the relationship between inflation<br> and unemployment over time, capturing structural shifts that static models often miss.</p>
               <a href="https://kaykhosrow.github.io/time.varying.phillips.curves" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/site&gt;</a>
             </div>
-
             <div class="code-item">
               <h5>Unobserved Components Model</h5>
               <p>This function implements the Stock and Watson (2007) unobserved components<br> model with stochastic volatilities. It employs a gamma random variable generator<br> function and can be used to extract the trend of any given univariate time series.</p>
               <a href="https://github.com/kaykhosrow/unobserved.components" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/code&gt;</a>
             </div>
-
             <div class="code-item">
               <h5>VAR Historical Decomposition</h5>
               <p>This function takes in the output from the VAR function (refer to the vars package)<br> and computes the vector autoregression historical decomposition. It is an abridged<br> translation of Cesa-Bianchi's MATLAB code (see the VAR-Toolbox) designed for R.</p>
               <a href="https://github.com/kaykhosrow/historical.decomposition" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/code&gt;</a>
             </div>
-
             <div class="code-item">
               <h5>Gaussian Error Propagation</h5>
               <p>This function determines the uncertainty of any mathematical expression containing<br> estimated variables with uncertainties by taking the partial derivatives with respect to<br> each variable, multiplied by their uncertainty, and added in quadrature.</p>
               <a href="https://github.com/kaykhosrow/gaussian.propagation" target="_blank" class="btn btn-outline-secondary code-btn">&lt;/code&gt;</a>
             </div>
-
           </div>
         </section>
 
-        <footer style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 49; background: linear-gradient(rgba(0,0,0,0.06), rgba(0,0,0,0.06)), rgb(255,219,103);">
+        <footer style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 49; background: linear-gradient(rgba(0,0,0,0.06), rgba(0,0,0,0.06)), rgb(var(--primary));">
           <div class="container">
             <div class="row">
               <div class="col-12">
@@ -223,65 +195,73 @@
         this.classList.toggle('open');
         document.getElementById('settingsOptions').classList.toggle('open');
       });
+
       document.getElementById('grainToggleBtn').addEventListener('click', function() {
         var cb = document.querySelector('.grained-checkbox');
         cb.checked = !cb.checked;
         cb.dispatchEvent(new Event('change'));
         this.classList.toggle('active');
       });
+
+      (function() {
+        var latticeOn = true;
+        document.getElementById('latticeToggleBtn').addEventListener('click', function() {
+          latticeOn = !latticeOn;
+          var canvas = document.getElementById('grid-bg-canvas');
+          if (canvas) canvas.style.display = latticeOn ? 'block' : 'none';
+          this.classList.toggle('active', latticeOn);
+        });
+      })();
+
+      document.querySelectorAll('.color-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.color-btn').forEach(function(b) { b.classList.remove('active'); });
+          this.classList.add('active');
+        });
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var current = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim().replace(/\s+/g, '');
+        document.querySelectorAll('.color-btn').forEach(function(btn) {
+          var c = btn.getAttribute('data-color').replace(/\s+/g, '');
+          btn.classList.toggle('active', c === current);
+        });
+      });
     </script>
+
     <script>
     (function () {
       var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$\u20ac\u00a3#@%&?!';
-
       function splitFlap(el) {
         var original = el.textContent.trim();
-        var isH2     = (el.tagName === 'H2');
-        var display  = isH2 ? original.toUpperCase() : original;
-
+        var isH2 = (el.tagName === 'H2');
+        var display = isH2 ? original.toUpperCase() : original;
         el.innerHTML = '';
-        var chars = display.split('').map(function (ch) {
-          var span           = document.createElement('span');
+        var chars = display.split('').map(function(ch) {
+          var span = document.createElement('span');
           span.style.display = 'inline-block';
-          if (ch === ' ') {
-            span.style.minWidth = '0.35em';
-            span.textContent    = '\u00a0';
-          } else {
-            span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-          }
+          if (ch === ' ') { span.style.minWidth = '0.35em'; span.textContent = '\u00a0'; }
+          else { span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)]; }
           el.appendChild(span);
           return { span: span, final: ch, space: ch === ' ' };
         });
-
-        var stagger   = 52;
-        var flipSpeed = 40;
-        var flipCount = 13;
-
-        var wordIdx = 0;
-        chars.forEach(function (c) {
+        var stagger = 52, flipSpeed = 40, flipCount = 13, wordIdx = 0;
+        chars.forEach(function(c) {
           if (c.space) { wordIdx = 0; return; }
-          var delayBase    = wordIdx * stagger;
+          var delayBase = wordIdx * stagger;
           var initialDelay = delayBase % flipSpeed;
-          var landAt       = delayBase + flipCount * flipSpeed;
+          var landAt = delayBase + flipCount * flipSpeed;
           wordIdx++;
           c.span.classList.add('is-cycling');
           var startTime = Date.now();
           setTimeout(function tick() {
-            if (Date.now() - startTime >= landAt) {
-              c.span.textContent = c.final;
-              c.span.classList.remove('is-cycling');
-            } else {
-              c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
-              setTimeout(tick, flipSpeed);
-            }
+            if (Date.now() - startTime >= landAt) { c.span.textContent = c.final; c.span.classList.remove('is-cycling'); }
+            else { c.span.textContent = CHARS[Math.floor(Math.random() * CHARS.length)]; setTimeout(tick, flipSpeed); }
           }, initialDelay);
         });
       }
-
-      document.addEventListener('DOMContentLoaded', function () {
-          document.querySelectorAll('.section-title h2, .section-title h4').forEach(function (el) {
-            splitFlap(el);
-          });
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.section-title h2, .section-title h4').forEach(function(el) { splitFlap(el); });
       });
     })();
     </script>
