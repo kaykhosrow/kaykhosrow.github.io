@@ -341,11 +341,11 @@
       section p a:not(.btn):hover::after, section p .link-pair:hover a:not(.btn)::after { right: 0; }
 
       ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: rgb(var(--primary)); border-radius: 999px; }
+      ::-webkit-scrollbar-track { background: transparent; }
       body::after { content: ''; position: fixed; top: 0; right: 0; width: 1px; height: 100%; background: rgba(0,0,0,0.1); pointer-events: none; z-index: 9999; }
-      ::-webkit-scrollbar-thumb { background: rgb(var(--black)); border-radius: 999px; border: 2px solid rgb(var(--primary)); }
-      ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
-      * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
+      ::-webkit-scrollbar-thumb { background: rgb(var(--black)); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); background-clip: padding-box; }
+      * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) transparent; }
 
       .nav-arrow-wrap {
         display: flex;
