@@ -14,8 +14,13 @@
 
   // ── Config ─────────────────────────────────────────────────────────────────
   var D = 75;                      // dot spacing in px
-  var H = D * Math.sqrt(3) / 2;   // row height ≈ 39 px  (equilateral triangles)
+  var H = D * Math.sqrt(3) / 2;   // row height ≈ 65 px  (equilateral triangles)
   var R = 2;                       // dot radius in px
+
+  // Grid origin offset — aligns the top-left vertex with the right edge of
+  // the left icon panel (81 px) and the very top of the browser (y = 0).
+  var OFFSET_X = 81;
+  var OFFSET_Y = 0;
 
   // Proximity thresholds (squared px)
   var NEAR = 4000;   // ≈  63 px — strong ring glow
@@ -89,8 +94,8 @@
     for (row = 0; row < rows; row++) {
       for (col = 0; col < cols; col++) {
         points.push({
-          x      : col * D + (row % 2 === 1 ? D / 2 : 0),
-          y      : row * H,
+          x      : col * D + (row % 2 === 1 ? D / 2 : 0) + OFFSET_X,
+          y      : row * H + OFFSET_Y,
           idx    : row * cols + col,
           adjIdx : []           // filled in step 3
         });
