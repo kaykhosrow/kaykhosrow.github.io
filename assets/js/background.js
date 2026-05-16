@@ -23,14 +23,14 @@
   var FAR  = 40000;  // ≈ 200 px — dot brightening range
 
   // Line opacities
-  var LINE_BG       = 0.03;  // always-visible background grid (slightly fainter than before)
-  var LINE_RING_MID = 0.05;  // ring highlight — medium distance
-  var LINE_RING     = 0.11;  // ring highlight — near cursor
+  var LINE_BG       = 0.03;   // always-visible background grid
+  var LINE_RING_MID = 0.038;  // ring highlight — medium distance (slightly reduced)
+  var LINE_RING     = 0.085;  // ring highlight — near cursor (slightly reduced)
 
-  // Dot opacities (reduced ~20% — "a tad fainter")
+  // Dot opacities (slightly reduced)
   var DOT_FAR  = 0.09;
   var DOT_MID  = 0.16;
-  var DOT_NEAR = 0.24;
+  var DOT_NEAR = 0.19;
 
   // ── State ──────────────────────────────────────────────────────────────────
   var canvas, ctx, points, edges, rafId;
@@ -58,8 +58,14 @@
       window.addEventListener('mousemove', function (e) {
         mouse.x = e.clientX; mouse.y = e.clientY;
       });
-      window.addEventListener('mouseleave', function () {
-        mouse.x = -99999; mouse.y = -99999;
+
+      // Clear hover effect as soon as the cursor leaves the viewport.
+      // Using document mouseout with a relatedTarget check is more reliable
+      // than window mouseleave, which can fail to fire in some browsers.
+      document.addEventListener('mouseout', function (e) {
+        if (!e.relatedTarget && !e.toElement) {
+          mouse.x = -99999; mouse.y = -99999;
+        }
       });
     }
     window.addEventListener('resize', function () { resize(); buildGrid(); });
