@@ -1061,6 +1061,16 @@
         });
       });
 
+      // Sync active swatch on load to match whatever colour app.js restored
+      document.addEventListener('DOMContentLoaded', function() {
+        var current = getComputedStyle(document.documentElement)
+          .getPropertyValue('--primary').trim().replace(/\s+/g, '');
+        document.querySelectorAll('.color-btn').forEach(function(btn) {
+          var c = btn.getAttribute('data-color').replace(/\s+/g, '');
+          btn.classList.toggle('active', c === current);
+        });
+      });
+
       document.addEventListener('DOMContentLoaded', function() {
         var researchSwiper = document.querySelector('#research .service-swiper');
         if (researchSwiper && researchSwiper.swiper) {
