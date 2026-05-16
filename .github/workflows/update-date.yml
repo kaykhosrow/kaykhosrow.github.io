@@ -12,7 +12,7 @@ jobs:
 
       - name: Set date
         run: |
-          DATE=$(date +'%B %Y')
+          DATE=$(date +'%m/%Y')
           sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" index.html
           sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" conferences.html
           sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" code.html
