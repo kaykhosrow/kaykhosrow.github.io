@@ -13,7 +13,7 @@
 (function () {
 
   // ── Config ─────────────────────────────────────────────────────────────────
-  var D = 45;                      // dot spacing in px
+  var D = 75;                      // dot spacing in px
   var H = D * Math.sqrt(3) / 2;   // row height ≈ 39 px  (equilateral triangles)
   var R = 2;                       // dot radius in px
 
@@ -24,8 +24,8 @@
 
   // Line opacities
   var LINE_BG       = 0.03;   // always-visible background grid
-  var LINE_RING_MID = 0.038;  // ring highlight — medium distance (slightly reduced)
-  var LINE_RING     = 0.085;  // ring highlight — near cursor (slightly reduced)
+  var LINE_RING_MID = 0.038;  // ring highlight — medium distance
+  var LINE_RING     = 0.085;  // ring highlight — near cursor
 
   // Dot opacities (slightly reduced)
   var DOT_FAR  = 0.09;
