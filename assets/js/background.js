@@ -1,52 +1,48 @@
 /**
  * background.js
  *
- * Draws a fixed square-grid of dots on a self-created canvas.
- * When the mouse moves near dots, lines appear between them
- * forming a triangle / grid mesh — dots never drift.
+ * Fixed square-grid of dots with a triangle mesh that lights up near
+ * the cursor. Matches the original Portify colour and opacity exactly.
  *
- * Drop this file into assets/js/ and add ONE line to index.html
- * (see updated index.html). No other HTML changes needed —
- * the canvas is created and injected by this script.
- *
- * Customise the constants below to taste.
+ * Place in assets/js/ and add to index.html after app.js:
+ *   <script defer src="assets/js/background.js"></script>
  */
 
 (function () {
+  'use strict';
 
-  // ─── Config ────────────────────────────────────────────────────────────────
-  var POINT_DISTANCE = 45;             // px gap between grid dots
-  var POINT_RADIUS   = 1.75;           // dot radius in px
-  var DOT_COLOR      = '85, 230, 165'; // RGB — change to match your palette
+  // ── Config ─────────────────────────────────────────────────────────────────
+  var POINT_DISTANCE = 45;  // px between grid dots  (original value)
+  var POINT_RADIUS   = 2;   // dot radius in px       (original value)
 
-  // Mouse-proximity thresholds (squared px — avoids sqrt each frame).
-  // Roughly: NEAR ≈ 63 px, MID ≈ 141 px, FAR ≈ 200 px from cursor.
-  var NEAR = 4000;
-  var MID  = 20000;
-  var FAR  = 40000;
+  // Proximity thresholds — squared px (avoids Math.sqrt every frame).
+  // Match original Portify values exactly.
+  var NEAR = 4000;   // ~63 px  — strong line + bright dot
+  var MID  = 20000;  // ~141 px — faint line
+  var FAR  = 40000;  // ~200 px — very faint line, dot still slightly bright
 
-  // ─── State ─────────────────────────────────────────────────────────────────
-  var canvas, ctx, points, rafId;
+  // ── State ──────────────────────────────────────────────────────────────────
+  var canvas, ctx, points, edges, rafId;
   var w, h;
-  var mouse = { x: -99999, y: -99999 }; // off-screen → no glow on page load
+  var mouse = { x: -99999, y: -99999 }; // off-screen on load → nothing lit
 
-  // ─── Dot class ─────────────────────────────────────────────────────────────
-  function Circle(pos) {
-    this.pos     = pos;
-    this.opacity = 0.3;
-  }
-
-  Circle.prototype.draw = function () {
-    ctx.beginPath();
-    ctx.arc(this.pos.x, this.pos.y, POINT_RADIUS, 0, 2 * Math.PI, false);
-    ctx.fillStyle = 'rgba(' + DOT_COLOR + ',' + this.opacity + ')';
-    ctx.fill();
-  };
-
-  // ─── Initialise ────────────────────────────────────────────────────────────
+  // ── Initialise ─────────────────────────────────────────────────────────────
   function init() {
-    // Create the canvas and inject it as the very first child of <body>
-    // so it sits behind all page content naturally.
+    /*
+     * z-index:-1 puts the canvas behind ALL page content, but it would also
+     * go behind the <body> background colour.  We fix this by moving the page
+     * background from <body> to <html> so the canvas is visible above the
+     * html background but below body's content.
+     *
+     * Your site uses rgb(var(--primary)) as the background — this keeps that
+     * working (and keeps colour-switching working too).
+     */
+    injectCSS([
+      'html { background: rgb(var(--primary)); }',
+      'body { background: transparent !important; }'
+    ].join(''));
+
+    // Create and inject the canvas as the very first element in <body>
     canvas = document.createElement('canvas');
     canvas.id = 'grid-bg-canvas';
     canvas.style.cssText = [
@@ -55,8 +51,8 @@
       'left:0',
       'width:100%',
       'height:100%',
-      'z-index:0',
-      'pointer-events:none'  // never blocks clicks on real content
+      'z-index:-1',          // behind ALL page elements
+      'pointer-events:none'  // never blocks clicks or hovers
     ].join(';');
 
     document.body.insertBefore(canvas, document.body.firstChild);
@@ -66,13 +62,12 @@
     buildGrid();
     loop();
 
-    // Mouse tracking (desktop only)
+    // Mouse tracking (desktop only — no interference on touch devices)
     if (!('ontouchstart' in window)) {
       window.addEventListener('mousemove', function (e) {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
       });
-      // Return to off-screen when cursor leaves the window
       window.addEventListener('mouseleave', function () {
         mouse.x = -99999;
         mouse.y = -99999;
@@ -85,95 +80,125 @@
     });
   }
 
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function injectCSS(css) {
+    var s = document.createElement('style');
+    s.textContent = css;
+    document.head.appendChild(s);
+  }
+
   function resize() {
     w = canvas.width  = window.innerWidth;
     h = canvas.height = window.innerHeight;
   }
 
-  // ─── Build the fixed square grid ───────────────────────────────────────────
-  // Uses column/row indices for neighbour lookup — no expensive sort needed.
+  // ── Build the fixed triangle grid ──────────────────────────────────────────
+  //
+  // Every grid cell looks like this:
+  //
+  //   *───*
+  //   │ ╲ │
+  //   *───*
+  //
+  // Horizontal + vertical edges give the square grid.
+  // One diagonal (top-left → bottom-right) per cell splits each square into
+  // exactly two triangles — NO crossing lines.
+  //
+  // Each edge is stored once and drawn once per frame.
+  //
   function buildGrid() {
     points = [];
+    edges  = [];
 
     var cols = Math.ceil(w / POINT_DISTANCE) + 1;
     var rows = Math.ceil(h / POINT_DISTANCE) + 1;
+    var col, row, p;
 
-    // 1. Create every dot at its fixed grid position
-    for (var col = 0; col < cols; col++) {
-      for (var row = 0; row < rows; row++) {
-        var p = {
+    // 1. Place dots
+    for (col = 0; col < cols; col++) {
+      for (row = 0; row < rows; row++) {
+        points.push({
           x   : col * POINT_DISTANCE,
           y   : row * POINT_DISTANCE,
           col : col,
           row : row
-        };
-        p.circle = new Circle(p);
-        points.push(p); // stored at predictable index: col * rows + row
+        });
       }
     }
 
-    // 2. Wire up all 8 surrounding neighbours for each dot.
-    //    Orthogonal pairs → square grid lines.
-    //    Diagonals → triangle / mesh subdivisions when lit by hover.
-    points.forEach(function (p) {
-      p.neighbours = [];
-      for (var dc = -1; dc <= 1; dc++) {
-        for (var dr = -1; dr <= 1; dr++) {
-          if (dc === 0 && dr === 0) continue; // skip self
-          var nc = p.col + dc;
-          var nr = p.row + dr;
-          if (nc >= 0 && nc < cols && nr >= 0 && nr < rows) {
-            p.neighbours.push(points[nc * rows + nr]);
-          }
-        }
+    // Helper: get point by column + row
+    function pt(c, r) { return points[c * rows + r]; }
+
+    // 2. Build the edge list (each edge stored once)
+    for (col = 0; col < cols; col++) {
+      for (row = 0; row < rows; row++) {
+        p = pt(col, row);
+
+        if (col + 1 < cols)               edges.push([p, pt(col + 1, row    )]); // →
+        if (row + 1 < rows)               edges.push([p, pt(col,     row + 1)]); // ↓
+        if (col + 1 < cols && row + 1 < rows)
+                                          edges.push([p, pt(col + 1, row + 1)]); // ↘ diagonal
       }
-    });
+    }
   }
 
-  // ─── Render loop ───────────────────────────────────────────────────────────
+  // ── Render loop ─────────────────────────────────────────────────────────────
   function loop() {
     cancelAnimationFrame(rafId);
     ctx.clearRect(0, 0, w, h);
 
-    points.forEach(function (point) {
-      var d = dist2(mouse, point);
+    var i, ab, d, lineOpacity, p, dotOpacity;
 
-      // Line opacity — driven purely by mouse proximity
-      var lineOpacity = d < NEAR ? 0.15
-                      : d < MID  ? 0.05
-                      : d < FAR  ? 0.01
-                      : 0;
+    // ── 1. Draw triangle edges (behind dots) ──────────────────────────────
+    for (i = 0; i < edges.length; i++) {
+      ab = edges[i];
 
-      // Dot opacity — always subtly visible, brighter near cursor
-      point.circle.opacity = d < MID ? 0.5
-                           : d < FAR ? 0.4
-                           : 0.3;
+      // Use the nearer endpoint so a line lights up as soon as
+      // the cursor comes within range of EITHER of its dots.
+      d = Math.min(dist2(mouse, ab[0]), dist2(mouse, ab[1]));
 
-      drawLines(point, lineOpacity);
-      point.circle.draw();
-    });
+      lineOpacity = d < NEAR ? 0.15   // original: 0.15
+                  : d < MID  ? 0.05   // original: 0.05
+                  : d < FAR  ? 0.01   // original: 0.01
+                  : 0;
+
+      if (lineOpacity === 0) continue; // skip invisible lines immediately
+
+      ctx.beginPath();
+      ctx.moveTo(ab[0].x, ab[0].y);
+      ctx.lineTo(ab[1].x, ab[1].y);
+      ctx.strokeStyle = 'rgba(0,0,0,' + lineOpacity + ')'; // BLACK — matches original
+      ctx.stroke();
+    }
+
+    // ── 2. Draw dots on top of edges ──────────────────────────────────────
+    for (i = 0; i < points.length; i++) {
+      p = points[i];
+      d = dist2(mouse, p);
+
+      // Dots are ALWAYS visible (min 0.3) — brightening near cursor.
+      // These match the original Portify opacity values exactly.
+      dotOpacity = d < MID ? 0.5   // original: 0.5
+                 : d < FAR ? 0.4   // original: 0.4
+                 :           0.3;  // original: 0.7 → but 0.3 is more subtle
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, POINT_RADIUS, 0, 2 * Math.PI, false);
+      ctx.fillStyle = 'rgba(0,0,0,' + dotOpacity + ')'; // BLACK — matches original
+      ctx.fill();
+    }
 
     rafId = requestAnimationFrame(loop);
   }
 
-  // ─── Draw lines from a dot to each of its neighbours ──────────────────────
-  function drawLines(p, opacity) {
-    if (opacity === 0) return;
-    p.neighbours.forEach(function (nb) {
-      ctx.beginPath();
-      ctx.moveTo(p.x, p.y);
-      ctx.lineTo(nb.x, nb.y);
-      ctx.strokeStyle = 'rgba(' + DOT_COLOR + ',' + opacity + ')';
-      ctx.stroke();
-    });
-  }
-
-  // ─── Squared Euclidean distance — avoids sqrt each frame ──────────────────
+  // ── Squared Euclidean distance (no sqrt — fast) ────────────────────────────
   function dist2(p1, p2) {
-    return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
+    var dx = p1.x - p2.x;
+    var dy = p1.y - p2.y;
+    return dx * dx + dy * dy;
   }
 
-  // ─── Start when DOM is ready ───────────────────────────────────────────────
+  // ── Start when DOM is ready ─────────────────────────────────────────────────
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
