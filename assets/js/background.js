@@ -23,14 +23,14 @@
   var FAR  = 40000;  // ≈ 200 px — dot brightening range
 
   // Line opacities
-  var LINE_BG       = 0.04;  // always-visible background grid (slightly fainter than before)
-  var LINE_RING_MID = 0.07;  // ring highlight — medium distance
-  var LINE_RING     = 0.14;  // ring highlight — near cursor
+  var LINE_BG       = 0.03;  // always-visible background grid (slightly fainter than before)
+  var LINE_RING_MID = 0.05;  // ring highlight — medium distance
+  var LINE_RING     = 0.11;  // ring highlight — near cursor
 
   // Dot opacities (reduced ~20% — "a tad fainter")
-  var DOT_FAR  = 0.12;
-  var DOT_MID  = 0.20;
-  var DOT_NEAR = 0.30;
+  var DOT_FAR  = 0.09;
+  var DOT_MID  = 0.16;
+  var DOT_NEAR = 0.24;
 
   // ── State ──────────────────────────────────────────────────────────────────
   var canvas, ctx, points, edges, rafId;
