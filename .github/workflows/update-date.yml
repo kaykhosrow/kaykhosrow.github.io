@@ -14,9 +14,11 @@ jobs:
         run: |
           DATE=$(date +'%B %Y')
           sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" index.html
+          sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" conferences.html
+          sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" code.html
 
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --quiet && echo "No changes" || (git add index.html && git commit -m "chore: update last-updated date" && git push)
+          git diff --quiet && echo "No changes" || (git add index.html conferences.html code.html && git commit -m "chore: update last-updated date" && git push)
