@@ -184,8 +184,8 @@
       /* Divider between colour swatches and toggle swatches */
       .settings-divider { width: 1px; align-self: stretch; margin: 5px 0px; background: rgba(0,0,0,0.1); flex-shrink: 0; }
 
-      /* Rectangular swatches — same shape as the cog button */
-      .setting-swatch { width: 28px; height: 28px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: opacity 0.2s, border-color 0.2s; }
+      /* Circle swatches */
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: opacity 0.2s, border-color 0.2s; }
       .setting-swatch:hover { opacity: 0.85; }
 
       /* Active state — darker border for whichever is on */
@@ -196,14 +196,14 @@
       /* Grain swatch */
       .grain-swatch { background-image: radial-gradient(circle, #777 1px, transparent 1px), radial-gradient(circle, #777 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: #bbb; }
 
-      /* Lattice swatch — suggests the triangle-grid with three-direction lines */
+      /* Lattice swatch — bold triangle-grid lines */
       .lattice-swatch {
-        background-color: #c4c0b4;
+        background-color: #c8c3b8;
         background-image:
-          linear-gradient(rgba(0,0,0,0.28) 1px, transparent 1px),
-          linear-gradient(60deg,  rgba(0,0,0,0.28) 1px, transparent 1px),
-          linear-gradient(120deg, rgba(0,0,0,0.28) 1px, transparent 1px);
-        background-size: 6px 7px;
+          linear-gradient(rgba(0,0,0,0.55) 1.5px, transparent 1.5px),
+          linear-gradient(60deg,  rgba(0,0,0,0.55) 1.5px, transparent 1.5px),
+          linear-gradient(120deg, rgba(0,0,0,0.55) 1.5px, transparent 1.5px);
+        background-size: 7px 8px;
       }
 
       /* Hide the lattice canvas on load — toggled on by the button */
@@ -1043,14 +1043,16 @@
         this.classList.toggle('active');
       });
 
-      // Lattice toggle — show/hide the canvas created by background.js
-      document.getElementById('latticeToggleBtn').addEventListener('click', function() {
-        var canvas = document.getElementById('grid-bg-canvas');
-        if (canvas) {
-          canvas.style.display = canvas.style.display === 'none' ? '' : 'none';
-        }
-        this.classList.toggle('active');
-      });
+      // Lattice toggle — explicit 'block'/'none' overrides the CSS display:none rule
+      (function() {
+        var latticeOn = false;
+        document.getElementById('latticeToggleBtn').addEventListener('click', function() {
+          latticeOn = !latticeOn;
+          var canvas = document.getElementById('grid-bg-canvas');
+          if (canvas) canvas.style.display = latticeOn ? 'block' : 'none';
+          this.classList.toggle('active', latticeOn);
+        });
+      })();
 
       // Colour swatches — mark whichever is selected with an active border
       document.querySelectorAll('.color-btn').forEach(function(btn) {
