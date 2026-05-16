@@ -1,0 +1,26 @@
+name: Sync Code
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - code.html
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: pip install beautifulsoup4 --break-system-packages
+      - name: Sync and set date
+        run: |
+          DATE=$(date +'%m/%Y')
+          python sync.py
+          sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" code.html
+          sed -i "s|<span id=\"last-updated\">.*</span>|<span id=\"last-updated\">$DATE</span>|" index.html
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet && echo "No changes" || (git add code.html index.html && git commit -m "chore: sync code and update date" && git push)
