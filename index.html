@@ -45,7 +45,8 @@
     <script defer src="assets/js/app.js"></script>
     
     <!-- Lattice background - enable if desired -->
-    <!-- <script defer src="assets/js/background.js"></script> -->
+    
+    <script defer src="assets/js/background.js"></script>
     
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
@@ -174,14 +175,40 @@
       .gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; border: 2.5px solid rgba(0,0,0,0.5); cursor: pointer; transition: background 0.3s, border-color 0.3s, transform 0.3s; }
       .gallery-dot.active { background: #000; border: 2.5px solid #000; transform: scale(1.25); }
 
+      /* ── Settings bar ──────────────────────────────────────────────────────── */
       .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 4px; border-left: 1px solid rgba(0,0,0,0.1); transition: padding-left 0.4s cubic-bezier(0.4,0,0.2,1); }
       .settings-bar:has(.settings-options.open) { padding-left: 12px; }
       .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
-      .settings-options.open { max-width: 200px; opacity: 1; }
-      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s; }
+      .settings-options.open { max-width: 240px; opacity: 1; }
+
+      /* Divider between colour swatches and toggle swatches */
+      .settings-divider { width: 1px; align-self: stretch; margin: 5px 0px; background: rgba(0,0,0,0.1); flex-shrink: 0; }
+
+      /* Rectangular swatches — same shape as the cog button */
+      .setting-swatch { width: 28px; height: 28px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: opacity 0.2s, border-color 0.2s; }
       .setting-swatch:hover { opacity: 0.85; }
+
+      /* Active state — darker border for whichever is on */
+      .color-btn.active   { border-color: rgba(0,0,0,0.5); }
+      .grain-swatch.active   { border-color: rgba(0,0,0,0.5); }
+      .lattice-swatch.active { border-color: rgba(0,0,0,0.5); }
+
+      /* Grain swatch */
       .grain-swatch { background-image: radial-gradient(circle, #777 1px, transparent 1px), radial-gradient(circle, #777 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: #bbb; }
-      .grain-swatch.active { border-color: rgba(0,0,0,0.5); }
+
+      /* Lattice swatch — suggests the triangle-grid with three-direction lines */
+      .lattice-swatch {
+        background-color: #c4c0b4;
+        background-image:
+          linear-gradient(rgba(0,0,0,0.28) 1px, transparent 1px),
+          linear-gradient(60deg,  rgba(0,0,0,0.28) 1px, transparent 1px),
+          linear-gradient(120deg, rgba(0,0,0,0.28) 1px, transparent 1px);
+        background-size: 6px 7px;
+      }
+
+      /* Hide the lattice canvas on load — toggled on by the button */
+      #grid-bg-canvas { display: none; }
+
       .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.3); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
       .settings-gear-btn.open { transform: rotate(90deg); }
 
@@ -573,8 +600,13 @@
           </ul>
           <div class="settings-bar d-none d-xl-flex">
             <div class="settings-options" id="settingsOptions">
-              <button style="background-color:#ffdb67" class="color-btn setting-swatch" data-color="255, 219, 103"></button>
-              <button style="background-color:#eee8aa" class="color-btn setting-swatch" data-color="238, 232, 170"></button>
+              <!-- Colour swatches -->
+              <button style="background-color:#ffdb67" class="color-btn setting-swatch active" data-color="255, 219, 103" title="Yellow"></button>
+              <button style="background-color:#eee8aa" class="color-btn setting-swatch" data-color="238, 232, 170" title="Pale yellow"></button>
+              <!-- Divider -->
+              <div class="settings-divider"></div>
+              <!-- Toggle swatches -->
+              <button class="lattice-swatch setting-swatch" id="latticeToggleBtn" title="Toggle Lattice"></button>
               <button class="grain-swatch setting-swatch" id="grainToggleBtn" title="Toggle Grain"></button>
             </div>
             <button class="settings-gear-btn" id="settingsGearBtn">
@@ -1002,12 +1034,34 @@
         this.classList.toggle('open');
         document.getElementById('settingsOptions').classList.toggle('open');
       });
+
+      // Grain toggle
       document.getElementById('grainToggleBtn').addEventListener('click', function() {
         var cb = document.querySelector('.grained-checkbox');
         cb.checked = !cb.checked;
         cb.dispatchEvent(new Event('change'));
         this.classList.toggle('active');
       });
+
+      // Lattice toggle — show/hide the canvas created by background.js
+      document.getElementById('latticeToggleBtn').addEventListener('click', function() {
+        var canvas = document.getElementById('grid-bg-canvas');
+        if (canvas) {
+          canvas.style.display = canvas.style.display === 'none' ? '' : 'none';
+        }
+        this.classList.toggle('active');
+      });
+
+      // Colour swatches — mark whichever is selected with an active border
+      document.querySelectorAll('.color-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.color-btn').forEach(function(b) {
+            b.classList.remove('active');
+          });
+          this.classList.add('active');
+        });
+      });
+
       document.addEventListener('DOMContentLoaded', function() {
         var researchSwiper = document.querySelector('#research .service-swiper');
         if (researchSwiper && researchSwiper.swiper) {
