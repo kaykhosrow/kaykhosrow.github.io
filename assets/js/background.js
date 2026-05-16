@@ -19,7 +19,7 @@
 
   // Grid origin offset — aligns the top-left vertex with the right edge of
   // the left icon panel (81 px) and the very top of the browser (y = 0).
-  var OFFSET_X = 85;
+  var OFFSET_X = 80;
   var OFFSET_Y = 0;
 
   // Proximity thresholds (squared px)
