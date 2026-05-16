@@ -87,6 +87,8 @@
         z-index: 49;
       }
 
+      #navigation { z-index: 49 !important; }
+
       html:not(.js-loading) #navigation {
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
@@ -347,11 +349,8 @@
       * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
       body::after { content: ''; position: fixed; top: 0; right: 0; width: 1px; height: 100%; background: rgba(0,0,0,0.1); pointer-events: none; z-index: 9999; }
 
-      /* Grain on scrollbar track — active only when grain is enabled */
-      html.grain-active::-webkit-scrollbar-track {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.7' fill='rgba(0,0,0,0.18)'/%3E%3Ccircle cx='3' cy='3' r='0.7' fill='rgba(0,0,0,0.18)'/%3E%3C/svg%3E");
-        background-size: 4px 4px;
-      }
+
+
 
       .nav-arrow-wrap {
         display: flex;
@@ -1039,7 +1038,6 @@
         cb.checked = !cb.checked;
         cb.dispatchEvent(new Event('change'));
         this.classList.toggle('active');
-        document.documentElement.classList.toggle('grain-active', cb.checked);
       });
 
       // Lattice toggle — starts ON (canvas visible by default)
