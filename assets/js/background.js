@@ -1,61 +1,52 @@
 /**
- * background.js
+ * background.js — equilateral-triangle lattice with hexagonal cursor highlight.
  *
- * Equilateral-triangle lattice background.
- * Odd rows are offset by half a column, giving this pattern:
- *
- *   ●────●────●────●
- *     ╲ ╱  ╲ ╱  ╲ ╱
- *      ●────●────●
- *     ╱ ╲  ╱ ╲  ╱ ╲
- *   ●────●────●────●
- *
- * Add to index.html after app.js:
- *   <script defer src="assets/js/background.js"></script>
+ * How the hexagon effect works:
+ *   Every edge in the triangle mesh has 1-2 "ring centres" — dots that are
+ *   adjacent to BOTH of the edge's endpoints.  When the cursor is near one of
+ *   those ring-centre dots, that edge belongs to the hexagonal ring around it
+ *   and lights up.  Spoke edges (which only share one endpoint with the
+ *   nearest dot) have that dot as an endpoint, not a ring centre, so they
+ *   stay dark → you get a hexagon, not a star.
  */
 
 (function () {
 
   // ── Config ─────────────────────────────────────────────────────────────────
-  var D = 45;                        // dot spacing in px
-  var H = D * Math.sqrt(3) / 2;     // row height ≈ 39 px  (equilateral triangles)
-  var R = 2;                         // dot radius in px
+  var D = 45;                      // dot spacing in px
+  var H = D * Math.sqrt(3) / 2;   // row height ≈ 39 px  (equilateral triangles)
+  var R = 2;                       // dot radius in px
 
-  // Mouse-proximity thresholds (squared px — no sqrt needed each frame)
-  var NEAR = 4000;   // ≈  63 px
-  var MID  = 20000;  // ≈ 141 px
-  var FAR  = 40000;  // ≈ 200 px
-
-  // Dot opacities (reduced ~40% from previous — "a bit fainter")
-  var DOT_FAR  = 0.15;
-  var DOT_MID  = 0.25;
-  var DOT_NEAR = 0.35;
+  // Proximity thresholds (squared px)
+  var NEAR = 4000;   // ≈  63 px — strong ring glow
+  var MID  = 20000;  // ≈ 141 px — faint ring glow
+  var FAR  = 40000;  // ≈ 200 px — dot brightening range
 
   // Line opacities
-  var LINE_NEAR = 0.10;
-  var LINE_MID  = 0.03;
-  var LINE_FAR  = 0.008;
+  var LINE_BG       = 0.04;  // always-visible background grid (slightly fainter than before)
+  var LINE_RING_MID = 0.07;  // ring highlight — medium distance
+  var LINE_RING     = 0.14;  // ring highlight — near cursor
+
+  // Dot opacities (reduced ~20% — "a tad fainter")
+  var DOT_FAR  = 0.12;
+  var DOT_MID  = 0.20;
+  var DOT_NEAR = 0.30;
 
   // ── State ──────────────────────────────────────────────────────────────────
   var canvas, ctx, points, edges, rafId;
   var w, h;
   var mouse = { x: -99999, y: -99999 };
 
-  // ── Initialise ─────────────────────────────────────────────────────────────
+  // ── Init ───────────────────────────────────────────────────────────────────
   function init() {
-    // Move the page background from <body> to <html> so the canvas at
-    // z-index:-1 stays visible (otherwise body's bg would cover it).
-    // Uses your --primary CSS variable so colour-switching still works.
     var s = document.createElement('style');
     s.textContent = 'html{background:rgb(var(--primary))}body{background:transparent!important}';
     document.head.appendChild(s);
 
-    // Create canvas and inject as the very first child of <body>
     canvas = document.createElement('canvas');
     canvas.id = 'grid-bg-canvas';
     canvas.style.cssText =
       'position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none';
-
     document.body.insertBefore(canvas, document.body.firstChild);
     ctx = canvas.getContext('2d');
 
@@ -65,61 +56,41 @@
 
     if (!('ontouchstart' in window)) {
       window.addEventListener('mousemove', function (e) {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
+        mouse.x = e.clientX; mouse.y = e.clientY;
       });
       window.addEventListener('mouseleave', function () {
-        mouse.x = -99999;
-        mouse.y = -99999;
+        mouse.x = -99999; mouse.y = -99999;
       });
     }
-
-    window.addEventListener('resize', function () {
-      resize();
-      buildGrid();
-    });
+    window.addEventListener('resize', function () { resize(); buildGrid(); });
   }
 
-  // ── Resize ─────────────────────────────────────────────────────────────────
   function resize() {
     w = canvas.width  = window.innerWidth;
     h = canvas.height = window.innerHeight;
   }
 
   // ── Build triangular lattice ────────────────────────────────────────────────
-  //
-  // Dot position for (col, row):
-  //   x = col * D + (odd row ? D/2 : 0)
-  //   y = row * H
-  //
-  // Edges (stored once each, no duplicates):
-  //   Horizontal  →   every dot to the one on its right
-  //   Even row ↘  →   pt(col,   row+1)   (down-right into odd row)
-  //   Even row ↙  →   pt(col-1, row+1)   (down-left  into odd row)
-  //   Odd  row ↙  →   pt(col,   row+1)   (down-left  into even row)
-  //   Odd  row ↘  →   pt(col+1, row+1)   (down-right into even row)
-  //
   function buildGrid() {
     points = [];
     edges  = [];
 
     var cols = Math.ceil(w / D) + 2;
     var rows = Math.ceil(h / H) + 2;
-    var col, row, p, nb;
+    var row, col, p, nb, i, j;
 
-    // 1. Place dots
+    // 1. Create dots
     for (row = 0; row < rows; row++) {
       for (col = 0; col < cols; col++) {
         points.push({
-          x   : col * D + (row % 2 === 1 ? D / 2 : 0),
-          y   : row * H,
-          col : col,
-          row : row
+          x      : col * D + (row % 2 === 1 ? D / 2 : 0),
+          y      : row * H,
+          idx    : row * cols + col,
+          adjIdx : []           // filled in step 3
         });
       }
     }
 
-    // Look up a dot by grid coordinates; null if out of bounds
     function pt(c, r) {
       if (c < 0 || c >= cols || r < 0 || r >= rows) return null;
       return points[r * cols + c];
@@ -130,21 +101,37 @@
       for (col = 0; col < cols; col++) {
         p = pt(col, row);
 
-        // Horizontal →
         nb = pt(col + 1, row);
-        if (nb) edges.push([p, nb]);
+        if (nb) edges.push({ a: p, b: nb, rc: [] });
 
-        // Diagonals into next row
         if (row + 1 < rows) {
           if (row % 2 === 0) {
-            // Even row → odd row below (odd row is shifted right by D/2)
-            nb = pt(col,     row + 1); if (nb) edges.push([p, nb]); // ↘
-            nb = pt(col - 1, row + 1); if (nb) edges.push([p, nb]); // ↙
+            nb = pt(col,     row + 1); if (nb) edges.push({ a: p, b: nb, rc: [] });
+            nb = pt(col - 1, row + 1); if (nb) edges.push({ a: p, b: nb, rc: [] });
           } else {
-            // Odd row → even row below (even row has no shift)
-            nb = pt(col,     row + 1); if (nb) edges.push([p, nb]); // ↙
-            nb = pt(col + 1, row + 1); if (nb) edges.push([p, nb]); // ↘
+            nb = pt(col,     row + 1); if (nb) edges.push({ a: p, b: nb, rc: [] });
+            nb = pt(col + 1, row + 1); if (nb) edges.push({ a: p, b: nb, rc: [] });
           }
+        }
+      }
+    }
+
+    // 3. Build adjacency lists (needed to find ring centres)
+    for (i = 0; i < edges.length; i++) {
+      edges[i].a.adjIdx.push(edges[i].b.idx);
+      edges[i].b.adjIdx.push(edges[i].a.idx);
+    }
+
+    // 4. For each edge A-B, find their common neighbours.
+    //    A common neighbour C means: C is adjacent to both A and B,
+    //    so the edge A-B sits on the hexagonal ring around C.
+    //    Stored as edge.rc (ring centres).
+    for (i = 0; i < edges.length; i++) {
+      var aAdj = edges[i].a.adjIdx;
+      var bAdj = edges[i].b.adjIdx;
+      for (j = 0; j < aAdj.length; j++) {
+        if (bAdj.indexOf(aAdj[j]) !== -1) {
+          edges[i].rc.push(points[aAdj[j]]);
         }
       }
     }
@@ -155,34 +142,39 @@
     cancelAnimationFrame(rafId);
     ctx.clearRect(0, 0, w, h);
 
-    var i, ab, d, opacity, p;  // ← all variables declared here (fixes strict-mode bug)
+    var i, k, e, d, dd, opacity, p;
 
-    // Draw edges behind dots
+    // ── Draw edges ────────────────────────────────────────────────────────
     for (i = 0; i < edges.length; i++) {
-      ab = edges[i];
+      e = edges[i];
 
-      // Light up the line when the cursor is near EITHER of its endpoints
-      d = Math.min(dist2(mouse, ab[0]), dist2(mouse, ab[1]));
+      // Find distance to the nearest ring centre of this edge.
+      // When cursor is near ring centre C, this edge is part of C's hexagon.
+      d = Infinity;
+      for (k = 0; k < e.rc.length; k++) {
+        dd = dist2(mouse, e.rc[k]);
+        if (dd < d) d = dd;
+      }
 
-      opacity = d < NEAR ? LINE_NEAR
-              : d < MID  ? LINE_MID
-              : d < FAR  ? LINE_FAR
-              : 0;
-
-      if (opacity === 0) continue;
+      // Ring edges belonging to the nearest hexagon light up;
+      // everything else stays at the faint background opacity.
+      opacity = d < NEAR ? LINE_RING
+              : d < MID  ? LINE_RING_MID
+              : LINE_BG;
 
       ctx.beginPath();
-      ctx.moveTo(ab[0].x, ab[0].y);
-      ctx.lineTo(ab[1].x, ab[1].y);
+      ctx.moveTo(e.a.x, e.a.y);
+      ctx.lineTo(e.b.x, e.b.y);
       ctx.strokeStyle = 'rgba(0,0,0,' + opacity + ')';
       ctx.stroke();
     }
 
-    // Draw dots on top of edges
+    // ── Draw dots ─────────────────────────────────────────────────────────
     for (i = 0; i < points.length; i++) {
       p = points[i];
       d = dist2(mouse, p);
 
+      // Dot at the hexagon centre brightens when cursor is near
       opacity = d < MID ? DOT_NEAR
               : d < FAR ? DOT_MID
               : DOT_FAR;
@@ -196,7 +188,7 @@
     rafId = requestAnimationFrame(loop);
   }
 
-  // ── Squared distance (avoids Math.sqrt each frame) ─────────────────────────
+  // ── Squared distance ────────────────────────────────────────────────────────
   function dist2(p1, p2) {
     var dx = p1.x - p2.x;
     var dy = p1.y - p2.y;
