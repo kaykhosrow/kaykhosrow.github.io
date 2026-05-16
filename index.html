@@ -184,17 +184,13 @@
       /* Divider between colour swatches and toggle swatches */
       .settings-divider { width: 1px; align-self: stretch; margin: 5px 0px; background: rgba(0,0,0,0.1); flex-shrink: 0; }
 
-      /* Circle swatches */
-      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: opacity 0.2s, border-color 0.2s; }
-      .setting-swatch:hover { opacity: 0.85; }
+      /* Circle swatches — border always visible; active state darkens the fill */
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease; }
+      .setting-swatch:hover { filter: brightness(0.92); }
+      .setting-swatch.active { filter: brightness(0.78); }
 
-      /* Active state — darker border for whichever is on */
-      .color-btn.active   { border-color: rgba(0,0,0,0.5); }
-      .grain-swatch.active   { border-color: rgba(0,0,0,0.5); }
-      .lattice-swatch.active { border-color: rgba(0,0,0,0.5); }
-
-      /* Grain swatch */
-      .grain-swatch { background-image: radial-gradient(circle, #777 1px, transparent 1px), radial-gradient(circle, #777 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: #bbb; }
+      /* Grain swatch — inherits the selected background colour */
+      .grain-swatch { background-image: radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px), radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: rgb(var(--primary)); }
 
       /* Lattice swatch — SVG snapshot of the actual triangle lattice (dots + edges) */
       .lattice-swatch {
@@ -204,8 +200,6 @@
         background-position: center;
       }
 
-      /* Hide the lattice canvas on load — toggled on by the button */
-      #grid-bg-canvas { display: none; }
 
       .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.3); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
       .settings-gear-btn.open { transform: rotate(90deg); }
@@ -604,7 +598,7 @@
               <!-- Divider -->
               <div class="settings-divider"></div>
               <!-- Toggle swatches -->
-              <button class="lattice-swatch setting-swatch" id="latticeToggleBtn" title="Toggle Lattice"></button>
+              <button class="lattice-swatch setting-swatch active" id="latticeToggleBtn" title="Toggle Lattice"></button>
               <button class="grain-swatch setting-swatch" id="grainToggleBtn" title="Toggle Grain"></button>
             </div>
             <button class="settings-gear-btn" id="settingsGearBtn">
@@ -1041,9 +1035,9 @@
         this.classList.toggle('active');
       });
 
-      // Lattice toggle — explicit 'block'/'none' overrides the CSS display:none rule
+      // Lattice toggle — starts ON (canvas visible by default)
       (function() {
-        var latticeOn = false;
+        var latticeOn = true;
         document.getElementById('latticeToggleBtn').addEventListener('click', function() {
           latticeOn = !latticeOn;
           var canvas = document.getElementById('grid-bg-canvas');
