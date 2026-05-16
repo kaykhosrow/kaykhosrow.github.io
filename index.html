@@ -300,6 +300,11 @@
 
       .nav-overlay { display: none !important; }
 
+      @media (max-width: 1199px) {
+        .navigation { transition: none !important; animation: none !important; }
+        .navigation:not(.opened) { display: none !important; }
+      }
+
       html { min-width: 1200px; }
       body { min-width: 1200px; overflow-x: visible !important; }
 
