@@ -43,7 +43,7 @@
       approachAngle: 0,
       tailDist:      140,
       textSide:      'above',
-      tilt:          0,
+      tilt:          5,
       arrowImg:      1,
       baseAngle:     10,
       flipX:         true,
