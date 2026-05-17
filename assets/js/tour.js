@@ -29,8 +29,8 @@
       tailDist:      140,
       textSide:      'above',
       tilt:           1.0,
-      arrowImg:      2,
-      baseAngle:     0,
+      arrowImg:      1,
+      baseAngle:     180,
       arrowOffsetX:  -11,   /* shifts tip toward About button */
       arrowOffsetY:    6,
     },
