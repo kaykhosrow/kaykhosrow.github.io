@@ -15,7 +15,7 @@
       approachAngle: 180,
       tailDist:      115,
       textSide:      'above',
-      tilt:          3.75,
+      tilt:          1.0,
       arrowImg:      1,
       baseAngle:     0,
       arrowOffsetX:  -175,   /* nudge: negative = left,  positive = right */
@@ -25,15 +25,16 @@
     {
       sel:           '.work-btn',
       text:          'Click here to learn more',
+      flipX:  true,
       approachAngle: 150,
       tailDist:      140,
       textSide:      'above',
-      tilt:          20,
+      tilt:          90,
       arrowImg:      1,
       baseAngle:     150,
       arrowOffsetX:  -250,   /* shifts tip toward About button */
       arrowOffsetY:  100,
-      textOffsetY:   150,  /* additional text-only nudge */
+      textOffsetY:   300,  /* additional text-only nudge */
       textOffsetX:   -100, 
     },
     {
