@@ -17,10 +17,10 @@
       textSide:      'above',
       tilt:          0,
       arrowImg:      1,
-      baseAngle:     5,
+      baseAngle:     2.5,
       arrowOffsetX:  -175,   /* nudge: negative = left,  positive = right */
       arrowOffsetY:  -35,  /* nudge: negative = up,    positive = down  */
-      textOffsetY:   -57.5,    /* additional text-only nudge */
+      textOffsetY:   -58.5,    /* additional text-only nudge */
       textOffsetX:   -5,
     },
      {
