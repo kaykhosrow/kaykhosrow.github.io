@@ -31,11 +31,10 @@
       tilt:          270,
       arrowImg:      1,
       baseAngle:     150,
-      flipY:         true,
       arrowOffsetX:  -250,   /* shifts tip toward About button */
       arrowOffsetY:  100,
-      textOffsetY:   300,  /* additional text-only nudge */
-      textOffsetX:   -100, 
+      textOffsetY:   250,  /* additional text-only nudge */
+      textOffsetX:   -125, 
     },
     {
       sel:           '.contact-btn',
