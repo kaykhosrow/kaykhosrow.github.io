@@ -42,11 +42,13 @@
       approachAngle:  30,
       tailDist:      140,
       textSide:      'above',
-      tilt:          -0.8,
+      tilt:          1,
       arrowImg:      2,
-      baseAngle:     180,
-      arrowOffsetX:   11,   /* shifts tip toward Contact button */
-      arrowOffsetY:    6,
+      baseAngle:     0,
+      arrowOffsetX:   250,   /* shifts tip toward Contact button */
+      arrowOffsetY:   200,
+      textOffsetY:   200,  /* additional text-only nudge */
+      textOffsetX:   250, 
     },
     {
       sel:           '#navigation ul',
