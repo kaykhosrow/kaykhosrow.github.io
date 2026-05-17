@@ -20,7 +20,7 @@
       tilt:          -1.2,
       arrowImg:      1,
       baseAngle:     0,
-      arrowOffsetX:  -65,   /* nudge: negative = left,  positive = right */
+      arrowOffsetX:  -115,   /* nudge: negative = left,  positive = right */
       arrowOffsetY:  -35,   /* nudge: negative = up,    positive = down  */
     },
     {
