@@ -44,7 +44,7 @@
       tailDist:      140,
       textSide:      'above',
       tilt:          0,
-      arrowImg:      4,
+      arrowImg:      1,
       baseAngle:     200,
       arrowOffsetX:  292.5,
       arrowOffsetY:  35,
