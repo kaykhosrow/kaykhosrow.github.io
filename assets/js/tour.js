@@ -112,7 +112,7 @@
     '  transform-origin:center center;',
     '  opacity:0;',
     '  transition:opacity ' + FADE_MS + 'ms ease;',
-    '  filter:drop-shadow(1px 2px 6px rgba(0,0,0,0.28));',
+    '  filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));',
     '}',
     '.tour-arrow.t-on { opacity:1; }',
 
