@@ -19,8 +19,8 @@
       arrowImg:      1,
       baseAngle:     0,
       arrowOffsetX:  -175,   /* nudge: negative = left,  positive = right */
-      arrowOffsetY:  -32.5,  /* nudge: negative = up,    positive = down  */
-      textOffsetY:   -52.5,    /* additional text-only nudge */
+      arrowOffsetY:  -35,  /* nudge: negative = up,    positive = down  */
+      textOffsetY:   -57.5,    /* additional text-only nudge */
     },
      {
       sel:           '.work-btn',
