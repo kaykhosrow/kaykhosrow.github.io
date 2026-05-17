@@ -22,7 +22,7 @@
       arrowOffsetY:  -32.5,  /* nudge: negative = up,    positive = down  */
       textOffsetY:   -50,    /* additional text-only nudge */
     },
-    {
+     {
       sel:           '.work-btn',
       text:          'Click here to learn more',
       approachAngle: 150,
