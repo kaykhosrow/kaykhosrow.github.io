@@ -20,7 +20,7 @@
       tilt:          -1.2,
       arrowImg:      1,
       baseAngle:     0,
-      arrowOffsetX:  -115,   /* nudge: negative = left,  positive = right */
+      arrowOffsetX:  -215,   /* nudge: negative = left,  positive = right */
       arrowOffsetY:  -35,   /* nudge: negative = up,    positive = down  */
     },
     {
@@ -282,17 +282,19 @@
     arrowEl.style.top       = (arrCY - ARR * 0.5 + (note.arrowOffsetY || 0)) + 'px';
     arrowEl.style.transform = 'rotate(' + rotation.toFixed(1) + 'deg)';
 
-    /* Text at the tail */
+    /* Text at the tail — offset moves with the arrow */
     var nW = textEl.offsetWidth  || 240;
     var nH = textEl.offsetHeight || 36;
+    var ox = note.arrowOffsetX || 0;
+    var oy = note.arrowOffsetY || 0;
     var ax, ay;
 
     switch (note.textSide) {
-      case 'above': ax = tailX - nW * 0.5; ay = tailY - nH - GAP; break;
-      case 'below': ax = tailX - nW * 0.5; ay = tailY + GAP;       break;
-      case 'left':  ax = tailX - nW - GAP; ay = tailY - nH * 0.5; break;
-      case 'right': ax = tailX + GAP;      ay = tailY - nH * 0.5; break;
-      default:      ax = tailX - nW * 0.5; ay = tailY - nH - GAP;
+      case 'above': ax = tailX - nW * 0.5 + ox; ay = tailY - nH - GAP + oy; break;
+      case 'below': ax = tailX - nW * 0.5 + ox; ay = tailY + GAP + oy;       break;
+      case 'left':  ax = tailX - nW - GAP + ox;  ay = tailY - nH * 0.5 + oy; break;
+      case 'right': ax = tailX + GAP + ox;       ay = tailY - nH * 0.5 + oy; break;
+      default:      ax = tailX - nW * 0.5 + ox; ay = tailY - nH - GAP + oy;
     }
 
     /* Clamp so nothing bleeds past the right edge of the viewport */
