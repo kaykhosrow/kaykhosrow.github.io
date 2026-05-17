@@ -46,10 +46,10 @@
       tilt:          0,
       arrowImg:      4,
       baseAngle:     200,
-      arrowOffsetX:  295,
+      arrowOffsetX:  292.5,
       arrowOffsetY:  35,
-      textOffsetY:   85,
-      textOffsetX:   150,
+      textOffsetY:   90,
+      textOffsetX:   145,
     },
     {
       sel:           '#navigation ul',
