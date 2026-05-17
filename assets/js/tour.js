@@ -1,74 +1,87 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    tour.js  —  Site walkthrough
-   Add one line to <head>:  <script defer src="assets/js/tour.js"></script>
+   <script defer src="assets/js/tour.js"></script>
+   Arrows: assets/images/arrow1.png / arrow2.png / arrow3.png
 
-   ? button appears in the nav bar (same box as the gear icon).
-   Click it → all annotations fade in simultaneously.
-   Click again / scroll down → all fade out.
-   No arrows. No navigation controls. Just text on the page.
+   Annotations are position:absolute so they sit on the page and scroll away
+   naturally as the user scrolls down — just like the hero content does.
    ───────────────────────────────────────────────────────────────────────────── */
 (function () {
   'use strict';
 
-  /* ── Annotation definitions ─────────────────────────────────────────────
-     sel:  CSS selector for the element the note refers to
-     text: the annotation text (kept short so it fits on one line)
-     pos:  where to place the note relative to the element
-           'right'  → to the right of the element
-           'above'  → centred above the element
-           'left'   → to the left of the element
-           'below'  → centred below the element
-     gap:  extra breathing room between element edge and note (px)
-     tilt: subtle rotation on the text block (degrees)
-  ───────────────────────────────────────────────────────────────────────── */
+  /* ── Annotation definitions ─────────────────────────────────────────────── */
   var NOTES = [
     {
-      sel:  '#heroName',
-      text: 'Click here for the pronunciation',
-      pos:  'right',
-      gap:  22,
-      tilt: -1.4,
+      sel:           '#heroName',
+      text:          'Click here for the pronunciation',
+      approachAngle: 180,
+      tailDist:      115,
+      textSide:      'above',
+      tilt:          -1.2,
+      arrowImg:      1,
+      baseAngle:     0,
     },
     {
-      sel:  '.work-btn',
-      text: 'Click here to learn more about me',
-      pos:  'above',
-      gap:  14,
-      tilt:  1.1,
+      sel:           '.work-btn',
+      text:          'Click here to learn more about me',
+      approachAngle: 150,
+      tailDist:      140,
+      textSide:      'above',
+      tilt:           1.0,
+      arrowImg:      2,
+      baseAngle:     0,
     },
     {
-      sel:  '.contact-btn',
-      text: 'Click here to get in touch',
-      pos:  'right',
-      gap:  18,
-      tilt: -0.9,
+      sel:           '.contact-btn',
+      text:          'Click here to get in touch',
+      approachAngle:  30,
+      tailDist:      140,
+      textSide:      'above',
+      tilt:          -0.8,
+      arrowImg:      3,
+      baseAngle:     0,
     },
     {
-      sel:  '#navigation ul',
-      text: 'Navigate to different sections',
-      pos:  'above',
-      gap:  14,
-      tilt:  0.8,
+      sel:           '#navigation ul',
+      text:          'Navigate to different sections',
+      approachAngle:  90,
+      tailDist:      105,
+      textSide:      'right',
+      tilt:           0.7,
+      arrowImg:      2,
+      baseAngle:     0,
     },
     {
-      sel:  '.left-bar ul',
-      text: 'Email, LinkedIn, GitHub',
-      pos:  'right',
-      gap:  16,
-      tilt: -1.1,
+      sel:           '.left-bar ul',
+      text:          'Email, LinkedIn, GitHub',
+      approachAngle: 180,
+      tailDist:       95,
+      textSide:      'above',
+      tilt:          -1.0,
+      arrowImg:      3,
+      baseAngle:     0,
     },
     {
-      sel:  '#settingsGearBtn',
-      text: 'Customise the site',
-      pos:  'above',
-      gap:  14,
-      tilt:  0.6,
+      sel:           '#settingsGearBtn',
+      text:          'Customise the site',
+      approachAngle:  90,
+      tailDist:      100,
+      textSide:      'left',
+      tilt:           0.5,
+      arrowImg:      1,
+      baseAngle:     0,
     },
   ];
 
+  /* ── Constants ─────────────────────────────────────────────────────────── */
+  var ARR     = 115;
+  var GAP     = 12;
+  var TIP_CLR = 8;
+  var FADE_MS = 380;
+
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
-  var noteEls    = [];   /* one <div> per annotation, created in init() */
+  var pairs      = [];
 
   /* ── CSS ────────────────────────────────────────────────────────────────── */
   var styleEl = document.createElement('style');
@@ -76,7 +89,6 @@
 
     '@font-face{font-family:"Scribble";src:url("assets/fonts/Scribble.otf") format("opentype");}',
 
-    /* ── ? button ── same box as the gear */
     '#tourBtn{',
     '  width:32px;height:32px;border-radius:4px;',
     '  border:2px solid rgba(0,0,0,0.3);background:transparent;',
@@ -90,28 +102,36 @@
     '#tourBtn.t-on    { background:rgb(var(--black)); color:rgb(var(--primary)); border-color:rgb(var(--black)); }',
     '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
 
-    /* ── Individual annotation notes ── */
-    '.tour-note {',
-    '  position:fixed;',
+    /* ── position:absolute so they scroll with the page ── */
+    '.tour-arrow {',
+    '  position:absolute;',          /* ← absolute, not fixed */
     '  z-index:9001;',
+    '  width:' + ARR + 'px; height:' + ARR + 'px;',
+    '  object-fit:contain; object-position:center;',
+    '  pointer-events:none;',
+    '  transform-origin:center center;',
+    '  opacity:0;',
+    '  transition:opacity ' + FADE_MS + 'ms ease;',
+    '  filter:drop-shadow(1px 2px 6px rgba(0,0,0,0.28));',
+    '}',
+    '.tour-arrow.t-on { opacity:1; }',
+
+    '.tour-note {',
+    '  position:absolute;',          /* ← absolute, not fixed */
+    '  z-index:9002;',
     '  pointer-events:none;',
     '  white-space:nowrap;',
     '  opacity:0;',
-    '  transition:opacity 0.45s ease;',
+    '  transition:opacity ' + FADE_MS + 'ms ease;',
     '}',
     '.tour-note.t-on { opacity:1; }',
 
-    /* ── Note text ── */
     '.tn-text {',
     '  font-family:"Scribble","InterRegular",cursive;',
-    '  font-size:1.38rem;',
-    '  line-height:1.4;',
+    '  font-size:1.38rem; line-height:1.4;',
     '  color:rgba(0,0,0,0.88);',
-    '  text-shadow:',
-    '    0.1px 0.1px 1.5px rgba(0,0,0,0.45),',
-    '    0 2px 8px rgba(0,0,0,0.12);',
-    '  white-space:nowrap;',
-    '  display:block;',
+    '  text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12);',
+    '  white-space:nowrap; display:block;',
     '}',
 
   ].join('\n');
@@ -134,32 +154,37 @@
     bar.style.marginLeft = '0';
     nav.insertBefore(btn, bar);
 
-    /* One annotation div per note — appended to body, opacity:0 */
+    /* Arrow + text elements per note */
     NOTES.forEach(function (note) {
-      var div  = document.createElement('div');
-      div.className = 'tour-note';
+      var arrowEl = document.createElement('img');
+      arrowEl.className = 'tour-arrow';
+      arrowEl.alt = '';
+      arrowEl.setAttribute('aria-hidden', 'true');
+      arrowEl.src = 'assets/images/arrow' + note.arrowImg + '.png';
+      document.body.appendChild(arrowEl);
+
+      var textEl = document.createElement('div');
+      textEl.className = 'tour-note';
       var span = document.createElement('span');
       span.className   = 'tn-text';
       span.textContent = note.text;
-      div.appendChild(span);
-      div.style.transform = 'rotate(' + note.tilt + 'deg)';
-      document.body.appendChild(div);
-      noteEls.push(div);
+      textEl.appendChild(span);
+      textEl.style.transform = 'rotate(' + note.tilt + 'deg)';
+      document.body.appendChild(textEl);
+
+      pairs.push({ arrow: arrowEl, text: textEl });
     });
 
-    /* ── Events ── */
+    /* Events */
     btn.addEventListener('click', function () {
       tourActive ? hideAll() : showAll();
     });
 
-    /* Fade button + notes when user scrolls away from the top */
+    /* Only fade the button when scrolled — annotations scroll naturally */
     window.addEventListener('scroll', function () {
-      var away = window.scrollY > 40;
-      btn.classList.toggle('t-faded', away);
-      if (away && tourActive) hideAll();
+      btn.classList.toggle('t-faded', window.scrollY > 40);
     }, { passive: true });
 
-    /* Reposition on resize */
     window.addEventListener('resize', function () {
       if (tourActive) positionAll();
     }, { passive: true });
@@ -170,10 +195,12 @@
     tourActive = true;
     document.getElementById('tourBtn').classList.add('t-on');
     positionAll();
-    /* Small rAF delay so position is applied before opacity transition fires */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        noteEls.forEach(function (el) { el.classList.add('t-on'); });
+        pairs.forEach(function (p) {
+          p.arrow.classList.add('t-on');
+          p.text.classList.add('t-on');
+        });
       });
     });
   }
@@ -181,59 +208,97 @@
   function hideAll() {
     tourActive = false;
     document.getElementById('tourBtn').classList.remove('t-on');
-    noteEls.forEach(function (el) { el.classList.remove('t-on'); });
-  }
-
-  /* ── Position all notes based on current element rects ──────────────────── */
-  function positionAll() {
-    noteEls.forEach(function (noteEl, i) {
-      positionNote(noteEl, NOTES[i]);
+    pairs.forEach(function (p) {
+      p.arrow.classList.remove('t-on');
+      p.text.classList.remove('t-on');
     });
   }
 
-  function positionNote(noteEl, note) {
+  /* ── Position all pairs ─────────────────────────────────────────────────── */
+  function positionAll() {
+    NOTES.forEach(function (note, i) {
+      positionPair(pairs[i].arrow, pairs[i].text, note);
+    });
+  }
+
+  function positionPair(arrowEl, textEl, note) {
     var target = document.querySelector(note.sel);
     if (!target) return;
 
-    var r    = target.getBoundingClientRect();
-    var vW   = window.innerWidth;
-    var vH   = window.innerHeight;
-    var gap  = note.gap || 14;
+    /* getBoundingClientRect gives viewport coords.
+       Add scrollY / scrollX to convert to page (document) coordinates,
+       which is what position:absolute needs.                             */
+    var vr  = target.getBoundingClientRect();
+    var sx  = window.scrollX || 0;
+    var sy  = window.scrollY || 0;
 
-    /* Measure the note's rendered size (element is in DOM, opacity:0) */
-    var nW   = noteEl.offsetWidth  || 200;
-    var nH   = noteEl.offsetHeight || 32;
+    /* Page-coordinate rect */
+    var pr = {
+      left:   vr.left   + sx,
+      top:    vr.top    + sy,
+      right:  vr.right  + sx,
+      bottom: vr.bottom + sy,
+      width:  vr.width,
+      height: vr.height,
+    };
 
+    var tCX = pr.left + pr.width  * 0.5;
+    var tCY = pr.top  + pr.height * 0.5;
+
+    /* Arrow direction */
+    var rad = note.approachAngle * Math.PI / 180;
+    var ux  = Math.cos(rad);
+    var uy  = Math.sin(rad);
+
+    /* Tip on target page-coordinate edge */
+    var tipPt = rectEdge(pr, tCX - ux * 2000, tCY - uy * 2000);
+    var tipX  = tipPt.x - ux * TIP_CLR;
+    var tipY  = tipPt.y - uy * TIP_CLR;
+
+    /* Tail */
+    var tailX = tipX - ux * note.tailDist;
+    var tailY = tipY - uy * note.tailDist;
+
+    /* Arrow centre */
+    var arrCX    = (tipX + tailX) * 0.5;
+    var arrCY    = (tipY + tailY) * 0.5;
+    var rotation = note.approachAngle - (note.baseAngle || 0);
+
+    arrowEl.style.left      = (arrCX - ARR * 0.5) + 'px';
+    arrowEl.style.top       = (arrCY - ARR * 0.5) + 'px';
+    arrowEl.style.transform = 'rotate(' + rotation.toFixed(1) + 'deg)';
+
+    /* Text at the tail */
+    var nW = textEl.offsetWidth  || 240;
+    var nH = textEl.offsetHeight || 36;
     var ax, ay;
 
-    switch (note.pos) {
-      case 'right':
-        ax = r.right + gap;
-        ay = r.top + r.height * 0.5 - nH * 0.5;
-        break;
-      case 'left':
-        ax = r.left - nW - gap;
-        ay = r.top + r.height * 0.5 - nH * 0.5;
-        break;
-      case 'above':
-        ax = r.left + r.width * 0.5 - nW * 0.5;
-        ay = r.top - nH - gap;
-        break;
-      case 'below':
-        ax = r.left + r.width * 0.5 - nW * 0.5;
-        ay = r.bottom + gap;
-        break;
-      default:
-        ax = r.right + gap;
-        ay = r.top + r.height * 0.5 - nH * 0.5;
+    switch (note.textSide) {
+      case 'above': ax = tailX - nW * 0.5; ay = tailY - nH - GAP; break;
+      case 'below': ax = tailX - nW * 0.5; ay = tailY + GAP;       break;
+      case 'left':  ax = tailX - nW - GAP; ay = tailY - nH * 0.5; break;
+      case 'right': ax = tailX + GAP;      ay = tailY - nH * 0.5; break;
+      default:      ax = tailX - nW * 0.5; ay = tailY - nH - GAP;
     }
 
-    /* Clamp to viewport */
-    ax = Math.max(12, Math.min(ax, vW - nW - 12));
-    ay = Math.max(10, Math.min(ay, vH - nH - 10));
+    /* Clamp so nothing bleeds off the left/right of the page */
+    var pageW = Math.max(document.documentElement.scrollWidth, window.innerWidth);
+    ax = Math.max(12, Math.min(ax, pageW - nW - 12));
 
-    noteEl.style.left = ax + 'px';
-    noteEl.style.top  = ay + 'px';
+    textEl.style.left = ax + 'px';
+    textEl.style.top  = ay + 'px';
+  }
+
+  /* ── Nearest point on a rect's edge facing (fx, fy) ─────────────────────── */
+  function rectEdge(rect, fx, fy) {
+    var cx = rect.left + rect.width  * 0.5;
+    var cy = rect.top  + rect.height * 0.5;
+    var dx = fx - cx, dy = fy - cy;
+    if (!dx && !dy) return { x: cx, y: cy };
+    var sx = dx ? rect.width  * 0.5 / Math.abs(dx) : 1e9;
+    var sy = dy ? rect.height * 0.5 / Math.abs(dy) : 1e9;
+    var s  = Math.min(sx, sy);
+    return { x: cx + dx * s, y: cy + dy * s };
   }
 
   /* ── Boot ───────────────────────────────────────────────────────────────── */
