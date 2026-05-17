@@ -19,8 +19,8 @@
       arrowImg:      1,
       baseAngle:     0,
       arrowOffsetX:  -175,   /* nudge: negative = left,  positive = right */
-      arrowOffsetY:  -32.5,   /* nudge: negative = up,    positive = down  */
-      textOffsetY:   -50,  /* additional text-only nudge */
+      arrowOffsetY:  -32.5,  /* nudge: negative = up,    positive = down  */
+      textOffsetY:   -50,    /* additional text-only nudge */
     },
     {
       sel:           '.work-btn',
@@ -31,61 +31,61 @@
       tilt:          270,
       arrowImg:      1,
       baseAngle:     150,
-      arrowOffsetX:  -250,   /* shifts tip toward About button */
+      arrowOffsetX:  -250,
       arrowOffsetY:  100,
-      textOffsetY:   225,  /* additional text-only nudge */
-      textOffsetX:   -115, 
+      textOffsetY:   225,
+      textOffsetX:   -115,
     },
     {
       sel:           '.contact-btn',
       text:          'Click here to connect',
-      approachAngle:  0,
+      approachAngle: 0,
       tailDist:      140,
       textSide:      'above',
       tilt:          1,
       arrowImg:      2,
       baseAngle:     125,
-      flipX:         true, 
-      arrowOffsetX:   250,   /* shifts tip toward Contact button */
-      arrowOffsetY:   200,
-      textOffsetY:   0,  /* additional text-only nudge */
-      textOffsetX:   75, 
+      flipX:         true,
+      arrowOffsetX:  250,
+      arrowOffsetY:  200,
+      textOffsetY:   0,
+      textOffsetX:   75,
     },
     {
       sel:           '#navigation ul',
       text:          'Navigate between chapters',
-      approachAngle:  90,
+      approachAngle: 90,
       tailDist:      105,
       textSide:      'right',
-      tilt:           0.7,
+      tilt:          0.7,
       arrowImg:      2,
       baseAngle:     0,
-      arrowOffsetX:    0,
-      arrowOffsetY:   -5,   /* shifts tip down toward nav */
+      arrowOffsetX:  0,
+      arrowOffsetY:  -5,
     },
     {
       sel:           '.left-bar ul',
       text:          'Network Links',
       approachAngle: 180,
-      tailDist:       95,
+      tailDist:      95,
       textSide:      'above',
       tilt:          -1.0,
       arrowImg:      1,
       baseAngle:     0,
-      arrowOffsetX:   10,   /* shifts tip left toward icons */
-      arrowOffsetY:    0,
+      arrowOffsetX:  10,
+      arrowOffsetY:  0,
     },
     {
       sel:           '#settingsGearBtn',
       text:          'Customise the site',
-      approachAngle:  90,
+      approachAngle: 90,
       tailDist:      100,
       textSide:      'left',
-      tilt:           0.5,
+      tilt:          0.5,
       arrowImg:      1,
       baseAngle:     0,
-      arrowOffsetX:    0,
-      arrowOffsetY:   -8,   /* shifts tip down toward gear */
+      arrowOffsetX:  0,
+      arrowOffsetY:  -8,
     },
   ];
 
@@ -118,7 +118,6 @@
     '#tourBtn.t-on    { background:rgb(var(--black)); color:rgb(var(--primary)); border-color:rgb(var(--black)); }',
     '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
 
-    /* ── position:absolute so they scroll with the page ── */
     '.tour-arrow {',
     '  position:absolute;',
     '  z-index:50;',
@@ -133,7 +132,7 @@
     '.tour-arrow.t-on { opacity:1; }',
 
     '.tour-note {',
-    '  position:absolute;',          /* ← absolute, not fixed */
+    '  position:absolute;',
     '  z-index:50;',
     '  pointer-events:none;',
     '  white-space:nowrap;',
@@ -160,7 +159,6 @@
     var bar = nav.querySelector('.settings-bar');
     if (!bar) return;
 
-    /* ? button */
     var btn = document.createElement('button');
     btn.id          = 'tourBtn';
     btn.title       = 'Site guide';
@@ -170,7 +168,6 @@
     bar.style.marginLeft = '0';
     nav.insertBefore(btn, bar);
 
-    /* Arrow + text elements per note */
     NOTES.forEach(function (note) {
       var arrowEl = document.createElement('img');
       arrowEl.className = 'tour-arrow';
@@ -191,12 +188,10 @@
       pairs.push({ arrow: arrowEl, text: textEl });
     });
 
-    /* Events */
     btn.addEventListener('click', function () {
       tourActive ? hideAll() : showAll();
     });
 
-    /* Fade button when scrolled; dismiss annotations so user must click ? again */
     window.addEventListener('scroll', function () {
       var away = window.scrollY > 25;
       btn.classList.toggle('t-faded', away);
@@ -243,14 +238,10 @@
     var target = document.querySelector(note.sel);
     if (!target) return;
 
-    /* getBoundingClientRect gives viewport coords.
-       Add scrollY / scrollX to convert to page (document) coordinates,
-       which is what position:absolute needs.                             */
-    var vr  = target.getBoundingClientRect();
-    var sx  = window.scrollX || 0;
-    var sy  = window.scrollY || 0;
+    var vr = target.getBoundingClientRect();
+    var sx = window.scrollX || 0;
+    var sy = window.scrollY || 0;
 
-    /* Page-coordinate rect */
     var pr = {
       left:   vr.left   + sx,
       top:    vr.top    + sy,
@@ -263,32 +254,30 @@
     var tCX = pr.left + pr.width  * 0.5;
     var tCY = pr.top  + pr.height * 0.5;
 
-    /* Arrow direction */
     var rad = note.approachAngle * Math.PI / 180;
     var ux  = Math.cos(rad);
     var uy  = Math.sin(rad);
 
-    /* Tip on target page-coordinate edge */
     var tipPt = rectEdge(pr, tCX - ux * 2000, tCY - uy * 2000);
     var tipX  = tipPt.x - ux * TIP_CLR;
     var tipY  = tipPt.y - uy * TIP_CLR;
 
-    /* Tail */
     var tailX = tipX - ux * note.tailDist;
     var tailY = tipY - uy * note.tailDist;
 
-    /* Arrow centre */
     var arrCX    = (tipX + tailX) * 0.5;
     var arrCY    = (tipY + tailY) * 0.5;
     var rotation = note.approachAngle - (note.baseAngle || 0);
 
-    arrowEl.style.left      = (arrCX - ARR * 0.5 + (note.arrowOffsetX || 0)) + 'px';
-    arrowEl.style.top       = (arrCY - ARR * 0.5 + (note.arrowOffsetY || 0)) + 'px';
-    arrowEl.style.transform = 'rotate(' + rotation.toFixed(1) + 'deg)';
+    arrowEl.style.left = (arrCX - ARR * 0.5 + (note.arrowOffsetX || 0)) + 'px';
+    arrowEl.style.top  = (arrCY - ARR * 0.5 + (note.arrowOffsetY || 0)) + 'px';
 
-    /* Text at the tail — offset moves with the arrow */
-    var nW = textEl.offsetWidth  || 240;
-    var nH = textEl.offsetHeight || 36;
+    /* ── flipX / flipY support ── */
+    var flip = (note.flipX ? 'scaleX(-1) ' : '') + (note.flipY ? 'scaleY(-1) ' : '');
+    arrowEl.style.transform = flip + 'rotate(' + rotation.toFixed(1) + 'deg)';
+
+    var nW  = textEl.offsetWidth  || 240;
+    var nH  = textEl.offsetHeight || 36;
     var ox  = note.arrowOffsetX || 0;
     var oy  = note.arrowOffsetY || 0;
     var tox = note.textOffsetX  || 0;
@@ -297,13 +286,12 @@
 
     switch (note.textSide) {
       case 'above': ax = tailX - nW * 0.5 + ox + tox; ay = tailY - nH - GAP + oy + toy; break;
-      case 'below': ax = tailX - nW * 0.5 + ox + tox; ay = tailY + GAP + oy + toy;       break;
+      case 'below': ax = tailX - nW * 0.5 + ox + tox; ay = tailY + GAP       + oy + toy; break;
       case 'left':  ax = tailX - nW - GAP  + ox + tox; ay = tailY - nH * 0.5 + oy + toy; break;
       case 'right': ax = tailX + GAP       + ox + tox; ay = tailY - nH * 0.5 + oy + toy; break;
-      default:      ax = tailX - nW * 0.5 + ox + tox; ay = tailY - nH - GAP + oy + toy;
+      default:      ax = tailX - nW * 0.5 + ox + tox; ay = tailY - nH - GAP  + oy + toy;
     }
 
-    /* Clamp so nothing bleeds past the right edge of the viewport */
     ax = Math.max(12, Math.min(ax, window.innerWidth - nW - 12));
 
     textEl.style.left = ax + 'px';
