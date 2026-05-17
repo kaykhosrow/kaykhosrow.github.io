@@ -33,8 +33,8 @@
       baseAngle:     150,
       arrowOffsetX:  -250,   /* shifts tip toward About button */
       arrowOffsetY:  100,
-      textOffsetY:   225,  /* additional text-only nudge */
-      textOffsetX:   -115, 
+      textOffsetY:   227,  /* additional text-only nudge */
+      textOffsetX:   -117, 
     },
     {
       sel:           '.contact-btn',
