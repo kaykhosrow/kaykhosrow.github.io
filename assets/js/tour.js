@@ -28,7 +28,7 @@
       approachAngle: 150,
       tailDist:      140,
       textSide:      'above',
-      tilt:           -25,
+      tilt:          25,
       arrowImg:      1,
       baseAngle:     150,
       arrowOffsetX:  -250,   /* shifts tip toward About button */
