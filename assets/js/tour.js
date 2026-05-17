@@ -116,8 +116,8 @@
 
     /* ── position:absolute so they scroll with the page ── */
     '.tour-arrow {',
-    '  position:absolute;',          /* ← absolute, not fixed */
-    '  z-index:9001;',
+    '  position:absolute;',
+    '  z-index:50;',
     '  width:' + ARR + 'px; height:' + ARR + 'px;',
     '  object-fit:contain; object-position:center;',
     '  pointer-events:none;',
@@ -130,7 +130,7 @@
 
     '.tour-note {',
     '  position:absolute;',          /* ← absolute, not fixed */
-    '  z-index:9002;',
+    '  z-index:50;',
     '  pointer-events:none;',
     '  white-space:nowrap;',
     '  opacity:0;',
