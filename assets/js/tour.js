@@ -180,9 +180,11 @@
       tourActive ? hideAll() : showAll();
     });
 
-    /* Only fade the button when scrolled — annotations scroll naturally */
+    /* Fade button when scrolled; dismiss annotations so user must click ? again */
     window.addEventListener('scroll', function () {
-      btn.classList.toggle('t-faded', window.scrollY > 40);
+      var away = window.scrollY > 25;
+      btn.classList.toggle('t-faded', away);
+      if (away && tourActive) hideAll();
     }, { passive: true });
 
     window.addEventListener('resize', function () {
