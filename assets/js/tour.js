@@ -46,6 +46,7 @@
       tilt:          0,
       arrowImg:      1,
       baseAngle:     200,
+      flipX:         true,
       arrowOffsetX:  292.5,
       arrowOffsetY:  35,
       textOffsetY:   90,
