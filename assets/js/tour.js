@@ -33,8 +33,8 @@
       baseAngle:     330,
       flipX:         true,
       arrowOffsetX:  -250,
-      arrowOffsetY:  100,
-      textOffsetY:   225,
+      arrowOffsetY:  -50,
+      textOffsetY:   -50,
       textOffsetX:   -115,
     },
     {
