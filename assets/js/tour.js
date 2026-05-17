@@ -60,13 +60,12 @@
       tailDist:      100,
       textSide:      'left',
       tilt:          0,
-      arrowImg:      4,
+      arrowImg:      1,
       baseAngle:     15,
-      flipX:         true,
       arrowOffsetX:  -50,
       arrowOffsetY:  -15,
-      textOffsetY:   -2.5,
-      textOffsetX:   -70,
+      textOffsetY:   -5,
+      textOffsetX:   -75,
     },
   ];
 
