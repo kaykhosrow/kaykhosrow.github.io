@@ -15,7 +15,7 @@
       approachAngle: 180,
       tailDist:      115,
       textSide:      'above',
-      tilt:          1.0,
+      tilt:          0,
       arrowImg:      1,
       baseAngle:     0,
       arrowOffsetX:  -175,   /* nudge: negative = left,  positive = right */
@@ -29,7 +29,7 @@
       approachAngle: 150,
       tailDist:      140,
       textSide:      'above',
-      tilt:          90,
+      tilt:          180,
       arrowImg:      1,
       baseAngle:     150,
       arrowOffsetX:  -250,   /* shifts tip toward About button */
