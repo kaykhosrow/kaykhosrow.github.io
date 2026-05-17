@@ -73,7 +73,7 @@
       textSide:      'above',
       tilt:          -1.0,
       arrowImg:      1,
-      baseAngle:     95,
+      baseAngle:     105,
       flipX:         true,
       arrowOffsetX:  -40,
       arrowOffsetY:  -155,
