@@ -30,7 +30,7 @@
       textSide:      'above',
       tilt:          270,
       arrowImg:      1,
-      baseAngle:     150,
+      baseAngle:     240,
       flipX:         true,
       arrowOffsetX:  -250,
       arrowOffsetY:  100,
