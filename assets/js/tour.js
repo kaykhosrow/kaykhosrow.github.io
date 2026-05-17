@@ -1,4 +1,4 @@
-45/* ─────────────────────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────────────────────
    tour.js  —  Site walkthrough
    <script defer src="assets/js/tour.js"></script>
    Arrows: assets/images/arrow1.png / arrow2.png / arrow3.png
