@@ -46,9 +46,9 @@
       tilt:          0,
       arrowImg:      4,
       baseAngle:     200,
-      arrowOffsetX:  290,
-      arrowOffsetY:  33,
-      textOffsetY:   65,
+      arrowOffsetX:  295,
+      arrowOffsetY:  35,
+      textOffsetY:   85,
       textOffsetX:   150,
     },
     {
