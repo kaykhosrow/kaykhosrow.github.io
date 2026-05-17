@@ -50,7 +50,7 @@
     },
     {
       sel:           '.left-bar ul',
-      text:          'Network Links',
+      text:          'Links to connect',
       approachAngle: 180,
       tailDist:      95,
       textSide:      'above',
@@ -58,9 +58,9 @@
       arrowImg:      1,
       baseAngle:     0,
       arrowOffsetX:  15,
-      arrowOffsetY:  -50,
-      textOffsetY:   25,
-      textOffsetX:   0,
+      arrowOffsetY:  -55,
+      textOffsetY:   50,
+      textOffsetX:   15,
     },
     {
       sel:           '#settingsGearBtn',
