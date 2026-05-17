@@ -28,12 +28,12 @@
       approachAngle: 150,
       tailDist:      140,
       textSide:      'above',
-      tilt:           1.0,
+      tilt:           5,
       arrowImg:      1,
       baseAngle:     180,
-      arrowOffsetX:  -200,   /* shifts tip toward About button */
+      arrowOffsetX:  -225,   /* shifts tip toward About button */
       arrowOffsetY:    125,
-      textOffsetY:   -50,  /* additional text-only nudge */
+      textOffsetY:   100,  /* additional text-only nudge */
     },
     {
       sel:           '.contact-btn',
