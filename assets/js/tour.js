@@ -58,10 +58,10 @@
       arrowImg:      1,
       baseAngle:     -75,
       flipY:         true, 
-      arrowOffsetX:  -50,
+      arrowOffsetX:  -25,
       arrowOffsetY:  -150,
-      textOffsetY:   -40,
-      textOffsetX:   15,
+      textOffsetY:   -65,
+      textOffsetX:   50,
     },
     {
       sel:           '#settingsGearBtn',
