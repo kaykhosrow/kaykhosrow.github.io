@@ -30,9 +30,9 @@
       textSide:      'above',
       tilt:           -25,
       arrowImg:      1,
-      baseAngle:     125,
-      arrowOffsetX:  -225,   /* shifts tip toward About button */
-      arrowOffsetY:    125,
+      baseAngle:     150,
+      arrowOffsetX:  -250,   /* shifts tip toward About button */
+      arrowOffsetY:  100,
       textOffsetY:   125,  /* additional text-only nudge */
     },
     {
