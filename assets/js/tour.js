@@ -34,8 +34,8 @@
       flipX:         true,
       arrowOffsetX:  -245,
       arrowOffsetY:  20,
-      textOffsetY:   -110,
-      textOffsetX:   -101,
+      textOffsetY:   -107.5,
+      textOffsetX:   -105,
     },
       {
       sel:           '.contact-btn',
