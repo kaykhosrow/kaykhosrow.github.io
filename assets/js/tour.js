@@ -20,7 +20,7 @@
       baseAngle:     0,
       arrowOffsetX:  -175,   /* nudge: negative = left,  positive = right */
       arrowOffsetY:  -32.5,  /* nudge: negative = up,    positive = down  */
-      textOffsetY:   -50,    /* additional text-only nudge */
+      textOffsetY:   -52.5,    /* additional text-only nudge */
     },
      {
       sel:           '.work-btn',
@@ -36,6 +36,20 @@
       arrowOffsetY:  20,
       textOffsetY:   -110,
       textOffsetX:   -101,
+    },
+      {
+      sel:           '.contact-btn',
+      text:          'Click here to connect',
+      approachAngle: 0,
+      tailDist:      140,
+      textSide:      'above',
+      tilt:          1,
+      arrowImg:      4,
+      baseAngle:     190,
+      arrowOffsetX:  275,
+      arrowOffsetY:  75,
+      textOffsetY:   0,
+      textOffsetX:   75,
     },
     {
       sel:           '#navigation ul',
