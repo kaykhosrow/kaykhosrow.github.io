@@ -65,8 +65,8 @@
       flipX:         true,
       arrowOffsetX:  -50,
       arrowOffsetY:  -15,
-      textOffsetY:   -5,
-      textOffsetX:   -75,
+      textOffsetY:   -2.5,
+      textOffsetX:   -70,
     },
   ];
 
