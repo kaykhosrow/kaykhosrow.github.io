@@ -20,6 +20,8 @@
       tilt:          -1.2,
       arrowImg:      1,
       baseAngle:     0,
+      arrowOffsetX:  -40,   /* nudge: negative = left,  positive = right */
+      arrowOffsetY:  -35,   /* nudge: negative = up,    positive = down  */
     },
     {
       sel:           '.work-btn',
@@ -30,6 +32,8 @@
       tilt:           1.0,
       arrowImg:      2,
       baseAngle:     0,
+      arrowOffsetX:  -11,   /* shifts tip toward About button */
+      arrowOffsetY:    6,
     },
     {
       sel:           '.contact-btn',
@@ -40,6 +44,8 @@
       tilt:          -0.8,
       arrowImg:      3,
       baseAngle:     0,
+      arrowOffsetX:   11,   /* shifts tip toward Contact button */
+      arrowOffsetY:    6,
     },
     {
       sel:           '#navigation ul',
@@ -50,6 +56,8 @@
       tilt:           0.7,
       arrowImg:      2,
       baseAngle:     0,
+      arrowOffsetX:    0,
+      arrowOffsetY:   -5,   /* shifts tip down toward nav */
     },
     {
       sel:           '.left-bar ul',
@@ -60,6 +68,8 @@
       tilt:          -1.0,
       arrowImg:      3,
       baseAngle:     0,
+      arrowOffsetX:   10,   /* shifts tip left toward icons */
+      arrowOffsetY:    0,
     },
     {
       sel:           '#settingsGearBtn',
@@ -70,6 +80,8 @@
       tilt:           0.5,
       arrowImg:      1,
       baseAngle:     0,
+      arrowOffsetX:    0,
+      arrowOffsetY:   -8,   /* shifts tip down toward gear */
     },
   ];
 
@@ -266,8 +278,8 @@
     var arrCY    = (tipY + tailY) * 0.5;
     var rotation = note.approachAngle - (note.baseAngle || 0);
 
-    arrowEl.style.left      = (arrCX - ARR * 0.5) + 'px';
-    arrowEl.style.top       = (arrCY - ARR * 0.5) + 'px';
+    arrowEl.style.left      = (arrCX - ARR * 0.5 + (note.arrowOffsetX || 0)) + 'px';
+    arrowEl.style.top       = (arrCY - ARR * 0.5 + (note.arrowOffsetY || 0)) + 'px';
     arrowEl.style.transform = 'rotate(' + rotation.toFixed(1) + 'deg)';
 
     /* Text at the tail */
@@ -283,9 +295,8 @@
       default:      ax = tailX - nW * 0.5; ay = tailY - nH - GAP;
     }
 
-    /* Clamp so nothing bleeds off the left/right of the page */
-    var pageW = Math.max(document.documentElement.scrollWidth, window.innerWidth);
-    ax = Math.max(12, Math.min(ax, pageW - nW - 12));
+    /* Clamp so nothing bleeds past the right edge of the viewport */
+    ax = Math.max(12, Math.min(ax, window.innerWidth - nW - 12));
 
     textEl.style.left = ax + 'px';
     textEl.style.top  = ay + 'px';
