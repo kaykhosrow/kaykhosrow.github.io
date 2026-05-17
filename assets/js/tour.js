@@ -25,11 +25,11 @@
     {
       sel:           '.work-btn',
       text:          'Click here to learn more',
-      flipX:  true,
       approachAngle: 150,
       tailDist:      140,
       textSide:      'above',
-      tilt:          180,
+      tilt:          270,
+      flipY:         true,
       arrowImg:      1,
       baseAngle:     150,
       arrowOffsetX:  -250,   /* shifts tip toward About button */
