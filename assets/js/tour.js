@@ -3,8 +3,6 @@
    <script defer src="assets/js/tour.js"></script>
    Arrows: assets/images/arrow1.png / arrow2.png / arrow3.png
 
-   Annotations are position:absolute so they sit on the page and scroll away
-   naturally as the user scrolls down — just like the hero content does.
    ───────────────────────────────────────────────────────────────────────────── */
 (function () {
   'use strict';
