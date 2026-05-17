@@ -31,8 +31,8 @@
       tilt:           1.0,
       arrowImg:      1,
       baseAngle:     180,
-      arrowOffsetX:  -11,   /* shifts tip toward About button */
-      arrowOffsetY:    6,
+      arrowOffsetX:  -50,   /* shifts tip toward About button */
+      arrowOffsetY:    50,
     },
     {
       sel:           '.contact-btn',
@@ -41,8 +41,8 @@
       tailDist:      140,
       textSide:      'above',
       tilt:          -0.8,
-      arrowImg:      3,
-      baseAngle:     0,
+      arrowImg:      2,
+      baseAngle:     180,
       arrowOffsetX:   11,   /* shifts tip toward Contact button */
       arrowOffsetY:    6,
     },
@@ -60,12 +60,12 @@
     },
     {
       sel:           '.left-bar ul',
-      text:          'Email, LinkedIn, GitHub',
+      text:          'Connect',
       approachAngle: 180,
       tailDist:       95,
       textSide:      'above',
       tilt:          -1.0,
-      arrowImg:      3,
+      arrowImg:      1,
       baseAngle:     0,
       arrowOffsetX:   10,   /* shifts tip left toward icons */
       arrowOffsetY:    0,
