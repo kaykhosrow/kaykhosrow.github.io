@@ -77,8 +77,8 @@
       flipX:         true,
       arrowOffsetX:  -50,
       arrowOffsetY:  -150,
-      textOffsetY:   -75,
-      textOffsetX:   -25,
+      textOffsetY:   -80,
+      textOffsetX:   -17.5,
     },
     {
       sel:           '#settingsGearBtn',
