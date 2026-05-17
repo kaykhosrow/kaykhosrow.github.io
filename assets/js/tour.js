@@ -28,7 +28,7 @@
       approachAngle: 150,
       tailDist:      140,
       textSide:      'above',
-      tilt:          270,
+      tilt:          275,
       arrowImg:      1,
       baseAngle:     345,
       flipX:         true,
