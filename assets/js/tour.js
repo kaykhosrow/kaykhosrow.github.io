@@ -11,7 +11,7 @@
   var NOTES = [
     {
       sel:           '#heroName',
-      text:          'Click here for the pronunciation',
+      text:          'Click here for pronounciation',
       approachAngle: 180,
       tailDist:      115,
       textSide:      'above',
@@ -38,7 +38,7 @@
     },
     {
       sel:           '.contact-btn',
-      text:          'Click here to get in touch',
+      text:          'Click here to connect',
       approachAngle:  30,
       tailDist:      140,
       textSide:      'above',
@@ -62,7 +62,7 @@
     },
     {
       sel:           '.left-bar ul',
-      text:          'Connect',
+      text:          'Network Links',
       approachAngle: 180,
       tailDist:       95,
       textSide:      'above',
