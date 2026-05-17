@@ -39,7 +39,7 @@
     {
       sel:           '.contact-btn',
       text:          'Click here to connect',
-      approachAngle:  180,
+      approachAngle:  0,
       tailDist:      140,
       textSide:      'above',
       tilt:          1,
