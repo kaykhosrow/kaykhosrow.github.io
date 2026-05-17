@@ -1,4 +1,4 @@
-/* ─────────────────────────────────────────────────────────────────────────────
+45/* ─────────────────────────────────────────────────────────────────────────────
    tour.js  —  Site walkthrough
    <script defer src="assets/js/tour.js"></script>
    Arrows: assets/images/arrow1.png / arrow2.png / arrow3.png
@@ -44,11 +44,11 @@
       textSide:      'above',
       tilt:          1,
       arrowImg:      2,
-      baseAngle:     -25,
+      baseAngle:     -45,
       arrowOffsetX:   250,   /* shifts tip toward Contact button */
       arrowOffsetY:   200,
-      textOffsetY:   100,  /* additional text-only nudge */
-      textOffsetX:   275, 
+      textOffsetY:   25,  /* additional text-only nudge */
+      textOffsetX:   300, 
     },
     {
       sel:           '#navigation ul',
