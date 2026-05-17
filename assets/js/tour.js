@@ -43,7 +43,7 @@
       tailDist:      140,
       textSide:      'above',
       tilt:          1,
-      arrowImg:      2,
+      arrowImg:      4,
       baseAngle:     190,
       flipY:         true,
       arrowOffsetX:  275,
