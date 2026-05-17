@@ -39,12 +39,13 @@
     {
       sel:           '.contact-btn',
       text:          'Click here to connect',
-      approachAngle:  360,
+      approachAngle:  0,
       tailDist:      140,
       textSide:      'above',
       tilt:          1,
       arrowImg:      2,
       baseAngle:     125,
+      flipX:         true, 
       arrowOffsetX:   250,   /* shifts tip toward Contact button */
       arrowOffsetY:   200,
       textOffsetY:   0,  /* additional text-only nudge */
