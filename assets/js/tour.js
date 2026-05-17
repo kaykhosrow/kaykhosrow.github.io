@@ -44,10 +44,10 @@
       textSide:      'above',
       tilt:          1,
       arrowImg:      2,
-      baseAngle:     25,
+      baseAngle:     -25,
       arrowOffsetX:   250,   /* shifts tip toward Contact button */
       arrowOffsetY:   200,
-      textOffsetY:   150,  /* additional text-only nudge */
+      textOffsetY:   100,  /* additional text-only nudge */
       textOffsetX:   275, 
     },
     {
