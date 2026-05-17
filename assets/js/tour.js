@@ -17,7 +17,7 @@
       approachAngle: 180,
       tailDist:      115,
       textSide:      'above',
-      tilt:          -1.2,
+      tilt:          10,
       arrowImg:      1,
       baseAngle:     0,
       arrowOffsetX:  -175,   /* nudge: negative = left,  positive = right */
