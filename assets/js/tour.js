@@ -20,8 +20,8 @@
       tilt:          -1.2,
       arrowImg:      1,
       baseAngle:     0,
-      arrowOffsetX:  -185,   /* nudge: negative = left,  positive = right */
-      arrowOffsetY:  -35,   /* nudge: negative = up,    positive = down  */
+      arrowOffsetX:  -150,   /* nudge: negative = left,  positive = right */
+      arrowOffsetY:  -25,   /* nudge: negative = up,    positive = down  */
     },
     {
       sel:           '.work-btn',
