@@ -47,10 +47,10 @@
       arrowImg:      1,
       baseAngle:     0,
       flipX:         true,
-      arrowOffsetX:  292.5,
+      arrowOffsetX:  290,
       arrowOffsetY:  35,
-      textOffsetY:   90,
-      textOffsetX:   145,
+      textOffsetY:   105,
+      textOffsetX:   140,
     },
     {
       sel:           '#navigation ul',
