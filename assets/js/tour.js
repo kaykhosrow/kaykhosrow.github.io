@@ -34,8 +34,8 @@
       flipX:         true,
       arrowOffsetX:  -245,
       arrowOffsetY:  20,
-      textOffsetY:   -85,
-      textOffsetX:   -95,
+      textOffsetY:   -100,
+      textOffsetX:   -100,
     },
     {
       sel:           '#navigation ul',
