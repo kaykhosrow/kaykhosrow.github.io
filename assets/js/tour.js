@@ -29,9 +29,9 @@
       tailDist:      140,
       textSide:      'above',
       tilt:          270,
-      flipY:         true,
       arrowImg:      1,
       baseAngle:     150,
+      flipY:         true,
       arrowOffsetX:  -250,   /* shifts tip toward About button */
       arrowOffsetY:  100,
       textOffsetY:   300,  /* additional text-only nudge */
