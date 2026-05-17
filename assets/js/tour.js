@@ -44,7 +44,7 @@
       textSide:      'above',
       tilt:          1,
       arrowImg:      2,
-      baseAngle:     180,
+      baseAngle:     125,
       arrowOffsetX:   250,   /* shifts tip toward Contact button */
       arrowOffsetY:   200,
       textOffsetY:   25,  /* additional text-only nudge */
