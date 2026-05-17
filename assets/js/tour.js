@@ -60,7 +60,7 @@
       tailDist:      100,
       textSide:      'left',
       tilt:          0,
-      arrowImg:      1,
+      arrowImg:      4,
       baseAngle:     15,
       arrowOffsetX:  -50,
       arrowOffsetY:  -15,
