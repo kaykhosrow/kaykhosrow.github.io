@@ -44,11 +44,11 @@
       textSide:      'above',
       tilt:          1,
       arrowImg:      2,
-      baseAngle:     125,
+      baseAngle:     100,
       arrowOffsetX:   250,   /* shifts tip toward Contact button */
       arrowOffsetY:   200,
-      textOffsetY:   25,  /* additional text-only nudge */
-      textOffsetX:   300, 
+      textOffsetY:   -100,  /* additional text-only nudge */
+      textOffsetX:   150, 
     },
     {
       sel:           '#navigation ul',
