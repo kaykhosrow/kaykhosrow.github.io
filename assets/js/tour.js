@@ -33,7 +33,7 @@
       baseAngle:     150,
       arrowOffsetX:  -250,   /* shifts tip toward About button */
       arrowOffsetY:  100,
-      textOffsetY:   -100,  /* additional text-only nudge */
+      textOffsetY:   200,  /* additional text-only nudge */
       textOffsetX:   -75, 
     },
     {
