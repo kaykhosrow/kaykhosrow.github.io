@@ -21,10 +21,9 @@
       label:      '01  —  NAME',
       text:       'Click here for the pronunciation of my name',
       pos:        'right',
-      gap:        200,        /* push into the empty right half of the hero */
+      gap:        200,
       arrowImg:   1,
-      baseAngle:  0,          /* arrow1 assumed to point right */
-      curveDir:   -1,
+      baseAngle:  0,
     },
     {
       sel:        '.work-btn',
@@ -33,8 +32,7 @@
       pos:        'left',
       gap:        110,
       arrowImg:   2,
-      baseAngle:  180,        /* arrow2 assumed to point right → flip for left-pointing */
-      curveDir:   1,
+      baseAngle:  180,
     },
     {
       sel:        '.contact-btn',
@@ -44,7 +42,6 @@
       gap:        110,
       arrowImg:   3,
       baseAngle:  0,
-      curveDir:   -1,
     },
     {
       sel:        '#navigation ul',
@@ -53,18 +50,16 @@
       pos:        'above',
       gap:        50,
       arrowImg:   1,
-      baseAngle:  -90,        /* rotate arrow1 so it points downward */
-      curveDir:   1,
+      baseAngle:  -90,
     },
     {
       sel:        '.left-bar',
       label:      '05  —  SOCIALS',
       text:       'Find me by email, on LinkedIn, or explore my work on GitHub.',
       pos:        'right',
-      gap:        30,         /* very close — sits right next to the icons */
+      gap:        30,
       arrowImg:   2,
-      baseAngle:  180,        /* points left toward the icons */
-      curveDir:   -1,
+      baseAngle:  180,
     },
     {
       sel:        '#settingsGearBtn',
@@ -73,14 +68,13 @@
       pos:        'above-left',
       gap:        50,
       arrowImg:   3,
-      baseAngle:  30,         /* tilted down-right toward the gear */
-      curveDir:   1,
+      baseAngle:  30,
     },
   ];
 
-  var ANN_W = 270;   /* annotation width (px)  */
-  var ANN_H = 138;   /* estimated height — used only for positioning maths */
-  var ARR   = 88;    /* arrow image bounding square (px) */
+  var ANN_W = 270;
+  var ANN_H = 138;
+  var ARR   = 88;
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive  = false;
@@ -91,8 +85,8 @@
   styleEl.textContent = [
 
     '@font-face {',
-    '  font-family:"ChalkBoard";',
-    '  src:url("assets/fonts/Chalk-Board.otf") format("opentype");',
+    '  font-family:"Scribble";',
+    '  src:url("assets/fonts/Scribble.otf") format("opentype");',
     '}',
 
     /* ── Tour ? button — exact same box as .settings-gear-btn ── */
@@ -144,7 +138,7 @@
     '  width:' + ANN_W + 'px;',
     '  pointer-events:none;',
     '  opacity:0;',
-    '  font-family:"ChalkBoard","InterRegular",cursive;',
+    '  font-family:"Scribble","InterRegular",cursive;',
     '  transition:',
     '    opacity 0.35s ease,',
     '    left 0.38s cubic-bezier(0.4,0,0.2,1),',
@@ -152,7 +146,6 @@
     '}',
     '#tourAnn.t-on { opacity:1; pointer-events:auto; }',
 
-    /* Label — full opacity */
     '.tan-label {',
     '  font-size:0.68rem;',
     '  letter-spacing:0.2em;',
@@ -167,16 +160,14 @@
     '  background:rgba(0,0,0,0.18);',
     '  margin-bottom:9px;',
     '}',
-    /* Main text — ChalkBoard font, large and readable */
     '.tan-text {',
     '  font-size:1.15rem;',
     '  line-height:1.45;',
     '  color:rgba(0,0,0,0.88);',
     '  margin:0 0 11px;',
-    '  font-family:"ChalkBoard","InterRegular",cursive;',
+    '  font-family:"Scribble","InterRegular",cursive;',
     '  letter-spacing:0.01em;',
     '}',
-    /* Nav row */
     '.tan-nav {',
     '  display:flex; align-items:center; gap:5px;',
     '}',
@@ -193,7 +184,6 @@
     '.tan-btn:disabled  { opacity:0.2; cursor:default; pointer-events:none; }',
     '.tan-close         { margin-left:4px; opacity:0.55; }',
     '.tan-close:hover   { opacity:1 !important; }',
-    /* Counter — full opacity */
     '.tan-count {',
     '  flex:1; text-align:center;',
     '  font-size:0.7rem;',
@@ -212,24 +202,24 @@
     var settingsBar = nav.querySelector('.settings-bar');
     if (!settingsBar) return;
 
-    /* ── Tour button — plain ? character, no icon font ── */
+    /* Tour button */
     var btn = document.createElement('button');
-    btn.id        = 'tourBtn';
-    btn.title     = 'Site guide';
+    btn.id          = 'tourBtn';
+    btn.title       = 'Site guide';
     btn.setAttribute('aria-label', 'Open site guide');
-    btn.className = 'd-none d-xl-flex';
+    btn.className   = 'd-none d-xl-flex';
     btn.textContent = '?';
     settingsBar.style.marginLeft = '0';
     nav.insertBefore(btn, settingsBar);
 
-    /* ── Arrow image (single reusable element) ── */
+    /* Arrow image */
     var arrImg = document.createElement('img');
     arrImg.id  = 'tourArrow';
     arrImg.alt = '';
     arrImg.setAttribute('aria-hidden', 'true');
     document.body.appendChild(arrImg);
 
-    /* ── Annotation ── */
+    /* Annotation */
     var ann = document.createElement('div');
     ann.id = 'tourAnn';
     ann.innerHTML = [
@@ -245,7 +235,7 @@
     ].join('');
     document.body.appendChild(ann);
 
-    /* ── Events ── */
+    /* Events */
     btn.addEventListener('click', function () {
       tourActive ? endTour() : startTour();
     });
@@ -298,10 +288,9 @@
     var ann = document.getElementById('tourAnn');
     var arr = document.getElementById('tourArrow');
     if (b)   b.classList.remove('t-active');
-    if (ann) { ann.classList.remove('t-on'); }
+    if (ann) ann.classList.remove('t-on');
     if (arr) {
       arr.classList.remove('t-on');
-      /* Clear src after fade so no ghost image lingers */
       setTimeout(function () {
         if (!tourActive) arr.removeAttribute('src');
       }, 400);
@@ -324,7 +313,7 @@
     var tCY   = tRect.top  + tRect.height * 0.5;
     var g     = step.gap || 80;
 
-    /* ── Annotation position ── */
+    /* Annotation position */
     var ax, ay;
     switch (step.pos) {
       case 'right':
@@ -350,7 +339,7 @@
     ax = Math.max(14, Math.min(ax, vW - ANN_W - 14));
     ay = Math.max(14, Math.min(ay, vH - ANN_H - 14));
 
-    /* ── Update annotation ── */
+    /* Update annotation */
     var ann = document.getElementById('tourAnn');
     ann.style.left = ax + 'px';
     ann.style.top  = ay + 'px';
@@ -361,36 +350,26 @@
     document.getElementById('tanNext').textContent  = (idx === STEPS.length - 1) ? '\u2713' : '\u2192';
     ann.classList.add('t-on');
 
-    /* ── Position & rotate the PNG arrow ── */
-    var arr = document.getElementById('tourArrow');
-
-    /* Temporarily hide while repositioning to avoid flash */
+    /* Position & rotate arrow PNG */
+    var arr    = document.getElementById('tourArrow');
     arr.classList.remove('t-on');
     arr.style.transition = 'none';
-
-    /* Load the correct PNG */
     arr.src = 'assets/images/arrow' + step.arrowImg + '.png';
 
-    /* Annotation center and edge nearest to target */
     var annCX  = ax + ANN_W * 0.5;
     var annCY  = ay + ANN_H * 0.5;
     var edgePt = rectEdge({ left: ax, top: ay, width: ANN_W, height: ANN_H }, tCX, tCY);
 
-    /* Direction vector from annotation edge toward target */
-    var dx     = tCX - edgePt.x;
-    var dy     = tCY - edgePt.y;
-    var dist   = Math.sqrt(dx * dx + dy * dy);
-    var ux     = dist > 0 ? dx / dist : 1;
-    var uy     = dist > 0 ? dy / dist : 0;
+    var dx   = tCX - edgePt.x;
+    var dy   = tCY - edgePt.y;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    var ux   = dist > 0 ? dx / dist : 1;
+    var uy   = dist > 0 ? dy / dist : 0;
 
-    /* Angle the arrow must rotate to point toward the target,
-       accounting for the image's natural pointing direction.       */
     var targetAngle = Math.atan2(uy, ux) * 180 / Math.PI;
     var rotation    = targetAngle - (step.baseAngle || 0);
 
-    /* Place arrow just outside the annotation edge,
-       offset toward the target so it "emerges" from the annotation. */
-    var EDGE_OFFSET = 10;  /* px past the annotation edge */
+    var EDGE_OFFSET = 10;
     var imgCX = edgePt.x + ux * (EDGE_OFFSET + ARR * 0.45);
     var imgCY = edgePt.y + uy * (EDGE_OFFSET + ARR * 0.45);
 
@@ -399,7 +378,6 @@
     arr.style.transform       = 'rotate(' + rotation.toFixed(1) + 'deg)';
     arr.style.transformOrigin = 'center center';
 
-    /* Fade arrow in after a short delay */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         arr.style.transition = 'opacity 0.4s ease 0.12s';
@@ -408,7 +386,7 @@
     });
   }
 
-  /* ── Nearest point on a rect's edge facing outward toward (fx, fy) ────── */
+  /* ── Nearest point on rect edge toward (fx, fy) ─────────────────────────── */
   function rectEdge(rect, fx, fy) {
     var cx = rect.left + rect.width  * 0.5;
     var cy = rect.top  + rect.height * 0.5;
