@@ -1,64 +1,86 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    tour.js  —  Site walkthrough  (chalk annotation style)
    Add to <head>:  <script defer src="assets/js/tour.js"></script>
+   Arrow assets must exist at:  assets/images/arrow1.png  /  arrow2.png  /  arrow3.png
    ───────────────────────────────────────────────────────────────────────────── */
 (function () {
   'use strict';
 
-  /* ── Steps ─────────────────────────────────────────────────────────────── */
+  /* ─────────────────────────────────────────────────────────────────────────
+     STEPS
+     pos:      where to place the annotation relative to the target
+     gap:      distance (px) from target edge to annotation edge
+     arrowImg: which PNG to use (1 / 2 / 3)
+     baseAngle:natural pointing direction of that PNG in degrees
+               0 = points RIGHT, 90 = points DOWN, 180 = points LEFT, etc.
+               Adjust these if the arrows appear backwards on your machine.
+  ───────────────────────────────────────────────────────────────────────────── */
   var STEPS = [
     {
-      sel:      '#heroNameWrap',
-      label:    '01  —  NAME',
-      text:     'Click here for the pronunciation of my name',
-      pos:      'right',
-      gap:      170,
-      curveDir: -1,
+      sel:        '#heroNameWrap',
+      label:      '01  —  NAME',
+      text:       'Click here for the pronunciation of my name',
+      pos:        'right',
+      gap:        200,        /* push into the empty right half of the hero */
+      arrowImg:   1,
+      baseAngle:  0,          /* arrow1 assumed to point right */
+      curveDir:   -1,
     },
     {
-      sel:      '.work-btn',
-      label:    '02  —  ABOUT',
-      text:     'Click here to learn more about me',
-      pos:      'right',
-      gap:      110,
-      curveDir:  1,
+      sel:        '.work-btn',
+      label:      '02  —  ABOUT',
+      text:       'Click here to learn more about me',
+      pos:        'left',
+      gap:        110,
+      arrowImg:   2,
+      baseAngle:  180,        /* arrow2 assumed to point right → flip for left-pointing */
+      curveDir:   1,
     },
     {
-      sel:      '.contact-btn',
-      label:    '03  —  CONTACT',
-      text:     'Click here to get in touch',
-      pos:      'right',
-      gap:      110,
-      curveDir: -1,
+      sel:        '.contact-btn',
+      label:      '03  —  CONTACT',
+      text:       'Click here to get in touch',
+      pos:        'right',
+      gap:        110,
+      arrowImg:   3,
+      baseAngle:  0,
+      curveDir:   -1,
     },
     {
-      sel:      '#navigation ul',
-      label:    '04  —  NAVIGATION',
-      text:     'Navigate to different sections',
-      pos:      'above',
-      gap:       55,
-      curveDir:  1,
+      sel:        '#navigation ul',
+      label:      '04  —  NAVIGATION',
+      text:       'Navigate to different sections',
+      pos:        'above',
+      gap:        50,
+      arrowImg:   1,
+      baseAngle:  -90,        /* rotate arrow1 so it points downward */
+      curveDir:   1,
     },
     {
-      sel:      '.left-bar',
-      label:    '05  —  SOCIALS',
-      text:     'Find me by email, on LinkedIn, or explore my work on GitHub.',
-      pos:      'right',
-      gap:       80,
-      curveDir: -1,
+      sel:        '.left-bar',
+      label:      '05  —  SOCIALS',
+      text:       'Find me by email, on LinkedIn, or explore my work on GitHub.',
+      pos:        'right',
+      gap:        30,         /* very close — sits right next to the icons */
+      arrowImg:   2,
+      baseAngle:  180,        /* points left toward the icons */
+      curveDir:   -1,
     },
     {
-      sel:      '#settingsGearBtn',
-      label:    '06  —  SETTINGS',
-      text:     'Customise the site, switch colours, toggle grain or the lattice.',
-      pos:      'above-left',
-      gap:       55,
-      curveDir:  1,
+      sel:        '#settingsGearBtn',
+      label:      '06  —  SETTINGS',
+      text:       'Customise the site, switch colours, toggle grain or the lattice.',
+      pos:        'above-left',
+      gap:        50,
+      arrowImg:   3,
+      baseAngle:  30,         /* tilted down-right toward the gear */
+      curveDir:   1,
     },
   ];
 
-  var ANN_W = 200;
-  var ANN_H = 130;
+  var ANN_W = 270;   /* annotation width (px)  */
+  var ANN_H = 138;   /* estimated height — used only for positioning maths */
+  var ARR   = 88;    /* arrow image bounding square (px) */
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive  = false;
@@ -73,20 +95,24 @@
     '  src:url("assets/fonts/Chalk-Board.otf") format("opentype");',
     '}',
 
+    /* ── Tour ? button — exact same box as .settings-gear-btn ── */
     '#tourBtn {',
     '  width:32px; height:32px;',
     '  border-radius:4px;',
     '  border:2px solid rgba(0,0,0,0.3);',
     '  background:transparent;',
     '  color:rgb(var(--black));',
-    '  font-size:1rem;',
+    '  font-size:1.05rem;',
+    '  font-family:"InterRegular",sans-serif;',
+    '  font-weight:500;',
+    '  line-height:1;',
     '  cursor:pointer;',
     '  display:flex; align-items:center; justify-content:center;',
     '  flex-shrink:0;',
     '  margin-left:auto; margin-right:13px;',
     '  padding:0;',
     '  transition:background 0.2s ease, color 0.2s ease,',
-    '             border-color 0.2s ease, opacity 0.3s ease;',
+    '             border-color 0.2s ease, opacity 0.35s ease;',
     '}',
     '#tourBtn:hover { border-color:rgba(0,0,0,0.55); }',
     '#tourBtn.t-active {',
@@ -96,69 +122,83 @@
     '}',
     '#tourBtn.t-faded { opacity:0 !important; pointer-events:none; }',
 
-    '#tourSvg {',
-    '  position:fixed; inset:0;',
-    '  width:100vw; height:100vh;',
-    '  pointer-events:none;',
-    '  z-index:9000;',
-    '  overflow:visible;',
-    '}',
-
-    '#tourAnn {',
+    /* ── Arrow image ── */
+    '#tourArrow {',
     '  position:fixed;',
     '  z-index:9001;',
+    '  width:' + ARR + 'px;',
+    '  height:' + ARR + 'px;',
+    '  object-fit:contain;',
+    '  object-position:center;',
+    '  pointer-events:none;',
+    '  opacity:0;',
+    '  transform-origin:center center;',
+    '  transition:opacity 0.35s ease 0.1s;',
+    '}',
+    '#tourArrow.t-on { opacity:1; }',
+
+    /* ── Annotation ── */
+    '#tourAnn {',
+    '  position:fixed;',
+    '  z-index:9002;',
     '  width:' + ANN_W + 'px;',
     '  pointer-events:none;',
     '  opacity:0;',
+    '  font-family:"ChalkBoard","InterRegular",cursive;',
     '  transition:',
     '    opacity 0.35s ease,',
-    '    left 0.42s cubic-bezier(0.4,0,0.2,1),',
-    '    top  0.42s cubic-bezier(0.4,0,0.2,1);',
+    '    left 0.38s cubic-bezier(0.4,0,0.2,1),',
+    '    top  0.38s cubic-bezier(0.4,0,0.2,1);',
     '}',
     '#tourAnn.t-on { opacity:1; pointer-events:auto; }',
 
+    /* Label — full opacity */
     '.tan-label {',
-    '  font-size:0.62rem;',
-    '  letter-spacing:0.18em;',
+    '  font-size:0.68rem;',
+    '  letter-spacing:0.2em;',
     '  text-transform:uppercase;',
-    '  color:rgba(0,0,0,0.42);',
+    '  color:rgba(0,0,0,0.88);',
     '  font-weight:700;',
-    '  margin-bottom:5px;',
+    '  margin-bottom:6px;',
     '  font-family:"InterRegular",sans-serif;',
     '}',
     '.tan-rule {',
     '  width:100%; height:1px;',
-    '  background:rgba(0,0,0,0.12);',
-    '  margin-bottom:8px;',
+    '  background:rgba(0,0,0,0.18);',
+    '  margin-bottom:9px;',
     '}',
+    /* Main text — ChalkBoard font, large and readable */
     '.tan-text {',
-    '  font-size:1.05rem;',
-    '  line-height:1.5;',
-    '  color:rgba(0,0,0,0.80);',
-    '  margin:0 0 10px;',
+    '  font-size:1.15rem;',
+    '  line-height:1.45;',
+    '  color:rgba(0,0,0,0.88);',
+    '  margin:0 0 11px;',
     '  font-family:"ChalkBoard","InterRegular",cursive;',
+    '  letter-spacing:0.01em;',
     '}',
+    /* Nav row */
     '.tan-nav {',
-    '  display:flex; align-items:center; gap:4px;',
+    '  display:flex; align-items:center; gap:5px;',
     '}',
     '.tan-btn {',
     '  background:none; border:none; outline:none;',
     '  cursor:pointer; padding:0;',
-    '  font-size:0.78rem;',
-    '  color:rgba(0,0,0,0.38);',
+    '  font-size:0.82rem;',
+    '  color:rgba(0,0,0,0.75);',
     '  line-height:1;',
     '  font-family:"InterRegular",sans-serif;',
     '  transition:color 0.15s;',
     '}',
-    '.tan-btn:hover     { color:rgba(0,0,0,0.85); }',
-    '.tan-btn:disabled  { opacity:0.18; cursor:default; pointer-events:none; }',
-    '.tan-close         { margin-left:3px; opacity:0.4; }',
-    '.tan-close:hover   { opacity:0.9 !important; }',
+    '.tan-btn:hover     { color:rgba(0,0,0,1); }',
+    '.tan-btn:disabled  { opacity:0.2; cursor:default; pointer-events:none; }',
+    '.tan-close         { margin-left:4px; opacity:0.55; }',
+    '.tan-close:hover   { opacity:1 !important; }',
+    /* Counter — full opacity */
     '.tan-count {',
     '  flex:1; text-align:center;',
-    '  font-size:0.63rem;',
-    '  letter-spacing:0.08em;',
-    '  color:rgba(0,0,0,0.26);',
+    '  font-size:0.7rem;',
+    '  letter-spacing:0.1em;',
+    '  color:rgba(0,0,0,0.82);',
     '  font-family:"InterRegular",sans-serif;',
     '}',
 
@@ -172,76 +212,24 @@
     var settingsBar = nav.querySelector('.settings-bar');
     if (!settingsBar) return;
 
-    /* Tour button */
+    /* ── Tour button — plain ? character, no icon font ── */
     var btn = document.createElement('button');
     btn.id        = 'tourBtn';
     btn.title     = 'Site guide';
     btn.setAttribute('aria-label', 'Open site guide');
     btn.className = 'd-none d-xl-flex';
-    btn.innerHTML = '<i class="ph ph-question"></i>';
+    btn.textContent = '?';
     settingsBar.style.marginLeft = '0';
     nav.insertBefore(btn, settingsBar);
 
-    /* SVG layer */
-    var NS  = 'http://www.w3.org/2000/svg';
-    var svg = document.createElementNS(NS, 'svg');
-    svg.id = 'tourSvg';
-    svg.setAttribute('aria-hidden', 'true');
+    /* ── Arrow image (single reusable element) ── */
+    var arrImg = document.createElement('img');
+    arrImg.id  = 'tourArrow';
+    arrImg.alt = '';
+    arrImg.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(arrImg);
 
-    /* Chalk displacement filter */
-    var defs   = document.createElementNS(NS, 'defs');
-    var filter = document.createElementNS(NS, 'filter');
-    filter.id  = 'tChalk';
-    filter.setAttribute('x', '-8%');
-    filter.setAttribute('y', '-30%');
-    filter.setAttribute('width',  '116%');
-    filter.setAttribute('height', '160%');
-
-    var turb = document.createElementNS(NS, 'feTurbulence');
-    turb.setAttribute('type',          'fractalNoise');
-    turb.setAttribute('baseFrequency', '0.025 0.06');
-    turb.setAttribute('numOctaves',    '2');
-    turb.setAttribute('result',        'noise');
-    turb.setAttribute('seed',          '5');
-
-    var disp = document.createElementNS(NS, 'feDisplacementMap');
-    disp.setAttribute('in',               'SourceGraphic');
-    disp.setAttribute('in2',              'noise');
-    disp.setAttribute('scale',            '2.8');
-    disp.setAttribute('xChannelSelector', 'R');
-    disp.setAttribute('yChannelSelector', 'G');
-
-    filter.appendChild(turb);
-    filter.appendChild(disp);
-    defs.appendChild(filter);
-    svg.appendChild(defs);
-
-    /* Arc path */
-    var arcPath = document.createElementNS(NS, 'path');
-    arcPath.id = 'tArc';
-    arcPath.setAttribute('fill',            'none');
-    arcPath.setAttribute('stroke',          'rgba(0,0,0,0.68)');
-    arcPath.setAttribute('stroke-width',    '2.1');
-    arcPath.setAttribute('stroke-linecap',  'round');
-    arcPath.setAttribute('stroke-linejoin', 'round');
-    arcPath.setAttribute('filter',          'url(#tChalk)');
-    svg.appendChild(arcPath);
-
-    /* Arrowhead */
-    var headPath = document.createElementNS(NS, 'path');
-    headPath.id = 'tHead';
-    headPath.setAttribute('fill',            'none');
-    headPath.setAttribute('stroke',          'rgba(0,0,0,0.68)');
-    headPath.setAttribute('stroke-width',    '2.1');
-    headPath.setAttribute('stroke-linecap',  'round');
-    headPath.setAttribute('stroke-linejoin', 'round');
-    headPath.setAttribute('filter',          'url(#tChalk)');
-    headPath.style.opacity = '0';
-    svg.appendChild(headPath);
-
-    document.body.appendChild(svg);
-
-    /* Annotation */
+    /* ── Annotation ── */
     var ann = document.createElement('div');
     ann.id = 'tourAnn';
     ann.innerHTML = [
@@ -257,11 +245,10 @@
     ].join('');
     document.body.appendChild(ann);
 
-    /* Events */
+    /* ── Events ── */
     btn.addEventListener('click', function () {
       tourActive ? endTour() : startTour();
     });
-
     document.getElementById('tanPrev').addEventListener('click', function () {
       if (currentStep > 0) goToStep(currentStep - 1);
     });
@@ -309,12 +296,16 @@
     currentStep = -1;
     var b   = document.getElementById('tourBtn');
     var ann = document.getElementById('tourAnn');
-    var arc = document.getElementById('tArc');
-    var hd  = document.getElementById('tHead');
+    var arr = document.getElementById('tourArrow');
     if (b)   b.classList.remove('t-active');
-    if (ann) ann.classList.remove('t-on');
-    if (arc) { arc.style.transition = 'none'; arc.style.strokeDashoffset = '9999px'; }
-    if (hd)  { hd.style.transition  = 'none'; hd.style.opacity = '0'; }
+    if (ann) { ann.classList.remove('t-on'); }
+    if (arr) {
+      arr.classList.remove('t-on');
+      /* Clear src after fade so no ghost image lingers */
+      setTimeout(function () {
+        if (!tourActive) arr.removeAttribute('src');
+      }, 400);
+    }
   }
 
   /* ── goToStep ───────────────────────────────────────────────────────────── */
@@ -333,11 +324,15 @@
     var tCY   = tRect.top  + tRect.height * 0.5;
     var g     = step.gap || 80;
 
-    /* Annotation position */
+    /* ── Annotation position ── */
     var ax, ay;
     switch (step.pos) {
       case 'right':
         ax = tRect.right + g;
+        ay = tCY - ANN_H * 0.5;
+        break;
+      case 'left':
+        ax = tRect.left - ANN_W - g;
         ay = tCY - ANN_H * 0.5;
         break;
       case 'above':
@@ -345,7 +340,7 @@
         ay = tRect.top - ANN_H - g;
         break;
       case 'above-left':
-        ax = tCX - ANN_W + 30;
+        ax = tCX - ANN_W + 20;
         ay = tRect.top - ANN_H - g;
         break;
       default:
@@ -355,7 +350,7 @@
     ax = Math.max(14, Math.min(ax, vW - ANN_W - 14));
     ay = Math.max(14, Math.min(ay, vH - ANN_H - 14));
 
-    /* Update annotation content */
+    /* ── Update annotation ── */
     var ann = document.getElementById('tourAnn');
     ann.style.left = ax + 'px';
     ann.style.top  = ay + 'px';
@@ -366,92 +361,54 @@
     document.getElementById('tanNext').textContent  = (idx === STEPS.length - 1) ? '\u2713' : '\u2192';
     ann.classList.add('t-on');
 
-    /* Arrow endpoints */
-    var annCX   = ax + ANN_W * 0.5;
-    var annCY   = ay + ANN_H * 0.5;
-    var startPt = rectEdge({ left: ax, top: ay, width: ANN_W, height: ANN_H }, tCX, tCY);
-    var endPt   = rectEdge(tRect, annCX, annCY);
+    /* ── Position & rotate the PNG arrow ── */
+    var arr = document.getElementById('tourArrow');
 
-    /* Pull wave endpoint back so the arrowhead sits on the edge */
-    var edx = endPt.x - startPt.x;
-    var edy = endPt.y - startPt.y;
-    var el  = Math.sqrt(edx*edx + edy*edy);
-    var pb  = 3;
-    var wex = el > pb ? endPt.x - (edx/el)*pb : endPt.x;
-    var wey = el > pb ? endPt.y - (edy/el)*pb : endPt.y;
+    /* Temporarily hide while repositioning to avoid flash */
+    arr.classList.remove('t-on');
+    arr.style.transition = 'none';
 
-    var curve = makeCurve(startPt.x, startPt.y, wex, wey, step.curveDir || 1);
-    var headD = makeHead(curve.tx, curve.ty, endPt.x, endPt.y);
+    /* Load the correct PNG */
+    arr.src = 'assets/images/arrow' + step.arrowImg + '.png';
 
-    /* Reset SVG paths instantly */
-    var arcEl  = document.getElementById('tArc');
-    var headEl = document.getElementById('tHead');
-    arcEl.style.transition       = 'none';
-    arcEl.style.strokeDasharray  = '';
-    arcEl.style.strokeDashoffset = '';
-    headEl.style.transition      = 'none';
-    headEl.style.opacity         = '0';
-    arcEl.setAttribute('d',  curve.path);
-    headEl.setAttribute('d', headD);
+    /* Annotation center and edge nearest to target */
+    var annCX  = ax + ANN_W * 0.5;
+    var annCY  = ay + ANN_H * 0.5;
+    var edgePt = rectEdge({ left: ax, top: ay, width: ANN_W, height: ANN_H }, tCX, tCY);
 
-    /* Animate: two rAFs ensure the reset is committed before we start */
+    /* Direction vector from annotation edge toward target */
+    var dx     = tCX - edgePt.x;
+    var dy     = tCY - edgePt.y;
+    var dist   = Math.sqrt(dx * dx + dy * dy);
+    var ux     = dist > 0 ? dx / dist : 1;
+    var uy     = dist > 0 ? dy / dist : 0;
+
+    /* Angle the arrow must rotate to point toward the target,
+       accounting for the image's natural pointing direction.       */
+    var targetAngle = Math.atan2(uy, ux) * 180 / Math.PI;
+    var rotation    = targetAngle - (step.baseAngle || 0);
+
+    /* Place arrow just outside the annotation edge,
+       offset toward the target so it "emerges" from the annotation. */
+    var EDGE_OFFSET = 10;  /* px past the annotation edge */
+    var imgCX = edgePt.x + ux * (EDGE_OFFSET + ARR * 0.45);
+    var imgCY = edgePt.y + uy * (EDGE_OFFSET + ARR * 0.45);
+
+    arr.style.left            = (imgCX - ARR * 0.5) + 'px';
+    arr.style.top             = (imgCY - ARR * 0.5) + 'px';
+    arr.style.transform       = 'rotate(' + rotation.toFixed(1) + 'deg)';
+    arr.style.transformOrigin = 'center center';
+
+    /* Fade arrow in after a short delay */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        var len = arcEl.getTotalLength ? arcEl.getTotalLength() : 200;
-        if (len < 1) len = 200;
-        arcEl.style.strokeDasharray  = len + 'px';
-        arcEl.style.strokeDashoffset = len + 'px';
-        arcEl.getBoundingClientRect(); /* force reflow */
-        arcEl.style.transition       = 'stroke-dashoffset 0.68s cubic-bezier(0.38,0,0.2,1)';
-        arcEl.style.strokeDashoffset = '0px';
-
-        /* Arrowhead appears when arc is almost done */
-        setTimeout(function () {
-          headEl.style.transition = 'opacity 0.18s ease';
-          headEl.style.opacity    = '1';
-        }, 620);
+        arr.style.transition = 'opacity 0.4s ease 0.12s';
+        arr.classList.add('t-on');
       });
     });
   }
 
-  /* ── Smooth cubic-bezier arc ─────────────────────────────────────────────── */
-  function makeCurve(x1, y1, x2, y2, dir) {
-    var dx  = x2 - x1, dy  = y2 - y1;
-    var len = Math.sqrt(dx*dx + dy*dy);
-    if (len < 4) return { path: 'M '+f(x1)+' '+f(y1)+' L '+f(x2)+' '+f(y2), tx: dx||1, ty: dy||0 };
-
-    var ux = dx / len, uy = dy / len;
-    var px = -uy * (dir || 1), py = ux * (dir || 1);
-    var bulge = Math.min(Math.max(len * 0.42, 38), 180);
-
-    var cp1x = x1 + ux * len * 0.28 + px * bulge;
-    var cp1y = y1 + uy * len * 0.28 + py * bulge;
-    var cp2x = x2 - ux * len * 0.22 + px * bulge;
-    var cp2y = y2 - uy * len * 0.22 + py * bulge;
-
-    /* Tangent at endpoint from cp2 → endpoint */
-    var tx = x2 - cp2x, ty = y2 - cp2y;
-    var tl = Math.sqrt(tx*tx + ty*ty) || 1;
-    tx /= tl; ty /= tl;
-
-    var path = 'M '+f(x1)+' '+f(y1)+
-               ' C '+f(cp1x)+' '+f(cp1y)+','+f(cp2x)+' '+f(cp2y)+','+f(x2)+' '+f(y2);
-
-    return { path: path, tx: tx, ty: ty };
-  }
-
-  /* ── V-shaped arrowhead at (ex,ey), tangent direction (tx,ty) ───────────── */
-  function makeHead(tx, ty, ex, ey) {
-    var tl = Math.sqrt(tx*tx + ty*ty) || 1;
-    tx /= tl; ty /= tl;
-    var px = -ty, py = tx;
-    var sz = 10, sp = 4.2;
-    return 'M '+f(ex - tx*sz + px*sp)+' '+f(ey - ty*sz + py*sp)+
-           ' L '+f(ex)+' '+f(ey)+
-           ' L '+f(ex - tx*sz - px*sp)+' '+f(ey - ty*sz - py*sp);
-  }
-
-  /* ── Nearest point on a rect's edge facing (fx, fy) ─────────────────────── */
+  /* ── Nearest point on a rect's edge facing outward toward (fx, fy) ────── */
   function rectEdge(rect, fx, fy) {
     var cx = rect.left + rect.width  * 0.5;
     var cy = rect.top  + rect.height * 0.5;
@@ -462,8 +419,6 @@
     var s  = Math.min(sx, sy);
     return { x: cx + dx * s, y: cy + dy * s };
   }
-
-  function f(n) { return Math.round(n * 10) / 10; }
 
   /* ── Boot ───────────────────────────────────────────────────────────────── */
   if (document.readyState === 'loading') {
