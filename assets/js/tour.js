@@ -24,7 +24,7 @@
     },
     {
       sel:           '.work-btn',
-      text:          'Click here to learn more about me',
+      text:          'Click here to learn more',
       approachAngle: 150,
       tailDist:      140,
       textSide:      'above',
@@ -33,8 +33,8 @@
       baseAngle:     150,
       arrowOffsetX:  -250,   /* shifts tip toward About button */
       arrowOffsetY:  100,
-      textOffsetY:   200,  /* additional text-only nudge */
-      textOffsetX:   -75, 
+      textOffsetY:   150,  /* additional text-only nudge */
+      textOffsetX:   -100, 
     },
     {
       sel:           '.contact-btn',
