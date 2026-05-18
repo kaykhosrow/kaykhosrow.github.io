@@ -61,7 +61,7 @@
       textSide:      'left',
       tilt:          0,
       arrowImg:      1,
-      baseAngle:     17.5,
+      baseAngle:     20,
       arrowOffsetX:  -47.5,
       arrowOffsetY:  0,
       textOffsetY:   7.5,
