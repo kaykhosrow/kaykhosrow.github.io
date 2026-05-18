@@ -189,9 +189,9 @@
       .settings-divider { width: 1px; align-self: stretch; margin: 5px 0px; background: rgba(0,0,0,0.1); flex-shrink: 0; }
 
       /* Circle swatches — border always visible; active state darkens the fill */
-      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease; }
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease, border-color 0.2s ease; }
       .setting-swatch:hover { filter: brightness(0.93); }
-      .setting-swatch.active { filter: brightness(0.85); }
+      .setting-swatch.active { border-color: rgba(0,0,0,0.5); filter: none; }
 
       /* Grain swatch — inherits the selected background colour */
       .grain-swatch { background-image: radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px), radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: rgb(var(--primary)); }
@@ -463,9 +463,6 @@
         pointer-events: none;
       }
 
-      #pronText { text-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5); }
-      #pronounceBtn img { filter: drop-shadow(0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5)); }
-
       #pronProgressBar {
         flex: 1;
         height: 1.5px;
@@ -476,7 +473,6 @@
         top: -1px;
         border-radius: 1px;
         min-width: 20px;
-        box-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5);
       }
 
       #pronProgressFill {
@@ -1048,6 +1044,15 @@
         this.classList.toggle('open');
         document.getElementById('settingsOptions').classList.toggle('open');
       });
+
+      window.addEventListener('scroll', function () {
+        var gearBtn = document.getElementById('settingsGearBtn');
+        var options = document.getElementById('settingsOptions');
+        if (gearBtn && gearBtn.classList.contains('open')) {
+          gearBtn.classList.remove('open');
+          options.classList.remove('open');
+        }
+      }, { passive: true });
 
       // Grain toggle
       document.getElementById('grainToggleBtn').addEventListener('click', function() {
