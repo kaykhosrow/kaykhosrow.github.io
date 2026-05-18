@@ -239,16 +239,16 @@
   function positionStack() {
     if (!stackEl) return;
     var content = document.querySelector('.hero-content');
-    var btnEl   = document.querySelector('.work-btn');
-    if (!content || !btnEl) return;
+    var btnRow  = document.querySelector('.hero-content .d-flex');
+    if (!content || !btnRow) return;
 
-    var br  = btnEl.getBoundingClientRect();
+    var rr  = btnRow.getBoundingClientRect();
     var cr  = content.getBoundingClientRect();
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = br.top + sy;
-    var left = cr.right + sx + STACK_LEFT_PAD;
+    var top  = rr.top + sy;
+    var left = cr.right + sx - STACK_LEFT_PAD;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
