@@ -200,15 +200,18 @@
       hideAll();
     });
 
-    btn.addEventListener('click', function () {
-      tourActive ? hideAll() : showAll();
-    });
-
     window.addEventListener('scroll', function () {
-      var away = window.scrollY > 25;
-      btn.classList.toggle('t-faded', away);
-      if (away && tourActive) hideAll();
+      if (window.scrollY > 25 && tourActive) hideAll();
     }, { passive: true });
+
+    btn.addEventListener('click', function () {
+      if (window.scrollY > 25) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (!tourActive) showAll();
+      } else {
+        tourActive ? hideAll() : showAll();
+      }
+    });
 
     window.addEventListener('resize', function () {
       if (tourActive) positionAll();
