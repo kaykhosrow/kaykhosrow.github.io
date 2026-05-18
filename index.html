@@ -1367,6 +1367,24 @@
     })();
     </script>
 
+    <!-- Align overlay text top with section title for all sections -->
+    <script>
+    (function () {
+      function alignOverlays() {
+        document.querySelectorAll('#about, #research, #teaching, #conferences, #code, #gallery, #contact').forEach(function (section) {
+          var overlay = section.querySelector('.section-title-overlay-text');
+          var title   = section.querySelector('.section-title');
+          if (!overlay || !title) return;
+          var relTop = title.getBoundingClientRect().top - section.getBoundingClientRect().top;
+          overlay.style.top = relTop + 'px';
+        });
+      }
+      document.addEventListener('DOMContentLoaded', alignOverlays);
+      window.addEventListener('resize', alignOverlays, { passive: true });
+      document.fonts && document.fonts.ready.then(alignOverlays);
+    })();
+    </script>
+
     <script>
     document.addEventListener('DOMContentLoaded', function () {
       document.documentElement.classList.remove('js-loading');
