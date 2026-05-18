@@ -18,9 +18,9 @@
       tilt:          0,
       arrowImg:      1,
       baseAngle:     2.5,
-      arrowOffsetX:  -175,   /* nudge: negative = left,  positive = right */
-      arrowOffsetY:  -35,  /* nudge: negative = up,    positive = down  */
-      textOffsetY:   -58.5,    /* additional text-only nudge */
+      arrowOffsetX:  -175,
+      arrowOffsetY:  -35,
+      textOffsetY:   -58.5,
       textOffsetX:   -5,
     },
      {
@@ -66,7 +66,7 @@
       arrowOffsetY:  0,
       textOffsetY:   5.75,
       textOffsetX:   -70,
-      zIndex:        55,   /* above nav (z-index:49) */
+      zIndex:        55,
     },
   ];
 
@@ -86,21 +86,19 @@
 
     '@font-face{font-family:"Scribble";src:url("assets/fonts/Scribble.otf") format("opentype");}',
 
-    /* ── Tour button — lives in .left-bar, sized to match social icon links ── */
     '#tourBtn{',
-    '  width:44px; height:44px; border-radius:4px;',
-    '  border:2px solid rgba(0,0,0,0.35); background:transparent;',
-    '  color:rgb(var(--black)); font-size:1.1rem;',
-    '  font-family:"InterRegular",sans-serif; font-weight:500; line-height:1;',
-    '  cursor:pointer; display:flex; align-items:center; justify-content:center;',
-    '  flex-shrink:0; padding:0; margin:0 auto;',
+    '  width:32px;height:32px;border-radius:4px;',
+    '  border:2px solid rgba(0,0,0,0.3);background:transparent;',
+    '  color:rgb(var(--black));font-size:0.9rem;',
+    '  font-family:"InterRegular",sans-serif;font-weight:500;line-height:1;',
+    '  cursor:pointer;display:flex;align-items:center;justify-content:center;',
+    '  flex-shrink:0;margin-left:auto;margin-right:13px;padding:0;',
     '  transition:background .2s,color .2s,border-color .2s,opacity .35s;',
     '}',
     '#tourBtn:hover   { border-color:rgba(0,0,0,0.55); }',
     '#tourBtn.t-on    { background:rgb(var(--black)); color:rgb(var(--primary)); border-color:rgb(var(--black)); }',
     '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
 
-    /* fixed: stays put in the viewport; slides under nav naturally via z-index */
     '.tour-arrow {',
     '  position:fixed;',
     '  z-index:40;',
@@ -137,18 +135,21 @@
 
   /* ── Build DOM ──────────────────────────────────────────────────────────── */
   function init() {
-    /* Target the left-bar instead of the nav settings-bar */
-    var leftBar = document.querySelector('.left-bar');
-    if (!leftBar) return;
+    var nav = document.getElementById('navigation');
+    if (!nav) return;
+    var bar = nav.querySelector('.settings-bar');
+    if (!bar) return;
 
     var btn = document.createElement('button');
-    btn.id        = 'tourBtn';
-    btn.title     = 'Site guide';
+    btn.id          = 'tourBtn';
+    btn.title       = 'Site guide';
     btn.setAttribute('aria-label', 'Toggle site guide');
-    btn.textContent = '?';
-
-    /* Insert at the very top of .left-bar, before the social icons <ul> */
-    leftBar.insertBefore(btn, leftBar.firstChild);
+    btn.className   = 'd-none d-xl-flex';
+    /* Wrap ? in a span to nudge the glyph down 0.5px without affecting
+       the button's flex centring */
+    btn.innerHTML   = '<span style="position:relative;top:0.5px;">?</span>';
+    bar.style.marginLeft = '0';
+    nav.insertBefore(btn, bar);
 
     NOTES.forEach(function (note) {
       var arrowEl = document.createElement('img');
@@ -220,9 +221,6 @@
     var target = document.querySelector(note.sel);
     if (!target) return;
 
-    /* Use viewport-relative rect directly — no scroll offsets needed with
-       position:fixed.  The annotations stay exactly where they were set
-       regardless of scroll or resize reflow. */
     var pr = target.getBoundingClientRect();
 
     var tCX = pr.left + pr.width  * 0.5;
@@ -246,13 +244,11 @@
     arrowEl.style.left = (arrCX - ARR * 0.5 + (note.arrowOffsetX || 0)) + 'px';
     arrowEl.style.top  = (arrCY - ARR * 0.5 + (note.arrowOffsetY || 0)) + 'px';
 
-    /* ── per-note z-index override ── */
     if (note.zIndex) {
       arrowEl.style.zIndex = note.zIndex;
       textEl.style.zIndex  = note.zIndex;
     }
 
-    /* ── flipX / flipY support ── */
     var flip = (note.flipX ? 'scaleX(-1) ' : '') + (note.flipY ? 'scaleY(-1) ' : '');
     arrowEl.style.transform = flip + 'rotate(' + rotation.toFixed(1) + 'deg)';
 
