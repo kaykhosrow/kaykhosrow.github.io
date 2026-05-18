@@ -189,9 +189,9 @@
       .settings-divider { width: 1px; align-self: stretch; margin: 5px 0px; background: rgba(0,0,0,0.1); flex-shrink: 0; }
 
       /* Circle swatches — border always visible; active state darkens the fill */
-      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease; }
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease, border-color 0.2s ease; }
       .setting-swatch:hover { filter: brightness(0.93); }
-      .setting-swatch.active { filter: brightness(0.85); }
+      .setting-swatch.active { border-color: rgba(0,0,0,0.5); filter: none; }
 
       /* Grain swatch — inherits the selected background colour */
       .grain-swatch { background-image: radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px), radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: rgb(var(--primary)); }
@@ -257,7 +257,7 @@
       .code-btn { font-size: 0.82rem; padding: 0.3rem 0.7rem; border-radius: 4px !important; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important; }
       .code-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
 
-      .about-img-wrap { position: relative; display: inline-block; min-height: 480px; }
+      .about-img-wrap { position: relative; display: inline-block; min-height: 400px; }
       .about-img-wrap::after { content: ''; position: absolute; bottom: -52px; left: 50%; transform: translateX(-50%); width: 78%; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at center top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%); filter: blur(12px); transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease; opacity: 0; pointer-events: none; z-index: 2; }
       .about-img-wrap:hover::after { opacity: 1; bottom: -46px; width: 88%; }
       .about-img-wrap .about-img { transition: transform 0.4s ease; display: block; }
@@ -466,7 +466,12 @@
         pointer-events: none;
       }
 
+      *:focus { outline: none; }
+
+      #pronText { text-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5); }
+      #pronounceBtn img { filter: drop-shadow(0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5)); }
       #pronProgressBar {
+        box-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5);
         flex: 1;
         height: 1.5px;
         background: rgba(0, 0, 0, 0.25);
@@ -652,7 +657,7 @@
                   src="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png"
                   alt="Omar Kaykhusraw"
                   class="about-img"
-                  style="max-width: 100%; max-height: 480px; object-fit: cover;"
+                  style="max-width: 100%; max-height: 400px; object-fit: cover;"
                 />
               </div>
             </div>
@@ -1309,7 +1314,7 @@
       function syncPronWidth() {
         var inner = document.getElementById('heroNameInner');
         if (inner && heroPronEl) {
-          heroPronEl.style.width = (inner.offsetWidth - 7.5) + 'px';
+          heroPronEl.style.width = (inner.offsetWidth - 10) + 'px';
         }
       }
       syncPronWidth();
