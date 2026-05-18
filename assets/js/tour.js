@@ -94,12 +94,11 @@
     '  cursor:pointer;display:flex;align-items:center;justify-content:center;',
     '  flex-shrink:0;margin-left:auto;margin-right:13px;padding:0;',
     '  transition:border-color .2s,opacity .35s;',
+    '  user-select:none;',
     '}',
-    '#tourBtn:hover   { border-color:rgba(0,0,0,0.55); }',
     '#tourBtn.t-on    { border-color:rgba(0,0,0,0.75); }',
     '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
 
-    /* Absolute so they sit at fixed page coordinates and scroll with content */
     '.tour-arrow {',
     '  position:absolute;',
     '  width:' + ARR + 'px; height:' + ARR + 'px;',
@@ -141,12 +140,18 @@
 
     var btn = document.createElement('button');
     btn.id          = 'tourBtn';
-    btn.title       = 'Site guide';
-    btn.setAttribute('aria-label', 'Toggle site guide');
+    btn.title       = 'Hold for site guide';
+    btn.setAttribute('aria-label', 'Hold for site guide');
     btn.className   = 'd-none d-xl-flex';
     btn.innerHTML   = '<span style="position:relative;top:1px;">?</span>';
     bar.style.marginLeft = '0';
     nav.insertBefore(btn, bar);
+
+    btn.addEventListener('mousedown',  function (e) { e.preventDefault(); showAll(); });
+    btn.addEventListener('mouseleave', function ()  { if (tourActive) hideAll(); });
+    btn.addEventListener('mouseup',    function ()  { if (tourActive) hideAll(); });
+    btn.addEventListener('touchstart', function (e) { e.preventDefault(); showAll(); }, { passive: false });
+    btn.addEventListener('touchend',   function ()  { if (tourActive) hideAll(); });
 
     NOTES.forEach(function (note) {
       var arrowEl = document.createElement('img');
@@ -166,10 +171,6 @@
       document.body.appendChild(textEl);
 
       pairs.push({ arrow: arrowEl, text: textEl });
-    });
-
-    btn.addEventListener('click', function () {
-      tourActive ? hideAll() : showAll();
     });
 
     window.addEventListener('scroll', function () {
@@ -218,8 +219,6 @@
     var target = document.querySelector(note.sel);
     if (!target) return;
 
-    /* getBoundingClientRect gives viewport coords; add scroll offset to
-       convert to page (document) coords for position:absolute elements */
     var pr  = target.getBoundingClientRect();
     var sx  = window.scrollX;
     var sy  = window.scrollY;
@@ -231,7 +230,6 @@
     var ux  = Math.cos(rad);
     var uy  = Math.sin(rad);
 
-    /* rectEdge works in the same coordinate space — shift rect too */
     var shiftedPr = {
       left:   pr.left   + sx,
       top:    pr.top    + sy,
