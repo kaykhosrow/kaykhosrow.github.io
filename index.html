@@ -463,6 +463,9 @@
         pointer-events: none;
       }
 
+      #pronText { text-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5); }
+      #pronounceBtn img { filter: drop-shadow(0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5)); }
+
       #pronProgressBar {
         flex: 1;
         height: 1.5px;
@@ -473,6 +476,7 @@
         top: -1px;
         border-radius: 1px;
         min-width: 20px;
+        box-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5);
       }
 
       #pronProgressFill {
@@ -1306,7 +1310,7 @@
       function syncPronWidth() {
         var inner = document.getElementById('heroNameInner');
         if (inner && heroPronEl) {
-          heroPronEl.style.width = (inner.offsetWidth - 7.5) + 'px';
+          heroPronEl.style.width = (inner.offsetWidth - 10) + 'px';
         }
       }
       syncPronWidth();
