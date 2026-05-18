@@ -77,8 +77,8 @@
   var FADE_MS = 380;
 
   /* Stack note: wide enough to wrap in ~3 lines; tune STACK_W if needed */
-  var STACK_W      = 500;
-  var STACK_LEFT_PAD = 150; /* extra gap from hero-content's right edge */
+  var STACK_W        = 500;
+  var STACK_LEFT_PAD = 150;
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
@@ -101,7 +101,7 @@
     '  transition:border-color .2s,opacity .35s;',
     '  user-select:none;',
     '}',
-    '#tourBtn.t-on    { border-color:rgba(0,0,0,0.75); }',
+    '#tourBtn.t-on    { border-color:rgba(0,0,0,0.5); }',
     '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
 
     '.tour-arrow {',
@@ -150,6 +150,22 @@
     '}',
     '#tourStack.t-on { opacity:1; }',
 
+    /* GitHub icon link inside the stack note */
+    '#tourStack a {',
+    '  pointer-events:auto;',
+    '  color:inherit;',
+    '  text-decoration:none;',
+    '  display:inline-block;',
+    '  vertical-align:middle;',
+    '  margin-left:6px;',
+    '  position:relative;',
+    '  top:-1px;',
+    '  opacity:0.75;',
+    '  transition:opacity 0.2s;',
+    '}',
+    '#tourStack a:hover { opacity:1; }',
+    '#tourStack a svg { display:block; }',
+
   ].join('\n');
   document.head.appendChild(styleEl);
 
@@ -171,7 +187,13 @@
 
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page. The source code can be found in my online GitHub repository.';
+    stackEl.innerHTML =
+      'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page. The source code can be found in my online GitHub repository.' +
+      '<a href="https://github.com/kaykhosrow" target="_blank" aria-label="GitHub repository">' +
+        '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>' +
+        '</svg>' +
+      '</a>';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
@@ -255,10 +277,7 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    /* Top: flush with the top of the hero name */
     var top  = nr.top + sy;
-
-    /* Left: hero-content's right edge + padding to push it away from the text */
     var left = cr.right + sx + STACK_LEFT_PAD;
 
     stackEl.style.top  = top  + 'px';
