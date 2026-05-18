@@ -78,7 +78,6 @@
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
-  var isFading   = false;   /* true during the CSS fade-out transition */
   var pairs      = [];
 
   /* ── CSS ────────────────────────────────────────────────────────────────── */
@@ -174,17 +173,14 @@
       tourActive ? hideAll() : showAll();
     });
 
+    /* Scroll: only used to fade the button and dismiss the tour */
     window.addEventListener('scroll', function () {
-      /* Keep arrows pinned to their targets while visible or fading out.
-         positionAll() re-reads getBoundingClientRect() every scroll event,
-         so fixed elements track the moving targets rather than drifting. */
-      if (tourActive || isFading) positionAll();
-
       var away = window.scrollY > 25;
       btn.classList.toggle('t-faded', away);
       if (away && tourActive) hideAll();
     }, { passive: true });
 
+    /* Resize: recompute positions so arrows stay correctly anchored */
     window.addEventListener('resize', function () {
       if (tourActive) positionAll();
     }, { passive: true });
@@ -193,7 +189,6 @@
   /* ── Show / hide ─────────────────────────────────────────────────────────── */
   function showAll() {
     tourActive = true;
-    isFading   = false;
     document.getElementById('tourBtn').classList.add('t-on');
     positionAll();
     requestAnimationFrame(function () {
@@ -208,14 +203,11 @@
 
   function hideAll() {
     tourActive = false;
-    isFading   = true;
     document.getElementById('tourBtn').classList.remove('t-on');
     pairs.forEach(function (p) {
       p.arrow.classList.remove('t-on');
       p.text.classList.remove('t-on');
     });
-    /* Clear fading flag once the CSS transition has finished */
-    setTimeout(function () { isFading = false; }, FADE_MS);
   }
 
   /* ── Position all pairs ─────────────────────────────────────────────────── */
