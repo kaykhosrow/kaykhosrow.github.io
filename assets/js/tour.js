@@ -76,7 +76,6 @@
   var TIP_CLR = 8;
   var FADE_MS = 380;
 
-  /* Stack note: wide enough to wrap in ~3 lines; tune STACK_W if needed */
   var STACK_W        = 500;
   var STACK_LEFT_PAD = 150;
 
@@ -150,19 +149,15 @@
     '}',
     '#tourStack.t-on { opacity:1; }',
 
-    /* GitHub icon link inside the stack note */
     '#tourStack a {',
-    '  position:absolute;',
-    '  right:0;',
-    '  bottom:0;',
     '  pointer-events:auto;',
     '  color:inherit;',
     '  text-decoration:none;',
-    
-    
-    
-    
-    
+    '  display:inline-block;',
+    '  vertical-align:middle;',
+    '  margin-left:14px;',
+    '  position:relative;',
+    '  top:-1px;',
     '  opacity:0.75;',
     '  transition:opacity 0.2s;',
     '}',
