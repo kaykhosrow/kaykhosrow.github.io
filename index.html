@@ -261,9 +261,9 @@
       .code-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
 
       .about-img-wrap { position: relative; display: inline-block; min-height: 0; }
-      .about-img-wrap::after { display: none; }
-      .about-img-wrap:hover::after { display: none; }
-      .about-img-wrap:hover .about-img { transform: none; }
+      .about-img-wrap::after { display: none !important; }
+      .about-img-wrap:hover::after { display: none !important; opacity: 0 !important; }
+      .about-img-wrap:hover .about-img { transform: none !important; }
       .about-img-wrap::after { content: ''; position: absolute; bottom: -52px; left: 50%; transform: translateX(-50%); width: 78%; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at center top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%); filter: blur(12px); transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease; opacity: 0; pointer-events: none; z-index: 2; }
       .about-img-wrap:hover::after { opacity: 1; bottom: -46px; width: 88%; }
       .about-img-wrap .about-img { transition: transform 0.4s ease; display: block; }
