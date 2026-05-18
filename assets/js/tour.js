@@ -64,7 +64,7 @@
       baseAngle:     12.5,
       arrowOffsetX:  -47.5,
       arrowOffsetY:  -25,
-      textOffsetY:   3.85,
+      textOffsetY:   3.925,
       textOffsetX:   -72.5,
       zIndex:        55,
     },
@@ -171,7 +171,7 @@
 
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see throughout this website. The source code is available in my GitHub repository.';
+    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this site. The source code is available in my online GitHub repository.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
