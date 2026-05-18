@@ -63,7 +63,7 @@
       baseAngle:     12.5,
       arrowOffsetX:  -47.5,
       arrowOffsetY:  0,
-      textOffsetY:   8,
+      textOffsetY:   7.75,
       textOffsetX:   -72.5,
       zIndex:        55,
     },
@@ -172,7 +172,7 @@
     stackEl = document.createElement('div');
     stackEl.id        = 'tourStack';
     stackEl.className = 'tour-stack';
-    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview:</span>Welcome to my page. Here you can explore my research, teaching, and conference activity, as well as selected code, cinematography, and contact details for any enquiries or potential collaboration.<br><br><span style="display:block;font-size:1.9rem;margin-top:0.45em;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages:</span>This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.';
+    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview</span>Welcome to my page. Here you can explore my research, teaching, and conference activity, as well as selected code, cinematography, and contact details for any enquiries or potential collaboration.<br><br><span style="display:block;font-size:1.9rem;margin-top:0.45em;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages</span>This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
