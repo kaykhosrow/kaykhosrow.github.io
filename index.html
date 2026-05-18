@@ -43,6 +43,7 @@
     <meta property="og:type" content="website">
 
     <script defer src="assets/js/app.js"></script>
+    <script defer src="assets/js/tour.js"></script>
     
     <!-- Lattice background - enable if desired -->
     
@@ -188,9 +189,9 @@
       .settings-divider { width: 1px; align-self: stretch; margin: 5px 0px; background: rgba(0,0,0,0.1); flex-shrink: 0; }
 
       /* Circle swatches — border always visible; active state darkens the fill */
-      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease; }
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease, border-color 0.2s ease; }
       .setting-swatch:hover { filter: brightness(0.93); }
-      .setting-swatch.active { filter: brightness(0.85); }
+      .setting-swatch.active { border-color: rgba(0,0,0,0.5); filter: none; }
 
       /* Grain swatch — inherits the selected background colour */
       .grain-swatch { background-image: radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px), radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: rgb(var(--primary)); }
@@ -256,7 +257,7 @@
       .code-btn { font-size: 0.82rem; padding: 0.3rem 0.7rem; border-radius: 4px !important; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important; }
       .code-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
 
-      .about-img-wrap { position: relative; display: inline-block; min-height: 480px; }
+      .about-img-wrap { position: relative; display: inline-block; min-height: 400px; }
       .about-img-wrap::after { content: ''; position: absolute; bottom: -52px; left: 50%; transform: translateX(-50%); width: 78%; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at center top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%); filter: blur(12px); transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease; opacity: 0; pointer-events: none; z-index: 2; }
       .about-img-wrap:hover::after { opacity: 1; bottom: -46px; width: 88%; }
       .about-img-wrap .about-img { transition: transform 0.4s ease; display: block; }
@@ -307,7 +308,9 @@
       }
 
       html { min-width: 1200px; }
-      body { min-width: 1200px; overflow-x: visible !important; }
+      body { min-width: 1200px; overflow-x: visible !important; padding-bottom: 0 !important; }
+      main { padding-bottom: 0 !important; }
+      footer { margin-bottom: 0 !important; padding-bottom: 0 !important; }
 
       /* ── Left-bar clearance: at least 80px from left, but still auto-centred on wide screens ── */
       #home, #about, #research, #teaching, #conferences, #code, #gallery, #contact {
@@ -357,12 +360,9 @@
       section p a:not(.btn)::after { content: ""; position: absolute; border-radius: 1em; border-top: .10em solid rgba(0, 0, 0, 1); right: 100%; bottom: -.15em; left: 0; transition: right .75s cubic-bezier(0.4, 0, 0.2, 1), border-color .75s ease-out; }
       section p a:not(.btn):hover::after, section p .link-pair:hover a:not(.btn)::after { right: 0; }
 
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: rgb(var(--primary)); border-radius: 999px; }
-      ::-webkit-scrollbar-thumb { background: rgb(var(--black)); border-radius: 999px; border: 2px solid rgb(var(--primary)); }
-      ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
-      * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
-      body::after { content: ''; position: fixed; top: 0; right: 0; width: 1px; height: 100%; background: rgba(0,0,0,0.1); pointer-events: none; z-index: 9999; }
+      ::-webkit-scrollbar { display: none; }
+      * { scrollbar-width: none; }
+      body::after { display: none; }
 
 
 
@@ -465,7 +465,12 @@
         pointer-events: none;
       }
 
+      *:focus { outline: none; }
+
+      #pronText { text-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5); }
+      #pronounceBtn img { filter: drop-shadow(0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5)); }
       #pronProgressBar {
+        box-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5);
         flex: 1;
         height: 1.5px;
         background: rgba(0, 0, 0, 0.25);
@@ -651,7 +656,7 @@
                   src="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png"
                   alt="Omar Kaykhusraw"
                   class="about-img"
-                  style="max-width: 100%; max-height: 480px; object-fit: cover;"
+                  style="max-width: 100%; max-height: 400px; object-fit: cover;"
                 />
               </div>
             </div>
@@ -1047,6 +1052,15 @@
         document.getElementById('settingsOptions').classList.toggle('open');
       });
 
+      window.addEventListener('scroll', function () {
+        var gearBtn = document.getElementById('settingsGearBtn');
+        var options = document.getElementById('settingsOptions');
+        if (gearBtn && gearBtn.classList.contains('open')) {
+          gearBtn.classList.remove('open');
+          options.classList.remove('open');
+        }
+      }, { passive: true });
+
       // Grain toggle
       document.getElementById('grainToggleBtn').addEventListener('click', function() {
         var cb = document.querySelector('.grained-checkbox');
@@ -1124,11 +1138,16 @@
       if (!nav) return;
 
       function update() {
-        if (window.scrollY < 1) {
+        var shouldPin = window.scrollY < 1;
+        var isPin     = nav.classList.contains('nav-pinned-bottom');
+        if (shouldPin === isPin) return;
+        nav.style.transition = 'none';
+        if (shouldPin) {
           nav.classList.add('nav-pinned-bottom');
         } else {
           nav.classList.remove('nav-pinned-bottom');
         }
+        requestAnimationFrame(function () { nav.style.transition = ''; });
       }
 
       update();
@@ -1308,7 +1327,7 @@
       function syncPronWidth() {
         var inner = document.getElementById('heroNameInner');
         if (inner && heroPronEl) {
-          heroPronEl.style.width = (inner.offsetWidth - 7.5) + 'px';
+          heroPronEl.style.width = (inner.offsetWidth - 10) + 'px';
         }
       }
       syncPronWidth();
