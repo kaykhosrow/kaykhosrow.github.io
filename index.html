@@ -77,7 +77,6 @@
 
       section.hero .row { margin-top: 50px; }
 
-      .next-chapter { display: inline-flex !important; }
       section.hero .next-chapter { padding-top: 40px !important; padding-bottom: 20px !important; }
       
       .nav-pinned-bottom {
@@ -630,16 +629,9 @@
           <span class="section-title-overlay-text">About</span>
           <div class="row align-items-start">
             <div class="col-12 col-lg-7">
-              <div style="position: relative;">
-                <div class="section-title text-capitalize">
-                  <h4>Biography</h4>
-                  <h2>About</h2>
-                </div>
-                <img
-                  src="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png"
-                  alt="Omar Kaykhusraw"
-                  style="position: absolute; top: 0; right: 0; width: 160px; height: auto; display: block;"
-                />
+              <div class="section-title text-capitalize">
+                <h4>Biography</h4>
+                <h2>About</h2>
               </div>
               <div class="about-desc mb-4 mb-lg-5">
                 <p class="desc" style="text-align: justify;">
@@ -648,6 +640,16 @@
                 <div class="d-flex gap-3 mt-4 flex-wrap">
                   <a href="#" class="btn btn-outline-secondary about-new-btn">Curriculum Vitae</a>
                 </div>
+              </div>
+            </div>
+            <div class="col-12 col-lg-5 mt-5 mt-lg-0 d-flex justify-content-center justify-content-lg-end">
+              <div class="about-img-wrap">
+                <img
+                  src="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.png"
+                  alt="Omar Kaykhusraw"
+                  class="about-img"
+                  style="max-width: 100%; max-height: 480px; object-fit: cover;"
+                />
               </div>
             </div>
           </div>
