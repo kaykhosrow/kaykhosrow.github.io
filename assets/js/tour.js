@@ -55,7 +55,7 @@
     },
     {
       sel:           '#settingsGearBtn',
-      text:          'Customise the site',
+      text:          'Customise this site',
       approachAngle: 90,
       tailDist:      100,
       textSide:      'left',
@@ -64,8 +64,8 @@
       baseAngle:     12.5,
       arrowOffsetX:  -47.5,
       arrowOffsetY:  -25,
-      textOffsetY:   0,
-      textOffsetX:   -75,
+      textOffsetY:   10,
+      textOffsetX:   -77.5,
       zIndex:        55,
     },
   ];
