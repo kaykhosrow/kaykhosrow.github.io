@@ -77,7 +77,7 @@
   var FADE_MS = 380;
 
   /* ── Stack note width — fits neatly in the right half of the hero ───────── */
-  var STACK_W = 300;
+  var STACK_W = 420;
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
