@@ -35,7 +35,7 @@
       flipX:         true,
       arrowOffsetX:  -245,
       arrowOffsetY:  20,
-      textOffsetY:   -107.5,
+      textOffsetY:   -106.75,
       textOffsetX:   -107.25,
     },
       {
@@ -63,7 +63,7 @@
       arrowImg:      1,
       baseAngle:     12.5,
       arrowOffsetX:  -45,
-      arrowOffsetY:  0,
+      arrowOffsetY:  -15,
       textOffsetY:   0,
       textOffsetX:   -70,
       zIndex:        55,
