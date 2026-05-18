@@ -129,17 +129,14 @@
     '  white-space:nowrap; display:block;',
     '}',
 
-    /* Stack note */
     '#tourStack {',
     '  position:absolute;',
     '  font-family:"Scribble",cursive;',
-    '  font-size:1.35rem;',
-    '  line-height:2.1;',
+    '  font-size:1.2rem;',
+    '  line-height:1.75;',
     '  color:rgba(0,0,0,0.65);',
     '  text-align:right;',
-    '  display:flex;',
-    '  flex-direction:column;',
-    '  align-items:flex-end;',
+    '  max-width:260px;',
     '  text-shadow:0.1px 0.1px 2px rgba(0,0,0,0.18);',
     '  pointer-events:none;',
     '  user-select:none;',
@@ -167,10 +164,9 @@
     bar.style.marginLeft = '0';
     nav.insertBefore(btn, bar);
 
-    /* Stack note element */
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.innerHTML = '<span>HTML</span><span>CSS</span><span>JavaScript</span>';
+    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, while JavaScript takes care of the animations, navigation and the interactions you see throughout. The source code is available in my GitHub repository.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
@@ -245,18 +241,14 @@
   /* ── Position stack note in right half of hero ──────────────────────────── */
   function positionStack() {
     if (!stackEl) return;
-    var hero = document.getElementById('home');
     var content = document.querySelector('.hero-content');
-    if (!hero || !content) return;
+    if (!content) return;
 
-    var hr  = hero.getBoundingClientRect();
-    var cr  = content.getBoundingClientRect();
-    var sy  = window.scrollY;
-    var sx  = window.scrollX;
+    var cr = content.getBoundingClientRect();
+    var sy = window.scrollY;
 
-    /* Vertically centre with the hero content; sit in the right half */
-    var top  = cr.top  + sy + (cr.height * 0.5) - 50;
-    var right = (document.documentElement.offsetWidth - (hr.right + sx)) + 40;
+    var top   = cr.top + sy + (cr.height * 0.5) - (stackEl.offsetHeight * 0.5);
+    var right = 80;
 
     stackEl.style.top   = top + 'px';
     stackEl.style.right = right + 'px';
