@@ -78,7 +78,7 @@
 
   /* Stack note: wide enough to wrap in ~3 lines; tune STACK_W if needed */
   var STACK_W      = 500;
-  var STACK_LEFT_PAD = 200; /* extra gap from hero-content's right edge */
+  var STACK_LEFT_PAD = 150; /* extra gap from hero-content's right edge */
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
@@ -171,7 +171,7 @@
 
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, while JavaScript takes care of the animations, navigation and the interactions you see throughout. The source code is available in my GitHub repository.';
+    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of the animations, navigation and the interactions you see throughout. The source code is available in my online GitHub repository.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
