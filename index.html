@@ -309,9 +309,10 @@
       html { min-width: 1200px; }
       body { min-width: 1200px; overflow-x: visible !important; }
 
-      /* ── Left-bar clearance: shift only content sections, never the nav ── */
+      /* ── Left-bar clearance: at least 80px from left, but still auto-centred on wide screens ── */
       #home, #about, #research, #teaching, #conferences, #code, #gallery, #contact {
-        margin-left: 80px !important;
+        margin-left:  max(80px, calc((100% - 1140px) / 2)) !important;
+        margin-right: max(0px,  calc((100% - 1140px) / 2)) !important;
       }
 
       .container { min-width: 1140px !important; }
