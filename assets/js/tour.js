@@ -50,7 +50,7 @@
       flipX:         true,
       arrowOffsetX:  275,
       arrowOffsetY:  38.5,
-      textOffsetY:   115,
+      textOffsetY:   112.5,
       textOffsetX:   130,
     },
     {
@@ -61,7 +61,7 @@
       textSide:      'left',
       tilt:          0,
       arrowImg:      1,
-      baseAngle:     20,
+      baseAngle:     12.5,
       arrowOffsetX:  -47.5,
       arrowOffsetY:  0,
       textOffsetY:   7.5,
