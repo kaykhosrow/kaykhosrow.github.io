@@ -74,7 +74,7 @@
   var TIP_CLR = 8;
   var FADE_MS = 380;
 
-  var STACK_W        = 500;
+  var STACK_W        = 548;
   var STACK_LEFT_PAD = 150;
 
   var tourActive = false;
@@ -142,8 +142,10 @@
     '  user-select:none;',
     '  opacity:0;',
     '  transition:opacity ' + FADE_MS + 'ms ease;',
-    '  background:rgba(0,0,0,0.25);',
-    '  border-radius:14px;',
+    '  background:rgba(0,0,0,0.05);',
+    '  border-radius:7.5px;',
+    '  padding:20px 24px;',
+    '  box-sizing:border-box;',
     '}',
     '#tourStack.t-on { opacity:1; }',
 
