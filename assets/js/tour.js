@@ -102,6 +102,7 @@
 
     '.tour-arrow {',
     '  position:absolute;',
+    '  top:0; left:-9999px;',
     '  width:' + ARR + 'px; height:' + ARR + 'px;',
     '  object-fit:contain; object-position:center;',
     '  pointer-events:none;',
@@ -114,6 +115,7 @@
 
     '.tour-note {',
     '  position:absolute;',
+    '  top:0; left:-9999px;',
     '  pointer-events:none;',
     '  white-space:nowrap;',
     '  opacity:0;',
@@ -131,6 +133,7 @@
 
     '.tour-stack {',
     '  position:absolute;',
+    '  top:0; left:-9999px;',
     '  width:' + STACK_W + 'px;',
     '  font-family:"Scribble",cursive;',
     '  font-size:1.5rem;',
