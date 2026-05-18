@@ -74,7 +74,7 @@
   var TIP_CLR = 8;
   var FADE_MS = 380;
 
-  var STACK_W        = 360;
+  var STACK_W        = 500;
   var STACK_LEFT_PAD = 150;
 
   var tourActive = false;
@@ -238,11 +238,17 @@
 
   function positionStack() {
     if (!stackEl) return;
-    var sy = window.scrollY;
-    var sx = window.scrollX;
+    var content = document.querySelector('.hero-content');
+    var btnRow  = document.querySelector('.hero-content .d-flex');
+    if (!content || !btnRow) return;
 
-    var top  = sy + 70;
-    var left = sx + window.innerWidth - STACK_W - 70;
+    var rr  = btnRow.getBoundingClientRect();
+    var cr  = content.getBoundingClientRect();
+    var sy  = window.scrollY;
+    var sx  = window.scrollX;
+
+    var top  = rr.top + sy;
+    var left = cr.right + sx - 50;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
