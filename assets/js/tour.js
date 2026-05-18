@@ -62,10 +62,10 @@
       tilt:          0,
       arrowImg:      1,
       baseAngle:     15,
-      arrowOffsetX:  -50,
-      arrowOffsetY:  5,
-      textOffsetY:   -10,
-      textOffsetX:   -72.5,
+      arrowOffsetX:  -48.5,
+      arrowOffsetY:  -5,
+      textOffsetY:   5,
+      textOffsetX:   -75,
     },
   ];
 
