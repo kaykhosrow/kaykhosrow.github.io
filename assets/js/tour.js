@@ -98,8 +98,9 @@
     '#tourBtn.t-on    { background:rgb(var(--black)); color:rgb(var(--primary)); border-color:rgb(var(--black)); }',
     '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
 
+    /* fixed: stays put in the viewport; slides under nav naturally via z-index */
     '.tour-arrow {',
-    '  position:absolute;',
+    '  position:fixed;',
     '  z-index:50;',
     '  width:' + ARR + 'px; height:' + ARR + 'px;',
     '  object-fit:contain; object-position:center;',
@@ -112,7 +113,7 @@
     '.tour-arrow.t-on { opacity:1; }',
 
     '.tour-note {',
-    '  position:absolute;',
+    '  position:fixed;',
     '  z-index:50;',
     '  pointer-events:none;',
     '  white-space:nowrap;',
@@ -218,18 +219,10 @@
     var target = document.querySelector(note.sel);
     if (!target) return;
 
-    var vr = target.getBoundingClientRect();
-    var sx = window.scrollX || 0;
-    var sy = window.scrollY || 0;
-
-    var pr = {
-      left:   vr.left   + sx,
-      top:    vr.top    + sy,
-      right:  vr.right  + sx,
-      bottom: vr.bottom + sy,
-      width:  vr.width,
-      height: vr.height,
-    };
+    /* Use viewport-relative rect directly — no scroll offsets needed with
+       position:fixed.  The annotations stay exactly where they were set
+       regardless of scroll or resize reflow. */
+    var pr = target.getBoundingClientRect();
 
     var tCX = pr.left + pr.width  * 0.5;
     var tCY = pr.top  + pr.height * 0.5;
