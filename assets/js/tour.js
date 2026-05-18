@@ -142,10 +142,8 @@
     '  user-select:none;',
     '  opacity:0;',
     '  transition:opacity ' + FADE_MS + 'ms ease;',
-    '  background:rgba(200,200,200,0.5);',
+    '  background:rgba(0,0,0,0.25);',
     '  border-radius:14px;',
-    '  padding:20px 24px;',
-    '  box-sizing:border-box;',
     '}',
     '#tourStack.t-on { opacity:1; }',
 
