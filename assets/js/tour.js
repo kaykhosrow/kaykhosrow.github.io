@@ -248,7 +248,7 @@
     var sx  = window.scrollX;
 
     var top  = rr.top + sy;
-    var left = cr.right + sx - STACK_LEFT_PAD;
+    var left = cr.right + sx - 50;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
