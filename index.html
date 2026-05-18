@@ -1050,6 +1050,15 @@
         document.getElementById('settingsOptions').classList.toggle('open');
       });
 
+      window.addEventListener('scroll', function () {
+        var gearBtn = document.getElementById('settingsGearBtn');
+        var options = document.getElementById('settingsOptions');
+        if (gearBtn && gearBtn.classList.contains('open')) {
+          gearBtn.classList.remove('open');
+          options.classList.remove('open');
+        }
+      }, { passive: true });
+
       // Grain toggle
       document.getElementById('grainToggleBtn').addEventListener('click', function() {
         var cb = document.querySelector('.grained-checkbox');
