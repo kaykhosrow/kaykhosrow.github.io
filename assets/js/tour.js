@@ -76,6 +76,9 @@
   var TIP_CLR = 8;
   var FADE_MS = 380;
 
+  /* ── Stack note width — fits neatly in the right half of the hero ───────── */
+  var STACK_W = 300;
+
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
   var pairs      = [];
@@ -131,13 +134,14 @@
 
     '#tourStack {',
     '  position:absolute;',
+    '  width:' + STACK_W + 'px;',
     '  font-family:"Scribble",cursive;',
-    '  font-size:1.2rem;',
+    '  font-size:1.5rem;',
     '  line-height:1.75;',
-    '  color:rgba(0,0,0,0.65);',
-    '  text-align:right;',
-    '  max-width:260px;',
-    '  text-shadow:0.1px 0.1px 2px rgba(0,0,0,0.18);',
+    '  color:rgba(0,0,0,0.88);',
+    '  text-align:justify;',
+    '  text-align-last:left;',
+    '  text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12);',
     '  pointer-events:none;',
     '  user-select:none;',
     '  opacity:0;',
@@ -238,20 +242,29 @@
     positionStack();
   }
 
-  /* ── Position stack note in right half of hero ──────────────────────────── */
+  /* ── Centre the stack note in the gap between hero content and page edge ── */
   function positionStack() {
     if (!stackEl) return;
     var content = document.querySelector('.hero-content');
-    if (!content) return;
+    var hero    = document.getElementById('home');
+    if (!content || !hero) return;
 
-    var cr = content.getBoundingClientRect();
-    var sy = window.scrollY;
+    var cr  = content.getBoundingClientRect();
+    var hr  = hero.getBoundingClientRect();
+    var sy  = window.scrollY;
+    var sx  = window.scrollX;
 
-    var top   = cr.top + sy + (cr.height * 0.5) - (stackEl.offsetHeight * 0.5);
-    var right = 80;
+    /* Horizontal: centre STACK_W in the gap between content's right edge
+       and the hero section's right edge */
+    var gapLeft  = cr.right  + sx;
+    var gapRight = hr.right  + sx;
+    var left     = gapLeft + (gapRight - gapLeft) * 0.5 - STACK_W * 0.5;
 
-    stackEl.style.top   = top + 'px';
-    stackEl.style.right = right + 'px';
+    /* Vertical: centre with the hero content block */
+    var top = cr.top + sy + (cr.height * 0.5) - (stackEl.offsetHeight * 0.5);
+
+    stackEl.style.left = left + 'px';
+    stackEl.style.top  = top  + 'px';
   }
 
   function positionPair(arrowEl, textEl, note) {
