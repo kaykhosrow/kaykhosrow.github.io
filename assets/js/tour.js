@@ -99,9 +99,18 @@
     '#tourBtn.t-on    { border-color:rgba(0,0,0,0.75); }',
     '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
 
-    '.tour-arrow {',
+    /* ── Tour overlay: fixed to viewport, lives on <html> so no body
+          transform can affect it. Children use position:absolute within it. ── */
+    '#tourOverlay {',
     '  position:fixed;',
+    '  inset:0;',
+    '  pointer-events:none;',
     '  z-index:40;',
+    '  overflow:visible;',
+    '}',
+
+    '.tour-arrow {',
+    '  position:absolute;',        /* absolute inside the fixed overlay */
     '  width:' + ARR + 'px; height:' + ARR + 'px;',
     '  object-fit:contain; object-position:center;',
     '  pointer-events:none;',
@@ -113,8 +122,7 @@
     '.tour-arrow.t-on { opacity:1; }',
 
     '.tour-note {',
-    '  position:fixed;',
-    '  z-index:40;',
+    '  position:absolute;',        /* absolute inside the fixed overlay */
     '  pointer-events:none;',
     '  white-space:nowrap;',
     '  opacity:0;',
@@ -140,6 +148,7 @@
     var bar = nav.querySelector('.settings-bar');
     if (!bar) return;
 
+    /* Tour button — unchanged position in nav */
     var btn = document.createElement('button');
     btn.id          = 'tourBtn';
     btn.title       = 'Site guide';
@@ -149,13 +158,21 @@
     bar.style.marginLeft = '0';
     nav.insertBefore(btn, bar);
 
+    /* Single overlay div appended to <html>, not <body>.
+       Any transform/filter on body won't create a new stacking/containing
+       block for this element, so position:fixed on the overlay is guaranteed
+       to be relative to the actual viewport. */
+    var overlay = document.createElement('div');
+    overlay.id = 'tourOverlay';
+    document.documentElement.appendChild(overlay);
+
     NOTES.forEach(function (note) {
       var arrowEl = document.createElement('img');
       arrowEl.className = 'tour-arrow';
       arrowEl.alt = '';
       arrowEl.setAttribute('aria-hidden', 'true');
       arrowEl.src = 'assets/images/arrow' + note.arrowImg + '.png';
-      document.body.appendChild(arrowEl);
+      overlay.appendChild(arrowEl);
 
       var textEl = document.createElement('div');
       textEl.className = 'tour-note';
@@ -164,7 +181,7 @@
       span.textContent = note.text;
       textEl.appendChild(span);
       textEl.style.transform = 'rotate(' + note.tilt + 'deg)';
-      document.body.appendChild(textEl);
+      overlay.appendChild(textEl);
 
       pairs.push({ arrow: arrowEl, text: textEl });
     });
@@ -173,14 +190,14 @@
       tourActive ? hideAll() : showAll();
     });
 
-    /* Scroll: only used to fade the button and dismiss the tour */
+    /* Scroll: only fade/dismiss — no repositioning */
     window.addEventListener('scroll', function () {
       var away = window.scrollY > 25;
       btn.classList.toggle('t-faded', away);
       if (away && tourActive) hideAll();
     }, { passive: true });
 
-    /* Resize: recompute positions so arrows stay correctly anchored */
+    /* Resize: recompute so arrows stay correctly anchored */
     window.addEventListener('resize', function () {
       if (tourActive) positionAll();
     }, { passive: true });
