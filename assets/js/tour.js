@@ -64,7 +64,7 @@
       arrowOffsetX:  -47.5,
       arrowOffsetY:  0,
       textOffsetY:   5.75,
-      textOffsetX:   -67.5,
+      textOffsetX:   -66,
       zIndex:        55,
     },
   ];
