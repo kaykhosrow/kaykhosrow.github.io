@@ -309,8 +309,8 @@
       html { min-width: 1200px; }
       body { min-width: 1200px; overflow-x: visible !important; }
 
-      /* ── Left-bar clearance: prevent the fixed sidebar from ever overlapping content ── */
-      main { margin-left: 80px; }
+      /* ── Left-bar clearance: shift only content sections, never the nav ── */
+      main > div > section { margin-left: 80px; }
 
       .container { min-width: 1140px !important; }
 
@@ -1120,12 +1120,8 @@
       function update() {
         if (window.scrollY < 1) {
           nav.classList.add('nav-pinned-bottom');
-          nav.style.left  = '';
-          nav.style.right = '';
         } else {
           nav.classList.remove('nav-pinned-bottom');
-          nav.style.left  = '0';
-          nav.style.right = '0';
         }
       }
 
