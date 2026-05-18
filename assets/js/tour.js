@@ -64,8 +64,8 @@
       baseAngle:     15,
       arrowOffsetX:  -50,
       arrowOffsetY:  5,
-      textOffsetY:   -5,
-      textOffsetX:   -70,
+      textOffsetY:   -10,
+      textOffsetX:   -72.5,
     },
   ];
 
