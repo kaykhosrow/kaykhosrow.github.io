@@ -280,8 +280,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top + sy - stackEl2.offsetHeight + 180;
-    var left = cr.right + sx + 47;
+    var top  = rr.top + sy - stackEl2.offsetHeight + 80;
+    var left = cr.right + sx + 97;
 
     stackEl2.style.top  = top  + 'px';
     stackEl2.style.left = left + 'px';
