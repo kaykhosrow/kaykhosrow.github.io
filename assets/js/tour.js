@@ -170,7 +170,7 @@
 
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.15em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages:</span>This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
+    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages:</span>This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
