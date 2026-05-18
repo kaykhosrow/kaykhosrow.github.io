@@ -36,7 +36,7 @@
       arrowOffsetX:  -245,
       arrowOffsetY:  20,
       textOffsetY:   -107.5,
-      textOffsetX:   -106.5,
+      textOffsetX:   -107.25,
     },
       {
       sel:           '.contact-btn',
@@ -64,7 +64,7 @@
       baseAngle:     12.5,
       arrowOffsetX:  -45,
       arrowOffsetY:  0,
-      textOffsetY:   5.75,
+      textOffsetY:   0,
       textOffsetX:   -70,
       zIndex:        55,
     },
