@@ -199,6 +199,8 @@
       if (!tourActive) return;
       if (e.target.closest('#tourBtn, .tour-stack, .tour-arrow, .tour-note')) return;
       if (e.target.closest('#heroNameWrap, #pronounceBtn, #pronText, #pronProgressBar')) return;
+      if (e.target.closest('.settings-bar')) return;
+      if (e.target.closest('.left-bar li')) return;
       hideAll();
     });
 
