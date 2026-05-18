@@ -194,6 +194,12 @@
       pairs.push({ arrow: arrowEl, text: textEl });
     });
 
+    document.addEventListener('click', function (e) {
+      if (!tourActive) return;
+      if (e.target.closest('#tourBtn, .tour-stack, .tour-arrow, .tour-note')) return;
+      hideAll();
+    });
+
     btn.addEventListener('click', function () {
       tourActive ? hideAll() : showAll();
     });
