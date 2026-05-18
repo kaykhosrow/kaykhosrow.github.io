@@ -180,9 +180,7 @@
       if (away && tourActive) hideAll();
     }, { passive: true });
 
-    window.addEventListener('resize', function () {
-      if (tourActive) positionAll();
-    }, { passive: true });
+    /* No resize listener needed — page has min-width:1200px so layout never reflows. */
   }
 
   /* ── Show / hide ─────────────────────────────────────────────────────────── */
@@ -271,8 +269,6 @@
       case 'right': ax = tailX + GAP       + ox + tox; ay = tailY - nH * 0.5 + oy + toy; break;
       default:      ax = tailX - nW * 0.5 + ox + tox; ay = tailY - nH - GAP  + oy + toy;
     }
-
-    ax = Math.max(12, Math.min(ax, window.innerWidth - nW - 12));
 
     textEl.style.left = ax + 'px';
     textEl.style.top  = ay + 'px';
