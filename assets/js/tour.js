@@ -11,7 +11,7 @@
   var NOTES = [
     {
       sel:           '#heroName',
-      text:          'Click here for pronounciation',
+      text:          'Click here for pronunciation',
       approachAngle: 180,
       tailDist:      115,
       textSide:      'above',
@@ -171,7 +171,7 @@
 
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site. The source code is available in my online GitHub repository.';
+    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and the interactions you see across this website. The source code is available in my GitHub repository.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
