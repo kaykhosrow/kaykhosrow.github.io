@@ -74,7 +74,7 @@
   var TIP_CLR = 8;
   var FADE_MS = 380;
 
-  var STACK_W        = 200;
+  var STACK_W        = 360;
   var STACK_LEFT_PAD = 150;
 
   var tourActive = false;
@@ -241,8 +241,8 @@
     var sy = window.scrollY;
     var sx = window.scrollX;
 
-    var top  = sy + 40;
-    var left = sx + window.innerWidth - STACK_W - 40;
+    var top  = sy + 70;
+    var left = sx + window.innerWidth - STACK_W - 70;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
