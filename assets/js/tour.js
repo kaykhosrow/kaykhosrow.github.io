@@ -166,7 +166,7 @@
 
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
+    stackEl.innerHTML = '<span style="display:block;font-size:1.6rem;margin-bottom:0.15em;opacity:0.6;letter-spacing:0.04em;">Core Languages</span>This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
@@ -248,7 +248,7 @@
     var sx  = window.scrollX;
 
     var top  = rr.top + sy - stackEl.offsetHeight + 170;
-    var left = cr.right + sx - 55;
+    var left = cr.right + sx - 60;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
