@@ -171,7 +171,7 @@
     stackEl = document.createElement('div');
     stackEl.id        = 'tourStack';
     stackEl.className = 'tour-stack';
-    stackEl.style.width = '460px';
+    stackEl.style.width = '230px';
     stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview:</span>Welcome to my site. Here you can explore my research, teaching, and presentations, as well as selected code.<br><br><span style="display:block;font-size:1.9rem;margin-top:0.45em;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages:</span>This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
     document.body.appendChild(stackEl);
 
@@ -253,7 +253,7 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top + sy - stackEl.offsetHeight + 0;
+    var top  = rr.top + sy - stackEl.offsetHeight + 100;
     var left = cr.right + sx + 90;
 
     stackEl.style.top  = top  + 'px';
