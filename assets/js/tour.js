@@ -93,10 +93,10 @@
     '  font-family:"InterRegular",sans-serif;font-weight:500;line-height:1;',
     '  cursor:pointer;display:flex;align-items:center;justify-content:center;',
     '  flex-shrink:0;margin-left:auto;margin-right:13px;padding:0;',
-    '  transition:background .2s,color .2s,border-color .2s,opacity .35s;',
+    '  transition:border-color .2s,opacity .35s;',
     '}',
     '#tourBtn:hover   { border-color:rgba(0,0,0,0.55); }',
-    '#tourBtn.t-on    { background:rgb(var(--black)); color:rgb(var(--primary)); border-color:rgb(var(--black)); }',
+    '#tourBtn.t-on    { border-color:rgba(0,0,0,0.75); }',
     '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
 
     '.tour-arrow {',
@@ -145,9 +145,7 @@
     btn.title       = 'Site guide';
     btn.setAttribute('aria-label', 'Toggle site guide');
     btn.className   = 'd-none d-xl-flex';
-    /* Wrap ? in a span to nudge the glyph down 0.5px without affecting
-       the button's flex centring */
-    btn.innerHTML   = '<span style="position:relative;top:0.5px;">?</span>';
+    btn.innerHTML   = '<span style="position:relative;top:1px;">?</span>';
     bar.style.marginLeft = '0';
     nav.insertBefore(btn, bar);
 
