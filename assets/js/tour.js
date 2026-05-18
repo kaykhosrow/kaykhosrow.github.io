@@ -149,6 +149,16 @@
   ].join('\n');
   document.head.appendChild(styleEl);
 
+  /* ── Zoom compensation ────────────────────────────────────────────────────
+     getBoundingClientRect() returns values in the visual/zoomed viewport
+     coordinate space, while window.scrollY and style.top/left use the
+     un-zoomed layout coordinate space. Dividing rect values by the html
+     zoom factor normalises them to the same space before combining.        */
+  function getZoom() {
+    var z = parseFloat(getComputedStyle(document.documentElement).zoom);
+    return isNaN(z) ? 1 : z;
+  }
+
   function init() {
     var nav = document.getElementById('navigation');
     if (!nav) return;
@@ -242,13 +252,14 @@
     var content = document.querySelector('.hero-content');
     if (!nameEl || !content) return;
 
+    var z   = getZoom();
     var nr  = nameEl.getBoundingClientRect();
     var cr  = content.getBoundingClientRect();
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = nr.top + sy;
-    var left = cr.right + sx + STACK_LEFT_PAD;
+    var top  = nr.top  / z + sy;
+    var left = cr.right / z + sx + STACK_LEFT_PAD;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
@@ -258,24 +269,25 @@
     var target = document.querySelector(note.sel);
     if (!target) return;
 
+    var z   = getZoom();
     var pr  = target.getBoundingClientRect();
     var sx  = window.scrollX;
     var sy  = window.scrollY;
 
-    var tCX = pr.left + pr.width  * 0.5 + sx;
-    var tCY = pr.top  + pr.height * 0.5 + sy;
+    var tCX = pr.left / z + pr.width  / z * 0.5 + sx;
+    var tCY = pr.top  / z + pr.height / z * 0.5 + sy;
 
     var rad = note.approachAngle * Math.PI / 180;
     var ux  = Math.cos(rad);
     var uy  = Math.sin(rad);
 
     var shiftedPr = {
-      left:   pr.left   + sx,
-      top:    pr.top    + sy,
-      right:  pr.right  + sx,
-      bottom: pr.bottom + sy,
-      width:  pr.width,
-      height: pr.height
+      left:   pr.left   / z + sx,
+      top:    pr.top    / z + sy,
+      right:  pr.right  / z + sx,
+      bottom: pr.bottom / z + sy,
+      width:  pr.width  / z,
+      height: pr.height / z
     };
 
     var tipPt = rectEdge(shiftedPr, tCX - ux * 2000, tCY - uy * 2000);
