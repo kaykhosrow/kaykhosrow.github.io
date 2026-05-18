@@ -65,7 +65,7 @@
       arrowOffsetX:  -50,
       arrowOffsetY:  5,
       textOffsetY:   -5,
-      textOffsetX:   -75,
+      textOffsetX:   -70,
     },
   ];
 
