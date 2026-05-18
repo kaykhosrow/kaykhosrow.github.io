@@ -180,9 +180,7 @@
       if (away && tourActive) hideAll();
     }, { passive: true });
 
-    window.addEventListener('resize', function () {
-      if (tourActive) positionAll();
-    }, { passive: true });
+    /* No resize listener needed — page has min-width:1200px so layout never reflows. */
   }
 
   /* ── Show / hide ─────────────────────────────────────────────────────────── */
