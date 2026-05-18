@@ -152,14 +152,17 @@
 
     /* GitHub icon link inside the stack note */
     '#tourStack a {',
+    '  position:absolute;',
+    '  right:0;',
+    '  bottom:0;',
     '  pointer-events:auto;',
     '  color:inherit;',
     '  text-decoration:none;',
-    '  display:inline-block;',
-    '  vertical-align:middle;',
-    '  margin-left:6px;',
-    '  position:relative;',
-    '  top:-1px;',
+    
+    
+    
+    
+    
     '  opacity:0.75;',
     '  transition:opacity 0.2s;',
     '}',
