@@ -166,7 +166,7 @@
 
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page. The source code can be found in my online GitHub repository.';
+    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
