@@ -63,7 +63,7 @@
       arrowImg:      1,
       baseAngle:     15,
       arrowOffsetX:  -47.5,
-      arrowOffsetY:  -2.5,
+      arrowOffsetY:  0,
       textOffsetY:   5,
       textOffsetX:   -75,
     },
