@@ -308,7 +308,9 @@
       }
 
       html { min-width: 1200px; }
-      body { min-width: 1200px; overflow-x: visible !important; }
+      body { min-width: 1200px; overflow-x: visible !important; padding-bottom: 0 !important; }
+      main { padding-bottom: 0 !important; }
+      footer { margin-bottom: 0 !important; padding-bottom: 0 !important; }
 
       /* ── Left-bar clearance: at least 80px from left, but still auto-centred on wide screens ── */
       #home, #about, #research, #teaching, #conferences, #code, #gallery, #contact {
@@ -1136,11 +1138,16 @@
       if (!nav) return;
 
       function update() {
-        if (window.scrollY < 1) {
+        var shouldPin = window.scrollY < 1;
+        var isPin     = nav.classList.contains('nav-pinned-bottom');
+        if (shouldPin === isPin) return;
+        nav.style.transition = 'none';
+        if (shouldPin) {
           nav.classList.add('nav-pinned-bottom');
         } else {
           nav.classList.remove('nav-pinned-bottom');
         }
+        requestAnimationFrame(function () { nav.style.transition = ''; });
       }
 
       update();
