@@ -63,7 +63,7 @@
       baseAngle:     12.5,
       arrowOffsetX:  -47.5,
       arrowOffsetY:  0,
-      textOffsetY:   8.925,
+      textOffsetY:   8.75,
       textOffsetX:   -72.5,
       zIndex:        55,
     },
