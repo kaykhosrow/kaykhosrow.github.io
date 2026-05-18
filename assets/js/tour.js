@@ -23,7 +23,7 @@
       textOffsetY:   -58.5,
       textOffsetX:   -5,
     },
-     {
+    {
       sel:           '.work-btn',
       text:          'Click here to learn more',
       approachAngle: 150,
@@ -38,7 +38,7 @@
       textOffsetY:   -106.75,
       textOffsetX:   -106.75,
     },
-      {
+    {
       sel:           '.contact-btn',
       text:          'Click here to connect',
       approachAngle: 0,
@@ -78,6 +78,7 @@
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
+  var isFading   = false;   /* true during the CSS fade-out transition */
   var pairs      = [];
 
   /* ── CSS ────────────────────────────────────────────────────────────────── */
@@ -174,6 +175,11 @@
     });
 
     window.addEventListener('scroll', function () {
+      /* Keep arrows pinned to their targets while visible or fading out.
+         positionAll() re-reads getBoundingClientRect() every scroll event,
+         so fixed elements track the moving targets rather than drifting. */
+      if (tourActive || isFading) positionAll();
+
       var away = window.scrollY > 25;
       btn.classList.toggle('t-faded', away);
       if (away && tourActive) hideAll();
@@ -187,6 +193,7 @@
   /* ── Show / hide ─────────────────────────────────────────────────────────── */
   function showAll() {
     tourActive = true;
+    isFading   = false;
     document.getElementById('tourBtn').classList.add('t-on');
     positionAll();
     requestAnimationFrame(function () {
@@ -201,11 +208,14 @@
 
   function hideAll() {
     tourActive = false;
+    isFading   = true;
     document.getElementById('tourBtn').classList.remove('t-on');
     pairs.forEach(function (p) {
       p.arrow.classList.remove('t-on');
       p.text.classList.remove('t-on');
     });
+    /* Clear fading flag once the CSS transition has finished */
+    setTimeout(function () { isFading = false; }, FADE_MS);
   }
 
   /* ── Position all pairs ─────────────────────────────────────────────────── */
