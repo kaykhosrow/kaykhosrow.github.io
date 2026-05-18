@@ -178,7 +178,7 @@
     stackEl2 = document.createElement('div');
     stackEl2.id        = 'tourStack2';
     stackEl2.className = 'tour-stack';
-    stackEl2.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview:</span>Welcome to my personal site. Here you can explore my research, teaching, and conference activity, as well as selected code, cinematography, and ways to get in touch.';
+    stackEl2.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview:</span>Welcome to my personal site. Here you can explore my research, teaching, and conference activity, as well as selected code.';
     document.body.appendChild(stackEl2);
 
     NOTES.forEach(function (note) {
@@ -280,8 +280,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top + sy - stackEl2.offsetHeight + -70;
-    var left = cr.right + sx + 197;
+    var top  = rr.top + sy - stackEl2.offsetHeight + -20;
+    var left = cr.right + sx + 97;
 
     stackEl2.style.top  = top  + 'px';
     stackEl2.style.left = left + 'px';
