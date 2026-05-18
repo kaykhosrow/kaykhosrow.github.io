@@ -7,7 +7,6 @@
 (function () {
   'use strict';
 
-  /* ── Annotation definitions ─────────────────────────────────────────────── */
   var NOTES = [
     {
       sel:           '#heroName',
@@ -70,7 +69,6 @@
     },
   ];
 
-  /* ── Constants ─────────────────────────────────────────────────────────── */
   var ARR     = 115;
   var GAP     = 12;
   var TIP_CLR = 8;
@@ -79,12 +77,10 @@
   var STACK_W        = 500;
   var STACK_LEFT_PAD = 150;
 
-  /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
   var pairs      = [];
   var stackEl    = null;
 
-  /* ── CSS ────────────────────────────────────────────────────────────────── */
   var styleEl = document.createElement('style');
   styleEl.textContent = [
 
@@ -113,7 +109,7 @@
     '  transition:opacity ' + FADE_MS + 'ms ease;',
     '  filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));',
     '}',
-    '.tour-arrow.t-on { opacity:1; }',
+    '.tour-arrow.t-on { opacity:0.75; }',
 
     '.tour-note {',
     '  position:absolute;',
@@ -122,7 +118,7 @@
     '  opacity:0;',
     '  transition:opacity ' + FADE_MS + 'ms ease;',
     '}',
-    '.tour-note.t-on { opacity:1; }',
+    '.tour-note.t-on { opacity:0.75; }',
 
     '.tn-text {',
     '  font-family:"Scribble","InterRegular",cursive;',
@@ -149,25 +145,10 @@
     '}',
     '#tourStack.t-on { opacity:1; }',
 
-    '#tourStack a {',
-    '  pointer-events:auto;',
-    '  color:inherit;',
-    '  text-decoration:none;',
-    '  display:inline-block;',
-    '  vertical-align:middle;',
-    '  margin-left:6px;',
-    '  position:relative;',
-    '  top:-1px;',
-    '  opacity:0.75;',
-    '  transition:opacity 0.2s;',
-    '}',
-    '#tourStack a:hover { opacity:1; }',
-    '#tourStack a svg { display:block; }',
 
   ].join('\n');
   document.head.appendChild(styleEl);
 
-  /* ── Build DOM ──────────────────────────────────────────────────────────── */
   function init() {
     var nav = document.getElementById('navigation');
     if (!nav) return;
@@ -185,13 +166,7 @@
 
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.innerHTML =
-      'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page. The source code can be found in my online GitHub repository:' +
-      '<a href="https://github.com/kaykhosrow" target="_blank" aria-label="GitHub repository">' +
-        '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-          '<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>' +
-        '</svg>' +
-      '</a>';
+    stackEl.textContent = 'This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page. The source code is available online in my GitHub repository.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
@@ -229,7 +204,6 @@
     }, { passive: true });
   }
 
-  /* ── Show / hide ─────────────────────────────────────────────────────────── */
   function showAll() {
     tourActive = true;
     document.getElementById('tourBtn').classList.add('t-on');
@@ -255,7 +229,6 @@
     if (stackEl) stackEl.classList.remove('t-on');
   }
 
-  /* ── Position all pairs + stack note ───────────────────────────────────── */
   function positionAll() {
     NOTES.forEach(function (note, i) {
       positionPair(pairs[i].arrow, pairs[i].text, note);
@@ -263,7 +236,6 @@
     positionStack();
   }
 
-  /* ── Align stack note top with heroName, shifted right of hero content ─── */
   function positionStack() {
     if (!stackEl) return;
     var nameEl  = document.getElementById('heroName');
@@ -348,7 +320,6 @@
     textEl.style.top  = ay + 'px';
   }
 
-  /* ── Nearest point on a rect's edge facing (fx, fy) ─────────────────────── */
   function rectEdge(rect, fx, fy) {
     var cx = rect.left + rect.width  * 0.5;
     var cy = rect.top  + rect.height * 0.5;
@@ -360,7 +331,6 @@
     return { x: cx + dx * s, y: cy + dy * s };
   }
 
-  /* ── Boot ───────────────────────────────────────────────────────────────── */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
