@@ -286,6 +286,8 @@
     stackEl2.style.top  = top  + 'px';
     stackEl2.style.left = left + 'px';
   }
+
+  function positionPair(arrowEl, textEl, note) {
     var target = document.querySelector(note.sel);
     if (!target) return;
 
