@@ -133,7 +133,7 @@
     '  width:' + STACK_W + 'px;',
     '  font-family:"Scribble",cursive;',
     '  font-size:1.5rem;',
-    '  line-height:1.875;',
+    '  line-height:1.5;',
     '  color:rgba(0,0,0,0.88);',
     '  text-align:justify;',
     '  text-align-last:left;',
@@ -142,6 +142,10 @@
     '  user-select:none;',
     '  opacity:0;',
     '  transition:opacity ' + FADE_MS + 'ms ease;',
+    '  background:rgba(200,200,200,0.5);',
+    '  border-radius:14px;',
+    '  padding:20px 24px;',
+    '  box-sizing:border-box;',
     '}',
     '#tourStack.t-on { opacity:1; }',
 
@@ -166,7 +170,7 @@
 
     stackEl = document.createElement('div');
     stackEl.id = 'tourStack';
-    stackEl.innerHTML = '<span style="display:block;font-size:1.6rem;margin-bottom:0.15em;opacity:0.6;letter-spacing:0.04em;">Core languages:</span>This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
+    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.15em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages:</span>This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
     document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
