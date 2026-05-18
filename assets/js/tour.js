@@ -76,8 +76,9 @@
   var TIP_CLR = 8;
   var FADE_MS = 380;
 
-  /* ── Stack note width — fits neatly in the right half of the hero ───────── */
-  var STACK_W = 420;
+  /* Stack note: wide enough to wrap in ~3 lines; tune STACK_W if needed */
+  var STACK_W      = 500;
+  var STACK_LEFT_PAD = 50; /* extra gap from hero-content's right edge */
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
@@ -242,29 +243,26 @@
     positionStack();
   }
 
-  /* ── Centre the stack note in the gap between hero content and page edge ── */
+  /* ── Align stack note top with heroName, shifted right of hero content ─── */
   function positionStack() {
     if (!stackEl) return;
+    var nameEl  = document.getElementById('heroName');
     var content = document.querySelector('.hero-content');
-    var hero    = document.getElementById('home');
-    if (!content || !hero) return;
+    if (!nameEl || !content) return;
 
+    var nr  = nameEl.getBoundingClientRect();
     var cr  = content.getBoundingClientRect();
-    var hr  = hero.getBoundingClientRect();
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    /* Horizontal: centre STACK_W in the gap between content's right edge
-       and the hero section's right edge */
-    var gapLeft  = cr.right  + sx;
-    var gapRight = hr.right  + sx;
-    var left     = gapLeft + (gapRight - gapLeft) * 0.5 - STACK_W * 0.5;
+    /* Top: flush with the top of the hero name */
+    var top  = nr.top + sy;
 
-    /* Vertical: centre with the hero content block */
-    var top = cr.top + sy + (cr.height * 0.5) - (stackEl.offsetHeight * 0.5);
+    /* Left: hero-content's right edge + padding to push it away from the text */
+    var left = cr.right + sx + STACK_LEFT_PAD;
 
-    stackEl.style.left = left + 'px';
     stackEl.style.top  = top  + 'px';
+    stackEl.style.left = left + 'px';
   }
 
   function positionPair(arrowEl, textEl, note) {
