@@ -79,6 +79,7 @@
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
   var pairs      = [];
+  var stackEl    = null;
 
   /* ── CSS ────────────────────────────────────────────────────────────────── */
   var styleEl = document.createElement('style');
@@ -128,6 +129,25 @@
     '  white-space:nowrap; display:block;',
     '}',
 
+    /* Stack note */
+    '#tourStack {',
+    '  position:absolute;',
+    '  font-family:"Scribble",cursive;',
+    '  font-size:1.35rem;',
+    '  line-height:2.1;',
+    '  color:rgba(0,0,0,0.65);',
+    '  text-align:right;',
+    '  display:flex;',
+    '  flex-direction:column;',
+    '  align-items:flex-end;',
+    '  text-shadow:0.1px 0.1px 2px rgba(0,0,0,0.18);',
+    '  pointer-events:none;',
+    '  user-select:none;',
+    '  opacity:0;',
+    '  transition:opacity ' + FADE_MS + 'ms ease;',
+    '}',
+    '#tourStack.t-on { opacity:1; }',
+
   ].join('\n');
   document.head.appendChild(styleEl);
 
@@ -140,18 +160,18 @@
 
     var btn = document.createElement('button');
     btn.id          = 'tourBtn';
-    btn.title       = 'Hold for site guide';
-    btn.setAttribute('aria-label', 'Hold for site guide');
+    btn.title       = 'Site guide';
+    btn.setAttribute('aria-label', 'Toggle site guide');
     btn.className   = 'd-none d-xl-flex';
     btn.innerHTML   = '<span style="position:relative;top:1px;">?</span>';
     bar.style.marginLeft = '0';
     nav.insertBefore(btn, bar);
 
-    btn.addEventListener('mousedown',  function (e) { e.preventDefault(); showAll(); });
-    btn.addEventListener('mouseleave', function ()  { if (tourActive) hideAll(); });
-    btn.addEventListener('mouseup',    function ()  { if (tourActive) hideAll(); });
-    btn.addEventListener('touchstart', function (e) { e.preventDefault(); showAll(); }, { passive: false });
-    btn.addEventListener('touchend',   function ()  { if (tourActive) hideAll(); });
+    /* Stack note element */
+    stackEl = document.createElement('div');
+    stackEl.id = 'tourStack';
+    stackEl.innerHTML = '<span>HTML</span><span>CSS</span><span>JavaScript</span>';
+    document.body.appendChild(stackEl);
 
     NOTES.forEach(function (note) {
       var arrowEl = document.createElement('img');
@@ -171,6 +191,10 @@
       document.body.appendChild(textEl);
 
       pairs.push({ arrow: arrowEl, text: textEl });
+    });
+
+    btn.addEventListener('click', function () {
+      tourActive ? hideAll() : showAll();
     });
 
     window.addEventListener('scroll', function () {
@@ -195,6 +219,7 @@
           p.arrow.classList.add('t-on');
           p.text.classList.add('t-on');
         });
+        if (stackEl) stackEl.classList.add('t-on');
       });
     });
   }
@@ -206,13 +231,35 @@
       p.arrow.classList.remove('t-on');
       p.text.classList.remove('t-on');
     });
+    if (stackEl) stackEl.classList.remove('t-on');
   }
 
-  /* ── Position all pairs ─────────────────────────────────────────────────── */
+  /* ── Position all pairs + stack note ───────────────────────────────────── */
   function positionAll() {
     NOTES.forEach(function (note, i) {
       positionPair(pairs[i].arrow, pairs[i].text, note);
     });
+    positionStack();
+  }
+
+  /* ── Position stack note in right half of hero ──────────────────────────── */
+  function positionStack() {
+    if (!stackEl) return;
+    var hero = document.getElementById('home');
+    var content = document.querySelector('.hero-content');
+    if (!hero || !content) return;
+
+    var hr  = hero.getBoundingClientRect();
+    var cr  = content.getBoundingClientRect();
+    var sy  = window.scrollY;
+    var sx  = window.scrollX;
+
+    /* Vertically centre with the hero content; sit in the right half */
+    var top  = cr.top  + sy + (cr.height * 0.5) - 50;
+    var right = (document.documentElement.offsetWidth - (hr.right + sx)) + 40;
+
+    stackEl.style.top   = top + 'px';
+    stackEl.style.right = right + 'px';
   }
 
   function positionPair(arrowEl, textEl, note) {
