@@ -99,18 +99,9 @@
     '#tourBtn.t-on    { border-color:rgba(0,0,0,0.75); }',
     '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
 
-    /* ── Tour overlay: fixed to viewport, lives on <html> so no body
-          transform can affect it. Children use position:absolute within it. ── */
-    '#tourOverlay {',
-    '  position:fixed;',
-    '  inset:0;',
-    '  pointer-events:none;',
-    '  z-index:40;',
-    '  overflow:visible;',
-    '}',
-
+    /* Absolute so they sit at fixed page coordinates and scroll with content */
     '.tour-arrow {',
-    '  position:absolute;',        /* absolute inside the fixed overlay */
+    '  position:absolute;',
     '  width:' + ARR + 'px; height:' + ARR + 'px;',
     '  object-fit:contain; object-position:center;',
     '  pointer-events:none;',
@@ -122,7 +113,7 @@
     '.tour-arrow.t-on { opacity:1; }',
 
     '.tour-note {',
-    '  position:absolute;',        /* absolute inside the fixed overlay */
+    '  position:absolute;',
     '  pointer-events:none;',
     '  white-space:nowrap;',
     '  opacity:0;',
@@ -148,7 +139,6 @@
     var bar = nav.querySelector('.settings-bar');
     if (!bar) return;
 
-    /* Tour button — unchanged position in nav */
     var btn = document.createElement('button');
     btn.id          = 'tourBtn';
     btn.title       = 'Site guide';
@@ -158,21 +148,13 @@
     bar.style.marginLeft = '0';
     nav.insertBefore(btn, bar);
 
-    /* Single overlay div appended to <html>, not <body>.
-       Any transform/filter on body won't create a new stacking/containing
-       block for this element, so position:fixed on the overlay is guaranteed
-       to be relative to the actual viewport. */
-    var overlay = document.createElement('div');
-    overlay.id = 'tourOverlay';
-    document.documentElement.appendChild(overlay);
-
     NOTES.forEach(function (note) {
       var arrowEl = document.createElement('img');
       arrowEl.className = 'tour-arrow';
       arrowEl.alt = '';
       arrowEl.setAttribute('aria-hidden', 'true');
       arrowEl.src = 'assets/images/arrow' + note.arrowImg + '.png';
-      overlay.appendChild(arrowEl);
+      document.body.appendChild(arrowEl);
 
       var textEl = document.createElement('div');
       textEl.className = 'tour-note';
@@ -181,7 +163,7 @@
       span.textContent = note.text;
       textEl.appendChild(span);
       textEl.style.transform = 'rotate(' + note.tilt + 'deg)';
-      overlay.appendChild(textEl);
+      document.body.appendChild(textEl);
 
       pairs.push({ arrow: arrowEl, text: textEl });
     });
@@ -190,14 +172,12 @@
       tourActive ? hideAll() : showAll();
     });
 
-    /* Scroll: only fade/dismiss — no repositioning */
     window.addEventListener('scroll', function () {
       var away = window.scrollY > 25;
       btn.classList.toggle('t-faded', away);
       if (away && tourActive) hideAll();
     }, { passive: true });
 
-    /* Resize: recompute so arrows stay correctly anchored */
     window.addEventListener('resize', function () {
       if (tourActive) positionAll();
     }, { passive: true });
@@ -238,16 +218,30 @@
     var target = document.querySelector(note.sel);
     if (!target) return;
 
-    var pr = target.getBoundingClientRect();
+    /* getBoundingClientRect gives viewport coords; add scroll offset to
+       convert to page (document) coords for position:absolute elements */
+    var pr  = target.getBoundingClientRect();
+    var sx  = window.scrollX;
+    var sy  = window.scrollY;
 
-    var tCX = pr.left + pr.width  * 0.5;
-    var tCY = pr.top  + pr.height * 0.5;
+    var tCX = pr.left + pr.width  * 0.5 + sx;
+    var tCY = pr.top  + pr.height * 0.5 + sy;
 
     var rad = note.approachAngle * Math.PI / 180;
     var ux  = Math.cos(rad);
     var uy  = Math.sin(rad);
 
-    var tipPt = rectEdge(pr, tCX - ux * 2000, tCY - uy * 2000);
+    /* rectEdge works in the same coordinate space — shift rect too */
+    var shiftedPr = {
+      left:   pr.left   + sx,
+      top:    pr.top    + sy,
+      right:  pr.right  + sx,
+      bottom: pr.bottom + sy,
+      width:  pr.width,
+      height: pr.height
+    };
+
+    var tipPt = rectEdge(shiftedPr, tCX - ux * 2000, tCY - uy * 2000);
     var tipX  = tipPt.x - ux * TIP_CLR;
     var tipY  = tipPt.y - uy * TIP_CLR;
 
