@@ -86,13 +86,14 @@
 
     '@font-face{font-family:"Scribble";src:url("assets/fonts/Scribble.otf") format("opentype");}',
 
+    /* ── Tour button — lives in .left-bar, sized to match social icon links ── */
     '#tourBtn{',
-    '  width:32px;height:32px;border-radius:4px;',
-    '  border:2px solid rgba(0,0,0,0.3);background:transparent;',
-    '  color:rgb(var(--black));font-size:1.05rem;',
-    '  font-family:"InterRegular",sans-serif;font-weight:500;line-height:1;',
-    '  cursor:pointer;display:flex;align-items:center;justify-content:center;',
-    '  flex-shrink:0;margin-left:auto;margin-right:13px;padding:0;',
+    '  width:44px; height:44px; border-radius:4px;',
+    '  border:2px solid rgba(0,0,0,0.35); background:transparent;',
+    '  color:rgb(var(--black)); font-size:1.1rem;',
+    '  font-family:"InterRegular",sans-serif; font-weight:500; line-height:1;',
+    '  cursor:pointer; display:flex; align-items:center; justify-content:center;',
+    '  flex-shrink:0; padding:0; margin:0 auto;',
     '  transition:background .2s,color .2s,border-color .2s,opacity .35s;',
     '}',
     '#tourBtn:hover   { border-color:rgba(0,0,0,0.55); }',
@@ -136,19 +137,18 @@
 
   /* ── Build DOM ──────────────────────────────────────────────────────────── */
   function init() {
-    var nav = document.getElementById('navigation');
-    if (!nav) return;
-    var bar = nav.querySelector('.settings-bar');
-    if (!bar) return;
+    /* Target the left-bar instead of the nav settings-bar */
+    var leftBar = document.querySelector('.left-bar');
+    if (!leftBar) return;
 
     var btn = document.createElement('button');
-    btn.id          = 'tourBtn';
-    btn.title       = 'Site guide';
+    btn.id        = 'tourBtn';
+    btn.title     = 'Site guide';
     btn.setAttribute('aria-label', 'Toggle site guide');
-    btn.className   = 'd-none d-xl-flex';
     btn.textContent = '?';
-    bar.style.marginLeft = '0';
-    nav.insertBefore(btn, bar);
+
+    /* Insert at the very top of .left-bar, before the social icons <ul> */
+    leftBar.insertBefore(btn, leftBar.firstChild);
 
     NOTES.forEach(function (note) {
       var arrowEl = document.createElement('img');
