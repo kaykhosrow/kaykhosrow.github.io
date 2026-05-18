@@ -80,7 +80,6 @@
   var tourActive = false;
   var pairs      = [];
   var stackEl    = null;
-  var stackEl2   = null;
 
   var styleEl = document.createElement('style');
   styleEl.textContent = [
@@ -172,15 +171,9 @@
     stackEl = document.createElement('div');
     stackEl.id        = 'tourStack';
     stackEl.className = 'tour-stack';
-    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages:</span>This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
+    stackEl.style.width = '460px';
+    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview:</span>Welcome to my site. Here you can explore my research, teaching, and presentations, as well as selected code.<br><br><span style="display:block;font-size:1.9rem;margin-top:0.45em;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages:</span>This site was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across this page.';
     document.body.appendChild(stackEl);
-
-    stackEl2 = document.createElement('div');
-    stackEl2.id        = 'tourStack2';
-    stackEl2.className = 'tour-stack';
-    stackEl2.style.width = '460px';
-    stackEl2.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview:</span>Welcome to my site. Here you can explore my research, teaching, and presentations, as well as selected code.';
-    document.body.appendChild(stackEl2);
 
     NOTES.forEach(function (note) {
       var arrowEl = document.createElement('img');
@@ -228,7 +221,6 @@
           p.text.classList.add('t-on');
         });
         if (stackEl)  stackEl.classList.add('t-on');
-        if (stackEl2) stackEl2.classList.add('t-on');
       });
     });
   }
@@ -241,7 +233,6 @@
       p.text.classList.remove('t-on');
     });
     if (stackEl)  stackEl.classList.remove('t-on');
-    if (stackEl2) stackEl2.classList.remove('t-on');
   }
 
   function positionAll() {
@@ -249,7 +240,6 @@
       positionPair(pairs[i].arrow, pairs[i].text, note);
     });
     positionStack();
-    positionStack2();
   }
 
   function positionStack() {
@@ -263,29 +253,11 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top + sy - stackEl.offsetHeight + 182.5;
-    var left = cr.right + sx - 90;
+    var top  = rr.top + sy - stackEl.offsetHeight + -50;
+    var left = cr.right + sx + 90;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
-  }
-
-  function positionStack2() {
-    if (!stackEl2) return;
-    var content = document.querySelector('.hero-content');
-    var btnRow  = document.querySelector('.hero-content .d-flex');
-    if (!content || !btnRow) return;
-
-    var rr  = btnRow.getBoundingClientRect();
-    var cr  = content.getBoundingClientRect();
-    var sy  = window.scrollY;
-    var sx  = window.scrollX;
-
-    var top  = rr.top + sy - stackEl2.offsetHeight + -50;
-    var left = cr.right + sx + 90;
-
-    stackEl2.style.top  = top  + 'px';
-    stackEl2.style.left = left + 'px';
   }
 
   function positionPair(arrowEl, textEl, note) {
