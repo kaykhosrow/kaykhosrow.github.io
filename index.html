@@ -468,10 +468,10 @@
 
       *:focus { outline: none; }
 
-      #pronText { text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); }
-      #pronounceBtn img { filter: drop-shadow(0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5)); }
+      #pronText { text-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5); }
+      #pronounceBtn img { filter: drop-shadow(0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5)); }
       #pronProgressBar {
-        box-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5);
+        box-shadow: 0.1px 0.1px 0.5px rgba(0, 0, 0, 0.5);
         flex: 1;
         height: 1.5px;
         background: rgba(0, 0, 0, 0.25);
@@ -1314,7 +1314,7 @@
       function syncPronWidth() {
         var inner = document.getElementById('heroNameInner');
         if (inner && heroPronEl) {
-          heroPronEl.style.width = (inner.offsetWidth - 7.5) + 'px';
+          heroPronEl.style.width = (inner.offsetWidth - 10) + 'px';
         }
       }
       syncPronWidth();
