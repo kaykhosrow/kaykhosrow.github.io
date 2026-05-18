@@ -311,6 +311,8 @@
 
       /* ── Left-bar clearance: prevent the fixed sidebar from ever overlapping content ── */
       main { margin-left: 80px; }
+      /* ── Keep the nav pinned edge-to-edge regardless of main's margin ── */
+      #navigation { left: 0 !important; right: 0 !important; }
 
       .container { min-width: 1140px !important; }
 
