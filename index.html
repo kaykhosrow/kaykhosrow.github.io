@@ -217,7 +217,7 @@
       #research .service-card { position: relative; }
       #research .blog-card { max-width: 87.5%; }
       #research .service-swiper { max-width: 87.5%; margin-left: 0; margin-right: auto; }
-      #research .service-swiper .swiper-slide { min-height: 380px; }
+      #research .service-swiper .swiper-slide { min-height: 320px; }
       #research { scroll-margin-top: 100px; }
       #teaching { scroll-margin-top: 50px; }
 
@@ -1095,6 +1095,11 @@
           researchSwiper.swiper.autoplay.stop();
         }
       });
+
+      window.addEventListener('resize', function () {
+        var swiperEl = document.querySelector('#research .service-swiper');
+        if (swiperEl && swiperEl.swiper) swiperEl.swiper.update();
+      }, { passive: true });
     </script>
 
     <script>
