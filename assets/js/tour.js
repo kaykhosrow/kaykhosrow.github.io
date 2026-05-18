@@ -66,6 +66,7 @@
       arrowOffsetY:  0,
       textOffsetY:   5.75,
       textOffsetX:   -70,
+      zIndex:        55,   /* above nav (z-index:49) */
     },
   ];
 
@@ -101,7 +102,7 @@
     /* fixed: stays put in the viewport; slides under nav naturally via z-index */
     '.tour-arrow {',
     '  position:fixed;',
-    '  z-index:50;',
+    '  z-index:40;',
     '  width:' + ARR + 'px; height:' + ARR + 'px;',
     '  object-fit:contain; object-position:center;',
     '  pointer-events:none;',
@@ -114,7 +115,7 @@
 
     '.tour-note {',
     '  position:fixed;',
-    '  z-index:50;',
+    '  z-index:40;',
     '  pointer-events:none;',
     '  white-space:nowrap;',
     '  opacity:0;',
@@ -244,6 +245,12 @@
 
     arrowEl.style.left = (arrCX - ARR * 0.5 + (note.arrowOffsetX || 0)) + 'px';
     arrowEl.style.top  = (arrCY - ARR * 0.5 + (note.arrowOffsetY || 0)) + 'px';
+
+    /* ── per-note z-index override ── */
+    if (note.zIndex) {
+      arrowEl.style.zIndex = note.zIndex;
+      textEl.style.zIndex  = note.zIndex;
+    }
 
     /* ── flipX / flipY support ── */
     var flip = (note.flipX ? 'scaleX(-1) ' : '') + (note.flipY ? 'scaleY(-1) ' : '');
