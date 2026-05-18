@@ -262,6 +262,8 @@
 
       .about-img-wrap { position: relative; display: inline-block; min-height: 0; }
       .about-img-wrap::after { display: none; }
+      .about-img-wrap:hover::after { display: none; }
+      .about-img-wrap:hover .about-img { transform: none; }
       .about-img-wrap::after { content: ''; position: absolute; bottom: -52px; left: 50%; transform: translateX(-50%); width: 78%; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at center top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%); filter: blur(12px); transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease; opacity: 0; pointer-events: none; z-index: 2; }
       .about-img-wrap:hover::after { opacity: 1; bottom: -46px; width: 88%; }
       .about-img-wrap .about-img { transition: transform 0.4s ease; display: block; }
@@ -651,7 +653,7 @@
             </div>
 
             <div class="col-12 col-lg-5 mt-5 mt-lg-0 d-flex justify-content-center justify-content-lg-start">
-              <div class="about-img-wrap" style="margin-top:-40px; margin-left:0;">
+              <div class="about-img-wrap" style="margin-top:-50px; margin-left:25px;">
                 <img
                   src="images/hero.png"
                   alt="Omar Kaykhusraw"
