@@ -133,7 +133,7 @@
     '  width:' + STACK_W + 'px;',
     '  font-family:"Scribble",cursive;',
     '  font-size:1.5rem;',
-    '  line-height:1.5;',
+    '  line-height:1.25;',
     '  color:rgba(0,0,0,0.88);',
     '  text-align:justify;',
     '  text-align-last:left;',
@@ -251,8 +251,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top + sy - stackEl.offsetHeight + 170;
-    var left = cr.right + sx - 65;
+    var top  = rr.top + sy - stackEl.offsetHeight + 195;
+    var left = cr.right + sx - 90;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
