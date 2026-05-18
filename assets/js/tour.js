@@ -78,7 +78,7 @@
 
   /* Stack note: wide enough to wrap in ~3 lines; tune STACK_W if needed */
   var STACK_W      = 500;
-  var STACK_LEFT_PAD = 100; /* extra gap from hero-content's right edge */
+  var STACK_LEFT_PAD = 200; /* extra gap from hero-content's right edge */
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var tourActive = false;
