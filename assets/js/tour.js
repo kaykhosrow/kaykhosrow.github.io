@@ -77,7 +77,8 @@
   var STACK_W        = 548;
   var STACK_LEFT_PAD = 150;
 
-  var tourActive = false;
+  var tourActive  = false;
+  var pendingShow = false;
   var pairs      = [];
   var stackEl    = null;
 
@@ -201,13 +202,18 @@
     });
 
     window.addEventListener('scroll', function () {
-      if (window.scrollY > 25 && tourActive) hideAll();
+      if (pendingShow && window.scrollY < 1) {
+        pendingShow = false;
+        showAll();
+        return;
+      }
+      if (!pendingShow && window.scrollY > 25 && tourActive) hideAll();
     }, { passive: true });
 
     btn.addEventListener('click', function () {
       if (window.scrollY > 25) {
+        pendingShow = true;
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        if (!tourActive) showAll();
       } else {
         tourActive ? hideAll() : showAll();
       }
