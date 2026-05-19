@@ -214,9 +214,9 @@
       #research .service-swiper .swiper-slide { height: auto; display: flex; transform: none !important; opacity: 1 !important; animation: none !important; visibility: visible !important; }
       #research .service-swiper .swiper-slide .service-card { height: 100%; width: 100%; transform: none !important; animation: none !important; opacity: 1 !important; }
       #research .service-list li { display: block !important; }
-      #research .service-card { position: relative; box-shadow: 0.1px 0.1px 2.25px rgba(0,0,0,0.25); }
+      #research .service-card { position: relative; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.25); }
       #research .service-card:hover::before,
-      #research .service-card:hover::after { box-shadow: 0.1px 0.1px 2.25px rgba(0,0,0,0.25); }
+      #research .service-card:hover::after { box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.25); }
       #research .blog-card { max-width: 87.5%; }
       #research .service-swiper { max-width: 87.5%; margin-left: 0; margin-right: auto; }
       #research .service-swiper .swiper-slide { min-height: 320px; }
@@ -1560,11 +1560,27 @@
         });
 
         card.addEventListener('mouseleave', function () {
-          ripples.forEach(function (r) { r.style.transition = 'opacity 0.5s ease'; r.style.opacity = '0'; });
-          setTimeout(function () {
-            card.classList.remove('ripple-on');
-            ripples.forEach(function (r) { r.style.transition = ''; r.style.opacity = ''; });
-          }, 500);
+          /* 1. freeze each ripple at its current animated opacity */
+          ripples.forEach(function (r) {
+            r.style.opacity = window.getComputedStyle(r).opacity;
+          });
+          /* 2. kill the animation */
+          card.classList.remove('ripple-on');
+          /* 3. next two frames: apply fade-out transition */
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              ripples.forEach(function (r) {
+                r.style.transition = 'opacity 0.45s ease';
+                r.style.opacity   = '0';
+              });
+              setTimeout(function () {
+                ripples.forEach(function (r) {
+                  r.style.transition = '';
+                  r.style.opacity    = '';
+                });
+              }, 450);
+            });
+          });
         });
       });
     })();
