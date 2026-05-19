@@ -214,8 +214,9 @@
       #research .service-swiper .swiper-slide { height: auto; display: flex; transform: none !important; opacity: 1 !important; animation: none !important; visibility: visible !important; }
       #research .service-swiper .swiper-slide .service-card { height: 100%; width: 100%; transform: none !important; animation: none !important; opacity: 1 !important; }
       #research .service-list li { display: block !important; }
-      #research .service-card { position: relative; box-shadow: 0.1px 0.1px 1.5px rgba(0,0,0,0.25); }
-      #research .service-card:hover .card-inner { filter: drop-shadow(0.1px 0.1px 1.5px rgba(0,0,0,0.25)); }
+      #research .service-card { position: relative; box-shadow: 0.1px 0.1px 2.25px rgba(0,0,0,0.25); }
+      #research .service-card:hover::before,
+      #research .service-card:hover::after { box-shadow: 0.1px 0.1px 2.25px rgba(0,0,0,0.25); }
       #research .blog-card { max-width: 87.5%; }
       #research .service-swiper { max-width: 87.5%; margin-left: 0; margin-right: auto; }
       #research .service-swiper .swiper-slide { min-height: 320px; }
@@ -1551,24 +1552,20 @@
     <script>
     (function () {
       document.querySelectorAll('#research .service-card').forEach(function (card) {
-        var ripples = card.querySelectorAll('.card-ripple');
-        var hovered = false;
+        var ripples = Array.from(card.querySelectorAll('.card-ripple'));
 
         card.addEventListener('mouseenter', function () {
-          hovered = true;
+          ripples.forEach(function (r) { r.style.transition = ''; r.style.opacity = ''; });
           card.classList.add('ripple-on');
         });
 
         card.addEventListener('mouseleave', function () {
-          hovered = false;
-          /* wait for the lead ripple to finish its current cycle then stop */
+          ripples.forEach(function (r) { r.style.transition = 'opacity 0.5s ease'; r.style.opacity = '0'; });
+          setTimeout(function () {
+            card.classList.remove('ripple-on');
+            ripples.forEach(function (r) { r.style.transition = ''; r.style.opacity = ''; });
+          }, 500);
         });
-
-        if (ripples[0]) {
-          ripples[0].addEventListener('animationiteration', function () {
-            if (!hovered) card.classList.remove('ripple-on');
-          });
-        }
       });
     })();
     </script>
