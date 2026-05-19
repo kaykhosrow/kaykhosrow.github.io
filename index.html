@@ -675,12 +675,7 @@
                   <img src="assets/images/arrow4.png" alt="" aria-hidden="true" class="about-me-arrow" id="aboutMeArrow"
                     style="position:absolute; object-fit:contain; width:80px; height:80px; filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));">
                   <span class="about-me-text" id="aboutMeText"
-                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap; text-transform:uppercase;">Me #Ghibli</span>
-                  <!-- Graduation 2025 annotation -->
-                  <img src="assets/images/arrow4.png" alt="" aria-hidden="true" class="about-me-arrow" id="aboutGradArrow"
-                    style="position:absolute; object-fit:contain; width:80px; height:80px; filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));">
-                  <span class="about-me-text" id="aboutGradText"
-                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap; text-transform:uppercase;">Graduation 2025</span>
+                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap;">Me #Ghibli</span>
                 </div>
               </div>
             </div>
@@ -1620,22 +1615,11 @@
       var arrowFlipX   = false;
       var textLeft     = -100;
       var textTop      = 125;
-
-      /* ---- Graduation arrow config ---- */
-      var gradArrowLeft   = -140;
-      var gradArrowTop    = 520;
-      var gradArrowRotate = -20;
-      var gradArrowFlipX  = false;
-      var gradArrowFlipY  = true;
-      var gradTextLeft    = -195;
-      var gradTextTop     = 575;
       /* ---- end config ---- */
 
-      var arrow     = document.getElementById('aboutMeArrow');
-      var text      = document.getElementById('aboutMeText');
-      var gradArrow = document.getElementById('aboutGradArrow');
-      var gradText  = document.getElementById('aboutGradText');
-      var img       = document.querySelector('.about-img-wrap .about-img');
+      var arrow = document.getElementById('aboutMeArrow');
+      var text  = document.getElementById('aboutMeText');
+      var img   = document.querySelector('.about-img-wrap .about-img');
       if (!arrow || !text || !img) return;
 
       arrow.style.left      = arrowLeft + 'px';
@@ -1643,16 +1627,6 @@
       arrow.style.transform = (arrowFlipX ? 'scaleX(-1) ' : '') + 'rotate(' + arrowRotate + 'deg)';
       text.style.left       = textLeft  + 'px';
       text.style.top        = textTop   + 'px';
-
-      if (gradArrow) {
-        gradArrow.style.left      = gradArrowLeft + 'px';
-        gradArrow.style.top       = gradArrowTop  + 'px';
-        gradArrow.style.transform = (gradArrowFlipX ? 'scaleX(-1) ' : '') + (gradArrowFlipY ? 'scaleY(-1) ' : '') + 'rotate(' + gradArrowRotate + 'deg)';
-      }
-      if (gradText) {
-        gradText.style.left = gradTextLeft + 'px';
-        gradText.style.top  = gradTextTop  + 'px';
-      }
 
       img.style.cursor = 'pointer';
 
@@ -1677,9 +1651,8 @@
 
       function setVisible(v) {
         visible = v;
-        [arrow, text, gradArrow, gradText].forEach(function(el) {
-          if (el) el.style.opacity = visible ? '0.875' : '0';
-        });
+        arrow.style.opacity = visible ? '0.875' : '0';
+        text.style.opacity  = visible ? '0.875' : '0';
       }
 
       img.addEventListener('click', function (e) {
