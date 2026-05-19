@@ -1628,7 +1628,21 @@
       text.style.left       = textLeft  + 'px';
       text.style.top        = textTop   + 'px';
 
-      img.style.cursor = 'pointer';
+      img.style.cursor = 'default';
+
+      img.addEventListener('mousemove', function (e) {
+        if (ready && ctx) {
+          var rect  = img.getBoundingClientRect();
+          var x     = Math.floor((e.clientX - rect.left) * (img.naturalWidth  / rect.width));
+          var y     = Math.floor((e.clientY - rect.top)  * (img.naturalHeight / rect.height));
+          var alpha = ctx.getImageData(x, y, 1, 1).data[3];
+          img.style.cursor = alpha >= 10 ? 'pointer' : 'default';
+        }
+      });
+
+      img.addEventListener('mouseleave', function () {
+        img.style.cursor = 'default';
+      });
 
       var canvas = document.createElement('canvas');
       var ctx    = null;
