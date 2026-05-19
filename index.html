@@ -1609,12 +1609,13 @@
     <script>
     (function () {
       /* ---- tweak these values ---- */
-      var arrowLeft    = 30;
-      var arrowTop     = -70;
-      var arrowRotate  = 160;
-      var arrowFlipX   = false;
-      var textLeft     = 20;
-      var textTop      = -100;
+      var arrowLeft    = -80;    /* px from left edge of image (negative = outside) */
+      var arrowTop     = 230;    /* px from top of image — shoulder level           */
+      var arrowRotate  = 15;     /* degrees — pointing rightward toward shoulder    */
+      var arrowFlipX   = false;  /* mirror horizontally                             */
+
+      var textLeft     = -115;   /* px from left edge                               */
+      var textTop      = 215;    /* px from top                                     */
       /* ---- end config ---- */
 
       var arrow = document.getElementById('aboutMeArrow');
