@@ -264,6 +264,13 @@
       .code-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
 
       .about-img-wrap { position: relative; display: inline-block; min-height: 0; }
+      @font-face {
+        font-family: 'QuakerHack';
+        src: url('assets/fonts/QuakerHack.otf') format('opentype');
+      }
+
+      .about-me-arrow, .about-me-text { opacity:0; transition:opacity 380ms ease; pointer-events:none; }
+
       .about-img-wrap::after { display: none !important; }
       .about-img-wrap:hover::after { display: none !important; opacity: 0 !important; }
       .about-img-wrap:hover .about-img { transform: none !important; }
@@ -664,6 +671,11 @@
                     class="about-img"
                     style="max-width:100%; max-height:650px; width:auto; object-fit:cover; display:block; filter:drop-shadow(0px 0.5px 2.5px rgba(0,0,0,0.45)); opacity:0.925;"
                   />
+                  <!-- Me annotation — positions controlled by script below -->
+                  <img src="assets/images/arrow4.png" alt="" aria-hidden="true" class="about-me-arrow" id="aboutMeArrow"
+                    style="position:absolute; object-fit:contain; width:80px; height:80px; filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));">
+                  <span class="about-me-text" id="aboutMeText"
+                    style="position:absolute; font-family:'QuakerHack',cursive; font-size:1.4rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap;">Me</span>
                 </div>
               </div>
             </div>
@@ -1590,6 +1602,80 @@
             });
           });
         });
+      });
+    })();
+    </script>
+    <!-- ── Me annotation config ─────────────────────────────────────────── -->
+    <script>
+    (function () {
+      /* ---- tweak these values ---- */
+      var arrowLeft    = 30;
+      var arrowTop     = -70;
+      var arrowRotate  = 160;
+      var arrowFlipX   = false;
+      var textLeft     = 20;
+      var textTop      = -100;
+      /* ---- end config ---- */
+
+      var arrow = document.getElementById('aboutMeArrow');
+      var text  = document.getElementById('aboutMeText');
+      var img   = document.querySelector('.about-img-wrap .about-img');
+      if (!arrow || !text || !img) return;
+
+      arrow.style.left      = arrowLeft + 'px';
+      arrow.style.top       = arrowTop  + 'px';
+      arrow.style.transform = (arrowFlipX ? 'scaleX(-1) ' : '') + 'rotate(' + arrowRotate + 'deg)';
+      text.style.left       = textLeft  + 'px';
+      text.style.top        = textTop   + 'px';
+
+      img.style.cursor = 'pointer';
+
+      /* pixel-perfect click detection via canvas */
+      var canvas = document.createElement('canvas');
+      var ctx    = null;
+      var ready  = false;
+
+      function buildCanvas() {
+        try {
+          canvas.width  = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          ready = true;
+        } catch (e) { ready = false; }
+      }
+
+      if (img.complete && img.naturalWidth) {
+        buildCanvas();
+      } else {
+        img.addEventListener('load', buildCanvas);
+      }
+
+      var visible = false;
+
+      function setVisible(v) {
+        visible = v;
+        arrow.style.opacity = visible ? '0.875' : '0';
+        text.style.opacity  = visible ? '0.875' : '0';
+      }
+
+      img.addEventListener('click', function (e) {
+        /* pixel-perfect: check alpha at click point */
+        if (ready && ctx) {
+          var rect  = img.getBoundingClientRect();
+          var x     = Math.floor((e.clientX - rect.left) * (img.naturalWidth  / rect.width));
+          var y     = Math.floor((e.clientY - rect.top)  * (img.naturalHeight / rect.height));
+          var alpha = ctx.getImageData(x, y, 1, 1).data[3];
+          if (alpha < 10) return; /* transparent pixel — ignore */
+        }
+        setVisible(!visible);
+      });
+
+      /* clicking anywhere else hides the annotation */
+      document.addEventListener('click', function (e) {
+        if (!visible) return;
+        if (e.target === img) return;
+        setVisible(false);
       });
     })();
     </script>
