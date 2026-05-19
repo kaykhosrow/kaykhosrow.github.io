@@ -1569,7 +1569,13 @@
         ['right', 45], ['left', 65], ['right', 52], ['left', 40],
         ['right', 70], ['left', 57], ['right', 35], ['left', 72],
         ['right', 48], ['left', 62], ['right', 55], ['left', 44],
-        ['right', 68], ['left', 50]
+        ['right', 68], ['left', 50], ['right', 74], ['left', 36],
+        ['right', 58], ['left', 66], ['right', 43], ['left', 77],
+        ['right', 51], ['left', 41], ['right', 63], ['left', 58],
+        ['right', 38], ['left', 71], ['right', 46], ['left', 59],
+        ['right', 67], ['left', 33], ['right', 75], ['left', 53],
+        ['right', 47], ['left', 69], ['right', 40], ['left', 61],
+        ['right', 54], ['left', 76], ['right', 44], ['left', 37]
       ];
 
       var n = config.length;
@@ -1582,7 +1588,7 @@
         bar.style.top    = 'calc(' + i + ' * (100% / ' + n + '))';
         bar.style.height = 'calc(100% / ' + n + ')';
         bar.style.width  = c[1] + '%';
-        bar.style.transitionDelay = (i * 14) + 'ms';
+        bar.style.transitionDelay = (i * 7) + 'ms';
         overlay.appendChild(bar);
       });
 
