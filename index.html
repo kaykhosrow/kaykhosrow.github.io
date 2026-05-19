@@ -675,12 +675,12 @@
                   <img src="assets/images/arrow4.png" alt="" aria-hidden="true" class="about-me-arrow" id="aboutMeArrow"
                     style="position:absolute; object-fit:contain; width:80px; height:80px; filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));">
                   <span class="about-me-text" id="aboutMeText"
-                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap;">Me #Ghibli</span>
+                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap; text-transform:uppercase;">Me #Ghibli</span>
                   <!-- Graduation 2025 annotation -->
                   <img src="assets/images/arrow4.png" alt="" aria-hidden="true" class="about-me-arrow" id="aboutGradArrow"
                     style="position:absolute; object-fit:contain; width:80px; height:80px; filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));">
                   <span class="about-me-text" id="aboutGradText"
-                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap;">Graduation 2025</span>
+                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap; text-transform:uppercase;">Graduation 2025</span>
                 </div>
               </div>
             </div>
@@ -1622,11 +1622,12 @@
       var textTop      = 125;
 
       /* ---- Graduation arrow config ---- */
-      var gradArrowLeft   = -80;
+      var gradArrowLeft   = -140;
       var gradArrowTop    = 520;
       var gradArrowRotate = -20;
       var gradArrowFlipX  = false;
-      var gradTextLeft    = -115;
+      var gradArrowFlipY  = true;
+      var gradTextLeft    = -195;
       var gradTextTop     = 575;
       /* ---- end config ---- */
 
@@ -1646,7 +1647,7 @@
       if (gradArrow) {
         gradArrow.style.left      = gradArrowLeft + 'px';
         gradArrow.style.top       = gradArrowTop  + 'px';
-        gradArrow.style.transform = (gradArrowFlipX ? 'scaleX(-1) ' : '') + 'rotate(' + gradArrowRotate + 'deg)';
+        gradArrow.style.transform = (gradArrowFlipX ? 'scaleX(-1) ' : '') + (gradArrowFlipY ? 'scaleY(-1) ' : '') + 'rotate(' + gradArrowRotate + 'deg)';
       }
       if (gradText) {
         gradText.style.left = gradTextLeft + 'px';
