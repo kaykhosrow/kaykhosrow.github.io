@@ -266,7 +266,7 @@
       .about-img-wrap:hover .about-img { transform: none !important; }
 
       .img-lines-overlay { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:2; }
-      .img-line { position:absolute; background:rgb(var(--primary)); transition:transform 0.55s cubic-bezier(0.4,0,0.2,1); }
+      .img-line { position:absolute; background:rgba(var(--primary), 0.88); transition:transform 0.55s cubic-bezier(0.4,0,0.2,1); }
       .img-line.left  { left:0;  transform:translateX(0); }
       .img-line.right { right:0; transform:translateX(0); }
       .about-img-wrap:hover .img-line.left  { transform:translateX(-100%); }
@@ -1563,34 +1563,24 @@
       var inner = wrap.querySelector('div');
       if (!inner) return;
 
-      var config = [
-        ['left', 68], ['right', 42], ['left', 55], ['left', 73],
-        ['right', 60], ['left', 38], ['right', 78], ['left', 50],
-        ['right', 45], ['left', 65], ['right', 52], ['left', 40],
-        ['right', 70], ['left', 57], ['right', 35], ['left', 72],
-        ['right', 48], ['left', 62], ['right', 55], ['left', 44],
-        ['right', 68], ['left', 50], ['right', 74], ['left', 36],
-        ['right', 58], ['left', 66], ['right', 43], ['left', 77],
-        ['right', 51], ['left', 41], ['right', 63], ['left', 58],
-        ['right', 38], ['left', 71], ['right', 46], ['left', 59],
-        ['right', 67], ['left', 33], ['right', 75], ['left', 53],
-        ['right', 47], ['left', 69], ['right', 40], ['left', 61],
-        ['right', 54], ['left', 76], ['right', 44], ['left', 37]
-      ];
+      var n   = 100;
+      var seed = 42;
+      function rand() { seed = (seed * 16807 + 0) % 2147483647; return (seed - 1) / 2147483646; }
 
-      var n = config.length;
       var overlay = document.createElement('div');
       overlay.className = 'img-lines-overlay';
 
-      config.forEach(function (c, i) {
-        var bar = document.createElement('div');
-        bar.className = 'img-line ' + c[0];
-        bar.style.top    = 'calc(' + i + ' * (100% / ' + n + '))';
-        bar.style.height = 'calc(100% / ' + n + ')';
-        bar.style.width  = c[1] + '%';
-        bar.style.transitionDelay = (i * 7) + 'ms';
+      for (var i = 0; i < n; i++) {
+        var side  = rand() > 0.5 ? 'left' : 'right';
+        var width = 30 + Math.floor(rand() * 50);
+        var bar   = document.createElement('div');
+        bar.className = 'img-line ' + side;
+        bar.style.top    = 'calc(' + i + ' * (100% / ' + n + ') + 0.5px)';
+        bar.style.height = 'calc(100% / ' + n + ' - 1px)';
+        bar.style.width  = width + '%';
+        bar.style.transitionDelay = (i * 4) + 'ms';
         overlay.appendChild(bar);
-      });
+      }
 
       inner.appendChild(overlay);
     })();
