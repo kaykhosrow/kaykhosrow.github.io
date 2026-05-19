@@ -74,7 +74,7 @@
   var TIP_CLR = 8;
   var FADE_MS = 380;
 
-  var STACK_W        = 548;
+  var STACK_W        = 500;
   var STACK_LEFT_PAD = 150;
 
   var tourActive  = false;
