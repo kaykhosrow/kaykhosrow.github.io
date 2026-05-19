@@ -264,6 +264,13 @@
       .about-img-wrap::after { display: none !important; }
       .about-img-wrap:hover::after { display: none !important; opacity: 0 !important; }
       .about-img-wrap:hover .about-img { transform: none !important; }
+
+      .img-lines-overlay { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:2; }
+      .img-line { position:absolute; background:rgb(var(--primary)); transition:transform 0.55s cubic-bezier(0.4,0,0.2,1); }
+      .img-line.left  { left:0;  transform:translateX(0); }
+      .img-line.right { right:0; transform:translateX(0); }
+      .about-img-wrap:hover .img-line.left  { transform:translateX(-100%); }
+      .about-img-wrap:hover .img-line.right { transform:translateX(100%); }
       .about-img-wrap::after { content: ''; position: absolute; bottom: -52px; left: 50%; transform: translateX(-50%); width: 78%; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at center top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%); filter: blur(12px); transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease; opacity: 0; pointer-events: none; z-index: 2; }
       .about-img-wrap:hover::after { opacity: 1; bottom: -46px; width: 88%; }
       .about-img-wrap .about-img { transition: transform 0.4s ease; display: block; }
@@ -663,7 +670,7 @@
                       style="max-width:100%; max-height:650px; width:auto; object-fit:cover; display:block; filter:drop-shadow(0px 0.5px 2.5px rgba(0,0,0,0.45)); opacity:0.875;"
                     />
                   </div>
-                  <div style="position:absolute; bottom:0; left:-42.5px; right:-12px; height:3.75px; background:rgb(var(--black)); box-shadow: 0 0.5px 2.5px rgba(0,0,0,0.45); border-radius:999px;"></div>
+                  <div style="position:absolute; bottom:0; left:-42.5px; right:-12px; height:3.75px; background:rgb(var(--black)); box-shadow: 0 0.5px 2.5px rgba(0,0,0,0.45); border-radius:999px; z-index:3;"></div>
                 </div>
               </div>
             </div>
@@ -1547,6 +1554,39 @@
 
       window.addEventListener('scroll', update, { passive: true });
       update();
+    })();
+    </script>
+    <script>
+    (function () {
+      var wrap = document.querySelector('.about-img-wrap');
+      if (!wrap) return;
+      var inner = wrap.querySelector('div');
+      if (!inner) return;
+
+      var config = [
+        ['left', 68], ['right', 42], ['left', 55], ['left', 73],
+        ['right', 60], ['left', 38], ['right', 78], ['left', 50],
+        ['right', 45], ['left', 65], ['right', 52], ['left', 40],
+        ['right', 70], ['left', 57], ['right', 35], ['left', 72],
+        ['right', 48], ['left', 62], ['right', 55], ['left', 44],
+        ['right', 68], ['left', 50]
+      ];
+
+      var n = config.length;
+      var overlay = document.createElement('div');
+      overlay.className = 'img-lines-overlay';
+
+      config.forEach(function (c, i) {
+        var bar = document.createElement('div');
+        bar.className = 'img-line ' + c[0];
+        bar.style.top    = 'calc(' + i + ' * (100% / ' + n + '))';
+        bar.style.height = 'calc(100% / ' + n + ')';
+        bar.style.width  = c[1] + '%';
+        bar.style.transitionDelay = (i * 14) + 'ms';
+        overlay.appendChild(bar);
+      });
+
+      inner.appendChild(overlay);
     })();
     </script>
   </body>
