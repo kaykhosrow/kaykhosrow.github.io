@@ -264,13 +264,6 @@
       .about-img-wrap::after { display: none !important; }
       .about-img-wrap:hover::after { display: none !important; opacity: 0 !important; }
       .about-img-wrap:hover .about-img { transform: none !important; }
-
-      .img-lines-overlay { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:2; }
-      .img-line { position:absolute; background:rgba(var(--primary), 0.88); transition:transform 0.55s cubic-bezier(0.4,0,0.2,1); }
-      .img-line.left  { left:0;  transform:translateX(0); }
-      .img-line.right { right:0; transform:translateX(0); }
-      .about-img-wrap:hover .img-line.left  { transform:translateX(-100%); }
-      .about-img-wrap:hover .img-line.right { transform:translateX(100%); }
       .about-img-wrap::after { content: ''; position: absolute; bottom: -52px; left: 50%; transform: translateX(-50%); width: 78%; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at center top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%); filter: blur(12px); transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease; opacity: 0; pointer-events: none; z-index: 2; }
       .about-img-wrap:hover::after { opacity: 1; bottom: -46px; width: 88%; }
       .about-img-wrap .about-img { transition: transform 0.4s ease; display: block; }
@@ -670,7 +663,7 @@
                       style="max-width:100%; max-height:650px; width:auto; object-fit:cover; display:block; filter:drop-shadow(0px 0.5px 2.5px rgba(0,0,0,0.45)); opacity:0.875;"
                     />
                   </div>
-                  <div style="position:absolute; bottom:0; left:-42.5px; right:-12px; height:3.75px; background:rgb(var(--black)); box-shadow: 0 0.5px 2.5px rgba(0,0,0,0.45); border-radius:999px; z-index:3;"></div>
+                  <div style="position:absolute; bottom:0; left:-42.5px; right:-12px; height:3.75px; background:rgb(var(--black)); box-shadow: 0 0.5px 2.5px rgba(0,0,0,0.45); border-radius:999px;"></div>
                 </div>
               </div>
             </div>
@@ -1559,30 +1552,64 @@
     <script>
     (function () {
       var wrap = document.querySelector('.about-img-wrap');
-      if (!wrap) return;
-      var inner = wrap.querySelector('div');
-      if (!inner) return;
+      var img  = wrap ? wrap.querySelector('.about-img') : null;
+      if (!wrap || !img) return;
 
-      var n   = 100;
-      var seed = 42;
-      function rand() { seed = (seed * 16807 + 0) % 2147483647; return (seed - 1) / 2147483646; }
+      var N = 80, seed = 42;
+      function rand() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
 
-      var overlay = document.createElement('div');
-      overlay.className = 'img-lines-overlay';
-
-      for (var i = 0; i < n; i++) {
-        var side  = rand() > 0.5 ? 'left' : 'right';
-        var width = 30 + Math.floor(rand() * 50);
-        var bar   = document.createElement('div');
-        bar.className = 'img-line ' + side;
-        bar.style.top    = 'calc(' + i + ' * (100% / ' + n + ') + 0.5px)';
-        bar.style.height = 'calc(100% / ' + n + ' - 1px)';
-        bar.style.width  = width + '%';
-        bar.style.transitionDelay = (i * 4) + 'ms';
-        overlay.appendChild(bar);
+      var bars = [];
+      for (var i = 0; i < N; i++) {
+        bars.push({ lMax: 15 + rand() * 35, rMax: 15 + rand() * 35 });
       }
 
-      inner.appendChild(overlay);
+      function makeMask(prog) {
+        var rects = '';
+        for (var i = 0; i < N; i++) {
+          var rowProg = Math.max(0, Math.min(1, (prog - i / N * 0.25) / 0.75));
+          var lW = bars[i].lMax * (1 - rowProg);
+          var rW = bars[i].rMax * (1 - rowProg);
+          var y  = (i / N * 100).toFixed(3);
+          var h  = (100 / N - 0.15).toFixed(3);
+          var x  = lW.toFixed(3);
+          var w  = Math.max(0, 100 - lW - rW).toFixed(3);
+          rects += '<rect x="' + x + '%" y="' + y + '%" width="' + w + '%" height="' + h + '%" fill="white"/>';
+        }
+        return 'url("data:image/svg+xml,' + encodeURIComponent(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">' +
+          '<rect width="100%" height="100%" fill="black"/>' + rects + '</svg>'
+        ) + '")';
+      }
+
+      function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+      var progress = 0, target = 0, startProg = 0, startTime = null, rafId = null;
+      var DURATION = 520;
+
+      function applyMask(p) {
+        var m = makeMask(p);
+        img.style.webkitMaskImage = m;
+        img.style.maskImage = m;
+      }
+
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var t = ease(Math.min((ts - startTime) / DURATION, 1));
+        progress = startProg + (target - startProg) * t;
+        applyMask(progress);
+        if (ts - startTime < DURATION) { rafId = requestAnimationFrame(step); }
+        else { progress = target; startTime = null; rafId = null; }
+      }
+
+      function animate(to) {
+        if (rafId) cancelAnimationFrame(rafId);
+        startProg = progress; target = to; startTime = null;
+        rafId = requestAnimationFrame(step);
+      }
+
+      applyMask(0);
+      wrap.addEventListener('mouseenter', function () { animate(1); });
+      wrap.addEventListener('mouseleave', function () { animate(0); });
     })();
     </script>
   </body>
