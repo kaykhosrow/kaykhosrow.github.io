@@ -263,8 +263,8 @@
       .about-img-wrap { position: relative; display: inline-block; min-height: 0; }
       .about-img-wrap::after { display: none !important; }
       .about-me-arrow, .about-me-text { opacity:0; transition:opacity 380ms ease; pointer-events:none; }
-      .about-img-wrap:hover .about-me-arrow,
-      .about-img-wrap:hover .about-me-text { opacity:0.875; }
+      .about-img-wrap:has(.about-img:hover) .about-me-arrow,
+      .about-img-wrap:has(.about-img:hover) .about-me-text { opacity:0.875; }
       .about-img-wrap:hover::after { display: none !important; opacity: 0 !important; }
       .about-img-wrap:hover .about-img { transform: none !important; }
       .about-img-wrap::after { content: ''; position: absolute; bottom: -52px; left: 50%; transform: translateX(-50%); width: 78%; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at center top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0) 75%); filter: blur(12px); transition: opacity 0.4s ease, bottom 0.4s ease, width 0.4s ease; opacity: 0; pointer-events: none; z-index: 2; }
@@ -663,7 +663,7 @@
                       src="images/hero.png"
                       alt="Omar Kaykhusraw"
                       class="about-img"
-                      style="max-width:100%; max-height:650px; width:auto; object-fit:cover; display:block; filter:drop-shadow(0px 0.5px 2.5px rgba(0,0,0,0.45)); opacity:0.875;"
+                      style="max-width:100%; max-height:650px; width:auto; object-fit:cover; display:block; filter:drop-shadow(0px 0.5px 2.5px rgba(0,0,0,0.45)); opacity:0.875; pointer-events:auto;"
                     />
                   </div>
                   <div style="position:absolute; bottom:0; left:-42.5px; right:-12px; height:3.75px; background:rgb(var(--black)); box-shadow: 0 0.5px 2.5px rgba(0,0,0,0.45); border-radius:999px;"></div>
