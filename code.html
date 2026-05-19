@@ -9,7 +9,13 @@
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
       html { zoom: 1; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; min-width: 1200px; }
-      body { min-width: 1200px; overflow-x: visible !important; }
+      body { min-width: 1200px; overflow-x: visible !important; padding-bottom: 0 !important; }
+      main { padding-bottom: 0 !important; }
+      *:focus { outline: none; }
+      #home, #about, #research, #teaching, #conferences, #code, #gallery, #contact {
+        margin-left:  max(80px, calc((100% - 1140px) / 2)) !important;
+        margin-right: max(0px,  calc((100% - 1140px) / 2)) !important;
+      }
       .container { min-width: 1140px !important; }
       .code-item { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .code-item:last-child { border-bottom: none; }
@@ -35,13 +41,14 @@
 
       /* ── Settings bar ── */
       #navigation { z-index: 49 !important; overflow: visible !important; }
-      .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 4px; border-left: 1px solid rgba(0,0,0,0.1); }
+      .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 4px; border-left: 1px solid rgba(0,0,0,0.1); transition: padding-left 0.4s cubic-bezier(0.4,0,0.2,1); }
+      .settings-bar:has(.settings-options.open) { padding-left: 10px; }
       .settings-options { display: flex; align-items: center; gap: 8px; max-width: 0; overflow: hidden; opacity: 0; transition: max-width 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease; }
       .settings-options.open { max-width: 240px; opacity: 1; }
       .settings-divider { width: 1px; align-self: stretch; margin: 5px 0px; background: rgba(0,0,0,0.1); flex-shrink: 0; }
-      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease; }
+      .setting-swatch { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.22); cursor: pointer; flex-shrink: 0; transition: filter 0.2s ease, border-color 0.2s ease; }
       .setting-swatch:hover { filter: brightness(0.93); }
-      .setting-swatch.active { filter: brightness(0.85); }
+      .setting-swatch.active { border-color: rgba(0,0,0,0.5); filter: none; }
       .grain-swatch { background-image: radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px), radial-gradient(circle, rgba(0,0,0,0.45) 1px, transparent 1px); background-size: 4px 4px; background-position: 0 0, 2px 2px; background-color: rgb(var(--primary)); }
       .lattice-swatch {
         background-color: rgb(var(--primary));
@@ -63,11 +70,9 @@
       .section-title h4 { font-family: 'InterRegular', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); }
       .section-title-overlay-text { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1px rgba(0, 0, 0, 0.5); }
 
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: rgb(var(--primary)); border-radius: 999px; }
-      ::-webkit-scrollbar-thumb { background: rgb(var(--black)); border-radius: 999px; border: 2px solid rgb(var(--primary)); }
-      ::-webkit-scrollbar-thumb:hover { background: rgba(var(--black), 0.72); }
-      * { scrollbar-width: thin; scrollbar-color: rgb(var(--black)) rgb(var(--primary)); }
+      ::-webkit-scrollbar { display: none; }
+      * { scrollbar-width: none; }
+      body::after { display: none; }
 
       .nav-arrow-wrap { display: flex; align-items: center; justify-content: center; align-self: stretch; padding: 0 21px 0 41px; flex-shrink: 0; cursor: pointer; position: relative; }
       .nav-arrow-btn { position: absolute; inset: 0; border: none; background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; padding: 0 0 0 1px; text-shadow: 0.1px 0.1px 1.25px rgba(0, 0, 0, 0.5); opacity: 0.75; }
@@ -195,6 +200,15 @@
         this.classList.toggle('open');
         document.getElementById('settingsOptions').classList.toggle('open');
       });
+
+      window.addEventListener('scroll', function () {
+        var gearBtn = document.getElementById('settingsGearBtn');
+        var options = document.getElementById('settingsOptions');
+        if (gearBtn && gearBtn.classList.contains('open')) {
+          gearBtn.classList.remove('open');
+          options.classList.remove('open');
+        }
+      }, { passive: true });
 
       document.getElementById('grainToggleBtn').addEventListener('click', function() {
         var cb = document.querySelector('.grained-checkbox');
