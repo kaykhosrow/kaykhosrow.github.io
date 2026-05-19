@@ -214,8 +214,8 @@
       #research .service-swiper .swiper-slide { height: auto; display: flex; transform: none !important; opacity: 1 !important; animation: none !important; visibility: visible !important; }
       #research .service-swiper .swiper-slide .service-card { height: 100%; width: 100%; transform: none !important; animation: none !important; opacity: 1 !important; }
       #research .service-list li { display: block !important; }
-      #research .service-card { position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06); }
-      #research .service-card:hover .card-inner { filter: drop-shadow(1px 2px 5px rgba(0,0,0,0.15)); }
+      #research .service-card { position: relative; box-shadow: 0.1px 0.1px 1.5px rgba(0,0,0,0.25); }
+      #research .service-card:hover .card-inner { filter: drop-shadow(0.1px 0.1px 1.5px rgba(0,0,0,0.25)); }
       #research .blog-card { max-width: 87.5%; }
       #research .service-swiper { max-width: 87.5%; margin-left: 0; margin-right: auto; }
       #research .service-swiper .swiper-slide { min-height: 320px; }
@@ -239,10 +239,10 @@
         to   { transform: scale(1.6); opacity: 0; }
       }
       .card-ripple { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgb(var(--black)); pointer-events: none; opacity: 0; animation: none; }
-      .service-card:hover .card-ripple { animation: vacRippleCard 2.5s linear infinite; }
-      .service-card:hover .card-ripple:nth-child(2) { animation-delay: 0.625s; }
-      .service-card:hover .card-ripple:nth-child(3) { animation-delay: 1.25s; }
-      .service-card:hover .card-ripple:nth-child(4) { animation-delay: 1.875s; }
+      .service-card.ripple-on .card-ripple { animation: vacRippleCard 2.5s linear infinite; }
+      .service-card.ripple-on .card-ripple:nth-child(2) { animation-delay: 0.625s; }
+      .service-card.ripple-on .card-ripple:nth-child(3) { animation-delay: 1.25s; }
+      .service-card.ripple-on .card-ripple:nth-child(4) { animation-delay: 1.875s; }
       @keyframes vacRippleSubmit {
         from { transform: scale(1.01); opacity: 0.6; }
         to   { transform: scale(1.3); opacity: 0; }
@@ -1545,6 +1545,31 @@
 
       window.addEventListener('scroll', update, { passive: true });
       update();
+    })();
+    </script>
+    <!-- ── Ripple natural fade-out ───────────────────────────────────────── -->
+    <script>
+    (function () {
+      document.querySelectorAll('#research .service-card').forEach(function (card) {
+        var ripples = card.querySelectorAll('.card-ripple');
+        var hovered = false;
+
+        card.addEventListener('mouseenter', function () {
+          hovered = true;
+          card.classList.add('ripple-on');
+        });
+
+        card.addEventListener('mouseleave', function () {
+          hovered = false;
+          /* wait for the lead ripple to finish its current cycle then stop */
+        });
+
+        if (ripples[0]) {
+          ripples[0].addEventListener('animationiteration', function () {
+            if (!hovered) card.classList.remove('ripple-on');
+          });
+        }
+      });
     })();
     </script>
   </body>
