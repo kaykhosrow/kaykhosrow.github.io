@@ -146,10 +146,6 @@
     '  user-select:none;',
     '  opacity:0;',
     '  transition:opacity ' + FADE_MS + 'ms ease;',
-    '  background:rgba(0,0,0,0.05);',
-    '  border-radius:7.5px;',
-    '  padding:20px 24px;',
-    '  box-sizing:border-box;',
     '}',
     '.tour-stack.t-on { opacity:1; }',
 
