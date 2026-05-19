@@ -178,7 +178,7 @@
     stackEl2 = document.createElement('div');
     stackEl2.id        = 'tourStack2';
     stackEl2.className = 'tour-stack';
-    stackEl2.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages</span>This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.';
+    stackEl2.innerHTML = 'This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.';
     document.body.appendChild(stackEl2);
 
     NOTES.forEach(function (note) {
@@ -270,17 +270,15 @@
 
   function positionStack2() {
     if (!stackEl2) return;
-    var content = document.querySelector('.hero-content');
-    var btnRow  = document.querySelector('.hero-content .d-flex');
-    if (!content || !btnRow) return;
+    var nextChap = document.querySelector('.hero .next-chapter');
+    if (!nextChap) return;
 
-    var rr  = btnRow.getBoundingClientRect();
-    var cr  = content.getBoundingClientRect();
+    var nr  = nextChap.getBoundingClientRect();
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top + sy - stackEl2.offsetHeight + 165;
-    var left = cr.right + sx - 60;
+    var top  = nr.bottom + sy + 20;
+    var left = nr.left   + sx;
 
     stackEl2.style.top  = top  + 'px';
     stackEl2.style.left = left + 'px';
@@ -297,8 +295,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top + sy - stackEl.offsetHeight + -85;
-    var left = cr.right + sx + 90;
+    var top  = rr.top + sy - stackEl.offsetHeight + 165;
+    var left = cr.right + sx - 60;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
