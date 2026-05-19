@@ -675,7 +675,12 @@
                   <img src="assets/images/arrow4.png" alt="" aria-hidden="true" class="about-me-arrow" id="aboutMeArrow"
                     style="position:absolute; object-fit:contain; width:80px; height:80px; filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));">
                   <span class="about-me-text" id="aboutMeText"
-                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap;">Me</span>
+                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap;">Me #Ghibli</span>
+                  <!-- Graduation 2025 annotation -->
+                  <img src="assets/images/arrow4.png" alt="" aria-hidden="true" class="about-me-arrow" id="aboutGradArrow"
+                    style="position:absolute; object-fit:contain; width:80px; height:80px; filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));">
+                  <span class="about-me-text" id="aboutGradText"
+                    style="position:absolute; font-family:'Scribble','InterRegular',cursive; font-size:2rem; color:rgba(0,0,0,0.88); text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12); white-space:nowrap;">Graduation 2025</span>
                 </div>
               </div>
             </div>
@@ -1608,19 +1613,28 @@
     <!-- ── Me annotation config ─────────────────────────────────────────── -->
     <script>
     (function () {
-      /* ---- tweak these values ---- */
-      var arrowLeft    = -65;    /* px from left edge of image (negative = outside) */
-      var arrowTop     = 150;    /* px from top of image — shoulder level           */
-      var arrowRotate  = 345;     /* degrees — pointing rightward toward shoulder    */
-      var arrowFlipX   = false;  /* mirror                             */
+      /* ---- Me arrow config ---- */
+      var arrowLeft    = -65;
+      var arrowTop     = 150;
+      var arrowRotate  = 345;
+      var arrowFlipX   = false;
+      var textLeft     = -100;
+      var textTop      = 125;
 
-      var textLeft     = -100;   /* px from left edge                               */
-      var textTop      = 125;    /* px from top                                     */
+      /* ---- Graduation arrow config ---- */
+      var gradArrowLeft   = -80;
+      var gradArrowTop    = 520;
+      var gradArrowRotate = -20;
+      var gradArrowFlipX  = false;
+      var gradTextLeft    = -115;
+      var gradTextTop     = 575;
       /* ---- end config ---- */
 
-      var arrow = document.getElementById('aboutMeArrow');
-      var text  = document.getElementById('aboutMeText');
-      var img   = document.querySelector('.about-img-wrap .about-img');
+      var arrow     = document.getElementById('aboutMeArrow');
+      var text      = document.getElementById('aboutMeText');
+      var gradArrow = document.getElementById('aboutGradArrow');
+      var gradText  = document.getElementById('aboutGradText');
+      var img       = document.querySelector('.about-img-wrap .about-img');
       if (!arrow || !text || !img) return;
 
       arrow.style.left      = arrowLeft + 'px';
@@ -1629,9 +1643,18 @@
       text.style.left       = textLeft  + 'px';
       text.style.top        = textTop   + 'px';
 
+      if (gradArrow) {
+        gradArrow.style.left      = gradArrowLeft + 'px';
+        gradArrow.style.top       = gradArrowTop  + 'px';
+        gradArrow.style.transform = (gradArrowFlipX ? 'scaleX(-1) ' : '') + 'rotate(' + gradArrowRotate + 'deg)';
+      }
+      if (gradText) {
+        gradText.style.left = gradTextLeft + 'px';
+        gradText.style.top  = gradTextTop  + 'px';
+      }
+
       img.style.cursor = 'pointer';
 
-      /* pixel-perfect click detection via canvas */
       var canvas = document.createElement('canvas');
       var ctx    = null;
       var ready  = false;
@@ -1646,33 +1669,29 @@
         } catch (e) { ready = false; }
       }
 
-      if (img.complete && img.naturalWidth) {
-        buildCanvas();
-      } else {
-        img.addEventListener('load', buildCanvas);
-      }
+      if (img.complete && img.naturalWidth) { buildCanvas(); }
+      else { img.addEventListener('load', buildCanvas); }
 
       var visible = false;
 
       function setVisible(v) {
         visible = v;
-        arrow.style.opacity = visible ? '0.875' : '0';
-        text.style.opacity  = visible ? '0.875' : '0';
+        [arrow, text, gradArrow, gradText].forEach(function(el) {
+          if (el) el.style.opacity = visible ? '0.875' : '0';
+        });
       }
 
       img.addEventListener('click', function (e) {
-        /* pixel-perfect: check alpha at click point */
         if (ready && ctx) {
           var rect  = img.getBoundingClientRect();
           var x     = Math.floor((e.clientX - rect.left) * (img.naturalWidth  / rect.width));
           var y     = Math.floor((e.clientY - rect.top)  * (img.naturalHeight / rect.height));
           var alpha = ctx.getImageData(x, y, 1, 1).data[3];
-          if (alpha < 10) return; /* transparent pixel — ignore */
+          if (alpha < 10) return;
         }
         setVisible(!visible);
       });
 
-      /* clicking anywhere else hides the annotation */
       document.addEventListener('click', function (e) {
         if (!visible) return;
         if (e.target === img) return;
