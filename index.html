@@ -1064,34 +1064,33 @@
             var message = document.getElementById('mail_message').value.trim();
             btn.disabled = true;
 
+            /* fade "submit" out */
+            label.style.opacity = '0';
+
             emailjs.send('service_1wcir5j', 'template_trkbs7h', {
               name: name, email: email, message: message
             }).then(function () {
 
-              /* 1. fade "submit" out */
-              label.style.opacity = '0';
-
               setTimeout(function () {
-                /* 2. swap text to "sent", fade it in */
+                /* swap to "sent", fade in — also fade fields out now */
                 label.textContent   = 'sent';
                 label.style.opacity = '1';
+                fadeFields(true);
 
                 setTimeout(function () {
-                  /* 3. fade "sent" out */
+                  /* fade "sent" out */
                   label.style.opacity = '0';
 
                   setTimeout(function () {
-                    /* 4. reset form while invisible, animate textarea */
+                    /* reset form, animate textarea */
                     var ta = document.getElementById('mail_message');
                     var expandedH = ta ? ta.offsetHeight : 0;
                     form.reset();
 
                     if (ta && expandedH) {
-                      /* measure natural (empty) height */
                       ta.style.transition = 'none';
                       ta.style.height     = 'auto';
                       var naturalH = ta.scrollHeight;
-                      /* restore expanded, then animate to natural */
                       ta.style.height = expandedH + 'px';
                       requestAnimationFrame(function () {
                         requestAnimationFrame(function () {
@@ -1101,14 +1100,14 @@
                       });
                     }
 
-                    /* 5. swap back to "submit" and fade fields in together */
+                    /* fade "submit" back in and restore field text */
                     label.textContent   = 'submit';
                     label.style.opacity = '1';
                     fadeFields(false);
                     btn.disabled = false;
 
                   }, 450);
-                }, 2000);
+                }, 2500);
               }, 450);
 
             }, function () {
