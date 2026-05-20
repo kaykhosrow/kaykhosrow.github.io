@@ -376,6 +376,7 @@
 
       .submit-btn:hover #btn-label { color: #fff !important; }
       .contact-form textarea { resize: none; overflow: hidden; }
+      #mail_name, #mail_email, #mail_message { transition: color 0.45s ease; }
 
       .contact-form input, .contact-form textarea { font-family: 'Scribble', cursive !important; font-size: 1.75rem !important; }
 
@@ -1015,15 +1016,15 @@
             <div class="row g-4 g-xl-5">
               <div class="col-sm-6">
                 <label for="mail_name">Name</label>
-                <input type="text" id="mail_name" name="mail_name" placeholder="" required />
+                <input type="text" id="mail_name" name="mail_name" placeholder="" spellcheck="false" />
               </div>
               <div class="col-sm-6">
                 <label for="mail_email">Email</label>
-                <input type="email" id="mail_email" name="mail_email" placeholder="" required />
+                <input type="email" id="mail_email" name="mail_email" placeholder="" spellcheck="false" />
               </div>
               <div class="col-12">
                 <label for="mail_message">Message</label>
-                <textarea id="mail_message" name="mail_message" placeholder=""></textarea>
+                <textarea id="mail_message" name="mail_message" placeholder="" spellcheck="false"></textarea>
               </div>
               <div class="col-12">
                 <button type="submit" id="mail-submit-btn" class="submit-btn position-relative">
@@ -1055,8 +1056,8 @@
           function fadeFields(out) {
             fieldIds.forEach(function (id) {
               var el = document.getElementById(id);
-              el.style.transition = 'opacity 0.45s ease';
-              el.style.opacity    = out ? '0' : '';
+              el.style.color      = out ? 'transparent' : '';
+              el.style.caretColor = out ? 'transparent' : '';
             });
           }
 
@@ -1089,7 +1090,7 @@
 
                 if (ta) {
                   var expandedH = ta.offsetHeight;
-                  ta.style.transition = 'height 0.45s cubic-bezier(0.4,0,0.2,1)';
+                  ta.style.transition = 'height 0.25s cubic-bezier(0.4,0,0.2,1)';
                   ta.style.height     = expandedH + 'px';
                   requestAnimationFrame(function () {
                     requestAnimationFrame(function () {
