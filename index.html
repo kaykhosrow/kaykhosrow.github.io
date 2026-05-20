@@ -1751,14 +1751,7 @@
         text.style.opacity  = visible ? '0.75'  : '0';
       }
 
-      img.addEventListener('mouseenter', function (e) {
-        if (ready && ctx) {
-          var rect  = img.getBoundingClientRect();
-          var x     = Math.floor((e.clientX - rect.left) * (img.naturalWidth  / rect.width));
-          var y     = Math.floor((e.clientY - rect.top)  * (img.naturalHeight / rect.height));
-          var alpha = ctx.getImageData(x, y, 1, 1).data[3];
-          if (alpha < 10) return;
-        }
+      img.addEventListener('mouseenter', function () {
         setVisible(true);
       });
 
