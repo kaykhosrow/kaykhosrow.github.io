@@ -1067,6 +1067,12 @@
             var name    = document.getElementById('mail_name').value.trim();
             var email   = document.getElementById('mail_email').value.trim();
             var message = document.getElementById('mail_message').value.trim();
+
+            /* basic validation */
+            if (!name || !email || !message) return;
+            var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            if (!emailOk) return;
+
             btn.disabled = true;
 
             /* fire EmailJS in background — animation runs regardless */
@@ -1096,7 +1102,7 @@
                 ta.style.height = expandedH + 'px';
                 requestAnimationFrame(function () {
                   requestAnimationFrame(function () {
-                    ta.style.transition = 'height 0.3s ease-out';
+                    ta.style.transition = 'height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                     ta.style.height     = trueNatural + 'px';
                   });
                 });
