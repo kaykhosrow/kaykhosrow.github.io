@@ -1080,29 +1080,34 @@
             label.style.opacity = '0';
 
             setTimeout(function () {
-              /* 2. swap to "sent", fade in + fade fields out simultaneously */
+              /* 2. swap to "sent", fade in + fade fields + reset + animate textarea */
               label.textContent   = 'sent';
               label.style.opacity = '1';
               fadeFields(true);
 
+              /* reset form while fields are fading invisible */
+              form.reset();
+
+              if (ta) {
+                var expandedH = ta.offsetHeight;
+                ta.style.transition = 'none';
+                ta.style.height     = 'auto';
+                var trueNatural     = ta.scrollHeight;
+                ta.style.height = expandedH + 'px';
+                requestAnimationFrame(function () {
+                  requestAnimationFrame(function () {
+                    ta.style.transition = 'height 0.3s ease-out';
+                    ta.style.height     = trueNatural + 'px';
+                  });
+                });
+              }
+
               setTimeout(function () {
-                /* 3. "sent" fades out + textarea shrinks simultaneously */
+                /* 3. "sent" fades out */
                 label.style.opacity = '0';
 
-                if (ta) {
-                  var expandedH = ta.offsetHeight;
-                  ta.style.transition = 'height 0.05s cubic-bezier(0.4,0,0.2,1)';
-                  ta.style.height     = expandedH + 'px';
-                  requestAnimationFrame(function () {
-                    requestAnimationFrame(function () {
-                      ta.style.height = naturalH + 'px';
-                    });
-                  });
-                }
-
                 setTimeout(function () {
-                  /* 4. reset form, swap back to "submit", restore fields */
-                  form.reset();
+                  /* 4. restore */
                   if (ta) { ta.style.transition = 'none'; ta.style.height = ''; }
                   label.textContent   = 'submit';
                   label.style.opacity = '1';
@@ -1111,6 +1116,7 @@
                 }, 450);
 
               }, 2500);
+            }, 450);
             }, 450);
           });
         })();
