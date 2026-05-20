@@ -1024,7 +1024,7 @@
               </div>
               <div class="col-12">
                 <label for="mail_message">Message</label>
-                <textarea id="mail_message" name="mail_message" placeholder="" spellcheck="false"></textarea>
+                <textarea id="mail_message" name="mail_message" placeholder="" spellcheck="false" required></textarea>
               </div>
               <div class="col-12">
                 <button type="submit" id="mail-submit-btn" class="submit-btn position-relative">
@@ -1102,7 +1102,7 @@
                 ta.style.height = expandedH + 'px';
                 requestAnimationFrame(function () {
                   requestAnimationFrame(function () {
-                    ta.style.transition = 'height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    ta.style.transition = 'height 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
                     ta.style.height     = trueNatural + 'px';
                   });
                 });
@@ -1119,7 +1119,7 @@
                   label.style.opacity = '1';
                   fadeFields(false);
                   btn.disabled = false;
-                }, 450);
+                }, 520);
 
               }, 2500);
             }, 450);
