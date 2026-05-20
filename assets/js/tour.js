@@ -172,13 +172,13 @@
     stackEl = document.createElement('div');
     stackEl.id        = 'tourStack';
     stackEl.className = 'tour-stack';
-    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview</span><span style="display:block;line-height:1.5;">Welcome to my page. Here you can explore my research, teaching, and conference activity, as well as selected code, cinematography, and contact details for any enquiries or potential collaboration.</span>';
+    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview</span><span style="display:block;line-height:1.5;position:relative;top:2.5px;">Welcome to my page. Here you can explore my research, teaching, and conference activity, as well as selected code, cinematography, and contact details for any enquiries or potential collaboration.</span>';
     document.body.appendChild(stackEl);
 
     stackEl2 = document.createElement('div');
     stackEl2.id        = 'tourStack2';
     stackEl2.className = 'tour-stack';
-    stackEl2.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Core languages</span><span style="display:block;line-height:1.5;">This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.</span>';
+    stackEl2.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;position:relative;top:-2.5px;">Core languages</span><span style="display:block;line-height:1.5;">This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.</span>';
     document.body.appendChild(stackEl2);
 
     NOTES.forEach(function (note) {
