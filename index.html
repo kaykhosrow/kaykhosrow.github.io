@@ -1752,7 +1752,7 @@
       function setVisible(v) {
         visible = v;
         arrow.style.opacity = visible ? '0.875' : '0';
-        text.style.opacity  = visible ? '0.875' : '0';
+        text.style.opacity  = visible ? '0.75'  : '0';
       }
 
       img.addEventListener('click', function (e) {
@@ -1766,11 +1766,10 @@
         setVisible(!visible);
       });
 
-      document.addEventListener('click', function (e) {
+      window.addEventListener('scroll', function () {
         if (!visible) return;
-        if (e.target === img) return;
         setVisible(false);
-      });
+      }, { passive: true });
     })();
     </script>
     <script>
