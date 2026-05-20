@@ -1011,7 +1011,7 @@
             <h4>Get in touch</h4>
             <h2>Contact</h2>
           </div>
-          <form id="mail-form" class="contact-form">
+          <form id="mail-form" class="contact-form" novalidate>
             <div class="row g-4 g-xl-5">
               <div class="col-sm-6">
                 <label for="mail_name">Name</label>
@@ -1055,9 +1055,8 @@
           function fadeFields(out) {
             fieldIds.forEach(function (id) {
               var el = document.getElementById(id);
-              el.style.transition = 'color 0.45s ease';
-              el.style.color      = out ? 'transparent' : '';
-              el.style.caretColor = out ? 'transparent' : '';
+              el.style.transition = 'opacity 0.45s ease';
+              el.style.opacity    = out ? '0' : '';
             });
           }
 
@@ -1079,14 +1078,14 @@
             label.style.opacity = '0';
 
             setTimeout(function () {
-              /* 2. swap to "sent", fade in */
+              /* 2. swap to "sent", fade in + fade fields out simultaneously */
               label.textContent   = 'sent';
               label.style.opacity = '1';
+              fadeFields(true);
 
               setTimeout(function () {
-                /* 3. "sent" fades out + fields fade out + textarea shrinks simultaneously */
+                /* 3. "sent" fades out + textarea shrinks simultaneously */
                 label.style.opacity = '0';
-                fadeFields(true);
 
                 if (ta) {
                   var expandedH = ta.offsetHeight;
@@ -1100,7 +1099,7 @@
                 }
 
                 setTimeout(function () {
-                  /* 4. reset form, swap back to "submit", restore */
+                  /* 4. reset form, swap back to "submit", restore fields */
                   form.reset();
                   if (ta) { ta.style.transition = 'none'; ta.style.height = ''; }
                   label.textContent   = 'submit';
