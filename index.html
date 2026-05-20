@@ -1024,11 +1024,10 @@
                 <label for="mail_message">Message</label>
                 <textarea id="mail_message" name="mail_message" placeholder=""></textarea>
               </div>
-              <div class="col-12" style="position:relative;">
-                <button type="submit" id="mail-submit-btn" class="submit-btn position-relative" style="overflow:hidden;">
+              <div class="col-12">
+                <button type="submit" id="mail-submit-btn" class="submit-btn position-relative">
                   <div class="vac-ripple"></div><div class="vac-ripple"></div><div class="vac-ripple"></div><div class="vac-ripple"></div>
-                  <span id="btn-submit-text" style="transition:opacity 0.45s ease;">submit</span>
-                  <span id="btn-sent-text" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.45s ease; pointer-events:none;">sent</span>
+                  <span id="btn-label" style="transition:opacity 0.45s ease; position:relative; z-index:1;">submit</span>
                 </button>
               </div>
             </div>
@@ -1043,26 +1042,17 @@
         (function () {
           emailjs.init('fybQHhiPm_cSYSyN_');
 
-          var form       = document.getElementById('mail-form');
-          var btn        = document.getElementById('mail-submit-btn');
-          var submitText = document.getElementById('btn-submit-text');
-          var sentText   = document.getElementById('btn-sent-text');
-          var fieldIds   = ['mail_name', 'mail_email', 'mail_message'];
+          var form     = document.getElementById('mail-form');
+          var btn      = document.getElementById('mail-submit-btn');
+          var label    = document.getElementById('btn-label');
+          var fieldIds = ['mail_name', 'mail_email', 'mail_message'];
 
-          function setFieldsTransparent() {
+          function fadeFields(out) {
             fieldIds.forEach(function (id) {
               var el = document.getElementById(id);
-              el.style.transition  = 'color 0.45s ease';
-              el.style.color       = 'transparent';
-              el.style.caretColor  = 'transparent';
-            });
-          }
-
-          function restoreFields() {
-            fieldIds.forEach(function (id) {
-              var el = document.getElementById(id);
-              el.style.color      = '';
-              el.style.caretColor = '';
+              el.style.transition = 'color 0.45s ease';
+              el.style.color      = out ? 'transparent' : '';
+              el.style.caretColor = out ? 'transparent' : '';
             });
           }
 
@@ -1071,35 +1061,51 @@
             var name    = document.getElementById('mail_name').value.trim();
             var email   = document.getElementById('mail_email').value.trim();
             var message = document.getElementById('mail_message').value.trim();
-
             btn.disabled = true;
 
             emailjs.send('service_1wcir5j', 'template_trkbs7h', {
               name: name, email: email, message: message
             }).then(function () {
 
-              /* 1. fade field text + submit text out */
-              setFieldsTransparent();
-              submitText.style.opacity = '0';
+              /* 1. fade "submit" out */
+              label.style.opacity = '0';
 
               setTimeout(function () {
-                /* 2. reset form while text is invisible */
-                form.reset();
-                var ta = document.getElementById('mail_message');
-                if (ta) ta.style.height = 'auto';
-
-                /* 3. fade "sent" in */
-                sentText.style.opacity = '1';
+                /* 2. swap text to "sent", fade it in */
+                label.textContent   = 'sent';
+                label.style.opacity = '1';
 
                 setTimeout(function () {
-                  /* 4. fade "sent" out */
-                  sentText.style.opacity = '0';
+                  /* 3. fade "sent" out */
+                  label.style.opacity = '0';
 
                   setTimeout(function () {
-                    /* 5. fade "submit" back in, restore field colours */
-                    submitText.style.opacity = '1';
-                    restoreFields();
+                    /* 4. reset form while invisible, animate textarea */
+                    var ta = document.getElementById('mail_message');
+                    var expandedH = ta ? ta.offsetHeight : 0;
+                    form.reset();
+
+                    if (ta && expandedH) {
+                      /* measure natural (empty) height */
+                      ta.style.transition = 'none';
+                      ta.style.height     = 'auto';
+                      var naturalH = ta.scrollHeight;
+                      /* restore expanded, then animate to natural */
+                      ta.style.height = expandedH + 'px';
+                      requestAnimationFrame(function () {
+                        requestAnimationFrame(function () {
+                          ta.style.transition = 'height 0.55s cubic-bezier(0.4,0,0.2,1)';
+                          ta.style.height     = naturalH + 'px';
+                        });
+                      });
+                    }
+
+                    /* 5. swap back to "submit" and fade fields in together */
+                    label.textContent   = 'submit';
+                    label.style.opacity = '1';
+                    fadeFields(false);
                     btn.disabled = false;
+
                   }, 450);
                 }, 2000);
               }, 450);
