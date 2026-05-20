@@ -1726,10 +1726,6 @@
         }
       });
 
-      img.addEventListener('mouseleave', function () {
-        img.style.cursor = 'default';
-      });
-
       var canvas = document.createElement('canvas');
       var ctx    = null;
       var ready  = false;
@@ -1755,7 +1751,7 @@
         text.style.opacity  = visible ? '0.75'  : '0';
       }
 
-      img.addEventListener('click', function (e) {
+      img.addEventListener('mouseenter', function (e) {
         if (ready && ctx) {
           var rect  = img.getBoundingClientRect();
           var x     = Math.floor((e.clientX - rect.left) * (img.naturalWidth  / rect.width));
@@ -1763,7 +1759,12 @@
           var alpha = ctx.getImageData(x, y, 1, 1).data[3];
           if (alpha < 10) return;
         }
-        setVisible(!visible);
+        setVisible(true);
+      });
+
+      img.addEventListener('mouseleave', function () {
+        img.style.cursor = 'default';
+        setVisible(false);
       });
 
       
