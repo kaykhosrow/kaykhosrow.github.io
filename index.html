@@ -1086,27 +1086,30 @@
             label.style.opacity = '0';
 
             setTimeout(function () {
-              /* 2. swap to "sent", fade in + fade fields + reset + animate textarea */
+              /* 2. swap to "sent", fade in + fade fields out */
               label.textContent   = 'sent';
               label.style.opacity = '1';
               fadeFields(true);
 
-              /* reset form while fields are fading invisible */
-              form.reset();
+              /* wait for colour fade to complete THEN reset + animate textarea */
+              setTimeout(function () {
+                form.reset();
 
-              if (ta) {
-                var expandedH = ta.offsetHeight;
-                ta.style.transition = 'none';
-                ta.style.height     = 'auto';
-                var trueNatural     = ta.scrollHeight;
-                ta.style.height = expandedH + 'px';
-                requestAnimationFrame(function () {
+                if (ta) {
+                  var expandedH = ta.offsetHeight;
+                  ta.style.transition = 'none';
+                  ta.style.height     = 'auto';
+                  var trueNatural     = ta.scrollHeight;
+                  ta.style.height = expandedH + 'px';
                   requestAnimationFrame(function () {
-                    ta.style.transition = 'height 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
-                    ta.style.height     = trueNatural + 'px';
+                    requestAnimationFrame(function () {
+                      ta.style.transition = 'height 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
+                      ta.style.height     = trueNatural + 'px';
+                    });
                   });
-                });
-              }
+                }
+
+              }, 450);
 
               setTimeout(function () {
                 /* 3. "sent" fades out */
