@@ -376,9 +376,7 @@
 
       .submit-btn:hover #btn-label { color: #fff !important; }
       .contact-form textarea { resize: none; overflow: hidden; }
-      .contact-form .col-sm-6,
-      .contact-form .col-12:has(#mail_message) { border-bottom: 1px solid rgb(var(--black)); }
-      #mail_name, #mail_email, #mail_message { border-bottom: none !important; transition: opacity 0.45s ease; }
+      #mail_name, #mail_email, #mail_message { transition: color 0.45s ease, -webkit-text-fill-color 0.45s ease; }
 
       .contact-form input, .contact-form textarea { font-family: 'Scribble', cursive !important; font-size: 1.75rem !important; }
 
@@ -1058,7 +1056,9 @@
           function fadeFields(out) {
             fieldIds.forEach(function (id) {
               var el = document.getElementById(id);
-              el.style.opacity = out ? '0' : '';
+              el.style.color                = out ? 'transparent' : '';
+              el.style.webkitTextFillColor  = out ? 'transparent' : '';
+              el.style.caretColor           = out ? 'transparent' : '';
             });
           }
 
