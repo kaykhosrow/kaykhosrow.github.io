@@ -1024,11 +1024,12 @@
                 <label for="mail_message">Message</label>
                 <textarea id="mail_message" name="mail_message" placeholder=""></textarea>
               </div>
-              <div class="col-12">
-                <button type="submit" id="mail-submit-btn" class="submit-btn position-relative">
+              <div class="col-12" style="position:relative;">
+                <button type="submit" id="mail-submit-btn" class="submit-btn position-relative" style="transition:opacity 0.5s ease;">
                   <div class="vac-ripple"></div><div class="vac-ripple"></div><div class="vac-ripple"></div><div class="vac-ripple"></div>
                   submit
                 </button>
+                <span id="mail-sent-msg" style="position:absolute; left:0; top:50%; transform:translateY(-50%); font-family:'Poppins',sans-serif; font-size:24px; font-weight:500; color:rgb(var(--black)); opacity:0; transition:opacity 0.5s ease; pointer-events:none;">sent</span>
               </div>
             </div>
           </form>
@@ -1037,19 +1038,64 @@
           </div>
         </section>
 
+        <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
         <script>
-          document.getElementById('mail-form').addEventListener('submit', function(e) {
+        (function () {
+          emailjs.init('fybQHhiPm_cSYSyN_');
+
+          var form    = document.getElementById('mail-form');
+          var fields  = form.querySelector('.row');
+          var btn     = document.getElementById('mail-submit-btn');
+          var sentMsg = document.getElementById('mail-sent-msg');
+
+          fields.style.transition = 'opacity 0.5s ease';
+
+          form.addEventListener('submit', function (e) {
             e.preventDefault();
+
             var name    = document.getElementById('mail_name').value.trim();
+            var email   = document.getElementById('mail_email').value.trim();
             var message = document.getElementById('mail_message').value.trim();
-            var subject = encodeURIComponent('Message from ' + name);
-            var body    = encodeURIComponent(message);
-            var a = document.createElement('a');
-            a.href = 'mailto:omar.kaykhusraw@gmail.com?subject=' + subject + '&body=' + body;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+
+            btn.disabled = true;
+
+            emailjs.send('service_1wcir5j', 'template_trkbs7h', {
+              name:    name,
+              email:   email,
+              message: message
+            }).then(function () {
+              /* fade out fields and submit */
+              fields.style.opacity = '0';
+              btn.style.opacity    = '0';
+
+              setTimeout(function () {
+                btn.style.display = 'none';
+                /* fade in sent */
+                sentMsg.style.opacity = '1';
+
+                setTimeout(function () {
+                  /* fade out sent */
+                  sentMsg.style.opacity = '0';
+
+                  setTimeout(function () {
+                    /* reset and restore */
+                    form.reset();
+                    var ta = document.getElementById('mail_message');
+                    if (ta) ta.style.height = 'auto';
+                    btn.style.display  = '';
+                    btn.disabled       = false;
+                    fields.style.opacity = '1';
+                    btn.style.opacity    = '1';
+                  }, 500);
+                }, 2500);
+              }, 500);
+
+            }, function (err) {
+              btn.disabled = false;
+              alert('Something went wrong — please try again.');
+            });
           });
+        })();
         </script>
 
         <footer>
