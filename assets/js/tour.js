@@ -1,401 +1,390 @@
-/*
-	Dimension by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
-
-(function($) {
-
-	var	$window = $(window),
-		$body = $('body'),
-		$wrapper = $('#wrapper'),
-		$header = $('#header'),
-		$footer = $('#footer'),
-		$main = $('#main'),
-		$main_articles = $main.children('article');
-
-	// Breakpoints.
-		breakpoints({
-			xlarge:   [ '1281px',  '1680px' ],
-			large:    [ '981px',   '1280px' ],
-			medium:   [ '737px',   '980px'  ],
-			small:    [ '481px',   '736px'  ],
-			xsmall:   [ '361px',   '480px'  ],
-			xxsmall:  [ null,      '360px'  ]
-		});
-
-	// Play initial animations on page load.
-		$window.on('load', function() {
-			window.setTimeout(function() {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
-
-	// Fix: Flexbox min-height bug on IE.
-		if (browser.name == 'ie') {
-
-			var flexboxFixTimeoutId;
-
-			$window.on('resize.flexbox-fix', function() {
-
-				clearTimeout(flexboxFixTimeoutId);
-
-				flexboxFixTimeoutId = setTimeout(function() {
-
-					if ($wrapper.prop('scrollHeight') > $window.height())
-						$wrapper.css('height', 'auto');
-					else
-						$wrapper.css('height', '100vh');
-
-				}, 250);
-
-			}).triggerHandler('resize.flexbox-fix');
-
-		}
-
-	// Nav.
-		var $nav = $header.children('nav'),
-			$nav_li = $nav.find('li');
-
-		// Add "middle" alignment classes if we're dealing with an even number of items.
-			if ($nav_li.length % 2 == 0) {
-
-				$nav.addClass('use-middle');
-				$nav_li.eq( ($nav_li.length / 2) ).addClass('is-middle');
-
-			}
-
-	// Main.
-		var	delay = 325,
-			locked = false;
-
-		// Methods.
-			$main._show = function(id, initial) {
-
-				var $article = $main_articles.filter('#' + id);
-
-				// No such article? Bail.
-					if ($article.length == 0)
-						return;
-
-				// Handle lock.
-
-					// Already locked? Speed through "show" steps w/o delays.
-						if (locked || (typeof initial != 'undefined' && initial === true)) {
-
-							// Mark as switching.
-								$body.addClass('is-switching');
-
-							// Mark as visible.
-								$body.addClass('is-article-visible');
-
-							// Deactivate all articles (just in case one's already active).
-								$main_articles.removeClass('active');
-
-							// Hide header, footer.
-								$header.hide();
-								$footer.hide();
-
-							// Show main, article.
-								$main.show();
-								$article.show();
-
-							// Activate article.
-								$article.addClass('active');
-
-							// Unlock.
-								locked = false;
-
-							// Unmark as switching.
-								setTimeout(function() {
-									$body.removeClass('is-switching');
-								}, (initial ? 1000 : 0));
-
-							return;
-
-						}
-
-					// Lock.
-						locked = true;
-
-				// Article already visible? Just swap articles.
-					if ($body.hasClass('is-article-visible')) {
-
-						// Deactivate current article.
-							var $currentArticle = $main_articles.filter('.active');
-
-							$currentArticle.removeClass('active');
-
-						// Show article.
-							setTimeout(function() {
-
-								// Hide current article.
-									$currentArticle.hide();
-
-								// Show article.
-									$article.show();
-
-								// Activate article.
-									setTimeout(function() {
-
-										$article.addClass('active');
-
-										// Window stuff.
-											$window
-												.scrollTop(0)
-												.triggerHandler('resize.flexbox-fix');
-
-										// Unlock.
-											setTimeout(function() {
-												locked = false;
-											}, delay);
-
-									}, 25);
-
-							}, delay);
-
-					}
-
-				// Otherwise, handle as normal.
-					else {
-
-						// Mark as visible.
-							$body
-								.addClass('is-article-visible');
-
-						// Show article.
-							setTimeout(function() {
-
-								// Hide header, footer.
-									$header.hide();
-									$footer.hide();
-
-								// Show main, article.
-									$main.show();
-									$article.show();
-
-								// Activate article.
-									setTimeout(function() {
-
-										$article.addClass('active');
-
-										// Window stuff.
-											$window
-												.scrollTop(0)
-												.triggerHandler('resize.flexbox-fix');
-
-										// Unlock.
-											setTimeout(function() {
-												locked = false;
-											}, delay);
-
-									}, 25);
-
-							}, delay);
-
-					}
-
-			};
-
-			$main._hide = function(addState) {
-
-				var $article = $main_articles.filter('.active');
-
-				// Article not visible? Bail.
-					if (!$body.hasClass('is-article-visible'))
-						return;
-
-				// Add state?
-					if (typeof addState != 'undefined'
-					&&	addState === true)
-						history.pushState(null, null, '#');
-
-				// Handle lock.
-
-					// Already locked? Speed through "hide" steps w/o delays.
-						if (locked) {
-
-							// Mark as switching.
-								$body.addClass('is-switching');
-
-							// Deactivate article.
-								$article.removeClass('active');
-
-							// Hide article, main.
-								$article.hide();
-								$main.hide();
-
-							// Show footer, header.
-								$footer.show();
-								$header.show();
-
-							// Unmark as visible.
-								$body.removeClass('is-article-visible');
-
-							// Unlock.
-								locked = false;
-
-							// Unmark as switching.
-								$body.removeClass('is-switching');
-
-							// Window stuff.
-								$window
-									.scrollTop(0)
-									.triggerHandler('resize.flexbox-fix');
-
-							return;
-
-						}
-
-					// Lock.
-						locked = true;
-
-				// Deactivate article.
-					$article.removeClass('active');
-
-				// Hide article.
-					setTimeout(function() {
-
-						// Hide article, main.
-							$article.hide();
-							$main.hide();
-
-						// Show footer, header.
-							$footer.show();
-							$header.show();
-
-						// Unmark as visible.
-							setTimeout(function() {
-
-								$body.removeClass('is-article-visible');
-
-								// Window stuff.
-									$window
-										.scrollTop(0)
-										.triggerHandler('resize.flexbox-fix');
-
-								// Unlock.
-									setTimeout(function() {
-										locked = false;
-									}, delay);
-
-							}, 25);
-
-					}, delay);
-
-
-			};
-
-		// Articles.
-			$main_articles.each(function() {
-
-				var $this = $(this);
-
-				// Close.
-					$('<div class="close">Close</div>')
-						.appendTo($this)
-						.on('click', function() {
-							location.hash = '';
-						});
-
-				// Prevent clicks from inside article from bubbling.
-					$this.on('click', function(event) {
-						event.stopPropagation();
-					});
-
-			});
-
-		// Events.
-			$body.on('click', function(event) {
-
-				// Article visible? Hide.
-					if ($body.hasClass('is-article-visible'))
-						$main._hide(true);
-
-			});
-
-			$window.on('keyup', function(event) {
-
-				switch (event.keyCode) {
-
-					case 27:
-
-						// Article visible? Hide.
-							if ($body.hasClass('is-article-visible'))
-								$main._hide(true);
-
-						break;
-
-					default:
-						break;
-
-				}
-
-			});
-
-			$window.on('hashchange', function(event) {
-
-				// Empty hash?
-					if (location.hash == ''
-					||	location.hash == '#') {
-
-						// Prevent default.
-							event.preventDefault();
-							event.stopPropagation();
-
-						// Hide.
-							$main._hide();
-
-					}
-
-				// Otherwise, check for a matching article.
-					else if ($main_articles.filter(location.hash).length > 0) {
-
-						// Prevent default.
-							event.preventDefault();
-							event.stopPropagation();
-
-						// Show article.
-							$main._show(location.hash.substr(1));
-
-					}
-
-			});
-
-		// Scroll restoration.
-		// This prevents the page from scrolling back to the top on a hashchange.
-			if ('scrollRestoration' in history)
-				history.scrollRestoration = 'manual';
-			else {
-
-				var	oldScrollPos = 0,
-					scrollPos = 0,
-					$htmlbody = $('html,body');
-
-				$window
-					.on('scroll', function() {
-
-						oldScrollPos = scrollPos;
-						scrollPos = $htmlbody.scrollTop();
-
-					})
-					.on('hashchange', function() {
-						$window.scrollTop(oldScrollPos);
-					});
-
-			}
-
-		// Initialize.
-
-			// Hide main, articles.
-				$main.hide();
-				$main_articles.hide();
-
-			// Initial article.
-				if (location.hash != ''
-				&&	location.hash != '#')
-					$window.on('load', function() {
-						$main._show(location.hash.substr(1), true);
-					});
-
-})(jQuery);
+/* ─────────────────────────────────────────────────────────────────────────────
+   tour.js  —  Site walkthrough
+   <script defer src="assets/js/tour.js"></script>
+   Arrows: assets/images/arrow1.png / arrow2.png / arrow3.png
+
+   ───────────────────────────────────────────────────────────────────────────── */
+(function () {
+  'use strict';
+
+  var NOTES = [
+    {
+      sel:           '#heroName',
+      text:          'Click here for pronunciation',
+      approachAngle: 180,
+      tailDist:      115,
+      textSide:      'above',
+      tilt:          0,
+      arrowImg:      1,
+      baseAngle:     2.5,
+      arrowOffsetX:  -175,
+      arrowOffsetY:  -35,
+      textOffsetY:   -58.5,
+      textOffsetX:   -5,
+    },
+    {
+      sel:           '.work-btn',
+      text:          'Click here to learn more',
+      approachAngle: 150,
+      tailDist:      140,
+      textSide:      'above',
+      tilt:          270,
+      arrowImg:      1,
+      baseAngle:     340,
+      flipX:         true,
+      arrowOffsetX:  -245,
+      arrowOffsetY:  20,
+      textOffsetY:   -106.75,
+      textOffsetX:   -106.75,
+    },
+    {
+      sel:           '.contact-btn',
+      text:          'Click here to connect',
+      approachAngle: 0,
+      tailDist:      140,
+      textSide:      'above',
+      tilt:          0,
+      arrowImg:      1,
+      baseAngle:     5,
+      flipX:         true,
+      arrowOffsetX:  275,
+      arrowOffsetY:  38.5,
+      textOffsetY:   113.75,
+      textOffsetX:   130,
+    },
+    {
+      sel:           '#settingsGearBtn',
+      text:          'Customise this site',
+      approachAngle: 90,
+      tailDist:      100,
+      textSide:      'left',
+      tilt:          0,
+      arrowImg:      1,
+      baseAngle:     12.5,
+      arrowOffsetX:  -47.5,
+      arrowOffsetY:  0,
+      textOffsetY:   4.75,
+      textOffsetX:   -65,
+      zIndex:        55,
+    },
+  ];
+
+  var ARR     = 115;
+  var GAP     = 12;
+  var TIP_CLR = 8;
+  var FADE_MS = 380;
+
+  var STACK_W        = 500;
+  var STACK_LEFT_PAD = 150;
+
+  var tourActive  = false;
+  var pendingShow = false;
+  var pairs      = [];
+  var stackEl    = null;
+  var stackEl2   = null;
+
+  var styleEl = document.createElement('style');
+  styleEl.textContent = [
+
+    '@font-face{font-family:"Scribble";src:url("assets/fonts/Scribble.otf") format("opentype");}',
+
+    '#tourBtn{',
+    '  width:32px;height:32px;border-radius:4px;',
+    '  border:2px solid rgba(0,0,0,0.3);background:transparent;',
+    '  color:rgb(var(--black));font-size:0.9rem;',
+    '  font-family:"InterRegular",sans-serif;font-weight:500;line-height:1;',
+    '  cursor:pointer;display:flex;align-items:center;justify-content:center;',
+    '  flex-shrink:0;margin-left:auto;margin-right:13px;padding:0;',
+    '  transition:border-color .2s,opacity .35s;',
+    '  user-select:none;',
+    '}',
+    '#tourBtn.t-on    { border-color:rgba(0,0,0,0.5); }',
+    '#tourBtn.t-faded { opacity:0!important; pointer-events:none; }',
+
+    '.tour-arrow {',
+    '  position:absolute;',
+    '  top:0; left:-9999px;',
+    '  width:' + ARR + 'px; height:' + ARR + 'px;',
+    '  object-fit:contain; object-position:center;',
+    '  pointer-events:none;',
+    '  transform-origin:center center;',
+    '  opacity:0;',
+    '  transition:opacity ' + FADE_MS + 'ms ease;',
+    '  filter:drop-shadow(1px 1px 3px rgba(0,0,0,0.25));',
+    '}',
+    '.tour-arrow.t-on { opacity:0.875; }',
+
+    '.tour-note {',
+    '  position:absolute;',
+    '  top:0; left:-9999px;',
+    '  pointer-events:none;',
+    '  white-space:nowrap;',
+    '  opacity:0;',
+    '  transition:opacity ' + FADE_MS + 'ms ease;',
+    '}',
+    '.tour-note.t-on { opacity:0.875; }',
+
+    '.tn-text {',
+    '  font-family:"Scribble","InterRegular",cursive;',
+    '  font-size:1.38rem; line-height:1.4;',
+    '  color:rgba(0,0,0,0.88);',
+    '  text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12);',
+    '  white-space:nowrap; display:block;',
+    '}',
+
+    '.tour-stack {',
+    '  position:absolute;',
+    '  top:0; left:-9999px;',
+    '  width:' + STACK_W + 'px;',
+    '  font-family:"Scribble",cursive;',
+    '  font-size:1.5rem;',
+    '  line-height:1.25;',
+    '  color:rgba(0,0,0,0.88);',
+    '  text-align:justify;',
+    '  text-align-last:left;',
+    '  text-shadow:0.1px 0.1px 1.5px rgba(0,0,0,0.45),0 2px 8px rgba(0,0,0,0.12);',
+    '  pointer-events:none;',
+    '  user-select:none;',
+    '  opacity:0;',
+    '  transition:opacity ' + FADE_MS + 'ms ease;',
+    '}',
+    '.tour-stack.t-on { opacity:1; }',
+
+
+  ].join('\n');
+  document.head.appendChild(styleEl);
+
+  function init() {
+    var nav = document.getElementById('navigation');
+    if (!nav) return;
+    var bar = nav.querySelector('.settings-bar');
+    if (!bar) return;
+
+    var btn = document.createElement('button');
+    btn.id          = 'tourBtn';
+    btn.title       = 'Site guide';
+    btn.setAttribute('aria-label', 'Toggle site guide');
+    btn.className   = 'd-none d-xl-flex';
+    btn.innerHTML   = '<i class="ph ph-info" style="font-size:1rem;"></i>';
+    bar.style.marginLeft = '0';
+    nav.insertBefore(btn, bar);
+
+    stackEl = document.createElement('div');
+    stackEl.id        = 'tourStack';
+    stackEl.className = 'tour-stack';
+    stackEl.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Overview</span><span style="display:block;line-height:1.5;position:relative;top:2.5px;">Welcome to my page. Here you can explore my research, teaching, and conference activity, as well as selected code, cinematography, and contact details for any enquiries or potential collaboration.</span>';
+    document.body.appendChild(stackEl);
+
+    stackEl2 = document.createElement('div');
+    stackEl2.id        = 'tourStack2';
+    stackEl2.className = 'tour-stack';
+    stackEl2.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;position:relative;top:-7.5px;">Core languages</span><span style="display:block;line-height:1.5;position:relative;top:-5px;">This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.</span>';
+    document.body.appendChild(stackEl2);
+
+    NOTES.forEach(function (note) {
+      var arrowEl = document.createElement('img');
+      arrowEl.className = 'tour-arrow';
+      arrowEl.alt = '';
+      arrowEl.setAttribute('aria-hidden', 'true');
+      arrowEl.src = 'assets/images/arrow' + note.arrowImg + '.png';
+      document.body.appendChild(arrowEl);
+
+      var textEl = document.createElement('div');
+      textEl.className = 'tour-note';
+      var span = document.createElement('span');
+      span.className   = 'tn-text';
+      span.textContent = note.text;
+      textEl.appendChild(span);
+      textEl.style.transform = 'rotate(' + note.tilt + 'deg)';
+      document.body.appendChild(textEl);
+
+      pairs.push({ arrow: arrowEl, text: textEl });
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!tourActive) return;
+      if (e.target.closest('#tourBtn, .tour-stack, .tour-arrow, .tour-note')) return;
+      if (e.target.closest('#heroNameWrap, #pronounceBtn, #pronText, #pronProgressBar')) return;
+      if (e.target.closest('.settings-bar')) return;
+      if (e.target.closest('.left-bar li')) return;
+      hideAll();
+    });
+
+    window.addEventListener('scroll', function () {
+      if (pendingShow && window.scrollY < 1) {
+        pendingShow = false;
+        showAll();
+        return;
+      }
+      if (!pendingShow && window.scrollY > 25 && tourActive) hideAll();
+    }, { passive: true });
+
+    btn.addEventListener('click', function () {
+      if (window.scrollY > 25) {
+        pendingShow = true;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        tourActive ? hideAll() : showAll();
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      if (tourActive) positionAll();
+    }, { passive: true });
+  }
+
+  function showAll() {
+    tourActive = true;
+    document.getElementById('tourBtn').classList.add('t-on');
+    positionAll();
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        pairs.forEach(function (p) {
+          p.arrow.classList.add('t-on');
+          p.text.classList.add('t-on');
+        });
+        if (stackEl)  stackEl.classList.add('t-on');
+        if (stackEl2) stackEl2.classList.add('t-on');
+      });
+    });
+  }
+
+  function hideAll() {
+    tourActive = false;
+    document.getElementById('tourBtn').classList.remove('t-on');
+    pairs.forEach(function (p) {
+      p.arrow.classList.remove('t-on');
+      p.text.classList.remove('t-on');
+    });
+    if (stackEl)  stackEl.classList.remove('t-on');
+    if (stackEl2) stackEl2.classList.remove('t-on');
+  }
+
+  function positionAll() {
+    NOTES.forEach(function (note, i) {
+      positionPair(pairs[i].arrow, pairs[i].text, note);
+    });
+    positionStack();
+    positionStack2();
+  }
+
+  function positionStack2() {
+    if (!stackEl2) return;
+    var content = document.querySelector('.hero-content');
+    var btnRow  = document.querySelector('.hero-content .d-flex');
+    if (!content || !btnRow) return;
+
+    var rr  = btnRow.getBoundingClientRect();
+    var cr  = content.getBoundingClientRect();
+    var sy  = window.scrollY;
+    var sx  = window.scrollX;
+
+    var top  = rr.top + sy - stackEl2.offsetHeight + 172.5;
+    var left = cr.right + sx + 105;
+
+    stackEl2.style.top  = top  + 'px';
+    stackEl2.style.left = left + 'px';
+  }
+
+  function positionStack() {
+    if (!stackEl) return;
+    var content = document.querySelector('.hero-content');
+    var btnRow  = document.querySelector('.hero-content .d-flex');
+    if (!content || !btnRow) return;
+
+    var rr  = btnRow.getBoundingClientRect();
+    var cr  = content.getBoundingClientRect();
+    var sy  = window.scrollY;
+    var sx  = window.scrollX;
+
+    var top  = rr.top + sy - stackEl.offsetHeight + -40;
+    var left = cr.right + sx + 105;
+
+    stackEl.style.top  = top  + 'px';
+    stackEl.style.left = left + 'px';
+  }
+
+  function positionPair(arrowEl, textEl, note) {
+    var target = document.querySelector(note.sel);
+    if (!target) return;
+
+    var pr  = target.getBoundingClientRect();
+    var sx  = window.scrollX;
+    var sy  = window.scrollY;
+
+    var tCX = pr.left + pr.width  * 0.5 + sx;
+    var tCY = pr.top  + pr.height * 0.5 + sy;
+
+    var rad = note.approachAngle * Math.PI / 180;
+    var ux  = Math.cos(rad);
+    var uy  = Math.sin(rad);
+
+    var shiftedPr = {
+      left:   pr.left   + sx,
+      top:    pr.top    + sy,
+      right:  pr.right  + sx,
+      bottom: pr.bottom + sy,
+      width:  pr.width,
+      height: pr.height
+    };
+
+    var tipPt = rectEdge(shiftedPr, tCX - ux * 2000, tCY - uy * 2000);
+    var tipX  = tipPt.x - ux * TIP_CLR;
+    var tipY  = tipPt.y - uy * TIP_CLR;
+
+    var tailX = tipX - ux * note.tailDist;
+    var tailY = tipY - uy * note.tailDist;
+
+    var arrCX    = (tipX + tailX) * 0.5;
+    var arrCY    = (tipY + tailY) * 0.5;
+    var rotation = note.approachAngle - (note.baseAngle || 0);
+
+    arrowEl.style.left = (arrCX - ARR * 0.5 + (note.arrowOffsetX || 0)) + 'px';
+    arrowEl.style.top  = (arrCY - ARR * 0.5 + (note.arrowOffsetY || 0)) + 'px';
+
+    if (note.zIndex) {
+      arrowEl.style.zIndex = note.zIndex;
+      textEl.style.zIndex  = note.zIndex;
+    }
+
+    var flip = (note.flipX ? 'scaleX(-1) ' : '') + (note.flipY ? 'scaleY(-1) ' : '');
+    arrowEl.style.transform = flip + 'rotate(' + rotation.toFixed(1) + 'deg)';
+
+    var nW  = textEl.offsetWidth  || 240;
+    var nH  = textEl.offsetHeight || 36;
+    var ox  = note.arrowOffsetX || 0;
+    var oy  = note.arrowOffsetY || 0;
+    var tox = note.textOffsetX  || 0;
+    var toy = note.textOffsetY  || 0;
+    var ax, ay;
+
+    switch (note.textSide) {
+      case 'above': ax = tailX - nW * 0.5 + ox + tox; ay = tailY - nH - GAP + oy + toy; break;
+      case 'below': ax = tailX - nW * 0.5 + ox + tox; ay = tailY + GAP       + oy + toy; break;
+      case 'left':  ax = tailX - nW - GAP  + ox + tox; ay = tailY - nH * 0.5 + oy + toy; break;
+      case 'right': ax = tailX + GAP       + ox + tox; ay = tailY - nH * 0.5 + oy + toy; break;
+      default:      ax = tailX - nW * 0.5 + ox + tox; ay = tailY - nH - GAP  + oy + toy;
+    }
+
+    textEl.style.left = ax + 'px';
+    textEl.style.top  = ay + 'px';
+  }
+
+  function rectEdge(rect, fx, fy) {
+    var cx = rect.left + rect.width  * 0.5;
+    var cy = rect.top  + rect.height * 0.5;
+    var dx = fx - cx, dy = fy - cy;
+    if (!dx && !dy) return { x: cx, y: cy };
+    var sx = dx ? rect.width  * 0.5 / Math.abs(dx) : 1e9;
+    var sy = dy ? rect.height * 0.5 / Math.abs(dy) : 1e9;
+    var s  = Math.min(sx, sy);
+    return { x: cx + dx * s, y: cy + dy * s };
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
