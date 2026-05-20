@@ -1048,6 +1048,10 @@
           var label    = document.getElementById('btn-label');
           var fieldIds = ['mail_name', 'mail_email', 'mail_message'];
 
+          /* store natural textarea height on load (when empty) */
+          var ta = document.getElementById('mail_message');
+          var naturalH = ta ? ta.scrollHeight : 58;
+
           function fadeFields(out) {
             fieldIds.forEach(function (id) {
               var el = document.getElementById(id);
@@ -1064,56 +1068,49 @@
             var message = document.getElementById('mail_message').value.trim();
             btn.disabled = true;
 
-            /* fade "submit" out */
-            label.style.opacity = '0';
-
+            /* fire EmailJS in background — animation runs regardless */
             emailjs.send('service_1wcir5j', 'template_trkbs7h', {
               name: name, email: email, message: message
-            }).then(function () {
+            }).catch(function () {
+              console.warn('EmailJS send failed.');
+            });
+
+            /* 1. fade "submit" out immediately */
+            label.style.opacity = '0';
+
+            setTimeout(function () {
+              /* 2. swap to "sent", fade in */
+              label.textContent   = 'sent';
+              label.style.opacity = '1';
 
               setTimeout(function () {
-                /* swap to "sent", fade in — also fade fields out now */
-                label.textContent   = 'sent';
-                label.style.opacity = '1';
+                /* 3. "sent" fades out + fields fade out + textarea shrinks simultaneously */
+                label.style.opacity = '0';
                 fadeFields(true);
 
+                if (ta) {
+                  var expandedH = ta.offsetHeight;
+                  ta.style.transition = 'height 0.45s cubic-bezier(0.4,0,0.2,1)';
+                  ta.style.height     = expandedH + 'px';
+                  requestAnimationFrame(function () {
+                    requestAnimationFrame(function () {
+                      ta.style.height = naturalH + 'px';
+                    });
+                  });
+                }
+
                 setTimeout(function () {
-                  /* fade "sent" out */
-                  label.style.opacity = '0';
+                  /* 4. reset form, swap back to "submit", restore */
+                  form.reset();
+                  if (ta) { ta.style.transition = 'none'; ta.style.height = ''; }
+                  label.textContent   = 'submit';
+                  label.style.opacity = '1';
+                  fadeFields(false);
+                  btn.disabled = false;
+                }, 450);
 
-                  setTimeout(function () {
-                    /* reset form, animate textarea */
-                    var ta = document.getElementById('mail_message');
-                    var expandedH = ta ? ta.offsetHeight : 0;
-                    form.reset();
-
-                    if (ta && expandedH) {
-                      ta.style.transition = 'none';
-                      ta.style.height     = 'auto';
-                      var naturalH = ta.scrollHeight;
-                      ta.style.height = expandedH + 'px';
-                      requestAnimationFrame(function () {
-                        requestAnimationFrame(function () {
-                          ta.style.transition = 'height 0.55s cubic-bezier(0.4,0,0.2,1)';
-                          ta.style.height     = naturalH + 'px';
-                        });
-                      });
-                    }
-
-                    /* fade "submit" back in and restore field text */
-                    label.textContent   = 'submit';
-                    label.style.opacity = '1';
-                    fadeFields(false);
-                    btn.disabled = false;
-
-                  }, 450);
-                }, 2500);
-              }, 450);
-
-            }, function () {
-              btn.disabled = false;
-              alert('Something went wrong — please try again.');
-            });
+              }, 2500);
+            }, 450);
           });
         })();
         </script>
