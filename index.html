@@ -1636,15 +1636,12 @@
           var x     = Math.floor((e.clientX - rect.left) * (img.naturalWidth  / rect.width));
           var y     = Math.floor((e.clientY - rect.top)  * (img.naturalHeight / rect.height));
           var alpha = ctx.getImageData(x, y, 1, 1).data[3];
-          var onPixel = alpha >= 10;
-          img.style.cursor = onPixel ? 'default' : 'default';
-          setVisible(onPixel);
+          img.style.cursor = alpha >= 10 ? 'pointer' : 'default';
         }
       });
 
       img.addEventListener('mouseleave', function () {
         img.style.cursor = 'default';
-        setVisible(false);
       });
 
       var canvas = document.createElement('canvas');
@@ -1667,11 +1664,27 @@
       var visible = false;
 
       function setVisible(v) {
-        if (v === visible) return;
         visible = v;
         arrow.style.opacity = visible ? '0.875' : '0';
         text.style.opacity  = visible ? '0.875' : '0';
       }
+
+      img.addEventListener('click', function (e) {
+        if (ready && ctx) {
+          var rect  = img.getBoundingClientRect();
+          var x     = Math.floor((e.clientX - rect.left) * (img.naturalWidth  / rect.width));
+          var y     = Math.floor((e.clientY - rect.top)  * (img.naturalHeight / rect.height));
+          var alpha = ctx.getImageData(x, y, 1, 1).data[3];
+          if (alpha < 10) return;
+        }
+        setVisible(!visible);
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!visible) return;
+        if (e.target === img) return;
+        setVisible(false);
+      });
     })();
     </script>
   </body>
