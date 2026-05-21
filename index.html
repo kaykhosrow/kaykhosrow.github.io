@@ -1586,8 +1586,9 @@
           var target = document.getElementById('about');
           var nav    = document.getElementById('navigation');
           if (!target) return;
-          var offset = window.scrollY < 1 ? 0 : (nav ? nav.offsetHeight : 60);
-          var top = target.getBoundingClientRect().top + window.scrollY - offset;
+          var aboutAbs = target.getBoundingClientRect().top + window.scrollY;
+          if (window.scrollY < 1 && nav) aboutAbs += nav.offsetHeight;
+          var top = Math.max(1, aboutAbs + 120 - window.innerHeight + 50);
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
       });
