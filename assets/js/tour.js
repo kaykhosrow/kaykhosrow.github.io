@@ -248,7 +248,7 @@
     var sx  = window.scrollX;
 
     var top  = rr.top + sy - stackEl2.offsetHeight + 172.5;
-    var left = 92 + sx;
+    var left = Math.max(92, cr.left + sx - 200);
 
     stackEl3.style.top  = top  + 'px';
     stackEl3.style.left = left + 'px';
