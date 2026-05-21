@@ -17,10 +17,10 @@
       tilt:          0,
       arrowImg:      1,
       baseAngle:     2.5,
-      arrowOffsetX:  -175,
+      arrowOffsetX:  -125,
       arrowOffsetY:  -35,
       textOffsetY:   -58.5,
-      textOffsetX:   -5,
+      textOffsetX:   45,
     },
     {
       sel:           '#settingsGearBtn',
