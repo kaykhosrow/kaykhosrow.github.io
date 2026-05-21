@@ -6,6 +6,11 @@
     <title>Omar Kaykhusraw</title>
     <script defer src="assets/js/app.js"></script>
     <script defer src="assets/js/background.js"></script>
+    <script>
+      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        document.documentElement.classList.add('touch-device');
+      }
+    </script>
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
       html { zoom: 1; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; min-width: 1200px; }
@@ -66,9 +71,13 @@
       /* ── Synced from index.html ── */
       #navigation ul .nav-link a .text { letter-spacing: 0.05em; font-family: 'InterRegular', sans-serif !important; text-shadow: 0.1px 0.1px 1.25px rgba(0, 0, 0, 0.5); opacity: 0.75; }
       .section-title h2, .section-title h4 { min-height: 1.2em; }
-      .section-title h2 { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1px rgba(0, 0, 0, 0.5); }
-      .section-title h4 { font-family: 'InterRegular', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); }
-      .section-title-overlay-text { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1px rgba(0, 0, 0, 0.5); }
+      .section-title h2 { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1px rgba(0, 0, 0, 0.5); font-size: 80px !important; }
+      .section-title h4 { font-family: 'InterRegular', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); font-size: 24px !important; }
+      .section-title-overlay-text { font-family: 'BaronNeue', sans-serif !important; letter-spacing: 0.05em; text-shadow: 0.1px 0.1px 1px rgba(0, 0, 0, 0.5); font-size: 160px !important; }
+      .about.section { padding-top: 120px !important; }
+      .nav-overlay { display: none !important; }
+      /* ── Hide navigation on touch devices ── */
+      .touch-device #navigation { display: none !important; }
 
       ::-webkit-scrollbar { display: none; }
       * { scrollbar-width: none; }
