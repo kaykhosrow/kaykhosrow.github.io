@@ -32,7 +32,7 @@
 
   var STACK_W        = 500;
   var STACK_LEFT_PAD = 150;
-  var STACK_W3       = 420;
+  var STACK_W3       = 360;
 
   var tourActive  = false;
   var pendingShow = false;
@@ -248,7 +248,7 @@
     var sx  = window.scrollX;
 
     var top  = rr.top + sy - stackEl2.offsetHeight + 172.5;
-    var left = cr.left + sx - STACK_W3 - 105;
+    var left = 92 + sx;
 
     stackEl3.style.top  = top  + 'px';
     stackEl3.style.left = left + 'px';
