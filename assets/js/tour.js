@@ -9,50 +9,6 @@
 
   var NOTES = [
     {
-      sel:           '#heroName',
-      text:          'Click here for pronunciation',
-      approachAngle: 180,
-      tailDist:      115,
-      textSide:      'above',
-      tilt:          0,
-      arrowImg:      1,
-      baseAngle:     2.5,
-      arrowOffsetX:  -175,
-      arrowOffsetY:  -35,
-      textOffsetY:   -58.5,
-      textOffsetX:   -5,
-    },
-    {
-      sel:           '.work-btn',
-      text:          'Click here to learn more',
-      approachAngle: 150,
-      tailDist:      140,
-      textSide:      'above',
-      tilt:          270,
-      arrowImg:      1,
-      baseAngle:     340,
-      flipX:         true,
-      arrowOffsetX:  -245,
-      arrowOffsetY:  20,
-      textOffsetY:   -106.75,
-      textOffsetX:   -106.75,
-    },
-    {
-      sel:           '.contact-btn',
-      text:          'Click here to connect',
-      approachAngle: 0,
-      tailDist:      140,
-      textSide:      'above',
-      tilt:          0,
-      arrowImg:      1,
-      baseAngle:     5,
-      flipX:         true,
-      arrowOffsetX:  275,
-      arrowOffsetY:  38.5,
-      textOffsetY:   113.75,
-      textOffsetX:   130,
-    },
-    {
       sel:           '#settingsGearBtn',
       text:          'Customise this site',
       approachAngle: 90,
@@ -76,12 +32,14 @@
 
   var STACK_W        = 500;
   var STACK_LEFT_PAD = 150;
+  var STACK_W3       = 340;
 
   var tourActive  = false;
   var pendingShow = false;
   var pairs      = [];
   var stackEl    = null;
   var stackEl2   = null;
+  var stackEl3   = null;
 
   var styleEl = document.createElement('style');
   styleEl.textContent = [
@@ -181,6 +139,13 @@
     stackEl2.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;position:relative;top:-7.5px;">Core languages</span><span style="display:block;line-height:1.5;position:relative;top:-5px;">This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.</span>';
     document.body.appendChild(stackEl2);
 
+    stackEl3 = document.createElement('div');
+    stackEl3.id        = 'tourStack3';
+    stackEl3.className = 'tour-stack';
+    stackEl3.style.width = STACK_W3 + 'px';
+    stackEl3.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Optimal Viewing</span><span style="line-height:1.5;position:relative;top:2.5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">Designed for desktop. For an optimal experience, view at full screen width. Some elements may not display as intended on narrower windows or mobile devices.</span>';
+    document.body.appendChild(stackEl3);
+
     NOTES.forEach(function (note) {
       var arrowEl = document.createElement('img');
       arrowEl.className = 'tour-arrow';
@@ -245,6 +210,7 @@
         });
         if (stackEl)  stackEl.classList.add('t-on');
         if (stackEl2) stackEl2.classList.add('t-on');
+        if (stackEl3) stackEl3.classList.add('t-on');
       });
     });
   }
@@ -258,6 +224,7 @@
     });
     if (stackEl)  stackEl.classList.remove('t-on');
     if (stackEl2) stackEl2.classList.remove('t-on');
+    if (stackEl3) stackEl3.classList.remove('t-on');
   }
 
   function positionAll() {
@@ -266,6 +233,25 @@
     });
     positionStack();
     positionStack2();
+    positionStack3();
+  }
+
+  function positionStack3() {
+    if (!stackEl3) return;
+    var content = document.querySelector('.hero-content');
+    var btnRow  = document.querySelector('.hero-content .d-flex');
+    if (!content || !btnRow) return;
+
+    var rr  = btnRow.getBoundingClientRect();
+    var cr  = content.getBoundingClientRect();
+    var sy  = window.scrollY;
+    var sx  = window.scrollX;
+
+    var top  = rr.top + sy - stackEl3.offsetHeight + 385;
+    var left = cr.right + sx + 105;
+
+    stackEl3.style.top  = top  + 'px';
+    stackEl3.style.left = left + 'px';
   }
 
   function positionStack2() {
