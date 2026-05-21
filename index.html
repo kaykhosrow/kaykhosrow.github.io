@@ -347,7 +347,7 @@
       /* ── Anchor overlay text to its own section, matching research/conferences ── */
       #about, #teaching, #code, #gallery { position: relative; }
 
-      .container { min-width: 1140px !important; max-width: 1140px !important; }
+      .container { min-width: 1140px !important; }
 
       .col-md-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
       .col-xl-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
@@ -451,6 +451,9 @@
       .nav-arrow-btn:not(.is-up) .nav-arr { animation: navBounceDown 1.4s ease-in-out infinite; }
       .nav-arrow-btn.is-up .nav-arr { animation: navBounceUp 1.4s ease-in-out infinite; }
 
+      #about .row { flex-wrap: nowrap !important; }
+      #about .col-lg-7 { min-width: 665px !important; flex-shrink: 0 !important; }
+      #about .col-lg-5 { min-width: 475px !important; flex-shrink: 0 !important; }
       #about.section { margin-top: 100px; }
       #about .about-img-wrap { margin-top: -50px; }
       #contact.section { margin-bottom: 100px; }
