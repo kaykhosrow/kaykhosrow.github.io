@@ -318,78 +318,115 @@
 
       .nav-overlay { display: none !important; }
 
-      @media (max-width: 1199px) {
-        .navigation { transition: none !important; animation: none !important; }
-        .navigation:not(.opened) { display: none !important; }
+      /* ================================================================
+         DESKTOP LAYOUT LOCKS — applied at ALL widths above mobile.
+         Placed outside any media query so there is NO intermediate
+         reflow between ~768 px and full desktop. Only two states exist:
+         this (desktop) and the mobile block below (≤ 767 px).
+         ================================================================ */
+
+      /* Column widths: frozen at desktop proportions at every width */
+      .col-md-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
+      .col-xl-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
+      .col-lg-5  { flex: 0 0 41.6667% !important; max-width: 41.6667% !important; width: 41.6667% !important; }
+      .col-lg-7  { flex: 0 0 58.3333% !important; max-width: 58.3333% !important; width: 58.3333% !important; }
+      .col-lg-10 { flex: 0 0 83.3333% !important; max-width: 83.3333% !important; width: 83.3333% !important; }
+      .col-xl-8  { flex: 0 0 66.6667% !important; max-width: 66.6667% !important; width: 66.6667% !important; }
+      .col-sm-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
+
+      .g-xl-5 { --bs-gutter-x: 3rem !important; --bs-gutter-y: 3rem !important; }
+
+      /* Always show elements that Bootstrap would hide below xl */
+      .d-none.d-xl-flex  { display: flex  !important; }
+      .d-none.d-xl-block { display: block !important; }
+
+      .mt-5.mt-lg-0 { margin-top: 0 !important; }
+      .mb-4.mb-lg-5 { margin-bottom: 3rem !important; }
+      .justify-content-center.justify-content-lg-end { justify-content: flex-end !important; }
+
+      /* Section margins: safe at any width (max() clamps to 80px minimum) */
+      #home, #about, #research, #teaching, #conferences, #code, #gallery, #contact {
+        margin-left:  max(80px, calc((100% - 1140px) / 2)) !important;
+        margin-right: max(0px,  calc((100% - 1140px) / 2)) !important;
       }
 
-      /* ── Desktop-only layout locks (>= 1200px) ────────────────────────── */
+      #about, #teaching, #code, #gallery { position: relative; }
+
+      /* Full desktop container & page width — only meaningful at desktop size */
       @media (min-width: 1200px) {
         html { min-width: 1200px; }
         body { min-width: 1200px; overflow-x: visible !important; }
-
-        /* Left-bar clearance: at least 80px from left, but still auto-centred on wide screens */
-        #home, #about, #research, #teaching, #conferences, #code, #gallery, #contact {
-          margin-left:  max(80px, calc((100% - 1140px) / 2)) !important;
-          margin-right: max(0px,  calc((100% - 1140px) / 2)) !important;
-        }
-
-        /* Anchor overlay text to its own section, matching research/conferences */
-        #about, #teaching, #code, #gallery { position: relative; }
-
         .container { min-width: 1140px !important; }
-
-        .col-md-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
-        .col-xl-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
-        .col-lg-5  { flex: 0 0 41.6667% !important; max-width: 41.6667% !important; width: 41.6667% !important; }
-        .col-lg-7  { flex: 0 0 58.3333% !important; max-width: 58.3333% !important; width: 58.3333% !important; }
-        .col-lg-10 { flex: 0 0 83.3333% !important; max-width: 83.3333% !important; width: 83.3333% !important; }
-        .col-xl-8  { flex: 0 0 66.6667% !important; max-width: 66.6667% !important; width: 66.6667% !important; }
-        .col-sm-6  { flex: 0 0 50%      !important; max-width: 50%      !important; width: 50%      !important; }
-
-        .g-xl-5 { --bs-gutter-x: 3rem !important; --bs-gutter-y: 3rem !important; }
-
-        .d-none.d-xl-flex  { display: flex  !important; }
-        .d-none.d-xl-block { display: block !important; }
-
-        .mt-5.mt-lg-0 { margin-top: 0 !important; }
-        .mb-4.mb-lg-5 { margin-bottom: 3rem !important; }
-        .justify-content-center.justify-content-lg-end { justify-content: flex-end !important; }
       }
 
       /* ================================================================
-         MOBILE STYLES  —  add all your mobile overrides here (<= 767px)
-         These will NEVER affect desktop (>= 1200px).
+         MOBILE STYLES  ≤ 767 px
+         Everything below only fires on mobile. Desktop is untouched.
          ================================================================ */
       @media (max-width: 767px) {
 
-        /* ── Typography ─────────────────────────────────────────────── */
-        #typewriter { font-size: 1.5rem; white-space: normal; margin-left: 0; }
-        #heroName   { font-size: 2rem; }
+        /* ── Page-level resets ──────────────────────────────────────── */
+        html, body { min-width: 0 !important; overflow-x: hidden !important; }
+        .container { min-width: 0 !important; width: 100% !important; max-width: 100% !important; }
 
-        /* ── Hero section ───────────────────────────────────────────── */
-        section.hero { padding-bottom: 60px; }
-        section.hero .row { margin-top: 24px; }
+        /* ── Nav: hide pinned bottom bar (header hamburger takes over) ─ */
+        .navigation { transition: none !important; animation: none !important; }
+        .navigation:not(.opened) { display: none !important; }
 
-        /* ── Sections: full-width with comfortable side padding ─────── */
+        /* ── Undo desktop-only show rules ───────────────────────────── */
+        .d-none.d-xl-flex  { display: none !important; }
+        .d-none.d-xl-block { display: none !important; }
+
+        /* ── Sections: comfortable side padding ─────────────────────── */
         #home, #about, #research, #teaching,
         #conferences, #code, #gallery, #contact {
           margin-left:  16px !important;
           margin-right: 16px !important;
         }
 
-        /* ── Research cards: full width on mobile ───────────────────── */
+        /* ── Undo column locks — let columns stack naturally ─────────── */
+        .col-md-6, .col-xl-6, .col-lg-5, .col-lg-7,
+        .col-lg-10, .col-xl-8, .col-sm-6 {
+          flex: 0 0 100% !important;
+          max-width: 100% !important;
+          width: 100% !important;
+        }
+
+        /* ── Titles & typewriter: freeze at desktop size, no scaling ─── */
+        #heroName, #typewriter,
+        .section-title h2, .section-title h4 {
+          font-size: inherit !important;
+          white-space: nowrap;
+        }
+
+        /* ── Hero section ───────────────────────────────────────────── */
+        section.hero { padding-bottom: 60px; }
+        section.hero .row { margin-top: 24px; }
+
+        /* ── Hide profile picture on mobile ─────────────────────────── */
+        #about .col-lg-5 { display: none !important; }
+
+        /* ── About text: expand to full width (image is gone) ───────── */
+        #about .col-lg-7 {
+          flex: 0 0 100% !important;
+          max-width: 100% !important;
+          width: 100% !important;
+        }
+
+        /* ── Code: nudge font size to preserve manual line breaks ────── */
+        .code-item p { font-size: 0.82rem !important; }
+
+        /* ── Publications bar: force left-alignment ─────────────────── */
+        .research-sub-heading        { text-align: left !important; }
+        #research .blog-card         { justify-content: flex-start !important; }
+        #research .blog-card > div   { text-align: left !important; }
+
+        /* ── Research cards ─────────────────────────────────────────── */
         #research .service-swiper,
         #research .blog-card { max-width: 100%; }
 
-        /* ── Video gallery: single column on mobile ─────────────────── */
-        .vid-slide { flex: 0 0 100%; }
-
-        /* ── About section spacing ──────────────────────────────────── */
-        #about.section        { margin-top: 40px; }
-        #about .about-img-wrap { margin-top: 0; }
-
-        /* ── Contact section spacing ────────────────────────────────── */
+        /* ── Section spacing ────────────────────────────────────────── */
+        #about.section   { margin-top: 40px; }
         #contact.section { margin-bottom: 40px; }
 
         /* ── Add your own mobile styles below this line ─────────────── */
