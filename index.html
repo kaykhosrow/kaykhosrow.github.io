@@ -1583,12 +1583,8 @@
       document.querySelectorAll('a[href="#about"]').forEach(function (link) {
         link.addEventListener('click', function (e) {
           e.preventDefault();
-          var target = document.getElementById('about');
-          var nav    = document.getElementById('navigation');
-          if (!target) return;
-          var aboutAbs = target.getBoundingClientRect().top + window.scrollY;
-          if (window.scrollY < 1 && nav) aboutAbs += nav.offsetHeight;
-          var top = Math.max(1, aboutAbs + 120 - window.innerHeight + 50);
+          var nav = document.getElementById('navigation');
+          var top = nav ? Math.max(1, nav.offsetTop) : 1;
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
       });
