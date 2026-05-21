@@ -451,10 +451,9 @@
       .nav-arrow-btn:not(.is-up) .nav-arr { animation: navBounceDown 1.4s ease-in-out infinite; }
       .nav-arrow-btn.is-up .nav-arr { animation: navBounceUp 1.4s ease-in-out infinite; }
 
-      #about .row { flex-wrap: nowrap !important; }
-      #about .col-lg-7 { min-width: 665px !important; flex-shrink: 0 !important; }
-      #about .col-lg-5 { min-width: 475px !important; flex-shrink: 0 !important; }
       #about.section { margin-top: 100px; }
+      #about.section { overflow: hidden; }
+      #about .col-lg-5 { position: absolute !important; right: 0 !important; width: 475px !important; top: 120px !important; }
       #about .about-img-wrap { margin-top: -50px; }
       #contact.section { margin-bottom: 100px; }
       .about.section { padding-top: 120px !important; }
