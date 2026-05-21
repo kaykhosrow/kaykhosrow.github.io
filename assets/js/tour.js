@@ -32,7 +32,7 @@
 
   var STACK_W        = 500;
   var STACK_LEFT_PAD = 150;
-  var STACK_W3       = 340;
+  var STACK_W3       = 420;
 
   var tourActive  = false;
   var pendingShow = false;
@@ -143,7 +143,7 @@
     stackEl3.id        = 'tourStack3';
     stackEl3.className = 'tour-stack';
     stackEl3.style.width = STACK_W3 + 'px';
-    stackEl3.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Optimal Viewing</span><span style="line-height:1.5;position:relative;top:2.5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">Designed for desktop. For an optimal experience, view at full screen width. Some elements may not display as intended on narrower windows or mobile devices.</span>';
+    stackEl3.innerHTML = '<span style="display:block;font-size:1.9rem;margin-bottom:0.45em;opacity:0.6;letter-spacing:0.04em;text-transform:uppercase;">Optimal Viewing</span><span style="display:block;line-height:1.5;position:relative;top:2.5px;">Designed for desktop. For an optimal experience, view at full screen width. Some elements may not display as intended on narrower windows.</span>';
     document.body.appendChild(stackEl3);
 
     NOTES.forEach(function (note) {
@@ -247,8 +247,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top + sy - stackEl3.offsetHeight + 385;
-    var left = cr.right + sx + 105;
+    var top  = rr.top + sy - stackEl2.offsetHeight + 172.5;
+    var left = cr.left + sx - STACK_W3 - 105;
 
     stackEl3.style.top  = top  + 'px';
     stackEl3.style.left = left + 'px';
