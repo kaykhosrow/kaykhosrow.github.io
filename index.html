@@ -331,6 +331,9 @@
       /* ── Hide navigation on touch devices (set via JS below) ── */
       .touch-device #navigation { display: none !important; }
 
+      /* ── Prevent about paragraph reflow on touch devices ── */
+      .touch-device .about-desc p { text-align: left !important; white-space: normal !important; }
+
       html { min-width: 1200px; }
       body { min-width: 1200px; overflow-x: visible !important; }
 
