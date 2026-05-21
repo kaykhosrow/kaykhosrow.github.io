@@ -323,6 +323,16 @@
         .navigation:not(.opened) { display: none !important; }
       }
 
+      /* ── Lock navigation to top on touch/mobile devices (prevents top↔bottom jump) ── */
+      @media (hover: none) and (pointer: coarse) {
+        #navigation {
+          position: fixed !important;
+          top: 0 !important;
+          bottom: auto !important;
+          transition: none !important;
+        }
+      }
+
       html { min-width: 1200px; }
       body { min-width: 1200px; overflow-x: visible !important; }
 
