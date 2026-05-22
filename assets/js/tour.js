@@ -136,7 +136,7 @@
     stackEl3.id        = 'tourStack3';
     stackEl3.className = 'tour-stack';
     stackEl3.style.width = STACK_W3 + 'px';
-    stackEl3.innerHTML = '<span style="display:inline-block;font-size:1.5rem;margin-bottom:0.45em;opacity:0.75;letter-spacing:0.025em;text-transform:uppercase;border:3px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 9px;box-shadow:1px 1px 1.5px rgba(0,0,0,0.25);line-height:1.25;position:relative;top:-5px;left:125px;">Optimal Viewing</span><span style="display:block;line-height:1.5;position:relative;top:2.5px;">Designed for desktop. For an optimal experience, view at full screen width. Some elements may not display as intended on narrower windows.</span>';
+    stackEl3.innerHTML = '<span style="display:inline-block;font-size:1.5rem;margin-bottom:0.45em;opacity:0.75;letter-spacing:0.025em;text-transform:uppercase;border:3px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 9px;box-shadow:1px 1px 1.5px rgba(0,0,0,0.25);line-height:1.25;position:relative;top:-5px;left:200px;">Optimal Viewing</span><span style="display:block;line-height:1.5;position:relative;top:2.5px;">Designed for desktop. For an optimal experience, view at full screen width. Some elements may not display as intended on narrower windows.</span>';
     document.body.appendChild(stackEl3);
 
     NOTES.forEach(function (note) {
