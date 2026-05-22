@@ -9,20 +9,6 @@
 
   var NOTES = [
     {
-      sel:           '#heroName',
-      text:          'Click here for pronunciation',
-      approachAngle: 180,
-      tailDist:      115,
-      textSide:      'above',
-      tilt:          0,
-      arrowImg:      1,
-      baseAngle:     2.5,
-      arrowOffsetX:  -125,
-      arrowOffsetY:  -35,
-      textOffsetY:   -58.5,
-      textOffsetX:   45,
-    },
-    {
       sel:           '#settingsGearBtn',
       text:          'Customise this site',
       approachAngle: 90,
