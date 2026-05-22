@@ -243,8 +243,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top + sy - stackEl.offsetHeight - 42;
-    var left = cr.right + sx + 105 - 230 - 32.5;
+    var top  = rr.top + sy - stackEl.offsetHeight - 44.5;
+    var left = cr.right + sx + 105 - 230 - 30;
 
     stackElC.style.top  = top  + 'px';
     stackElC.style.left = left + 'px';
