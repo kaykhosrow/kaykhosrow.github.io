@@ -77,7 +77,7 @@
     '}',
 
     '.tour-stack {',
-    '  position:fixed;',
+    '  position:absolute;',
     '  top:0; left:-9999px;',
     '  width:' + STACK_W + 'px;',
     '  font-family:"Scribble",cursive;',
@@ -246,8 +246,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top - stackEl.offsetHeight - 50;
-    var left = cr.right + 105 - 230 - 27.5;
+    var top  = rr.top + sy - stackEl.offsetHeight - 50;
+    var left = cr.right + sx + 105 - 230 - 27.5;
 
     stackElC.style.top  = top  + 'px';
     stackElC.style.left = left + 'px';
@@ -265,8 +265,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top - stackEl2.offsetHeight + 165;
-    var left = cr.right + 104 - STACK_W3 - 70;
+    var top  = rr.top + sy - stackEl2.offsetHeight + 165;
+    var left = cr.right + sx + 104 - STACK_W3 - 70;
 
     stackEl3.style.top  = top  + 'px';
     stackEl3.style.left = left + 'px';
@@ -283,8 +283,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top - stackEl2.offsetHeight + 172.5;
-    var left = cr.right + 104;
+    var top  = rr.top + sy - stackEl2.offsetHeight + 172.5;
+    var left = cr.right + sx + 104;
 
     stackEl2.style.top  = top  + 'px';
     stackEl2.style.left = left + 'px';
@@ -301,8 +301,8 @@
     var sy  = window.scrollY;
     var sx  = window.scrollX;
 
-    var top  = rr.top - stackEl.offsetHeight + -40;
-    var left = cr.right + 104;
+    var top  = rr.top + sy - stackEl.offsetHeight + -40;
+    var left = cr.right + sx + 104;
 
     stackEl.style.top  = top  + 'px';
     stackEl.style.left = left + 'px';
