@@ -186,9 +186,6 @@
       }
     });
 
-    window.addEventListener('resize', function () {
-      if (tourActive) positionAll();
-    }, { passive: true });
   }
 
   function showAll() {
