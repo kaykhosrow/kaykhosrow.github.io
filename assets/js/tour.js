@@ -94,22 +94,6 @@
     '}',
     '.tour-stack.t-on { opacity:1; }',
 
-    '.corner-box { position:relative; display:inline-block; padding:1px 3px; }',
-    '.corner-box::before {',
-    '  content:""; position:absolute;',
-    '  top:0; left:0;',
-    '  width:16px; height:10px;',
-    '  border-top:2px solid rgba(0,0,0,0.6);',
-    '  border-left:2px solid rgba(0,0,0,0.6);',
-    '}',
-    '.corner-box::after {',
-    '  content:""; position:absolute;',
-    '  bottom:0; right:0;',
-    '  width:16px; height:10px;',
-    '  border-bottom:2px solid rgba(0,0,0,0.6);',
-    '  border-right:2px solid rgba(0,0,0,0.6);',
-    '}',
-
 
   ].join('\n');
   document.head.appendChild(styleEl);
@@ -133,7 +117,7 @@
     stackElC.id        = 'tourStackC';
     stackElC.className = 'tour-stack';
     stackElC.style.width = '230px';
-    stackElC.innerHTML = '<div class="corner-box"><span style="display:block;line-height:1.5;opacity:0.75;">COPYRIGHT <i class="ph ph-copyright" style="font-size:0.85em;vertical-align:-0.1em;"></i> ' + new Date().getFullYear() + '</span></div>';
+    stackElC.innerHTML = '<span style="display:inline-block;line-height:1.5;opacity:0.75;border:2.5px solid rgba(0,0,0,0.6);border-radius:4px;padding:1px 6px;">COPYRIGHT <i class="ph ph-copyright" style="font-size:0.85em;vertical-align:-0.1em;"></i> ' + new Date().getFullYear() + '</span>';
     document.body.appendChild(stackElC);
 
     stackEl = document.createElement('div');
