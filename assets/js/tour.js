@@ -186,6 +186,10 @@
       }
     });
 
+    window.addEventListener('resize', function () {
+      if (tourActive && window.innerWidth >= 1200) positionAll();
+    }, { passive: true });
+
   }
 
   function showAll() {
