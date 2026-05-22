@@ -132,7 +132,7 @@
     stackElC.id        = 'tourStackC';
     stackElC.className = 'tour-stack';
     stackElC.style.width = '230px';
-    stackElC.innerHTML = '<span style="display:block;line-height:1.5;">Copyright <i class="ph ph-copyright" style="font-size:1em;vertical-align:-0.1em;"></i></span>';
+    stackElC.innerHTML = '<span style="display:block;line-height:1.5;">Copyright <i class="ph ph-copyright" style="font-size:1em;vertical-align:-0.1em;"></i> ' + new Date().getFullYear() + '</span>';
     document.body.appendChild(stackElC);
 
     stackEl = document.createElement('div');
