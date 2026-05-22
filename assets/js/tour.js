@@ -116,7 +116,7 @@
     stackElC.id        = 'tourStackC';
     stackElC.className = 'tour-stack';
     stackElC.style.width = '230px';
-    stackElC.innerHTML = '<span style="display:inline-flex;align-items:center;line-height:1.5;opacity:0.75;border:2px solid rgba(0,0,0,0.3);border-radius:4px;padding:4px 10px;box-sizing:border-box;overflow:hidden;">Copyright <i class="ph ph-copyright" style="font-size:0.85em;vertical-align:-0.1em;margin-left:5px;"></i> ' + new Date().getFullYear() + '</span>';
+    stackElC.innerHTML = '<span style="display:inline-flex;align-items:center;line-height:1.5;opacity:0.75;border:2.5px solid rgba(0,0,0,0.3);border-radius:4px;padding:3px 10px;box-sizing:border-box;overflow:hidden;font-size:1rem;">Copyright <i class="ph ph-copyright" style="font-size:0.85em;vertical-align:-0.1em;margin-left:5px;"></i> ' + new Date().getFullYear() + '</span>';
     document.body.appendChild(stackElC);
 
     stackEl = document.createElement('div');
