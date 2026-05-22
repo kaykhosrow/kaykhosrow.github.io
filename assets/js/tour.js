@@ -25,6 +25,7 @@
   var stackEl2   = null;
   var stackEl3   = null;
   var stackElC   = null;
+  var stackElC   = null;
 
   var styleEl = document.createElement('style');
   styleEl.textContent = [
@@ -112,6 +113,13 @@
     bar.style.marginLeft = '0';
     nav.insertBefore(btn, bar);
 
+    stackElC = document.createElement('div');
+    stackElC.id        = 'tourStackC';
+    stackElC.className = 'tour-stack';
+    stackElC.style.width = '230px';
+    stackElC.innerHTML = '<span style="display:block;line-height:1.5;opacity:0.75;">COPYRIGHT <i class="ph ph-copyright" style="font-size:0.85em;vertical-align:-0.1em;"></i> ' + new Date().getFullYear() + '</span>';
+    document.body.appendChild(stackElC);
+
     stackEl = document.createElement('div');
     stackEl.id        = 'tourStack';
     stackEl.className = 'tour-stack';
@@ -193,6 +201,7 @@
           p.arrow.classList.add('t-on');
           p.text.classList.add('t-on');
         });
+        if (stackElC) stackElC.classList.add('t-on');
         if (stackEl)  stackEl.classList.add('t-on');
         if (stackEl2) stackEl2.classList.add('t-on');
         if (stackEl3) stackEl3.classList.add('t-on');
@@ -207,6 +216,7 @@
       p.arrow.classList.remove('t-on');
       p.text.classList.remove('t-on');
     });
+    if (stackElC) stackElC.classList.remove('t-on');
     if (stackEl)  stackEl.classList.remove('t-on');
     if (stackEl2) stackEl2.classList.remove('t-on');
     if (stackEl3) stackEl3.classList.remove('t-on');
@@ -216,9 +226,28 @@
     NOTES.forEach(function (note, i) {
       positionPair(pairs[i].arrow, pairs[i].text, note);
     });
+    positionStackC();
     positionStack();
     positionStack2();
     positionStack3();
+  }
+
+  function positionStackC() {
+    if (!stackElC) return;
+    var content = document.querySelector('.hero-content');
+    var btnRow  = document.querySelector('.hero-content .d-flex');
+    if (!content || !btnRow) return;
+
+    var rr  = btnRow.getBoundingClientRect();
+    var cr  = content.getBoundingClientRect();
+    var sy  = window.scrollY;
+    var sx  = window.scrollX;
+
+    var top  = rr.top + sy - stackEl.offsetHeight - 42;
+    var left = cr.right + sx + 105 - 230 - 7.5;
+
+    stackElC.style.top  = top  + 'px';
+    stackElC.style.left = left + 'px';
   }
 
 
