@@ -117,9 +117,7 @@
     stackElC.id        = 'tourStackC';
     stackElC.className = 'tour-stack';
     stackElC.style.width = '230px';
-    var _d = new Date();
-    var _date = String(_d.getDate()).padStart(2,'0') + '.' + String(_d.getMonth()+1).padStart(2,'0') + '.' + String(_d.getFullYear()).slice(-2);
-    stackElC.innerHTML = '<span style="display:inline-block;line-height:1.25;opacity:0.75;border:2.5px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 6px;box-shadow:1px 1px 1.5px rgba(0,0,0,0.25);font-size:1.2rem;letter-spacing:0.025em;">COPYRIGHT <i class="ph ph-copyright" style="font-size:0.85em;vertical-align:-0.1em;"></i> ' + _date + '</span>';
+    stackElC.innerHTML = '<span style="display:inline-block;line-height:1.25;opacity:0.75;border:2.5px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 6px;box-shadow:1px 1px 1.5px rgba(0,0,0,0.25);font-size:1.2rem;letter-spacing:0.025em;">COPYRIGHT <i class="ph ph-copyright" style="font-size:0.85em;vertical-align:-0.1em;"></i> ' + new Date().getFullYear() + '</span>';
     document.body.appendChild(stackElC);
 
     stackEl = document.createElement('div');
