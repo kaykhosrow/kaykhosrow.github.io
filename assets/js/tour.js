@@ -7,23 +7,7 @@
 (function () {
   'use strict';
 
-  var NOTES = [
-    {
-      sel:           '#settingsGearBtn',
-      text:          'Customise this site',
-      approachAngle: 90,
-      tailDist:      100,
-      textSide:      'left',
-      tilt:          0,
-      arrowImg:      1,
-      baseAngle:     12.5,
-      arrowOffsetX:  -47.5,
-      arrowOffsetY:  0,
-      textOffsetY:   4.75,
-      textOffsetX:   -65,
-      zIndex:        55,
-    },
-  ];
+  var NOTES = [];
 
   var ARR     = 115;
   var GAP     = 12;
