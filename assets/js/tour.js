@@ -123,20 +123,20 @@
     stackEl = document.createElement('div');
     stackEl.id        = 'tourStack';
     stackEl.className = 'tour-stack';
-    stackEl.innerHTML = '<span style="display:inline-block;font-size:1.5rem;margin-bottom:0.45em;opacity:0.75;letter-spacing:0.025em;text-transform:uppercase;border:3px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 9px;box-shadow:1px 1px 2.5px rgba(0,0,0,0.25);line-height:1.25;position:relative;top:-9.5px;">Overview</span><span style="display:block;line-height:1.5;position:relative;top:2.5px;">Welcome to my page. Here you can explore my research, teaching, and conference activity, as well as selected code, cinematography, and contact details for any enquiries or potential collaboration.</span>';
+    stackEl.innerHTML = '<span style="display:inline-block;font-size:1.5rem;margin-bottom:0.45em;opacity:0.75;letter-spacing:0.025em;text-transform:uppercase;border:3px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 9px;box-shadow:1px 1px 2.5px rgba(0,0,0,0.25);line-height:1.25;position:relative;top:-9.5px;left:-1px;">Overview</span><span style="display:block;line-height:1.5;position:relative;top:2.5px;">Welcome to my page. Here you can explore my research, teaching, and conference activity, as well as selected code, cinematography, and contact details for any enquiries or potential collaboration.</span>';
     document.body.appendChild(stackEl);
 
     stackEl2 = document.createElement('div');
     stackEl2.id        = 'tourStack2';
     stackEl2.className = 'tour-stack';
-    stackEl2.innerHTML = '<span style="display:inline-block;font-size:1.5rem;margin-bottom:0.45em;opacity:0.75;letter-spacing:0.025em;text-transform:uppercase;border:3px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 9px;box-shadow:1px 1px 2.5px rgba(0,0,0,0.25);line-height:1.25;position:relative;top:-17.5px;">Core languages</span><span style="display:block;line-height:1.5;position:relative;top:-5px;">This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.</span>';
+    stackEl2.innerHTML = '<span style="display:inline-block;font-size:1.5rem;margin-bottom:0.45em;opacity:0.75;letter-spacing:0.025em;text-transform:uppercase;border:3px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 9px;box-shadow:1px 1px 2.5px rgba(0,0,0,0.25);line-height:1.25;position:relative;top:-17.5px;left:-1px;">Core languages</span><span style="display:block;line-height:1.5;position:relative;top:-5px;">This page was built in HTML, CSS and JavaScript. The layout and styling are handled in CSS, whereas JavaScript takes care of all the animations, navigation and interactions you see across the site.</span>';
     document.body.appendChild(stackEl2);
 
     stackEl3 = document.createElement('div');
     stackEl3.id        = 'tourStack3';
     stackEl3.className = 'tour-stack';
     stackEl3.style.width = STACK_W3 + 'px';
-    stackEl3.innerHTML = '<span style="display:inline-block;font-size:1.5rem;margin-bottom:0.45em;opacity:0.75;letter-spacing:0.025em;text-transform:uppercase;border:3px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 9px;box-shadow:1px 1px 2.5px rgba(0,0,0,0.25);line-height:1.25;position:relative;top:-10px;">Optimal Viewing</span><span style="display:block;line-height:1.5;position:relative;top:2.5px;">Designed for desktop. For an optimal experience, view at full screen width. Some elements may not display as intended on narrower windows.</span>';
+    stackEl3.innerHTML = '<span style="display:inline-block;font-size:1.5rem;margin-bottom:0.45em;opacity:0.75;letter-spacing:0.025em;text-transform:uppercase;border:3px solid rgba(0,0,0,0.6);border-radius:4px;padding:0px 9px;box-shadow:1px 1px 2.5px rgba(0,0,0,0.25);line-height:1.25;position:relative;top:-10px;left:-1px;">Optimal Viewing</span><span style="display:block;line-height:1.5;position:relative;top:2.5px;">Designed for desktop. For an optimal experience, view at full screen width. Some elements may not display as intended on narrower windows.</span>';
     document.body.appendChild(stackEl3);
 
     NOTES.forEach(function (note) {
