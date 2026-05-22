@@ -115,8 +115,8 @@
     stackElC = document.createElement('div');
     stackElC.id        = 'tourStackC';
     stackElC.className = 'tour-stack';
-    stackElC.style.width = '230px';
-    stackElC.innerHTML = '<span style="display:inline-flex;align-items:center;line-height:1.5;opacity:0.75;border:2.5px solid rgba(0,0,0,0.3);border-radius:4px;padding:3px 10px;box-sizing:border-box;overflow:hidden;font-size:1rem;">Copyright <i class="ph ph-copyright" style="font-size:0.85em;vertical-align:-0.1em;margin-left:5px;"></i> ' + new Date().getFullYear() + '</span>';
+    stackElC.style.width = '300px';
+    stackElC.innerHTML = '<span style="display:inline-flex;align-items:center;line-height:1.5;border:2px solid rgba(0,0,0,0.3);border-radius:4px;padding:4px 12px;box-sizing:border-box;overflow:hidden;letter-spacing:0.15em;">Copyright <i class="ph ph-copyright" style="font-size:0.85em;vertical-align:-0.1em;margin-left:6px;margin-right:6px;"></i>' + new Date().getFullYear() + '</span>';
     document.body.appendChild(stackElC);
 
     stackEl = document.createElement('div');
@@ -241,9 +241,6 @@
     var cr  = content.getBoundingClientRect();
     var sy  = window.scrollY;
     var sx  = window.scrollX;
-
-    var heroName = document.getElementById('heroName');
-    if (heroName) stackElC.style.maxHeight = heroName.offsetHeight + 'px';
 
     var top  = rr.top + sy - stackEl.offsetHeight - 43.5;
     var left = cr.right + sx + 105 - 230 - 7.5;
