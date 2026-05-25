@@ -341,13 +341,13 @@
       body { min-width: 1200px; overflow-x: visible !important; }
 
       /* ── Left-bar clearance: at least 80px from left, but still auto-centred on wide screens ── */
-      #home, #about, #research, #teaching, #conferences, #code, #gallery, #contact {
+      #home, #about, #research, #teaching, #conferences, #code, #gallery, #chess, #contact {
         margin-left:  max(80px, calc((100% - 1140px) / 2)) !important;
         margin-right: max(0px,  calc((100% - 1140px) / 2)) !important;
       }
 
       /* ── Anchor overlay text to its own section, matching research/conferences ── */
-      #about, #teaching, #code, #gallery { position: relative; }
+      #about, #teaching, #code, #gallery, #chess { position: relative; }
 
       .container { min-width: 1140px !important; }
 
@@ -559,6 +559,60 @@
         top: -1px;
         transition: opacity 0.2s ease;
       }
+
+      /* ── Chess section ────────────────────────────────────────────────── */
+      .chess-viewer { display: flex; gap: 2.5rem; align-items: flex-start; }
+      .chess-board-col { flex: 0 0 auto; width: 400px; }
+      .chess-board-outer { position: relative; }
+      .chess-coord-row { display: flex; padding-left: 20px; margin-top: 5px; }
+      .chess-coord-row span { flex: 1; text-align: center; font-size: 0.68rem; opacity: 0.4; font-family: 'InterRegular', sans-serif; }
+      .chess-board-and-ranks { display: flex; gap: 0; }
+      .chess-rank-col { display: flex; flex-direction: column; justify-content: space-around; width: 16px; flex-shrink: 0; }
+      .chess-rank-col span { font-size: 0.68rem; opacity: 0.4; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; }
+      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); flex: 1; border: 1px solid rgba(0,0,0,0.14); box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.35); overflow: hidden; border-radius: 2px; }
+      .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; font-size: 2.05rem; user-select: none; cursor: default; position: relative; transition: background 0.12s; }
+      .chess-sq.light { background: rgba(var(--primary), 0.55); }
+      .chess-sq.dark  { background: rgba(0,0,0,0.27); }
+      .chess-sq.hl-from.light { background: rgba(var(--primary), 0.35); box-shadow: inset 0 0 0 3px rgba(0,0,0,0.22); }
+      .chess-sq.hl-from.dark  { background: rgba(0,0,0,0.16); box-shadow: inset 0 0 0 3px rgba(0,0,0,0.22); }
+      .chess-sq.hl-to.light   { background: rgba(var(--primary), 0.9); box-shadow: inset 0 0 0 3px rgba(0,0,0,0.28); }
+      .chess-sq.hl-to.dark    { background: rgba(0,0,0,0.42); box-shadow: inset 0 0 0 3px rgba(0,0,0,0.28); }
+      .chess-piece { line-height: 1; pointer-events: none; text-shadow: 0.5px 1px 2px rgba(0,0,0,0.18); }
+
+      .chess-sidebar { flex: 1; min-width: 0; max-width: 380px; }
+      .chess-meta { font-size: 0.82rem; opacity: 0.62; margin-bottom: 1.1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+      .chess-result-pill { padding: 2px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(0,0,0,0.22); opacity: 1; }
+      .chess-controls { display: flex; align-items: center; gap: 6px; margin-bottom: 1rem; }
+      .chess-ctrl-btn { width: 34px; height: 34px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; transition: background 0.18s, color 0.18s; }
+      .chess-ctrl-btn:hover { background: rgb(var(--black)); color: rgb(var(--primary)); }
+      .chess-pos-label { flex: 1; text-align: center; font-size: 0.8rem; opacity: 0.5; font-family: 'InterRegular', sans-serif; }
+
+      .chess-moves-list { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 1.4rem; max-height: 280px; overflow-y: auto; border: 1px solid rgba(0,0,0,0.08); border-radius: 4px; padding: 6px 4px; }
+      .chess-move-row { display: flex; align-items: center; width: 100%; }
+      .chess-move-num { font-size: 0.75rem; opacity: 0.38; min-width: 2.1rem; text-align: right; padding-right: 5px; flex-shrink: 0; font-family: 'InterRegular', sans-serif; }
+      .chess-move-btn { flex: 1; padding: 3px 6px; border-radius: 3px; border: none; background: transparent; cursor: pointer; font-size: 0.9rem; font-family: inherit; color: rgb(var(--black)); text-align: left; transition: background 0.14s; white-space: nowrap; }
+      .chess-move-btn:hover:not(.active) { background: rgba(0,0,0,0.07); }
+      .chess-move-btn.active { background: rgb(var(--black)); color: rgb(var(--primary)); border-radius: 3px; }
+      .chess-nag { font-size: 0.7em; margin-left: 1px; font-weight: 700; }
+      .chess-nag.n3 { color: #16a34a; } /* Brilliant  !! */
+      .chess-nag.n1 { color: #2563eb; } /* Great       ! */
+      .chess-nag.n2 { color: #ea580c; } /* Mistake     ? */
+      .chess-nag.n4 { color: #dc2626; } /* Blunder    ?? */
+      .chess-nag.n5 { color: #9333ea; } /* Interesting !?*/
+      .chess-nag.n6 { color: #ca8a04; } /* Dubious    ?! */
+      .chess-nag.n18 { color: #16a34a; }
+      .chess-nag.n19 { color: #dc2626; }
+
+      .chess-pgn-toggle { margin-top: 0.5rem; font-size: 0.78rem; opacity: 0.45; cursor: pointer; background: none; border: none; color: inherit; padding: 0; letter-spacing: 0.04em; text-decoration: underline; text-underline-offset: 3px; font-family: 'InterRegular', sans-serif; }
+      .chess-pgn-toggle:hover { opacity: 0.8; }
+      .chess-pgn-panel { display: none; margin-top: 0.6rem; }
+      .chess-pgn-panel.open { display: block; }
+      .chess-pgn-area { width: 100%; height: 110px; resize: vertical; font-size: 0.75rem; font-family: monospace; padding: 8px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.18); background: rgba(0,0,0,0.03); color: rgb(var(--black)); box-sizing: border-box; margin-bottom: 6px; }
+      .chess-load-btn { font-size: 0.8rem !important; padding: 5px 14px !important; border-radius: 4px !important; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important; }
+      .chess-load-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
+      .chess-error { font-size: 0.78rem; color: #dc2626; margin-top: 4px; display: none; }
+      .chess-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 0.75rem; font-size: 0.74rem; opacity: 0.65; }
+      .chess-legend-item { display: flex; align-items: center; gap: 3px; }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -629,7 +683,7 @@
             </div>
             <div class="col-12">
               <a href="#about" class="d-flex gap-4 align-items-center next-chapter">
-                <span class="page">01/08</span>
+                <span class="page">01/09</span>
                 <span class="next">Next Chapter</span>
                 <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
               </a>
@@ -651,6 +705,7 @@
             <li class="nav-link"><a href="#conferences"><span class="text">conferences</span></a></li>
             <li class="nav-link"><a href="#code"><span class="text">code</span></a></li>
             <li class="nav-link"><a href="#gallery"><span class="text">gallery</span></a></li>
+            <li class="nav-link"><a href="#chess"><span class="text">chess</span></a></li>
             <li class="nav-link"><a href="#contact"><span class="text">contact</span></a></li>
           </ul>
           <div class="settings-bar d-none d-xl-flex">
@@ -709,7 +764,7 @@
           </div>
           <div class="col-12">
             <a href="#research" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">02/08</span>
+              <span class="page">02/09</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -799,7 +854,7 @@
 
           <div class="col-12">
             <a href="#teaching" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">03/08</span>
+              <span class="page">03/09</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -833,7 +888,7 @@
 
           <div class="col-12">
             <a href="#conferences" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">04/08</span>
+              <span class="page">04/09</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -879,7 +934,7 @@
           </div>
           <div class="col-12">
             <a href="#code" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">05/08</span>
+              <span class="page">05/09</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -924,7 +979,7 @@
 
           <div class="col-12">
             <a href="#gallery" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">06/08</span>
+              <span class="page">06/09</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -1019,8 +1074,376 @@
           </script>
 
           <div class="col-12" style="margin-top: 2rem;">
+            <a href="#chess" class="d-flex gap-4 align-items-center next-chapter">
+              <span class="page">07/09</span>
+              <span class="next">Next Chapter</span>
+              <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
+            </a>
+          </div>
+        </section>
+
+        <section id="chess" class="about section container">
+          <span class="section-title-overlay-text">Chess</span>
+          <div class="section-title text-capitalize">
+            <h4>Chess Games</h4>
+            <h2>Chess</h2>
+          </div>
+
+          <div class="chess-viewer" id="chessViewer">
+
+            <!-- Board column -->
+            <div class="chess-board-col">
+              <div class="chess-board-outer">
+                <div class="chess-board-and-ranks">
+                  <div class="chess-rank-col" id="chessRankCol">
+                    <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
+                  </div>
+                  <div class="chess-board" id="chessBoard"></div>
+                </div>
+                <div class="chess-coord-row">
+                  <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="chess-sidebar">
+
+              <div class="chess-meta" id="chessMeta"></div>
+
+              <div class="chess-controls">
+                <button class="chess-ctrl-btn" id="chessFirst" title="Start"><i class="ph ph-skip-back"></i></button>
+                <button class="chess-ctrl-btn" id="chessPrev"  title="Previous"><i class="ph ph-caret-left"></i></button>
+                <span class="chess-pos-label" id="chessPosLabel">Start</span>
+                <button class="chess-ctrl-btn" id="chessNext"  title="Next"><i class="ph ph-caret-right"></i></button>
+                <button class="chess-ctrl-btn" id="chessLast"  title="End"><i class="ph ph-skip-forward"></i></button>
+              </div>
+
+              <div class="chess-moves-list" id="chessMovesList"></div>
+
+              <div class="chess-legend" id="chessLegend"></div>
+
+              <button class="chess-pgn-toggle" id="chessPgnToggle">↑ load new pgn</button>
+              <div class="chess-pgn-panel" id="chessPgnPanel">
+                <textarea class="chess-pgn-area" id="chessPgnArea" placeholder="Paste PGN here (with or without analysis)…"></textarea>
+                <button class="btn btn-outline-secondary chess-load-btn" id="chessPgnLoad">Load</button>
+                <p class="chess-error" id="chessError">Invalid PGN — please check and try again.</p>
+              </div>
+
+            </div>
+          </div>
+
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+          <script>
+          (function () {
+
+            /* ── Default PGN (player handles stripped) ── */
+            var DEFAULT_PGN = '[Event "Live Chess"]\n[Site "Chess.com"]\n[Date "2026.05.26"]\n[Round "?"]\n[White "White"]\n[Black "Black"]\n[Result "0-1"]\n[TimeControl "600"]\n[WhiteElo "2040"]\n[BlackElo "2068"]\n[Termination "Black won by checkmate"]\n\n1. e4 c6 2. d3 d5 3. e5 Bf5 4. f4 h5 5. Nc3 e6 6. Be2 Bb4 7. Bd2 d4 8. Ne4 Bxe4 9. dxe4 Bxd2+ 10. Qxd2 c5 11. O-O-O Nc6 12. Bf3 Qb6 13. Qe2 O-O-O 14. Bxh5 g6 15. Bf3 Nb4 16. Kb1 Ne7 17. a3 Nbc6 18. Nh3 Rh4 19. Qd2 Na5 20. Be2 c4 21. Qe1 c3 22. b4 Nec6 23. b5 Qc5 24. Ka2 Nb4+ 25. axb4 Qxb4 26. Rb1 Qa4# 0-1';
+
+            /* ── NAG catalogue ── */
+            var NAG = {
+              1:  { sym: '!',   cls: 'n1',  label: 'Great move' },
+              2:  { sym: '?',   cls: 'n2',  label: 'Mistake' },
+              3:  { sym: '!!',  cls: 'n3',  label: 'Brilliant' },
+              4:  { sym: '??',  cls: 'n4',  label: 'Blunder' },
+              5:  { sym: '!?',  cls: 'n5',  label: 'Interesting' },
+              6:  { sym: '?!',  cls: 'n6',  label: 'Dubious' },
+              7:  { sym: '□',   cls: '',    label: 'Forced' },
+              10: { sym: '=',   cls: '',    label: 'Equal' },
+              14: { sym: '⩲',   cls: '',    label: 'Slight advantage (White)' },
+              15: { sym: '⩱',   cls: '',    label: 'Slight advantage (Black)' },
+              16: { sym: '±',   cls: '',    label: 'Advantage (White)' },
+              17: { sym: '∓',   cls: '',    label: 'Advantage (Black)' },
+              18: { sym: '+-',  cls: 'n18', label: 'Decisive advantage (White)' },
+              19: { sym: '-+',  cls: 'n19', label: 'Decisive advantage (Black)' },
+            };
+
+            /* ── Unicode pieces ── */
+            var WP = { k:'♔', q:'♕', r:'♖', b:'♗', n:'♘', p:'♙' };
+            var BP = { k:'♚', q:'♛', r:'♜', b:'♝', n:'♞', p:'♟' };
+            function pieceChar(p) { return p ? (p.color === 'w' ? WP : BP)[p.type] : ''; }
+
+            /* ── Square name (row 0=rank8, col 0=fileA) ── */
+            function sqName(r, c) { return 'abcdefgh'[c] + (8 - r); }
+
+            /* ── Parse headers ── */
+            function parseHeaders(pgn) {
+              var h = {};
+              (pgn.match(/\[(\w+)\s+"([^"]*)"\]/g) || []).forEach(function (m) {
+                var p = m.match(/\[(\w+)\s+"([^"]*)"\]/);
+                if (p) h[p[1]] = p[2];
+              });
+              return h;
+            }
+
+            /* ── Sanitise PGN: strip player handles so they never appear ── */
+            function sanitisePGN(pgn, whiteHandle, blackHandle) {
+              var out = pgn;
+              if (whiteHandle) out = out.replace(new RegExp(escapeRE(whiteHandle), 'g'), 'White');
+              if (blackHandle) out = out.replace(new RegExp(escapeRE(blackHandle), 'g'), 'Black');
+              out = out.replace(/\[White\s+"[^"]*"\]/, '[White "White"]');
+              out = out.replace(/\[Black\s+"[^"]*"\]/, '[Black "Black"]');
+              return out;
+            }
+            function escapeRE(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+            /* ── Extract NAG map (halfmove-index → NAG code) ── */
+            function extractNAGs(pgn) {
+              var map = {};
+              /* remove headers */
+              var txt = pgn.replace(/\[[\s\S]*?\]\s*/g, '').trim();
+              /* remove nested variations */
+              var depth = 0, clean = '';
+              for (var i = 0; i < txt.length; i++) {
+                if (txt[i] === '(') { depth++; continue; }
+                if (txt[i] === ')') { depth--; continue; }
+                if (depth === 0) clean += txt[i];
+              }
+              /* remove comments */
+              clean = clean.replace(/\{[^}]*\}/g, ' ');
+              /* remove result */
+              clean = clean.replace(/\s*(1-0|0-1|1\/2-1\/2|\*)\s*$/, '');
+              /* tokenise */
+              var tokens = clean.trim().split(/\s+/).filter(function (t) { return t.length > 0; });
+              var mi = 0;
+              tokens.forEach(function (t) {
+                if (/^\d+\.+$/.test(t)) return;           /* move number */
+                if (t.charAt(0) === '$') {
+                  var n = parseInt(t.slice(1));
+                  if (!isNaN(n) && mi > 0) map[mi - 1] = n;
+                } else {
+                  mi++;
+                }
+              });
+              return map;
+            }
+
+            /* ── Collect which NAGs are used (for legend) ── */
+            function usedNAGs(nagMap) {
+              var used = {};
+              Object.keys(nagMap).forEach(function (k) {
+                var n = nagMap[k];
+                if (NAG[n]) used[n] = true;
+              });
+              return Object.keys(used).map(Number);
+            }
+
+            /* ── Format helpers ── */
+            function fmtDate(d) {
+              if (!d) return '';
+              var p = d.split('.');
+              if (p.length !== 3) return d;
+              var mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+              var m = parseInt(p[1]) - 1;
+              return (mn[m] || p[1]) + '\u00a0' + p[2] + ',\u00a0' + p[0];
+            }
+            function fmtTC(tc) {
+              if (!tc) return '';
+              var s = parseInt(tc);
+              if (isNaN(s)) return tc;
+              var m = Math.floor(s / 60), r = s % 60;
+              return r === 0 ? m + ' min' : m + ':' + (r < 10 ? '0' : '') + r + ' min';
+            }
+
+            /* ── State ── */
+            var allMoves = [];
+            var nagMap   = {};
+            var currentMove = -1;
+
+            /* ── Load PGN ── */
+            function loadPGN(raw) {
+              var rawHdrs = parseHeaders(raw);
+              var white = rawHdrs['White'] || '';
+              var black = rawHdrs['Black'] || '';
+              nagMap = extractNAGs(raw);
+
+              var clean = sanitisePGN(raw, white, black);
+              var chess = new Chess();
+              if (!chess.load_pgn(clean)) {
+                /* try stripping headers */
+                var movesOnly = clean.replace(/\[[\s\S]*?\]\s*/g, '').trim();
+                if (!chess.load_pgn(movesOnly)) return false;
+              }
+              allMoves = chess.history({ verbose: true });
+              currentMove = -1;
+
+              var hdrs = parseHeaders(clean);
+              renderMeta(hdrs);
+              renderMovesList();
+              renderLegend();
+              goTo(-1);
+              return true;
+            }
+
+            function renderMeta(h) {
+              var el = document.getElementById('chessMeta');
+              if (!el) return;
+              var res = h['Result'] || '*';
+              var rText = res === '1-0' ? 'White wins' : res === '0-1' ? 'Black wins' : res === '1/2-1/2' ? 'Draw' : res;
+              var date  = fmtDate(h['Date']);
+              var tc    = fmtTC(h['TimeControl']);
+              var info  = [date, tc].filter(Boolean).join('\u2009·\u2009');
+              el.innerHTML = (info ? '<span>' + info + '</span>' : '') +
+                '<span class="chess-result-pill">' + rText + '</span>';
+            }
+
+            function renderMovesList() {
+              var list = document.getElementById('chessMovesList');
+              if (!list) return;
+              list.innerHTML = '';
+              for (var i = 0; i < allMoves.length; i += 2) {
+                var row = document.createElement('div');
+                row.className = 'chess-move-row';
+                var numEl = document.createElement('span');
+                numEl.className = 'chess-move-num';
+                numEl.textContent = (Math.floor(i / 2) + 1) + '.';
+                row.appendChild(numEl);
+                row.appendChild(makeMoveBtn(i));
+                if (i + 1 < allMoves.length) {
+                  row.appendChild(makeMoveBtn(i + 1));
+                } else {
+                  var ph = document.createElement('span'); ph.style.flex = '1';
+                  row.appendChild(ph);
+                }
+                list.appendChild(row);
+              }
+            }
+
+            function makeMoveBtn(idx) {
+              var btn = document.createElement('button');
+              btn.className = 'chess-move-btn';
+              btn.setAttribute('data-idx', idx);
+              btn.textContent = allMoves[idx].san;
+              var nCode = nagMap[idx];
+              if (nCode !== undefined && NAG[nCode]) {
+                var sp = document.createElement('span');
+                sp.className = 'chess-nag ' + NAG[nCode].cls;
+                sp.textContent = NAG[nCode].sym;
+                sp.title = NAG[nCode].label;
+                btn.appendChild(sp);
+              }
+              btn.addEventListener('click', function () { goTo(parseInt(this.getAttribute('data-idx'))); });
+              return btn;
+            }
+
+            function renderLegend() {
+              var el = document.getElementById('chessLegend');
+              if (!el) return;
+              var used = usedNAGs(nagMap);
+              if (used.length === 0) { el.innerHTML = ''; return; }
+              el.innerHTML = used.sort(function(a,b){return a-b;}).map(function(n) {
+                var info = NAG[n];
+                return '<span class="chess-legend-item"><span class="chess-nag ' + info.cls + '">' +
+                  info.sym + '</span><span>' + info.label + '</span></span>';
+              }).join('');
+            }
+
+            /* ── Navigate ── */
+            function goTo(idx) {
+              currentMove = Math.max(-1, Math.min(idx, allMoves.length - 1));
+              var chess = new Chess();
+              for (var i = 0; i <= currentMove; i++) chess.move(allMoves[i].san);
+              var last = currentMove >= 0 ? allMoves[currentMove] : null;
+              renderBoard(chess.board(), last);
+              updateMoveHL();
+              updatePosLabel();
+              scrollActive();
+            }
+
+            function renderBoard(board, lastMove) {
+              var el = document.getElementById('chessBoard');
+              if (!el) return;
+              el.innerHTML = '';
+              var fromSq = lastMove ? lastMove.from : null;
+              var toSq   = lastMove ? lastMove.to   : null;
+              for (var r = 0; r < 8; r++) {
+                for (var c = 0; c < 8; c++) {
+                  var sq = document.createElement('div');
+                  var light = (r + c) % 2 === 1;
+                  sq.className = 'chess-sq ' + (light ? 'light' : 'dark');
+                  var sn = sqName(r, c);
+                  if (sn === fromSq) sq.classList.add('hl-from');
+                  if (sn === toSq)   sq.classList.add('hl-to');
+                  var p = board[r][c];
+                  if (p) {
+                    var sp = document.createElement('span');
+                    sp.className = 'chess-piece';
+                    sp.textContent = pieceChar(p);
+                    sq.appendChild(sp);
+                  }
+                  el.appendChild(sq);
+                }
+              }
+            }
+
+            function updateMoveHL() {
+              document.querySelectorAll('#chessMovesList .chess-move-btn').forEach(function (btn) {
+                btn.classList.toggle('active', parseInt(btn.getAttribute('data-idx')) === currentMove);
+              });
+            }
+
+            function updatePosLabel() {
+              var el = document.getElementById('chessPosLabel');
+              if (!el) return;
+              if (currentMove < 0) { el.textContent = 'Start'; return; }
+              var mn = Math.floor(currentMove / 2) + 1;
+              el.textContent = mn + (currentMove % 2 === 0 ? '.' : '\u2026');
+            }
+
+            function scrollActive() {
+              var list = document.getElementById('chessMovesList');
+              var a    = list && list.querySelector('.chess-move-btn.active');
+              if (a) a.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+
+            /* ── Controls ── */
+            document.getElementById('chessFirst').addEventListener('click', function () { goTo(-1); });
+            document.getElementById('chessPrev').addEventListener('click',  function () { goTo(currentMove - 1); });
+            document.getElementById('chessNext').addEventListener('click',  function () { goTo(currentMove + 1); });
+            document.getElementById('chessLast').addEventListener('click',  function () { goTo(allMoves.length - 1); });
+
+            /* ── Keyboard (arrow keys when chess section is in view) ── */
+            document.addEventListener('keydown', function (e) {
+              var sec  = document.getElementById('chess');
+              if (!sec) return;
+              var rect = sec.getBoundingClientRect();
+              if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+              if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(currentMove - 1); }
+              if (e.key === 'ArrowRight') { e.preventDefault(); goTo(currentMove + 1); }
+              if (e.key === 'Home')       { e.preventDefault(); goTo(-1); }
+              if (e.key === 'End')        { e.preventDefault(); goTo(allMoves.length - 1); }
+            });
+
+            /* ── PGN panel ── */
+            document.getElementById('chessPgnToggle').addEventListener('click', function () {
+              var panel = document.getElementById('chessPgnPanel');
+              panel.classList.toggle('open');
+              this.textContent = panel.classList.contains('open') ? '↓ close' : '↑ load new pgn';
+            });
+
+            document.getElementById('chessPgnLoad').addEventListener('click', function () {
+              var raw = document.getElementById('chessPgnArea').value.trim();
+              var err = document.getElementById('chessError');
+              err.style.display = 'none';
+              if (!raw) return;
+              if (loadPGN(raw)) {
+                document.getElementById('chessPgnPanel').classList.remove('open');
+                document.getElementById('chessPgnToggle').textContent = '↑ load new pgn';
+                document.getElementById('chessPgnArea').value = '';
+              } else {
+                err.style.display = 'block';
+              }
+            });
+
+            /* ── Init ── */
+            loadPGN(DEFAULT_PGN);
+
+          })();
+          </script>
+
+          <div class="col-12" style="margin-top: 3rem;">
             <a href="#contact" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">07/08</span>
+              <span class="page">08/09</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -1056,7 +1479,7 @@
             </div>
           </form>
           <div class="col mt-5 pt-5 next-chapter">
-            <span class="page">08/08</span>
+            <span class="page">09/09</span>
           </div>
         </section>
 
@@ -1607,7 +2030,7 @@
 
     <script>
     (function () {
-      var SECTIONS = ['home','about','research','teaching','conferences','code','gallery','contact'];
+      var SECTIONS = ['home','about','research','teaching','conferences','code','gallery','chess','contact'];
       var btn = document.getElementById('navArrowBtn');
       if (!btn) return;
 
