@@ -1089,9 +1089,65 @@
             <h2>Chess</h2>
           </div>
 
-          <div style="max-width: 900px;">
-            <iframe id="15178475" allowtransparency="true" frameborder="0" style="width:100%;border:none;" src="https://www.chess.com/emboard?id=15178475"></iframe>
-            <script>window.addEventListener("message",e=>{e['data']&&"15178475"===e['data']['id']&&document.getElementById(`${e['data']['id']}`)&&(document.getElementById(`${e['data']['id']}`).style.height=`${e['data']['frameHeight']+37}px`)});</script>
+          <div style="max-width: 820px; position: relative;">
+
+            <!-- Clipping wrapper: hides the player-info top bar and the "Play Chess" bottom banner -->
+            <div id="chessEmbedClip" style="overflow:hidden; position:relative; width:100%;">
+              <iframe
+                id="15178475"
+                allowtransparency="true"
+                frameborder="0"
+                style="width:100%; border:none; display:block; margin-top:-64px;"
+                src="https://www.chess.com/emboard?id=15178475">
+              </iframe>
+            </div>
+
+            <!-- Coordinate overlay strips (match site background; adjust colour with theme if needed) -->
+            <!-- Left rank-number strip -->
+            <div id="chessCoordLeft"  style="position:absolute; top:0; left:0;   width:22px;  background:rgb(var(--primary)); pointer-events:none; z-index:2;"></div>
+            <!-- Bottom file-letter strip -->
+            <div id="chessCoordBot"   style="position:absolute; bottom:0; left:0; right:0; height:22px; background:rgb(var(--primary)); pointer-events:none; z-index:2;"></div>
+
+            <script>
+            (function () {
+              var TOP_CLIP = 64;   /* px — height of the player-info header bar  */
+              var BOT_CLIP = 78;   /* px — height of the "Play Chess at Chess.com" footer */
+              var COORD_H  = 22;   /* px — height of the file-letter row at the bottom of the board */
+              var COORD_W  = 22;   /* px — width  of the rank-number column on the left of the board */
+
+              var clip   = document.getElementById('chessEmbedClip');
+              var iframe = document.getElementById('15178475');
+              var cLeft  = document.getElementById('chessCoordLeft');
+              var cBot   = document.getElementById('chessCoordBot');
+
+              function applyColour() {
+                var bg = 'rgb(' + getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() + ')';
+                if (cLeft) cLeft.style.background = bg;
+                if (cBot)  cBot.style.background  = bg;
+              }
+
+              window.addEventListener('message', function (e) {
+                if (!e['data'] || e['data']['id'] !== '15178475') return;
+                var rawH = e['data']['frameHeight'] + 37;          /* chess.com's own +37 */
+                iframe.style.height = rawH + 'px';
+                /* clip wrapper shows only the board strip */
+                var visibleH = rawH - TOP_CLIP - BOT_CLIP;
+                clip.style.height = Math.max(0, visibleH) + 'px';
+                /* stretch coordinate overlays to match visible height */
+                if (cLeft) cLeft.style.height = Math.max(0, visibleH) + 'px';
+              });
+
+              /* Re-sync overlay colour whenever the theme swatch is clicked */
+              document.addEventListener('click', function (e) {
+                if (e.target && e.target.classList.contains('color-btn')) {
+                  setTimeout(applyColour, 50);
+                }
+              });
+
+              applyColour();
+            })();
+            </script>
+
           </div>
 
           <div class="col-12" style="margin-top: 3rem;">
