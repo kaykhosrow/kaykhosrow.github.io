@@ -571,12 +571,12 @@
       .chess-rank-col span { font-size: 0.68rem; opacity: 0.4; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; }
       .chess-board { display: grid; grid-template-columns: repeat(8,1fr); flex: 1; border: 1px solid rgba(0,0,0,0.14); box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.35); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; font-size: 2.05rem; user-select: none; cursor: default; position: relative; transition: background 0.12s; }
-      .chess-sq.light { background: rgba(var(--primary), 0.55); }
-      .chess-sq.dark  { background: rgba(0,0,0,0.27); }
-      .chess-sq.hl-from.light { background: rgba(var(--primary), 0.35); box-shadow: inset 0 0 0 3px rgba(0,0,0,0.22); }
-      .chess-sq.hl-from.dark  { background: rgba(0,0,0,0.16); box-shadow: inset 0 0 0 3px rgba(0,0,0,0.22); }
-      .chess-sq.hl-to.light   { background: rgba(var(--primary), 0.9); box-shadow: inset 0 0 0 3px rgba(0,0,0,0.28); }
-      .chess-sq.hl-to.dark    { background: rgba(0,0,0,0.42); box-shadow: inset 0 0 0 3px rgba(0,0,0,0.28); }
+      .chess-sq.light { background: #f9f6ef; }
+      .chess-sq.dark  { background: #6d7270; }
+      .chess-sq.hl-from.light { background: #d6d46a; }
+      .chess-sq.hl-from.dark  { background: #97952a; }
+      .chess-sq.hl-to.light   { background: #ced132; }
+      .chess-sq.hl-to.dark    { background: #888b0e; }
       .chess-piece { line-height: 1; pointer-events: none; text-shadow: 0.5px 1px 2px rgba(0,0,0,0.18); }
 
       .chess-sidebar { flex: 1; min-width: 0; max-width: 380px; }
@@ -1089,66 +1089,344 @@
             <h2>Chess</h2>
           </div>
 
-          <div style="max-width: 820px; position: relative;">
+          <div class="chess-viewer" id="chessViewer">
 
-            <!-- Clipping wrapper: hides the player-info top bar and the "Play Chess" bottom banner -->
-            <div id="chessEmbedClip" style="overflow:hidden; position:relative; width:100%;">
-              <iframe
-                id="15178475"
-                allowtransparency="true"
-                frameborder="0"
-                style="width:100%; border:none; display:block; margin-top:-64px;"
-                src="https://www.chess.com/emboard?id=15178475">
-              </iframe>
+            <!-- Board column -->
+            <div class="chess-board-col">
+              <div class="chess-board-outer">
+                <div class="chess-board-and-ranks">
+                  <div class="chess-rank-col" id="chessRankCol">
+                    <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
+                  </div>
+                  <div class="chess-board" id="chessBoard"></div>
+                </div>
+                <div class="chess-coord-row">
+                  <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+                </div>
+              </div>
             </div>
 
-            <!-- Coordinate overlay strips (match site background; adjust colour with theme if needed) -->
-            <!-- Left rank-number strip -->
-            <div id="chessCoordLeft"  style="position:absolute; top:0; left:0;   width:22px;  background:rgb(var(--primary)); pointer-events:none; z-index:2;"></div>
-            <!-- Bottom file-letter strip -->
-            <div id="chessCoordBot"   style="position:absolute; bottom:0; left:0; right:0; height:22px; background:rgb(var(--primary)); pointer-events:none; z-index:2;"></div>
+            <!-- Sidebar -->
+            <div class="chess-sidebar">
 
-            <script>
-            (function () {
-              var TOP_CLIP = 64;   /* px — height of the player-info header bar  */
-              var BOT_CLIP = 78;   /* px — height of the "Play Chess at Chess.com" footer */
-              var COORD_H  = 22;   /* px — height of the file-letter row at the bottom of the board */
-              var COORD_W  = 22;   /* px — width  of the rank-number column on the left of the board */
+              <div class="chess-meta" id="chessMeta"></div>
 
-              var clip   = document.getElementById('chessEmbedClip');
-              var iframe = document.getElementById('15178475');
-              var cLeft  = document.getElementById('chessCoordLeft');
-              var cBot   = document.getElementById('chessCoordBot');
+              <div class="chess-controls">
+                <button class="chess-ctrl-btn" id="chessFirst" title="Start"><i class="ph ph-skip-back"></i></button>
+                <button class="chess-ctrl-btn" id="chessPrev"  title="Previous"><i class="ph ph-caret-left"></i></button>
+                <span class="chess-pos-label" id="chessPosLabel">Start</span>
+                <button class="chess-ctrl-btn" id="chessNext"  title="Next"><i class="ph ph-caret-right"></i></button>
+                <button class="chess-ctrl-btn" id="chessLast"  title="End"><i class="ph ph-skip-forward"></i></button>
+              </div>
 
-              function applyColour() {
-                var bg = 'rgb(' + getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() + ')';
-                if (cLeft) cLeft.style.background = bg;
-                if (cBot)  cBot.style.background  = bg;
+              <div class="chess-moves-list" id="chessMovesList"></div>
+
+              <div class="chess-legend" id="chessLegend"></div>
+
+              <button class="chess-pgn-toggle" id="chessPgnToggle">↑ load new pgn</button>
+              <div class="chess-pgn-panel" id="chessPgnPanel">
+                <textarea class="chess-pgn-area" id="chessPgnArea" placeholder="Paste PGN here (with or without analysis)…"></textarea>
+                <button class="btn btn-outline-secondary chess-load-btn" id="chessPgnLoad">Load</button>
+                <p class="chess-error" id="chessError">Invalid PGN — please check and try again.</p>
+              </div>
+
+            </div>
+          </div>
+
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+          <script>
+          (function () {
+
+            var DEFAULT_PGN = '[Event "Live Chess"]\n[Site "Chess.com"]\n[Date "2026.05.26"]\n[Round "?"]\n[White "White"]\n[Black "Black"]\n[Result "0-1"]\n[TimeControl "600"]\n[WhiteElo "2040"]\n[BlackElo "2068"]\n[Termination "Black won by checkmate"]\n\n1. e4 c6 2. d3 d5 3. e5 Bf5 4. f4 h5 5. Nc3 e6 6. Be2 Bb4 7. Bd2 d4 8. Ne4 Bxe4 9. dxe4 Bxd2+ 10. Qxd2 c5 11. O-O-O Nc6 12. Bf3 Qb6 13. Qe2 O-O-O 14. Bxh5 g6 15. Bf3 Nb4 16. Kb1 Ne7 17. a3 Nbc6 18. Nh3 Rh4 19. Qd2 Na5 20. Be2 c4 21. Qe1 c3 22. b4 Nec6 23. b5 Qc5 24. Ka2 Nb4+ 25. axb4 Qxb4 26. Rb1 Qa4# 0-1';
+
+            /* ── NAG catalogue ── */
+            var NAG = {
+              1:{sym:'!',cls:'n1',label:'Great move'},2:{sym:'?',cls:'n2',label:'Mistake'},
+              3:{sym:'!!',cls:'n3',label:'Brilliant'},4:{sym:'??',cls:'n4',label:'Blunder'},
+              5:{sym:'!?',cls:'n5',label:'Interesting'},6:{sym:'?!',cls:'n6',label:'Dubious'},
+              10:{sym:'=',cls:'',label:'Equal'},14:{sym:'⩲',cls:'',label:'White slightly better'},
+              15:{sym:'⩱',cls:'',label:'Black slightly better'},16:{sym:'±',cls:'',label:'White better'},
+              17:{sym:'∓',cls:'',label:'Black better'},18:{sym:'+-',cls:'n18',label:'White winning'},
+              19:{sym:'-+',cls:'n19',label:'Black winning'},
+            };
+
+            /* ── Neo-style inline SVG pieces ──────────────────────────────────────
+               Newspaper board: light #f9f6ef, dark #6d7270
+               White pieces : fill #ffffff, stroke #1a1a1a
+               Black pieces : fill #2c2c2c, stroke #c0c0c0 (light outline for dark squares)
+            ── */
+            var SVG = (function () {
+              var W='#ffffff', WS='#1a1a1a', sw='1.5';
+              var B='#2c2c2c', BS='#c0c0c0', bw='1';
+
+              function wrap(inner) {
+                return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" style="width:86%;height:86%;display:block;margin:auto;overflow:visible">' + inner + '</svg>';
               }
 
-              window.addEventListener('message', function (e) {
-                if (!e['data'] || e['data']['id'] !== '15178475') return;
-                var rawH = e['data']['frameHeight'] + 37;          /* chess.com's own +37 */
-                iframe.style.height = rawH + 'px';
-                /* clip wrapper shows only the board strip */
-                var visibleH = rawH - TOP_CLIP - BOT_CLIP;
-                clip.style.height = Math.max(0, visibleH) + 'px';
-                /* stretch coordinate overlays to match visible height */
-                if (cLeft) cLeft.style.height = Math.max(0, visibleH) + 'px';
-              });
+              function pawn(f,s,w) { return wrap(
+                '<circle cx="22.5" cy="11" r="6" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<path d="M22.5 17C17 18 14 22 14 28L31 28C31 22 28 18 22.5 17Z" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'" stroke-linejoin="round"/>'+
+                '<rect x="11" y="28" width="23" height="5" rx="2" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'
+              ); }
 
-              /* Re-sync overlay colour whenever the theme swatch is clicked */
-              document.addEventListener('click', function (e) {
-                if (e.target && e.target.classList.contains('color-btn')) {
-                  setTimeout(applyColour, 50);
-                }
-              });
+              function rook(f,s,w) { return wrap(
+                '<path d="M9 13L9 18L13 18L13 15L19 15L19 18L26 18L26 15L32 15L32 18L36 18L36 13Z" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'" stroke-linejoin="round"/>'+
+                '<rect x="11" y="18" width="23" height="11" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<line x1="13" y1="23" x2="32" y2="23" stroke="'+s+'" stroke-width="0.75"/>'+
+                '<rect x="9" y="29" width="27" height="6" rx="2" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'
+              ); }
 
-              applyColour();
+              function knight(f,s,w) { return wrap(
+                '<rect x="10" y="33" width="25" height="6" rx="2" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<path d="M15 33L14 26C12 23 10 20 10 16C10 12 12.5 9.5 16 8.5L16 7C17.5 5 20 5 21.5 7C25.5 6 30 9 32 14C32 19 29 23 27 25C30 27 31 30 31 33Z" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'" stroke-linejoin="round"/>'+
+                '<circle cx="19" cy="14.5" r="2.5" fill="'+s+'"/>'+
+                '<path d="M12.5 19.5C12.5 17.5 14.5 16.5 16.5 17.5" fill="none" stroke="'+s+'" stroke-width="1" stroke-linecap="round"/>'
+              ); }
+
+              function bishop(f,s,w) { return wrap(
+                '<circle cx="22.5" cy="8" r="4" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<path d="M22.5 12C16 15 13 20 13 28L32 28C32 20 29 15 22.5 12Z" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'" stroke-linejoin="round"/>'+
+                '<line x1="15" y1="21" x2="30" y2="21" stroke="'+s+'" stroke-width="1"/>'+
+                '<rect x="10" y="28" width="25" height="5" rx="2" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'
+              ); }
+
+              function queen(f,s,w) { return wrap(
+                '<circle cx="11" cy="14" r="3" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<circle cx="17" cy="11" r="3" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<circle cx="22.5" cy="10" r="3" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<circle cx="28" cy="11" r="3" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<circle cx="34" cy="14" r="3" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<path d="M10 16L9 29L36 29L35 16C29 20 26 14 22.5 13C19 14 16 20 10 16Z" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'" stroke-linejoin="round"/>'+
+                '<line x1="11" y1="23" x2="34" y2="23" stroke="'+s+'" stroke-width="0.75"/>'+
+                '<rect x="9" y="29" width="27" height="5" rx="2" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'
+              ); }
+
+              function king(f,s,w) { return wrap(
+                '<line x1="22.5" y1="5" x2="22.5" y2="15" stroke="'+s+'" stroke-width="2.5" stroke-linecap="round"/>'+
+                '<line x1="17" y1="9.5" x2="28" y2="9.5" stroke="'+s+'" stroke-width="2.5" stroke-linecap="round"/>'+
+                '<path d="M22.5 15C17 16 12 20 10 27L35 27C33 20 28 16 22.5 15Z" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'" stroke-linejoin="round"/>'+
+                '<rect x="10" y="27" width="25" height="6" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'+
+                '<line x1="12" y1="30" x2="33" y2="30" stroke="'+s+'" stroke-width="0.75"/>'+
+                '<rect x="9" y="33" width="27" height="5" rx="2" fill="'+f+'" stroke="'+s+'" stroke-width="'+w+'"/>'
+              ); }
+
+              return {
+                wP:pawn(W,WS,sw),  bP:pawn(B,BS,bw),
+                wR:rook(W,WS,sw),  bR:rook(B,BS,bw),
+                wN:knight(W,WS,sw),bN:knight(B,BS,bw),
+                wB:bishop(W,WS,sw),bB:bishop(B,BS,bw),
+                wQ:queen(W,WS,sw), bQ:queen(B,BS,bw),
+                wK:king(W,WS,sw),  bK:king(B,BS,bw),
+              };
             })();
-            </script>
 
-          </div>
+            function pieceHTML(p) {
+              if (!p) return '';
+              return SVG[(p.color === 'w' ? 'w' : 'b') + p.type.toUpperCase()] || '';
+            }
+
+            /* ── Helpers ── */
+            function sqName(r,c) { return 'abcdefgh'[c]+(8-r); }
+
+            function parseHeaders(pgn) {
+              var h={};
+              (pgn.match(/\[(\w+)\s+"([^"]*)"\]/g)||[]).forEach(function(m){
+                var p=m.match(/\[(\w+)\s+"([^"]*)"\]/);if(p)h[p[1]]=p[2];
+              });
+              return h;
+            }
+
+            function sanitisePGN(pgn,white,black) {
+              function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+              var out=pgn;
+              if(white&&white!=='White')out=out.replace(new RegExp(esc(white),'g'),'White');
+              if(black&&black!=='Black')out=out.replace(new RegExp(esc(black),'g'),'Black');
+              out=out.replace(/\[White\s+"[^"]*"\]/,'[White "White"]');
+              out=out.replace(/\[Black\s+"[^"]*"\]/,'[Black "Black"]');
+              return out;
+            }
+
+            function extractNAGs(pgn) {
+              var map={};
+              var txt=pgn.replace(/\[[\s\S]*?\]\s*/g,'').trim();
+              var depth=0,clean='';
+              for(var i=0;i<txt.length;i++){
+                if(txt[i]==='('){depth++;continue;}
+                if(txt[i]===')'){depth--;continue;}
+                if(depth===0)clean+=txt[i];
+              }
+              clean=clean.replace(/\{[^}]*\}/g,' ').replace(/\s*(1-0|0-1|1\/2-1\/2|\*)\s*$/,'');
+              var tokens=clean.trim().split(/\s+/).filter(function(t){return t.length>0;});
+              var mi=0;
+              tokens.forEach(function(t){
+                if(/^\d+\.+$/.test(t))return;
+                if(t.charAt(0)==='$'){var n=parseInt(t.slice(1));if(!isNaN(n)&&mi>0)map[mi-1]=n;}
+                else{mi++;}
+              });
+              return map;
+            }
+
+            function fmtDate(d){
+              if(!d)return'';var p=d.split('.');if(p.length!==3)return d;
+              var mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+              return(mn[parseInt(p[1])-1]||p[1])+'\u00a0'+p[2]+',\u00a0'+p[0];
+            }
+            function fmtTC(tc){
+              if(!tc)return'';var s=parseInt(tc);if(isNaN(s))return tc;
+              var m=Math.floor(s/60),r=s%60;return r===0?m+' min':m+':'+(r<10?'0':'')+r+' min';
+            }
+
+            /* ── State ── */
+            var allMoves=[],nagMap={},currentMove=-1;
+
+            function loadPGN(raw) {
+              var rh=parseHeaders(raw);
+              var white=rh['White']||'',black=rh['Black']||'';
+              nagMap=extractNAGs(raw);
+              var clean=sanitisePGN(raw,white,black);
+              var chess=new Chess();
+              if(!chess.load_pgn(clean)){
+                var mo=clean.replace(/\[[\s\S]*?\]\s*/g,'').trim();
+                if(!chess.load_pgn(mo))return false;
+              }
+              allMoves=chess.history({verbose:true});
+              currentMove=-1;
+              renderMeta(parseHeaders(clean));
+              renderMovesList();
+              renderLegend();
+              goTo(-1);
+              return true;
+            }
+
+            function renderMeta(h) {
+              var el=document.getElementById('chessMeta');if(!el)return;
+              var res=h['Result']||'*';
+              var rt=res==='1-0'?'White wins':res==='0-1'?'Black wins':res==='1/2-1/2'?'Draw':res;
+              var info=[fmtDate(h['Date']),fmtTC(h['TimeControl'])].filter(Boolean).join('\u2009\u00b7\u2009');
+              el.innerHTML=(info?'<span>'+info+'</span>':'')+
+                '<span class="chess-result-pill">'+rt+'</span>';
+            }
+
+            function renderMovesList() {
+              var list=document.getElementById('chessMovesList');if(!list)return;
+              list.innerHTML='';
+              for(var i=0;i<allMoves.length;i+=2){
+                var row=document.createElement('div');row.className='chess-move-row';
+                var num=document.createElement('span');num.className='chess-move-num';
+                num.textContent=(Math.floor(i/2)+1)+'.';row.appendChild(num);
+                row.appendChild(makeMoveBtn(i));
+                if(i+1<allMoves.length){row.appendChild(makeMoveBtn(i+1));}
+                else{var ph=document.createElement('span');ph.style.flex='1';row.appendChild(ph);}
+                list.appendChild(row);
+              }
+            }
+
+            function makeMoveBtn(idx) {
+              var btn=document.createElement('button');
+              btn.className='chess-move-btn';btn.setAttribute('data-idx',idx);
+              btn.textContent=allMoves[idx].san;
+              var nc=nagMap[idx];
+              if(nc!==undefined&&NAG[nc]){
+                var sp=document.createElement('span');
+                sp.className='chess-nag '+NAG[nc].cls;sp.textContent=NAG[nc].sym;sp.title=NAG[nc].label;
+                btn.appendChild(sp);
+              }
+              btn.addEventListener('click',function(){goTo(parseInt(this.getAttribute('data-idx')));});
+              return btn;
+            }
+
+            function renderLegend() {
+              var el=document.getElementById('chessLegend');if(!el)return;
+              var used={};
+              Object.keys(nagMap).forEach(function(k){var n=nagMap[k];if(NAG[n])used[n]=true;});
+              var keys=Object.keys(used).map(Number);
+              if(!keys.length){el.innerHTML='';return;}
+              el.innerHTML=keys.sort(function(a,b){return a-b;}).map(function(n){
+                return '<span class="chess-legend-item"><span class="chess-nag '+NAG[n].cls+'">'+NAG[n].sym+
+                  '</span><span>'+NAG[n].label+'</span></span>';
+              }).join('');
+            }
+
+            function goTo(idx) {
+              currentMove=Math.max(-1,Math.min(idx,allMoves.length-1));
+              var chess=new Chess();
+              for(var i=0;i<=currentMove;i++)chess.move(allMoves[i].san);
+              renderBoard(chess.board(),currentMove>=0?allMoves[currentMove]:null);
+              updateMoveHL();updatePosLabel();scrollActive();
+            }
+
+            function renderBoard(board,lastMove) {
+              var el=document.getElementById('chessBoard');if(!el)return;
+              el.innerHTML='';
+              var fromSq=lastMove?lastMove.from:null,toSq=lastMove?lastMove.to:null;
+              for(var r=0;r<8;r++){
+                for(var c=0;c<8;c++){
+                  var sq=document.createElement('div');
+                  sq.className='chess-sq '+((r+c)%2===1?'light':'dark');
+                  var sn=sqName(r,c);
+                  if(sn===fromSq)sq.classList.add('hl-from');
+                  if(sn===toSq)sq.classList.add('hl-to');
+                  var p=board[r][c];
+                  if(p)sq.innerHTML=pieceHTML(p);
+                  el.appendChild(sq);
+                }
+              }
+            }
+
+            function updateMoveHL() {
+              document.querySelectorAll('#chessMovesList .chess-move-btn').forEach(function(btn){
+                btn.classList.toggle('active',parseInt(btn.getAttribute('data-idx'))===currentMove);
+              });
+            }
+
+            function updatePosLabel() {
+              var el=document.getElementById('chessPosLabel');if(!el)return;
+              if(currentMove<0){el.textContent='Start';return;}
+              el.textContent=(Math.floor(currentMove/2)+1)+(currentMove%2===0?'.':'\u2026');
+            }
+
+            function scrollActive() {
+              var list=document.getElementById('chessMovesList');
+              var a=list&&list.querySelector('.chess-move-btn.active');
+              if(a)a.scrollIntoView({block:'nearest',behavior:'smooth'});
+            }
+
+            document.getElementById('chessFirst').addEventListener('click',function(){goTo(-1);});
+            document.getElementById('chessPrev').addEventListener('click',function(){goTo(currentMove-1);});
+            document.getElementById('chessNext').addEventListener('click',function(){goTo(currentMove+1);});
+            document.getElementById('chessLast').addEventListener('click',function(){goTo(allMoves.length-1);});
+
+            document.addEventListener('keydown',function(e){
+              var sec=document.getElementById('chess');if(!sec)return;
+              var rect=sec.getBoundingClientRect();
+              if(rect.bottom<0||rect.top>window.innerHeight)return;
+              if(e.key==='ArrowLeft'){e.preventDefault();goTo(currentMove-1);}
+              if(e.key==='ArrowRight'){e.preventDefault();goTo(currentMove+1);}
+              if(e.key==='Home'){e.preventDefault();goTo(-1);}
+              if(e.key==='End'){e.preventDefault();goTo(allMoves.length-1);}
+            });
+
+            document.getElementById('chessPgnToggle').addEventListener('click',function(){
+              var panel=document.getElementById('chessPgnPanel');
+              panel.classList.toggle('open');
+              this.textContent=panel.classList.contains('open')?'\u2193 close':'\u2191 load new pgn';
+            });
+
+            document.getElementById('chessPgnLoad').addEventListener('click',function(){
+              var raw=document.getElementById('chessPgnArea').value.trim();
+              var err=document.getElementById('chessError');err.style.display='none';
+              if(!raw)return;
+              if(loadPGN(raw)){
+                document.getElementById('chessPgnPanel').classList.remove('open');
+                document.getElementById('chessPgnToggle').textContent='\u2191 load new pgn';
+                document.getElementById('chessPgnArea').value='';
+              }else{err.style.display='block';}
+            });
+
+            loadPGN(DEFAULT_PGN);
+
+          })();
+          </script>
 
           <div class="col-12" style="margin-top: 3rem;">
             <a href="#contact" class="d-flex gap-4 align-items-center next-chapter">
