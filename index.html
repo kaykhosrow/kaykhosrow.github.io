@@ -2234,16 +2234,6 @@
         });
       });
 
-      document.querySelectorAll('a[href="#chess"]').forEach(function (link) {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          var target = document.getElementById('chess');
-          if (!target) return;
-          /* offsetTop is layout-stable (same before/during/after nav transition)
-             unlike getBCR+scrollY which fluctuates while nav animates bottom→top */
-          window.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
-        });
-      });
     })();
     </script>
 
