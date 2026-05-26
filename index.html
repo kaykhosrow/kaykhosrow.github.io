@@ -562,51 +562,75 @@
 
       /* ── Chess section ────────────────────────────────────────────────── */
       .chess-viewer { display: flex; gap: 2.5rem; align-items: flex-start; }
-      .chess-board-col { flex: 0 0 auto; width: 400px; }
+      .chess-board-col { flex: 0 0 auto; width: 520px; }
       .chess-board-outer { position: relative; }
-      .chess-coord-row { display: flex; padding-left: 20px; margin-top: 5px; }
-      .chess-coord-row span { flex: 1; text-align: center; font-size: 0.68rem; opacity: 0.4; font-family: 'InterRegular', sans-serif; }
-      .chess-board-and-ranks { display: flex; gap: 0; }
-      .chess-rank-col { display: flex; flex-direction: column; justify-content: space-around; width: 16px; flex-shrink: 0; }
-      .chess-rank-col span { font-size: 0.68rem; opacity: 0.4; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; }
-      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); flex: 1; border: 1px solid rgba(0,0,0,0.14); box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.35); overflow: hidden; border-radius: 2px; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; }
+      .chess-board-row { display: flex; align-items: stretch; }
+      .chess-rank-col { display: flex; flex-direction: column; justify-content: space-around; width: 14px; flex-shrink: 0; padding-bottom: 1px; }
+      .chess-rank-col span { font-size: 0.62rem; opacity: 0.45; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; }
+      .chess-coord-row { display: flex; padding-left: 14px; margin-top: 3px; }
+      .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.45; font-family: 'InterRegular', sans-serif; }
+      .chess-board-outer { position: relative; width: 100%; }
+
+      /* Semi-transparent board image sits behind pieces */
+      .chess-board-bg {
+        position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0;
+        background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png');
+        background-size: 100% 100%; opacity: 0.5;
+      }
+
+      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.5px 0.5px 4px rgba(0,0,0,0.25); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
-      .chess-sq.light { background: transparent; }
-      .chess-sq.dark  { background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
 
-      .chess-sidebar { flex: 1; min-width: 0; max-width: 380px; }
-      .chess-meta { font-size: 0.82rem; opacity: 0.62; margin-bottom: 1.1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-      .chess-result-pill { padding: 2px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(0,0,0,0.22); opacity: 1; }
-      .chess-controls { display: flex; align-items: center; gap: 6px; margin-bottom: 1rem; }
-      .chess-ctrl-btn { width: 34px; height: 34px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; transition: background 0.18s, color 0.18s; }
-      .chess-ctrl-btn:hover { background: rgb(var(--black)); color: rgb(var(--primary)); }
+      /* Bottom-left: game info overlay */
+      .chess-board-bl {
+        position: absolute; bottom: 10px; left: 10px; z-index: 5;
+        font-size: 0.72rem; font-family: 'InterRegular', sans-serif;
+        color: rgba(0,0,0,0.82); line-height: 1.55;
+        background: rgba(255,255,255,0.58); backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 5px 10px; border-radius: 4px;
+        border: 1px solid rgba(0,0,0,0.08); pointer-events: none;
+      }
+      .chess-board-bl .cb-result { font-weight: 600; }
 
-      .chess-moves-list { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 1.4rem; max-height: 280px; overflow-y: auto; border: 1px solid rgba(0,0,0,0.08); border-radius: 4px; padding: 6px 4px; }
+      /* Bottom-right: controls overlay */
+      .chess-board-br {
+        position: absolute; bottom: 10px; right: 10px; z-index: 5;
+        display: flex; gap: 4px; align-items: center;
+      }
+      .chess-bctrl {
+        width: 30px; height: 30px; border-radius: 4px; border: none;
+        background: rgba(255,255,255,0.6); backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: rgba(0,0,0,0.72); cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.82rem; flex-shrink: 0;
+        transition: background 0.15s, color 0.15s;
+        border: 1px solid rgba(0,0,0,0.08);
+      }
+      .chess-bctrl:hover, .chess-bctrl.active { background: rgba(0,0,0,0.78); color: #fff; border-color: transparent; }
+      /* Separator between nav and utility buttons */
+      .chess-bctrl-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.15); margin: 0 2px; flex-shrink: 0; }
+
+      .chess-sidebar { flex: 1; min-width: 0; max-width: 340px; }
+
+      .chess-moves-list { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 1.4rem; max-height: 360px; overflow-y: auto; border: 1px solid rgba(0,0,0,0.08); border-radius: 4px; padding: 6px 4px; }
       .chess-move-row { display: flex; align-items: center; width: 100%; }
       .chess-move-num { font-size: 0.75rem; opacity: 0.38; min-width: 2.1rem; text-align: right; padding-right: 5px; flex-shrink: 0; font-family: 'InterRegular', sans-serif; }
       .chess-move-btn { flex: 1; padding: 3px 6px; border-radius: 3px; border: none; background: transparent; cursor: pointer; font-size: 0.9rem; font-family: inherit; color: rgb(var(--black)); text-align: left; transition: background 0.14s; white-space: nowrap; }
       .chess-move-btn:hover:not(.active) { background: rgba(0,0,0,0.07); }
       .chess-move-btn.active { background: rgb(var(--black)); color: rgb(var(--primary)); border-radius: 3px; }
       .chess-nag { font-size: 0.7em; margin-left: 1px; font-weight: 700; }
-      .chess-nag.n3 { color: #16a34a; } /* Brilliant  !! */
-      .chess-nag.n1 { color: #2563eb; } /* Great       ! */
-      .chess-nag.n2 { color: #ea580c; } /* Mistake     ? */
-      .chess-nag.n4 { color: #dc2626; } /* Blunder    ?? */
-      .chess-nag.n5 { color: #9333ea; } /* Interesting !?*/
-      .chess-nag.n6 { color: #ca8a04; } /* Dubious    ?! */
+      .chess-nag.n3 { color: #16a34a; }
+      .chess-nag.n1 { color: #2563eb; }
+      .chess-nag.n2 { color: #ea580c; }
+      .chess-nag.n4 { color: #dc2626; }
+      .chess-nag.n5 { color: #9333ea; }
+      .chess-nag.n6 { color: #ca8a04; }
       .chess-nag.n18 { color: #16a34a; }
       .chess-nag.n19 { color: #dc2626; }
-
-      .chess-pgn-toggle { margin-top: 0.5rem; font-size: 0.78rem; opacity: 0.45; cursor: pointer; background: none; border: none; color: inherit; padding: 0; letter-spacing: 0.04em; text-decoration: underline; text-underline-offset: 3px; font-family: 'InterRegular', sans-serif; }
-      .chess-pgn-toggle:hover { opacity: 0.8; }
-      .chess-pgn-panel { display: none; margin-top: 0.6rem; }
-      .chess-pgn-panel.open { display: block; }
-      .chess-pgn-area { width: 100%; height: 110px; resize: vertical; font-size: 0.75rem; font-family: monospace; padding: 8px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.18); background: rgba(0,0,0,0.03); color: rgb(var(--black)); box-sizing: border-box; margin-bottom: 6px; }
-      .chess-load-btn { font-size: 0.8rem !important; padding: 5px 14px !important; border-radius: 4px !important; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease !important; }
-      .chess-load-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
-      .chess-error { font-size: 0.78rem; color: #dc2626; margin-top: 4px; display: none; }
-      .chess-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 0.75rem; font-size: 0.74rem; opacity: 0.65; }
+      .chess-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 0.74rem; opacity: 0.65; }
       .chess-legend-item { display: flex; align-items: center; gap: 3px; }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
@@ -1089,35 +1113,41 @@
             <!-- Board column -->
             <div class="chess-board-col">
               <div class="chess-board-outer">
-                <div class="chess-board-and-ranks">
+                <div class="chess-board-row">
                   <div class="chess-rank-col" id="chessRankCol">
                     <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
                   </div>
-                  <div class="chess-board" id="chessBoard"></div>
+                  <div style="position:relative;flex:1;">
+                    <div class="chess-board-bg"></div>
+                    <div class="chess-board" id="chessBoard"></div>
+
+                    <!-- Bottom-left: game info -->
+                    <div class="chess-board-bl" id="chessMeta"></div>
+
+                    <!-- Bottom-right: nav + play + flip -->
+                    <div class="chess-board-br">
+                      <button class="chess-bctrl" id="chessFirst" title="Start"><i class="ph ph-skip-back"></i></button>
+                      <button class="chess-bctrl" id="chessPrev"  title="Previous"><i class="ph ph-caret-left"></i></button>
+                      <button class="chess-bctrl" id="chessPlay"  title="Play / Pause"><i class="ph ph-play"></i></button>
+                      <button class="chess-bctrl" id="chessNext"  title="Next"><i class="ph ph-caret-right"></i></button>
+                      <button class="chess-bctrl" id="chessLast"  title="End"><i class="ph ph-skip-forward"></i></button>
+                      <div class="chess-bctrl-sep"></div>
+                      <button class="chess-bctrl" id="chessFlip"  title="Flip board"><i class="ph ph-arrows-clockwise"></i></button>
+                    </div>
+                  </div>
                 </div>
-                <div class="chess-coord-row">
+                <div class="chess-coord-row" id="chessCoordRow">
                   <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
                 </div>
               </div>
             </div>
 
-            <!-- Sidebar -->
+            <!-- Sidebar: moves list only -->
             <div class="chess-sidebar">
-
-              <div class="chess-meta" id="chessMeta"></div>
-
-              <div class="chess-controls">
-                <button class="chess-ctrl-btn" id="chessFirst" title="Start"><i class="ph ph-skip-back"></i></button>
-                <button class="chess-ctrl-btn" id="chessPrev"  title="Previous"><i class="ph ph-caret-left"></i></button>
-                <button class="chess-ctrl-btn" id="chessNext"  title="Next"><i class="ph ph-caret-right"></i></button>
-                <button class="chess-ctrl-btn" id="chessLast"  title="End"><i class="ph ph-skip-forward"></i></button>
-              </div>
-
               <div class="chess-moves-list" id="chessMovesList"></div>
-
               <div class="chess-legend" id="chessLegend"></div>
-
             </div>
+
           </div>
 
           <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
@@ -1243,9 +1273,11 @@
               var el=document.getElementById('chessMeta');if(!el)return;
               var res=h['Result']||'*';
               var rt=res==='1-0'?'White wins':res==='0-1'?'Black wins':res==='1/2-1/2'?'Draw':res;
-              var info=[fmtDate(h['Date']),fmtTC(h['TimeControl'])].filter(Boolean).join('\u2009\u00b7\u2009');
-              el.innerHTML=(info?'<span>'+info+'</span>':'')+
-                '<span class="chess-result-pill">'+rt+'</span>';
+              var date=fmtDate(h['Date']);
+              var tc=fmtTC(h['TimeControl']);
+              var line1=[date,tc].filter(Boolean).join('\u2009\u00b7\u2009');
+              el.innerHTML=(line1?'<div>'+line1+'</div>':'')+
+                '<div class="cb-result">'+rt+'</div>';
             }
 
             function renderMovesList() {
@@ -1272,7 +1304,7 @@
                 sp.className='chess-nag '+NAG[nc].cls;sp.textContent=NAG[nc].sym;sp.title=NAG[nc].label;
                 btn.appendChild(sp);
               }
-              btn.addEventListener('click',function(){goTo(parseInt(this.getAttribute('data-idx')));});
+              btn.addEventListener('click',function(){stopPlay();goTo(parseInt(this.getAttribute('data-idx')));});
               return btn;
             }
 
@@ -1288,41 +1320,125 @@
               }).join('');
             }
 
-            function goTo(idx) {
-              currentMove=Math.max(-1,Math.min(idx,allMoves.length-1));
-              var chess=new Chess();
-              for(var i=0;i<=currentMove;i++)chess.move(allMoves[i].san);
-              renderBoard(chess.board());
-              updateMoveHL();scrollActive();
+            /* ── Square helpers ── */
+            function sqAlg(r, c) { return 'abcdefgh'[c] + (8 - r); }
+
+            function getSquareEl(alg) {
+              var file = alg.charCodeAt(0) - 97;
+              var rank = parseInt(alg[1]);
+              var row  = flipped ? (rank - 1)  : (8 - rank);
+              var col  = flipped ? (7 - file)  : file;
+              var sqs  = document.querySelectorAll('#chessBoard .chess-sq');
+              return sqs[row * 8 + col] || null;
             }
 
-            function renderBoard(board) {
-              var el=document.getElementById('chessBoard');if(!el)return;
-              el.innerHTML='';
-              /* flipped = black at bottom: iterate rows/cols in reverse */
-              for(var ri=0;ri<8;ri++){
-                var r=flipped?(7-ri):ri;
-                for(var ci=0;ci<8;ci++){
-                  var c=flipped?(7-ci):ci;
-                  var sq=document.createElement('div');
-                  sq.className='chess-sq '+((r+c)%2===1?'light':'dark');
-                  var p=board[r][c];
-                  if(p)sq.innerHTML=pieceHTML(p);
+            function updateCoords() {
+              var rc = document.getElementById('chessRankCol');
+              if (rc) {
+                var ranks = flipped ? ['1','2','3','4','5','6','7','8'] : ['8','7','6','5','4','3','2','1'];
+                rc.innerHTML = ranks.map(function(r){return '<span>'+r+'</span>';}).join('');
+              }
+              var fc = document.getElementById('chessCoordRow');
+              if (fc) {
+                var files = flipped ? ['h','g','f','e','d','c','b','a'] : ['a','b','c','d','e','f','g','h'];
+                fc.innerHTML = files.map(function(f){return '<span>'+f+'</span>';}).join('');
+              }
+            }
+
+            function goTo(idx) {
+              var prevMove = currentMove;
+              currentMove = Math.max(-1, Math.min(idx, allMoves.length - 1));
+
+              var chess = new Chess();
+              for (var i = 0; i <= currentMove; i++) chess.move(allMoves[i].san);
+
+              /* Determine animation: only on single-step navigation */
+              var fromAlg = null, toAlg = null, pieceSrc = null;
+              var step = idx - prevMove;
+
+              if (step === 1 && currentMove >= 0) {
+                var mv = allMoves[currentMove];
+                fromAlg  = mv.from;
+                toAlg    = mv.to;
+                pieceSrc = PIECE_IMGS[mv.color + (mv.promotion || mv.piece)];
+              } else if (step === -1 && prevMove >= 0 && prevMove < allMoves.length) {
+                var pmv  = allMoves[prevMove];
+                fromAlg  = pmv.to;
+                toAlg    = pmv.from;
+                pieceSrc = PIECE_IMGS[pmv.color + pmv.piece];
+              }
+
+              if (fromAlg && toAlg && pieceSrc) {
+                /* Record source rect BEFORE re-rendering */
+                var fromEl   = getSquareEl(fromAlg);
+                var fromRect = fromEl ? fromEl.getBoundingClientRect() : null;
+
+                /* Render new position, hiding piece at destination */
+                renderBoard(chess.board(), toAlg);
+
+                var toEl   = getSquareEl(toAlg);
+                var toRect = toEl ? toEl.getBoundingClientRect() : null;
+
+                if (fromRect && toRect) {
+                  var ghost = document.createElement('img');
+                  ghost.src = pieceSrc;
+                  ghost.style.cssText = [
+                    'position:fixed', 'z-index:9999', 'pointer-events:none',
+                    'width:'  + fromRect.width  + 'px',
+                    'height:' + fromRect.height + 'px',
+                    'left:'   + fromRect.left   + 'px',
+                    'top:'    + fromRect.top    + 'px',
+                    'transition:left 0.18s cubic-bezier(0.25,0.46,0.45,0.94),' +
+                                'top 0.18s cubic-bezier(0.25,0.46,0.45,0.94)',
+                    'will-change:left,top',
+                  ].join(';');
+                  document.body.appendChild(ghost);
+
+                  requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                      ghost.style.left = toRect.left + 'px';
+                      ghost.style.top  = toRect.top  + 'px';
+                    });
+                  });
+
+                  setTimeout(function() {
+                    if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+                    if (toEl) {
+                      var destImg = toEl.querySelector('img');
+                      if (destImg) destImg.style.opacity = '';
+                    }
+                  }, 200);
+                } else {
+                  renderBoard(chess.board());
+                }
+              } else {
+                renderBoard(chess.board());
+              }
+
+              updateMoveHL(); scrollActive();
+            }
+
+            function renderBoard(board, hideSq) {
+              var el = document.getElementById('chessBoard'); if (!el) return;
+              el.innerHTML = '';
+              for (var ri = 0; ri < 8; ri++) {
+                var r = flipped ? (7 - ri) : ri;
+                for (var ci = 0; ci < 8; ci++) {
+                  var c = flipped ? (7 - ci) : ci;
+                  var sq = document.createElement('div');
+                  sq.className = 'chess-sq';
+                  var p = board[r][c];
+                  if (p) {
+                    sq.innerHTML = pieceHTML(p);
+                    if (hideSq && sqAlg(r, c) === hideSq) {
+                      var img = sq.querySelector('img');
+                      if (img) img.style.opacity = '0';
+                    }
+                  }
                   el.appendChild(sq);
                 }
               }
-              /* update rank labels */
-              var rankEl=document.getElementById('chessRankCol');
-              if(rankEl){
-                var ranks=flipped?['1','2','3','4','5','6','7','8']:['8','7','6','5','4','3','2','1'];
-                rankEl.innerHTML=ranks.map(function(r){return '<span>'+r+'</span>';}).join('');
-              }
-              /* update file labels */
-              var fileEl=document.querySelector('.chess-coord-row');
-              if(fileEl){
-                var files=flipped?['h','g','f','e','d','c','b','a']:['a','b','c','d','e','f','g','h'];
-                fileEl.innerHTML=files.map(function(f){return '<span>'+f+'</span>';}).join('');
-              }
+              updateCoords();
             }
 
             function updateMoveHL() {
@@ -1337,19 +1453,47 @@
               if(a)a.scrollIntoView({block:'nearest',behavior:'smooth'});
             }
 
-            document.getElementById('chessFirst').addEventListener('click',function(){goTo(-1);});
-            document.getElementById('chessPrev').addEventListener('click',function(){goTo(currentMove-1);});
-            document.getElementById('chessNext').addEventListener('click',function(){goTo(currentMove+1);});
-            document.getElementById('chessLast').addEventListener('click',function(){goTo(allMoves.length-1);});
+            /* ── Auto-play ── */
+            var playTimer=null;
+            function stopPlay(){
+              if(playTimer){clearInterval(playTimer);playTimer=null;}
+              var btn=document.getElementById('chessPlay');
+              if(btn){btn.classList.remove('active');btn.innerHTML='<i class="ph ph-play"></i>';}
+            }
+            function togglePlay(){
+              if(playTimer){stopPlay();return;}
+              /* if already at end, restart */
+              if(currentMove>=allMoves.length-1)goTo(-1);
+              var btn=document.getElementById('chessPlay');
+              btn.classList.add('active');btn.innerHTML='<i class="ph ph-pause"></i>';
+              playTimer=setInterval(function(){
+                if(currentMove>=allMoves.length-1){stopPlay();return;}
+                goTo(currentMove+1);
+              },900);
+            }
+
+            document.getElementById('chessFirst').addEventListener('click',function(){stopPlay();goTo(-1);});
+            document.getElementById('chessPrev').addEventListener('click',function(){stopPlay();goTo(currentMove-1);});
+            document.getElementById('chessPlay').addEventListener('click',togglePlay);
+            document.getElementById('chessNext').addEventListener('click',function(){stopPlay();goTo(currentMove+1);});
+            document.getElementById('chessLast').addEventListener('click',function(){stopPlay();goTo(allMoves.length-1);});
+            document.getElementById('chessFlip').addEventListener('click',function(){
+              flipped=!flipped;
+              this.classList.toggle('active',false); /* no persistent active state */
+              var chess=new Chess();
+              for(var i=0;i<=currentMove;i++)chess.move(allMoves[i].san);
+              renderBoard(chess.board());
+            });
 
             document.addEventListener('keydown',function(e){
               var sec=document.getElementById('chess');if(!sec)return;
               var rect=sec.getBoundingClientRect();
               if(rect.bottom<0||rect.top>window.innerHeight)return;
-              if(e.key==='ArrowLeft'){e.preventDefault();goTo(currentMove-1);}
-              if(e.key==='ArrowRight'){e.preventDefault();goTo(currentMove+1);}
-              if(e.key==='Home'){e.preventDefault();goTo(-1);}
-              if(e.key==='End'){e.preventDefault();goTo(allMoves.length-1);}
+              if(e.key==='ArrowLeft'){e.preventDefault();stopPlay();goTo(currentMove-1);}
+              if(e.key==='ArrowRight'){e.preventDefault();stopPlay();goTo(currentMove+1);}
+              if(e.key===' '){e.preventDefault();togglePlay();}
+              if(e.key==='Home'){e.preventDefault();stopPlay();goTo(-1);}
+              if(e.key==='End'){e.preventDefault();stopPlay();goTo(allMoves.length-1);}
             });
 
             loadPGN(DEFAULT_PGN);
