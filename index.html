@@ -564,12 +564,12 @@
       .chess-viewer { display: block; }
       .chess-board-col { width: 650px; }
       .chess-board-outer { position: relative; }
-      .chess-board-row { display: flex; align-items: stretch; }
+      .chess-board-row { display: flex; align-items: stretch; gap: 6px; }
       .chess-rank-col { display: flex; flex-direction: column; justify-content: space-around; width: 14px; flex-shrink: 0; }
       .chess-rank-col span { font-size: 0.62rem; opacity: 0.65; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
-      .chess-coord-row { display: flex; padding-left: 14px; margin-top: 4px; height: 14px; align-items: center; }
+      .chess-coord-row { display: flex; padding-left: 20px; margin-top: 6px; height: 14px; align-items: center; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.65; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
-      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.5; }
+      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.35; }
       .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.5px 0.5px 4px rgba(0,0,0,0.22); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
@@ -1313,11 +1313,12 @@
                       'width:'+capRect.width+'px;height:'+capRect.height+'px;'+
                       'left:'+capRect.left+'px;top:'+capRect.top+'px;';
                     document.body.appendChild(capGhost);
-                    /* Ease-in: slow at start, very fast at end — mimics piece arriving on top */
+                    /* Stay fully visible, then snap away just as piece arrives */
+                    capGhost.style.transitionDelay = Math.round(ANIM_MS * 0.87) + 'ms';
+                    capGhost.style.transition = 'opacity 22ms ease';
                     requestAnimationFrame(function(){ requestAnimationFrame(function(){
-                      capGhost.style.transition='opacity '+Math.round(ANIM_MS*0.92)+'ms ease-in';
-                      capGhost.style.opacity='0';
-                    });});
+                      capGhost.style.opacity = '0';
+                    }); });
                     setTimeout(function(){if(capGhost.parentNode)capGhost.parentNode.removeChild(capGhost);}, ANIM_MS+100);
                   }
                   spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], movRect, destRect, null, null);
@@ -1475,12 +1476,12 @@
                 var rx=kr.left-wr.left, ry=kr.top-wr.top;
                 var iconPx=Math.round(kr.width*0.75);
 
-                /* Highlight: starts transparent, fades in with background + text + outer border */
+                /* Highlight: starts transparent, fades in with background + text + inset border */
                 var hl=document.createElement('div');
                 hl.id=hlId;
                 hl.style.cssText='position:absolute;z-index:10;pointer-events:none;'+
                   'left:'+rx+'px;top:'+ry+'px;width:'+kr.width+'px;height:'+kr.height+'px;'+
-                  'background:rgba('+rgbStr+',0);box-shadow:0 0 0 0px rgba(0,0,0,0);'+
+                  'background:rgba('+rgbStr+',0);box-shadow:inset 0 0 0 0px rgba(0,0,0,0);'+
                   'display:flex;align-items:center;justify-content:center;'+
                   'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
                   'font-family:"InterRegular",sans-serif;line-height:1;'+
@@ -1497,26 +1498,26 @@
                   'left:'+(rx+kr.width-SZ/2)+'px;top:'+(ry-SZ/2)+'px;';
                 wrapEl.appendChild(badge);
 
-                /* Fade in highlight + border */
+                /* Fade in highlight + inset border */
                 requestAnimationFrame(function(){requestAnimationFrame(function(){
                   hl.style.background='rgba('+rgbStr+',0.6)';
                   hl.style.color='rgba(255,255,255,0.95)';
-                  hl.style.boxShadow='0 0 0 3px rgba(0,0,0,0.82)';
+                  hl.style.boxShadow='inset 0 0 0 3px rgba(0,0,0,0.88)';
                 });});
 
-                /* After 1.1s: fade out highlight+border simultaneously, fade in badge */
+                /* After 1.1s: fade out highlight+border together, fade in badge */
                 setTimeout(function(){
                   hl.style.background='rgba('+rgbStr+',0)';
                   hl.style.color='rgba(255,255,255,0)';
-                  hl.style.boxShadow='0 0 0 0px rgba(0,0,0,0)';
+                  hl.style.boxShadow='inset 0 0 0 0px rgba(0,0,0,0)';
                   badge.style.opacity='1';
                   setTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
                 },1100);
               }
 
               var loserIcon=(gameLastSan&&gameLastSan.indexOf('#')!==-1)?'#':'⚑';
-              mkEffect(loserColor, loserIcon, '220,38,38',  '#dc2626', 'chessLoserHl',  'chessLoserBadge');
-              mkEffect(winnerColor, '👑',    '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
+              mkEffect(loserColor, loserIcon,  '220,38,38',  '#dc2626', 'chessLoserHl',  'chessLoserBadge');
+              mkEffect(winnerColor, '\u265b',   '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
             }
 
             /* ── Auto-play ── */
