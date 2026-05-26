@@ -1626,25 +1626,24 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
             function showMoveAnnotation(destSq, annotType, fadeDur) {
               removeMoveAnnotation();
               var st = ANNOT_STYLES[annotType]; if (!st) return;
-              var wrapEl = document.getElementById('chessBoardWrap');
-              var boardEl = document.getElementById('chessBoard');
-              var el = getSquareEl(destSq);
-              if (!wrapEl || !boardEl || !el) return;
-              /* position:absolute in chessBoardWrap — scrolls with board, no twitching.
-                 .chess-board no longer has z-index (no stacking context), so
-                 z-index:10000 here participates in root context and beats ghost (9999).
-                 Nav is z-index:20000 so it stays on top. */
-              var boardOL = boardEl.offsetLeft + boardEl.clientLeft;
-              var boardOT = boardEl.offsetTop  + boardEl.clientTop;
-              var rx = boardOL + el.offsetLeft, ry = boardOT + el.offsetTop;
-              var SZ = 30, kw = el.offsetWidth, kh = el.offsetHeight;
+              var el = getSquareEl(destSq); if (!el) return;
+              /* position:absolute in document.body using document coordinates
+                 (getBCR + scrollY). This puts the element at a fixed point in
+                 the document so it scrolls naturally with the page — no scroll
+                 listener, no twitching. z-index:10000 is in root stacking context
+                 regardless of any ancestor stacking contexts. Ghost is 9999,
+                 nav is 20000. */
+              var kr = el.getBoundingClientRect();
+              var docTop  = kr.top  + window.scrollY;
+              var docLeft = kr.left + window.scrollX;
+              var SZ = 30, kw = Math.round(kr.width), kh = Math.round(kr.height);
               var iconPx = Math.round(kw * 0.52);
               var transDur = fadeDur ? (fadeDur/1000).toFixed(3) : '0.45';
 
               var hl = document.createElement('div');
               hl.id = 'chessMoveAnnotHl';
               hl.style.cssText = 'position:absolute;z-index:10000;pointer-events:none;'+
-                'left:'+rx+'px;top:'+ry+'px;'+
+                'left:'+docLeft+'px;top:'+docTop+'px;'+
                 'width:'+kw+'px;height:'+kh+'px;'+
                 'background:rgba('+st.rgb+',0);'+
                 'display:flex;align-items:center;justify-content:center;'+
@@ -1652,7 +1651,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 'font-family:"InterRegular",sans-serif;line-height:1;'+
                 'transition:background '+transDur+'s ease,color '+transDur+'s ease;';
               hl.innerHTML = st.icon;
-              wrapEl.appendChild(hl);
+              document.body.appendChild(hl);
 
               var badge = document.createElement('div');
               badge.id = 'chessMoveAnnotBadge';
@@ -1660,9 +1659,9 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               badge.innerHTML = st.icon;
               badge.style.cssText = 'position:absolute;z-index:10001;pointer-events:none;background:'+st.bg+';'+
                 'width:'+SZ+'px;height:'+SZ+'px;font-size:0.82rem;opacity:0;'+
-                'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;'+
+                'left:'+(docLeft+kw-SZ/2)+'px;top:'+(docTop-SZ/2)+'px;'+
                 'transition:opacity 0.4s ease;';
-              wrapEl.appendChild(badge);
+              document.body.appendChild(badge);
 
               requestAnimationFrame(function(){requestAnimationFrame(function(){
                 hl.style.background='rgba('+st.rgb+',0.55)';
