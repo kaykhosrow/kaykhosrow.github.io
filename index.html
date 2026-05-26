@@ -92,10 +92,10 @@
         top: auto !important;
         left: 0 !important;
         right: 0 !important;
-        z-index: 50;
+        z-index: 20000;
       }
 
-      #navigation { z-index: 49 !important; overflow: visible !important; }
+      #navigation { z-index: 19999 !important; overflow: visible !important; }
 
       html:not(.js-loading) #navigation {
         transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1523,7 +1523,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 var bDest = allMoves[currentMove] ? allMoves[currentMove].to : null;
                 if (bDest) {
                   if (step === 1) {
-                    animTimeout(function(){ showMoveAnnotation(bDest, curAnnot); }, fwdDur + 30);
+                    showMoveAnnotation(bDest, curAnnot, fwdDur);
                   } else {
                     showMoveAnnotation(bDest, curAnnot);
                   }
@@ -1623,44 +1623,55 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
             }
 
             /* ── Brilliant move highlight ('#1baca6' teal, chess.com colour) ── */
-            function showMoveAnnotation(destSq, annotType) {
+            var _annotScrollFn = null, _annotScrollRaf = null;
+
+            function showMoveAnnotation(destSq, annotType, fadeDur) {
               removeMoveAnnotation();
               var st = ANNOT_STYLES[annotType]; if (!st) return;
-              var wrapEl = document.getElementById('chessBoardWrap');
-              var boardEl = document.getElementById('chessBoard');
-              var el = getSquareEl(destSq);
-              if (!wrapEl || !boardEl || !el) return;
-              /* Identical approach to endgame highlights: position:absolute in
-                 chessBoardWrap, scrolls with board, stays below nav.
-                 Fired after ghost is gone (fwdDur+30ms) so no z-index conflict. */
-              var boardOL = boardEl.offsetLeft + boardEl.clientLeft;
-              var boardOT = boardEl.offsetTop  + boardEl.clientTop;
-              var rx = boardOL + el.offsetLeft, ry = boardOT + el.offsetTop;
-              var SZ = 30, kw = el.offsetWidth, kh = el.offsetHeight;
+              var el = getSquareEl(destSq); if (!el) return;
+              /* position:fixed in body at z-index:10000 — always above the ghost
+                 (9999). Nav is bumped to z-index:20000 so it stays on top.
+                 rAF-throttled scroll listener tracks the square smoothly. */
+              var kr = el.getBoundingClientRect();
+              var SZ = 30, kw = Math.round(kr.width), kh = Math.round(kr.height);
               var iconPx = Math.round(kw * 0.52);
+              var transDur = fadeDur ? (fadeDur/1000).toFixed(3) : '0.45';
 
               var hl = document.createElement('div');
               hl.id = 'chessMoveAnnotHl';
-              hl.style.cssText = 'position:absolute;z-index:10;pointer-events:none;'+
-                'left:'+rx+'px;top:'+ry+'px;'+
+              hl.style.cssText = 'position:fixed;z-index:10000;pointer-events:none;'+
+                'left:'+kr.left+'px;top:'+kr.top+'px;'+
                 'width:'+kw+'px;height:'+kh+'px;'+
                 'background:rgba('+st.rgb+',0);'+
                 'display:flex;align-items:center;justify-content:center;'+
                 'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
                 'font-family:"InterRegular",sans-serif;line-height:1;'+
-                'transition:background 0.45s ease,color 0.45s ease;';
+                'transition:background '+transDur+'s ease,color '+transDur+'s ease;';
               hl.innerHTML = st.icon;
-              wrapEl.appendChild(hl);
+              document.body.appendChild(hl);
 
               var badge = document.createElement('div');
               badge.id = 'chessMoveAnnotBadge';
               badge.className = 'chess-end-badge';
               badge.innerHTML = st.icon;
-              badge.style.cssText = 'position:absolute;z-index:11;pointer-events:none;background:'+st.bg+';'+
+              badge.style.cssText = 'position:fixed;z-index:10001;pointer-events:none;background:'+st.bg+';'+
                 'width:'+SZ+'px;height:'+SZ+'px;font-size:0.82rem;opacity:0;'+
-                'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;'+
+                'left:'+(kr.left+kw-SZ/2)+'px;top:'+(kr.top-SZ/2)+'px;'+
                 'transition:opacity 0.4s ease;';
-              wrapEl.appendChild(badge);
+              document.body.appendChild(badge);
+
+              /* rAF-throttled scroll tracker — batches updates to one per frame */
+              _annotScrollFn = function() {
+                if (_annotScrollRaf) return;
+                _annotScrollRaf = requestAnimationFrame(function() {
+                  _annotScrollRaf = null;
+                  var r = el.getBoundingClientRect();
+                  hl.style.left = r.left+'px'; hl.style.top = r.top+'px';
+                  badge.style.left = (r.left+kw-SZ/2)+'px';
+                  badge.style.top  = (r.top-SZ/2)+'px';
+                });
+              };
+              window.addEventListener('scroll', _annotScrollFn, { passive:true });
 
               requestAnimationFrame(function(){requestAnimationFrame(function(){
                 hl.style.background='rgba('+st.rgb+',0.55)';
@@ -1668,20 +1679,25 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 if (st.sound) playSound(st.sound);
               });});
 
+              var holdTime = (fadeDur || 450) + 900;
               animTimeout(function(){
                 hl.style.background='rgba('+st.rgb+',0)';
                 hl.style.color='rgba(255,255,255,0)';
                 badge.style.opacity='1';
                 animTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
-              }, 1100);
+              }, holdTime);
             }
             function removeMoveAnnotation() {
+              if (_annotScrollFn) { window.removeEventListener('scroll',_annotScrollFn); _annotScrollFn=null; }
+              if (_annotScrollRaf) { cancelAnimationFrame(_annotScrollRaf); _annotScrollRaf=null; }
               ['chessMoveAnnotHl','chessMoveAnnotBadge'].forEach(function(id){
                 var el=document.getElementById(id);
                 if(el&&el.parentNode)el.parentNode.removeChild(el);
               });
             }
             function fadeMoveAnnotation() {
+              if (_annotScrollFn) { window.removeEventListener('scroll',_annotScrollFn); _annotScrollFn=null; }
+              if (_annotScrollRaf) { cancelAnimationFrame(_annotScrollRaf); _annotScrollRaf=null; }
               /* Use opacity so the reverse fade works from wherever the
                  background transition currently is */
               ['chessMoveAnnotHl','chessMoveAnnotBadge'].forEach(function(id){
