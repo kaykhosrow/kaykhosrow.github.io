@@ -1082,12 +1082,12 @@
 
               <!-- Control bar below board -->
               <div class="chess-ctrl-bar">
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <div class="chess-game-info" id="chessMeta"></div>
+                <div class="chess-game-info" id="chessMeta"></div>
+                <div class="chess-game-info" id="chessResult" style="flex:1;margin:0 8px;justify-content:center;"></div>
+                <div style="display:flex;align-items:center;gap:8px;margin-right:8px;">
                   <div class="chess-game-info" id="chessEloW" style="display:none;"></div>
                   <div class="chess-game-info" id="chessEloB" style="display:none;"></div>
                 </div>
-                <div class="chess-game-info" id="chessResult" style="flex:1;margin:0 8px;justify-content:center;"></div>
                 <div class="chess-nav-btns">
                   <button class="chess-bctrl" id="chessFirst" title="Start"><i class="ph ph-skip-back"></i></button>
                   <button class="chess-bctrl" id="chessPrev"  title="Previous"><i class="ph ph-caret-left"></i></button>
@@ -1363,11 +1363,11 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               var wElo=h['WhiteElo']||'', bElo=h['BlackElo']||'';
               var eloW=document.getElementById('chessEloW');
               var eloB=document.getElementById('chessEloB');
-              var cBase='display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-0.05em;flex-shrink:0;';
+              var cBase='display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;flex-shrink:0;';
               var cW=cBase+'background:#fff;border:1.5px solid rgba(0,0,0,0.55);';
               var cB=cBase+'background:rgba(0,0,0,0.82);border:1.5px solid rgba(0,0,0,0.82);';
-              if(eloW){if(wElo){eloW.innerHTML='<span style="'+cW+'"></span>'+wElo;eloW.style.cssText+='display:inline-flex;align-items:center;';}else{eloW.style.display='none';}}
-              if(eloB){if(bElo){eloB.innerHTML='<span style="'+cB+'"></span>'+bElo;eloB.style.cssText+='display:inline-flex;align-items:center;';}else{eloB.style.display='none';}}
+              if(eloW){if(wElo){eloW.style.display='inline-flex';eloW.style.alignItems='center';eloW.innerHTML='<span style="'+cW+'"></span>'+wElo;}else{eloW.style.display='none';}}
+              if(eloB){if(bElo){eloB.style.display='inline-flex';eloB.style.alignItems='center';eloB.innerHTML='<span style="'+cB+'"></span>'+bElo;}else{eloB.style.display='none';}}
             }
 
             /* ── Square helpers ── */
