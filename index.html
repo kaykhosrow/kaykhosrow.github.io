@@ -1053,7 +1053,7 @@
         <section id="chess" class="about section container">
           <span class="section-title-overlay-text">Chess</span>
           <div class="section-title text-capitalize">
-            <h4>Chess Games</h4>
+            <h4>HIGHLIGHTS</h4>
             <h2>Chess</h2>
           </div>
 
@@ -1528,7 +1528,7 @@
                 var rx=boardOL+el.offsetLeft, ry=boardOT+el.offsetTop;
                 var badge=document.createElement('div');
                 badge.id=badgeId; badge.className='chess-end-badge';
-                badge.innerHTML=icon;
+                badge.innerHTML=icon.replace('max-width:60%;max-height:60%','max-width:46%;max-height:46%');
                 badge.style.cssText='position:absolute;z-index:11;pointer-events:none;background:'+badgeBg+';'+
                   'width:'+SZ+'px;height:'+SZ+'px;font-size:0.88rem;opacity:0;'+
                   'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;';
@@ -1550,7 +1550,7 @@
 
               var loserIcon=(gameLastSan&&gameLastSan.indexOf('#')!==-1)?'#':'⚑';
               mkEffect(loserColor, loserIcon,  '220,38,38',  '#dc2626', 'chessLoserHl',  'chessLoserBadge');
-              mkEffect(winnerColor, '<svg viewBox="-0.5 -0.5 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:60%;max-height:60%;display:block;"><path d="m12.9277 11.2693 1.3569 -7.5385 -4.7493 2.2616L7.5 3.7308 5.4646 5.9923 0.7154 3.7308l1.3569 7.5385h10.8554Z" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path></svg>',  '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
+              mkEffect(winnerColor, '<svg viewBox="-0.5 -0.5 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:60%;max-height:60%;display:block;"><path d="m12.9277 11.2693 1.3569 -7.5385 -4.7493 2.2616L7.5 3.7308 5.4646 5.9923 0.7154 3.7308l1.3569 7.5385h10.8554Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path></svg>',  '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
             }
 
             /* Instant version for flip — no animation, just drops badges at new positions */
@@ -1579,14 +1579,14 @@
                 var kw=el.offsetWidth;
                 var badge=document.createElement('div');
                 badge.id=badgeId; badge.className='chess-end-badge';
-                badge.innerHTML=icon;
+                badge.innerHTML=icon.replace('max-width:60%;max-height:60%','max-width:46%;max-height:46%');
                 badge.style.cssText='position:absolute;z-index:11;pointer-events:none;background:'+bg+';'+
                   'width:'+SZ+'px;height:'+SZ+'px;font-size:0.88rem;opacity:1;'+
                   'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;';
                 wrapEl.appendChild(badge);
               }
               mkBadge(loserColor, loserIcon, '#dc2626', 'chessLoserBadge');
-              mkBadge(winnerColor, '<svg viewBox="-0.5 -0.5 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:60%;max-height:60%;display:block;"><path d="m12.9277 11.2693 1.3569 -7.5385 -4.7493 2.2616L7.5 3.7308 5.4646 5.9923 0.7154 3.7308l1.3569 7.5385h10.8554Z" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path></svg>', '#16a34a', 'chessWinnerBadge');
+              mkBadge(winnerColor, '<svg viewBox="-0.5 -0.5 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:60%;max-height:60%;display:block;"><path d="m12.9277 11.2693 1.3569 -7.5385 -4.7493 2.2616L7.5 3.7308 5.4646 5.9923 0.7154 3.7308l1.3569 7.5385h10.8554Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path></svg>', '#16a34a', 'chessWinnerBadge');
             }
 
             /* ── Auto-play ── */
@@ -1968,7 +1968,7 @@
 
       var selectors = [
         '#about', '#research', '#teaching',
-        '#conferences', '#code', '#gallery', '#contact'
+        '#conferences', '#code', '#gallery', '#chess', '#contact'
       ].map(function (id) {
         return id + ' .section-title h2, ' + id + ' .section-title h4';
       }).join(', ');
