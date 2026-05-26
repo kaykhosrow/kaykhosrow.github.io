@@ -561,77 +561,25 @@
       }
 
       /* ── Chess section ────────────────────────────────────────────────── */
-      .chess-viewer { display: flex; gap: 2.5rem; align-items: flex-start; }
-      .chess-board-col { flex: 0 0 auto; width: 520px; }
+      .chess-viewer { display: block; }
+      .chess-board-col { width: 520px; }
       .chess-board-outer { position: relative; }
       .chess-board-row { display: flex; align-items: stretch; }
       .chess-rank-col { display: flex; flex-direction: column; justify-content: space-around; width: 14px; flex-shrink: 0; padding-bottom: 1px; }
       .chess-rank-col span { font-size: 0.62rem; opacity: 0.45; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; }
       .chess-coord-row { display: flex; padding-left: 14px; margin-top: 3px; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.45; font-family: 'InterRegular', sans-serif; }
-      .chess-board-outer { position: relative; width: 100%; }
-
-      /* Semi-transparent board image sits behind pieces */
-      .chess-board-bg {
-        position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0;
-        background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png');
-        background-size: 100% 100%; opacity: 0.5;
-      }
-
-      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.5px 0.5px 4px rgba(0,0,0,0.25); overflow: hidden; border-radius: 2px; }
+      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.5; }
+      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.5px 0.5px 4px rgba(0,0,0,0.22); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
-
-      /* Bottom-left: game info overlay */
-      .chess-board-bl {
-        position: absolute; bottom: 10px; left: 10px; z-index: 5;
-        font-size: 0.72rem; font-family: 'InterRegular', sans-serif;
-        color: rgba(0,0,0,0.82); line-height: 1.55;
-        background: rgba(255,255,255,0.58); backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        padding: 5px 10px; border-radius: 4px;
-        border: 1px solid rgba(0,0,0,0.08); pointer-events: none;
-      }
-      .chess-board-bl .cb-result { font-weight: 600; }
-
-      /* Bottom-right: controls overlay */
-      .chess-board-br {
-        position: absolute; bottom: 10px; right: 10px; z-index: 5;
-        display: flex; gap: 4px; align-items: center;
-      }
-      .chess-bctrl {
-        width: 30px; height: 30px; border-radius: 4px; border: none;
-        background: rgba(255,255,255,0.6); backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        color: rgba(0,0,0,0.72); cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.82rem; flex-shrink: 0;
-        transition: background 0.15s, color 0.15s;
-        border: 1px solid rgba(0,0,0,0.08);
-      }
-      .chess-bctrl:hover, .chess-bctrl.active { background: rgba(0,0,0,0.78); color: #fff; border-color: transparent; }
-      /* Separator between nav and utility buttons */
+      .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+      .chess-game-info { font-size: 0.75rem; opacity: 0.5; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; }
+      .chess-nav-btns { display: flex; gap: 4px; align-items: center; }
+      .chess-bctrl { width: 32px; height: 32px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.2); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s; }
+      .chess-bctrl:hover, .chess-bctrl.active { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.15); margin: 0 2px; flex-shrink: 0; }
-
-      .chess-sidebar { flex: 1; min-width: 0; max-width: 340px; }
-
-      .chess-moves-list { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 1.4rem; max-height: 360px; overflow-y: auto; border: 1px solid rgba(0,0,0,0.08); border-radius: 4px; padding: 6px 4px; }
-      .chess-move-row { display: flex; align-items: center; width: 100%; }
-      .chess-move-num { font-size: 0.75rem; opacity: 0.38; min-width: 2.1rem; text-align: right; padding-right: 5px; flex-shrink: 0; font-family: 'InterRegular', sans-serif; }
-      .chess-move-btn { flex: 1; padding: 3px 6px; border-radius: 3px; border: none; background: transparent; cursor: pointer; font-size: 0.9rem; font-family: inherit; color: rgb(var(--black)); text-align: left; transition: background 0.14s; white-space: nowrap; }
-      .chess-move-btn:hover:not(.active) { background: rgba(0,0,0,0.07); }
-      .chess-move-btn.active { background: rgb(var(--black)); color: rgb(var(--primary)); border-radius: 3px; }
-      .chess-nag { font-size: 0.7em; margin-left: 1px; font-weight: 700; }
-      .chess-nag.n3 { color: #16a34a; }
-      .chess-nag.n1 { color: #2563eb; }
-      .chess-nag.n2 { color: #ea580c; }
-      .chess-nag.n4 { color: #dc2626; }
-      .chess-nag.n5 { color: #9333ea; }
-      .chess-nag.n6 { color: #ca8a04; }
-      .chess-nag.n18 { color: #16a34a; }
-      .chess-nag.n19 { color: #dc2626; }
-      .chess-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 0.74rem; opacity: 0.65; }
-      .chess-legend-item { display: flex; align-items: center; gap: 3px; }
+      .chess-end-badge { position: fixed; z-index: 9999; pointer-events: none; width: 34px; height: 34px; border-radius: 50%; background: #dc2626; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; font-weight: 700; font-family: 'InterRegular', sans-serif; box-shadow: 0 2px 10px rgba(0,0,0,0.35); transition: left 0.6s cubic-bezier(0.25,0.46,0.45,0.94), top 0.6s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.3s ease; }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -1109,45 +1057,36 @@
           </div>
 
           <div class="chess-viewer" id="chessViewer">
-
-            <!-- Board column -->
             <div class="chess-board-col">
               <div class="chess-board-outer">
                 <div class="chess-board-row">
                   <div class="chess-rank-col" id="chessRankCol">
                     <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
                   </div>
-                  <div style="position:relative;flex:1;">
+                  <div style="position:relative;flex:1;" id="chessBoardWrap">
                     <div class="chess-board-bg"></div>
                     <div class="chess-board" id="chessBoard"></div>
-
-                    <!-- Bottom-left: game info -->
-                    <div class="chess-board-bl" id="chessMeta"></div>
-
-                    <!-- Bottom-right: nav + play + flip -->
-                    <div class="chess-board-br">
-                      <button class="chess-bctrl" id="chessFirst" title="Start"><i class="ph ph-skip-back"></i></button>
-                      <button class="chess-bctrl" id="chessPrev"  title="Previous"><i class="ph ph-caret-left"></i></button>
-                      <button class="chess-bctrl" id="chessPlay"  title="Play / Pause"><i class="ph ph-play"></i></button>
-                      <button class="chess-bctrl" id="chessNext"  title="Next"><i class="ph ph-caret-right"></i></button>
-                      <button class="chess-bctrl" id="chessLast"  title="End"><i class="ph ph-skip-forward"></i></button>
-                      <div class="chess-bctrl-sep"></div>
-                      <button class="chess-bctrl" id="chessFlip"  title="Flip board"><i class="ph ph-arrows-clockwise"></i></button>
-                    </div>
                   </div>
                 </div>
                 <div class="chess-coord-row" id="chessCoordRow">
                   <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
                 </div>
               </div>
-            </div>
 
-            <!-- Sidebar: moves list only -->
-            <div class="chess-sidebar">
-              <div class="chess-moves-list" id="chessMovesList"></div>
-              <div class="chess-legend" id="chessLegend"></div>
+              <!-- Control bar below board -->
+              <div class="chess-ctrl-bar">
+                <div class="chess-game-info" id="chessMeta"></div>
+                <div class="chess-nav-btns">
+                  <button class="chess-bctrl" id="chessFirst" title="Start"><i class="ph ph-skip-back"></i></button>
+                  <button class="chess-bctrl" id="chessPrev"  title="Previous"><i class="ph ph-caret-left"></i></button>
+                  <button class="chess-bctrl" id="chessPlay"  title="Play / Pause"><i class="ph ph-play"></i></button>
+                  <button class="chess-bctrl" id="chessNext"  title="Next"><i class="ph ph-caret-right"></i></button>
+                  <button class="chess-bctrl" id="chessLast"  title="End"><i class="ph ph-skip-forward"></i></button>
+                  <div class="chess-bctrl-sep"></div>
+                  <button class="chess-bctrl" id="chessFlip"  title="Flip board"><i class="ph ph-arrows-clockwise"></i></button>
+                </div>
+              </div>
             </div>
-
           </div>
 
           <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
@@ -1242,17 +1181,14 @@
 
             /* ── State ── */
             var allMoves=[],nagMap={},currentMove=-1,flipped=false;
+            var gameResult='*', gameLastSan='';
 
             function loadPGN(raw) {
               var rh=parseHeaders(raw);
               var white=rh['White']||'',black=rh['Black']||'';
               nagMap=extractNAGs(raw);
-
-              /* Determine perspective: if Black won (0-1) show from Black's side;
-                 if White won (1-0) show from White's side; draw → White default.
-                 Since the user pastes their own games, the winner is almost always them. */
-              var result=rh['Result']||'*';
-              flipped=(result==='0-1');
+              gameResult=rh['Result']||'*';
+              flipped=(gameResult==='0-1');
 
               var clean=sanitisePGN(raw,white,black);
               var chess=new Chess();
@@ -1261,63 +1197,18 @@
                 if(!chess.load_pgn(mo))return false;
               }
               allMoves=chess.history({verbose:true});
+              gameLastSan=allMoves.length>0?allMoves[allMoves.length-1].san:'';
               currentMove=-1;
+              removeBadge();
               renderMeta(parseHeaders(clean));
-              renderMovesList();
-              renderLegend();
               goTo(-1);
               return true;
             }
 
             function renderMeta(h) {
               var el=document.getElementById('chessMeta');if(!el)return;
-              var res=h['Result']||'*';
-              var rt=res==='1-0'?'White wins':res==='0-1'?'Black wins':res==='1/2-1/2'?'Draw':res;
-              var date=fmtDate(h['Date']);
-              var tc=fmtTC(h['TimeControl']);
-              var line1=[date,tc].filter(Boolean).join('\u2009\u00b7\u2009');
-              el.innerHTML=(line1?'<div>'+line1+'</div>':'')+
-                '<div class="cb-result">'+rt+'</div>';
-            }
-
-            function renderMovesList() {
-              var list=document.getElementById('chessMovesList');if(!list)return;
-              list.innerHTML='';
-              for(var i=0;i<allMoves.length;i+=2){
-                var row=document.createElement('div');row.className='chess-move-row';
-                var num=document.createElement('span');num.className='chess-move-num';
-                num.textContent=(Math.floor(i/2)+1)+'.';row.appendChild(num);
-                row.appendChild(makeMoveBtn(i));
-                if(i+1<allMoves.length){row.appendChild(makeMoveBtn(i+1));}
-                else{var ph=document.createElement('span');ph.style.flex='1';row.appendChild(ph);}
-                list.appendChild(row);
-              }
-            }
-
-            function makeMoveBtn(idx) {
-              var btn=document.createElement('button');
-              btn.className='chess-move-btn';btn.setAttribute('data-idx',idx);
-              btn.textContent=allMoves[idx].san;
-              var nc=nagMap[idx];
-              if(nc!==undefined&&NAG[nc]){
-                var sp=document.createElement('span');
-                sp.className='chess-nag '+NAG[nc].cls;sp.textContent=NAG[nc].sym;sp.title=NAG[nc].label;
-                btn.appendChild(sp);
-              }
-              btn.addEventListener('click',function(){stopPlay();goTo(parseInt(this.getAttribute('data-idx')));});
-              return btn;
-            }
-
-            function renderLegend() {
-              var el=document.getElementById('chessLegend');if(!el)return;
-              var used={};
-              Object.keys(nagMap).forEach(function(k){var n=nagMap[k];if(NAG[n])used[n]=true;});
-              var keys=Object.keys(used).map(Number);
-              if(!keys.length){el.innerHTML='';return;}
-              el.innerHTML=keys.sort(function(a,b){return a-b;}).map(function(n){
-                return '<span class="chess-legend-item"><span class="chess-nag '+NAG[n].cls+'">'+NAG[n].sym+
-                  '</span><span>'+NAG[n].label+'</span></span>';
-              }).join('');
+              var date=fmtDate(h['Date']),tc=fmtTC(h['TimeControl']);
+              el.textContent=[date,tc].filter(Boolean).join('\u2009\u00b7\u2009');
             }
 
             /* ── Square helpers ── */
@@ -1333,107 +1224,165 @@
             }
 
             function updateCoords() {
-              var rc = document.getElementById('chessRankCol');
-              if (rc) {
-                var ranks = flipped ? ['1','2','3','4','5','6','7','8'] : ['8','7','6','5','4','3','2','1'];
-                rc.innerHTML = ranks.map(function(r){return '<span>'+r+'</span>';}).join('');
-              }
-              var fc = document.getElementById('chessCoordRow');
-              if (fc) {
-                var files = flipped ? ['h','g','f','e','d','c','b','a'] : ['a','b','c','d','e','f','g','h'];
-                fc.innerHTML = files.map(function(f){return '<span>'+f+'</span>';}).join('');
-              }
+              var rc=document.getElementById('chessRankCol');
+              if(rc){var ranks=flipped?['1','2','3','4','5','6','7','8']:['8','7','6','5','4','3','2','1'];
+                rc.innerHTML=ranks.map(function(r){return '<span>'+r+'</span>';}).join('');}
+              var fc=document.getElementById('chessCoordRow');
+              if(fc){var files=flipped?['h','g','f','e','d','c','b','a']:['a','b','c','d','e','f','g','h'];
+                fc.innerHTML=files.map(function(f){return '<span>'+f+'</span>';}).join('');}
             }
 
+            /* ── Animated goTo ── */
+            var ANIM_MS = 180; /* piece slide duration */
+
             function goTo(idx) {
+              /* Clamp and guard: don't overshoot ends */
+              if (idx > allMoves.length - 1 || idx < -1) return;
               var prevMove = currentMove;
-              currentMove = Math.max(-1, Math.min(idx, allMoves.length - 1));
+              currentMove = idx;
 
               var chess = new Chess();
               for (var i = 0; i <= currentMove; i++) chess.move(allMoves[i].san);
+              var board = chess.board();
 
-              /* Determine animation: only on single-step navigation */
-              var fromAlg = null, toAlg = null, pieceSrc = null;
               var step = idx - prevMove;
+              var animated = false;
 
+              /* ── Single-step forward ── */
               if (step === 1 && currentMove >= 0) {
                 var mv = allMoves[currentMove];
-                fromAlg  = mv.from;
-                toAlg    = mv.to;
-                pieceSrc = PIECE_IMGS[mv.color + (mv.promotion || mv.piece)];
-              } else if (step === -1 && prevMove >= 0 && prevMove < allMoves.length) {
-                var pmv  = allMoves[prevMove];
-                fromAlg  = pmv.to;
-                toAlg    = pmv.from;
-                pieceSrc = PIECE_IMGS[pmv.color + pmv.piece];
-              }
+                animated = true;
 
-              if (fromAlg && toAlg && pieceSrc) {
-                /* Record source rect BEFORE re-rendering */
-                var fromEl   = getSquareEl(fromAlg);
-                var fromRect = fromEl ? fromEl.getBoundingClientRect() : null;
+                /* ── Castling: animate king + rook simultaneously ── */
+                var isCastle = mv.flags && (mv.flags.indexOf('k') !== -1 || mv.flags.indexOf('q') !== -1);
+                if (isCastle) {
+                  var rookFrom, rookTo;
+                  if (mv.flags.indexOf('k') !== -1) {
+                    rookFrom = mv.color==='w'?'h1':'h8'; rookTo = mv.color==='w'?'f1':'f8';
+                  } else {
+                    rookFrom = mv.color==='w'?'a1':'a8'; rookTo = mv.color==='w'?'d1':'d8';
+                  }
+                  var kFromRect  = rectOf(mv.from);
+                  var rFromRect  = rectOf(rookFrom);
+                  renderBoard(board, [mv.to, rookTo]);
+                  var kToRect    = rectOf(mv.to);
+                  var rToRect    = rectOf(rookTo);
+                  spawnGhost(PIECE_IMGS[mv.color+'k'], kFromRect, kToRect, null, null);
+                  spawnGhost(PIECE_IMGS[mv.color+'r'], rFromRect, rToRect, null, null);
+                  revealAfter([mv.to, rookTo], ANIM_MS);
 
-                /* Render new position, hiding piece at destination */
-                renderBoard(chess.board(), toAlg);
+                /* ── Capture: keep captured piece visible until ghost arrives ── */
+                } else if (mv.captured) {
+                  var capColor = mv.color==='w'?'b':'w';
+                  /* en-passant: captured pawn is on a different square */
+                  var capSq = mv.flags&&mv.flags.indexOf('e')!==-1
+                    ? mv.to[0]+(mv.color==='w'?parseInt(mv.to[1])-1:parseInt(mv.to[1])+1)
+                    : mv.to;
+                  var capRect  = rectOf(capSq);
+                  var movRect  = rectOf(mv.from);
+                  renderBoard(board, [mv.to]);
+                  var destRect = rectOf(mv.to);
+                  /* Capture ghost: sits at destination, fades out as slider arrives */
+                  if (capRect) {
+                    var capGhost = spawnStatic(PIECE_IMGS[capColor+mv.captured], capRect, 9998);
+                    setTimeout(function(){capGhost.style.opacity='0';},ANIM_MS-40);
+                    setTimeout(function(){if(capGhost.parentNode)capGhost.parentNode.removeChild(capGhost);},ANIM_MS+100);
+                  }
+                  spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], movRect, destRect, null, null);
+                  revealAfter([mv.to], ANIM_MS);
 
-                var toEl   = getSquareEl(toAlg);
-                var toRect = toEl ? toEl.getBoundingClientRect() : null;
-
-                if (fromRect && toRect) {
-                  var ghost = document.createElement('img');
-                  ghost.src = pieceSrc;
-                  ghost.style.cssText = [
-                    'position:fixed', 'z-index:9999', 'pointer-events:none',
-                    'width:'  + fromRect.width  + 'px',
-                    'height:' + fromRect.height + 'px',
-                    'left:'   + fromRect.left   + 'px',
-                    'top:'    + fromRect.top    + 'px',
-                    'transition:left 0.18s cubic-bezier(0.25,0.46,0.45,0.94),' +
-                                'top 0.18s cubic-bezier(0.25,0.46,0.45,0.94)',
-                    'will-change:left,top',
-                  ].join(';');
-                  document.body.appendChild(ghost);
-
-                  requestAnimationFrame(function() {
-                    requestAnimationFrame(function() {
-                      ghost.style.left = toRect.left + 'px';
-                      ghost.style.top  = toRect.top  + 'px';
-                    });
-                  });
-
-                  setTimeout(function() {
-                    if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
-                    if (toEl) {
-                      var destImg = toEl.querySelector('img');
-                      if (destImg) destImg.style.opacity = '';
-                    }
-                  }, 200);
+                /* ── Normal move ── */
                 } else {
-                  renderBoard(chess.board());
+                  var nMovRect = rectOf(mv.from);
+                  renderBoard(board, [mv.to]);
+                  var nDestRect = rectOf(mv.to);
+                  spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], nMovRect, nDestRect, null, null);
+                  revealAfter([mv.to], ANIM_MS);
                 }
-              } else {
-                renderBoard(chess.board());
               }
 
-              updateMoveHL(); scrollActive();
+              /* ── Single-step backward ── */
+              else if (step === -1 && prevMove >= 0 && prevMove < allMoves.length) {
+                var pmv  = allMoves[prevMove];
+                animated = true;
+                var bFromRect = rectOf(pmv.to);
+                renderBoard(board, [pmv.from]);
+                var bDestRect = rectOf(pmv.from);
+                spawnGhost(PIECE_IMGS[pmv.color+pmv.piece], bFromRect, bDestRect, null, null);
+                revealAfter([pmv.from], ANIM_MS);
+                /* If castling backward, also move rook back */
+                if (pmv.flags && (pmv.flags.indexOf('k')!==-1||pmv.flags.indexOf('q')!==-1)) {
+                  var brFrom = pmv.flags.indexOf('k')!==-1?(pmv.color==='w'?'f1':'f8'):(pmv.color==='w'?'d1':'d8');
+                  var brTo   = pmv.flags.indexOf('k')!==-1?(pmv.color==='w'?'h1':'h8'):(pmv.color==='w'?'a1':'a8');
+                  var rrFrom = rectOf(brFrom), rrTo = rectOf(brTo);
+                  spawnGhost(PIECE_IMGS[pmv.color+'r'], rrFrom, rrTo, null, null);
+                  revealAfter([pmv.from, brTo], ANIM_MS);
+                }
+              }
+
+              if (!animated) renderBoard(board);
+
+              /* Endgame badge */
+              if (currentMove === allMoves.length - 1) {
+                setTimeout(function(){ showEndBadge(board); }, animated ? ANIM_MS + 120 : 80);
+              } else {
+                removeBadge();
+              }
             }
 
-            function renderBoard(board, hideSq) {
-              var el = document.getElementById('chessBoard'); if (!el) return;
-              el.innerHTML = '';
-              for (var ri = 0; ri < 8; ri++) {
-                var r = flipped ? (7 - ri) : ri;
-                for (var ci = 0; ci < 8; ci++) {
-                  var c = flipped ? (7 - ci) : ci;
-                  var sq = document.createElement('div');
-                  sq.className = 'chess-sq';
-                  var p = board[r][c];
-                  if (p) {
-                    sq.innerHTML = pieceHTML(p);
-                    if (hideSq && sqAlg(r, c) === hideSq) {
-                      var img = sq.querySelector('img');
-                      if (img) img.style.opacity = '0';
-                    }
+            /* ── Ghost helpers ── */
+            function rectOf(alg) {
+              var el = getSquareEl(alg);
+              return el ? el.getBoundingClientRect() : null;
+            }
+
+            function spawnStatic(src, rect, z) {
+              if (!src || !rect) return { style:{}, parentNode:null };
+              var g = document.createElement('img'); g.src = src;
+              g.style.cssText = 'position:fixed;pointer-events:none;z-index:'+z+';'+
+                'width:'+rect.width+'px;height:'+rect.height+'px;'+
+                'left:'+rect.left+'px;top:'+rect.top+'px;transition:opacity 0.12s ease;';
+              document.body.appendChild(g); return g;
+            }
+
+            function spawnGhost(src, fromRect, toRect) {
+              if (!src || !fromRect || !toRect) return;
+              var g = document.createElement('img'); g.src = src;
+              g.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;'+
+                'width:'+fromRect.width+'px;height:'+fromRect.height+'px;'+
+                'left:'+fromRect.left+'px;top:'+fromRect.top+'px;'+
+                'transition:left '+ANIM_MS+'ms cubic-bezier(0.25,0.46,0.45,0.94),'+
+                           'top '+ANIM_MS+'ms cubic-bezier(0.25,0.46,0.45,0.94);';
+              document.body.appendChild(g);
+              requestAnimationFrame(function(){ requestAnimationFrame(function(){
+                g.style.left = toRect.left+'px'; g.style.top = toRect.top+'px';
+              });});
+              setTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, ANIM_MS+60);
+            }
+
+            function revealAfter(squares, delay) {
+              setTimeout(function(){
+                squares.forEach(function(sq){
+                  var el=getSquareEl(sq); if(!el)return;
+                  var img=el.querySelector('img'); if(img)img.style.opacity='';
+                });
+              }, delay);
+            }
+
+            function renderBoard(board, hideSqs) {
+              var el=document.getElementById('chessBoard'); if(!el)return;
+              el.innerHTML='';
+              var hideSet={};
+              if(hideSqs)hideSqs.forEach(function(s){hideSet[s]=true;});
+              for(var ri=0;ri<8;ri++){
+                var r=flipped?(7-ri):ri;
+                for(var ci=0;ci<8;ci++){
+                  var c=flipped?(7-ci):ci;
+                  var sq=document.createElement('div'); sq.className='chess-sq';
+                  var p=board[r][c];
+                  if(p){
+                    sq.innerHTML=pieceHTML(p);
+                    if(hideSet[sqAlg(r,c)]){var img=sq.querySelector('img');if(img)img.style.opacity='0';}
                   }
                   el.appendChild(sq);
                 }
@@ -1441,16 +1390,48 @@
               updateCoords();
             }
 
-            function updateMoveHL() {
-              document.querySelectorAll('#chessMovesList .chess-move-btn').forEach(function(btn){
-                btn.classList.toggle('active',parseInt(btn.getAttribute('data-idx'))===currentMove);
-              });
+            /* ── Endgame badge ── */
+            function removeBadge() {
+              var b=document.getElementById('chessEndBadge');
+              if(b&&b.parentNode)b.parentNode.removeChild(b);
             }
 
-            function scrollActive() {
-              var list=document.getElementById('chessMovesList');
-              var a=list&&list.querySelector('.chess-move-btn.active');
-              if(a)a.scrollIntoView({block:'nearest',behavior:'smooth'});
+            function showEndBadge(board) {
+              removeBadge();
+              if(gameResult==='1/2-1/2'||gameResult==='*')return;
+
+              /* Determine icon and loser color */
+              var icon, loserColor;
+              var isMate = gameLastSan && gameLastSan.indexOf('#')!==-1;
+              if(isMate){ icon='#'; loserColor=gameResult==='1-0'?'b':'w'; }
+              else       { icon='⚑'; loserColor=gameResult==='1-0'?'b':'w'; }
+
+              /* Find losing king square */
+              var kingSq=null;
+              outer:for(var r=0;r<8;r++)for(var c=0;c<8;c++){
+                var p=board[r][c];
+                if(p&&p.type==='k'&&p.color===loserColor){kingSq=sqAlg(r,c);break outer;}
+              }
+              if(!kingSq)return;
+
+              var kingEl=getSquareEl(kingSq); if(!kingEl)return;
+              var kr=kingEl.getBoundingClientRect();
+              var wrapEl=document.getElementById('chessBoardWrap'); if(!wrapEl)return;
+              var wr=wrapEl.getBoundingClientRect();
+
+              /* Badge appears centred on king square */
+              var badge=document.createElement('div');
+              badge.id='chessEndBadge'; badge.className='chess-end-badge';
+              badge.textContent=icon;
+              badge.style.left=(kr.left+kr.width/2-17)+'px';
+              badge.style.top =(kr.top +kr.height/2-17)+'px';
+              document.body.appendChild(badge);
+
+              /* Slides to board top-right corner */
+              setTimeout(function(){
+                badge.style.left=(wr.right-42)+'px';
+                badge.style.top =(wr.top+8)+'px';
+              }, 500);
             }
 
             /* ── Auto-play ── */
