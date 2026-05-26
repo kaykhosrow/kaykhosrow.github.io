@@ -230,8 +230,8 @@
       #research .blog-card { max-width: 87.5%; box-shadow: 0.25px 0.25px 1.75px rgba(0,0,0,0.25); }
       #research .service-swiper { max-width: 87.5%; margin-left: 0; margin-right: auto; }
       #research .service-swiper .swiper-slide { min-height: 320px; }
-      #research { }
-      #teaching { }
+      #research { scroll-margin-top: 100px; }
+      #teaching { scroll-margin-top: 50px; }
 
       .card-full-link { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
       .research-sub-heading { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; opacity: 0.55; margin-bottom: 1.25rem; margin-top: 0; font-family: 'InterRegular', sans-serif !important; text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); }
@@ -570,13 +570,13 @@
       .chess-coord-row { display: flex; padding-left: 20px; margin-top: 6px; height: 14px; align-items: center; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.65; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
       .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('assets/chess/board/newspaper.png'); background-size: 100% 100%; opacity: 0.325; }
-      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.25); overflow: hidden; border-radius: 2px; }
+      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.5); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
       .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 20px; }
-      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.25); border-radius: 4px; color: rgba(0,0,0,0.7); white-space: nowrap; }
+      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.5); border-radius: 4px; color: rgba(0,0,0,0.7); white-space: nowrap; }
       .chess-nav-btns { display: flex; gap: 4px; align-items: center; }
-      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: none; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
+      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: none; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.5); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
       .chess-bctrl:hover { background: rgb(var(--black)); color: rgb(var(--primary)); box-shadow: none; }
       .chess-bctrl.active:hover { background: rgb(var(--black)); color: rgb(var(--primary)); box-shadow: none; }
       .chess-bctrl-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.15); margin: 0 2px; flex-shrink: 0; }
@@ -2243,8 +2243,6 @@
             e.preventDefault();
             var target = document.getElementById(id);
             if (!target) return;
-            /* Skip if already at the correct position (within 2px tolerance) */
-            if (Math.abs(target.getBoundingClientRect().top) <= 2) return;
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
         });
