@@ -1353,6 +1353,11 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               var el=document.getElementById('chessMeta');if(!el)return;
               var date=fmtDate(h['Date']),tc=fmtTC(h['TimeControl']);
               el.textContent=[date,tc].filter(Boolean).join('\u2009\u00b7\u2009');
+              var wElo=h['WhiteElo']||'', bElo=h['BlackElo']||'';
+              var eloW=document.getElementById('chessEloW');
+              var eloB=document.getElementById('chessEloB');
+              if(eloW){if(wElo){eloW.innerHTML='\u2654\u00a0'+wElo;eloW.style.display='';}else{eloW.style.display='none';}}
+              if(eloB){if(bElo){eloB.innerHTML='\u265a\u00a0'+bElo;eloB.style.display='';}else{eloB.style.display='none';}}
             }
 
             /* ── Square helpers ── */
