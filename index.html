@@ -569,11 +569,11 @@
       .chess-rank-col span { font-size: 0.62rem; opacity: 0.65; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
       .chess-coord-row { display: flex; padding-left: 20px; margin-top: 6px; height: 14px; align-items: center; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.65; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
-      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.375; }
+      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.25; }
       .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.25); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
-      .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 14px; }
+      .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 20px; }
       .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 2px solid rgba(0,0,0,0.25); border-radius: 4px; color: rgba(0,0,0,0.7); white-space: nowrap; }
       .chess-nav-btns { display: flex; gap: 4px; align-items: center; }
       .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 2px solid rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
@@ -1287,9 +1287,9 @@
                   renderBoard(board, [mv.to, rookTo]);
                   var kToRect    = rectOf(mv.to);
                   var rToRect    = rectOf(rookTo);
-                  spawnGhost(PIECE_IMGS[mv.color+'k'], kFromRect, kToRect, null, null);
-                  spawnGhost(PIECE_IMGS[mv.color+'r'], rFromRect, rToRect, null, null);
-                  revealAfter([mv.to, rookTo], ANIM_MS);
+                  var kDur = spawnGhost(PIECE_IMGS[mv.color+'k'], kFromRect, kToRect);
+                  spawnGhost(PIECE_IMGS[mv.color+'r'], rFromRect, rToRect);
+                  revealAfter([mv.to, rookTo], kDur);
 
                 /* ── Capture: captured piece fades out as slider arrives ── */
                 } else if (mv.captured) {
@@ -1302,9 +1302,7 @@
                   var movRect  = rectOf(mv.from);
                   renderBoard(board, [mv.to]);
                   var destRect = rectOf(mv.to);
-                  /* Capture ghost: ease-in fade starts immediately — stays visible early,
-                     snaps away quickly as piece arrives. Uses rAF + plain setTimeout
-                     so rapid clicking doesn't prevent the fade from firing. */
+                  var movDur = spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], movRect, destRect);
                   if (capRect) {
                     var capGhost = document.createElement('img');
                     capGhost.src = PIECE_IMGS[capColor+mv.captured];
@@ -1313,23 +1311,22 @@
                       'left:'+capRect.left+'px;top:'+capRect.top+'px;';
                     document.body.appendChild(capGhost);
                     requestAnimationFrame(function(){ requestAnimationFrame(function(){
-                      capGhost.style.transition='opacity '+Math.round(ANIM_MS*0.92)+'ms ease-in';
+                      capGhost.style.transition='opacity '+Math.round(movDur*0.92)+'ms ease-in';
                       capGhost.style.opacity='0';
                     });});
                     setTimeout(function(){
                       if(capGhost.parentNode) capGhost.parentNode.removeChild(capGhost);
-                    }, ANIM_MS + 100);
+                    }, movDur + 100);
                   }
-                  spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], movRect, destRect, null, null);
-                  revealAfter([mv.to], ANIM_MS);
+                  revealAfter([mv.to], movDur);
 
                 /* ── Normal move ── */
                 } else {
                   var nMovRect = rectOf(mv.from);
                   renderBoard(board, [mv.to]);
                   var nDestRect = rectOf(mv.to);
-                  spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], nMovRect, nDestRect, null, null);
-                  revealAfter([mv.to], ANIM_MS);
+                  var nDur = spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], nMovRect, nDestRect);
+                  revealAfter([mv.to], nDur);
                 }
               }
 
@@ -1345,29 +1342,30 @@
                 if (isCastleBack) {
                   brFrom     = pmv.flags.indexOf('k')!==-1?(pmv.color==='w'?'f1':'f8'):(pmv.color==='w'?'d1':'d8');
                   brTo       = pmv.flags.indexOf('k')!==-1?(pmv.color==='w'?'h1':'h8'):(pmv.color==='w'?'a1':'a8');
-                  rrFromRect = rectOf(brFrom); /* rook's current (post-castle) square */
+                  rrFromRect = rectOf(brFrom);
                 }
 
-                /* Re-render hiding ALL destinations (so pieces appear only via ghosts) */
+                /* Re-render hiding ALL destinations */
                 var hideBack = [pmv.from];
                 if (isCastleBack) hideBack.push(brTo);
                 renderBoard(board, hideBack);
 
-                /* Get destination rects AFTER re-rendering, then animate */
+                /* Animate backward */
                 var bDestRect = rectOf(pmv.from);
-                spawnGhost(PIECE_IMGS[pmv.color+pmv.piece], bFromRect, bDestRect);
+                var bDur = spawnGhost(PIECE_IMGS[pmv.color+pmv.piece], bFromRect, bDestRect);
                 if (isCastleBack) {
                   var rrToRect = rectOf(brTo);
                   spawnGhost(PIECE_IMGS[pmv.color+'r'], rrFromRect, rrToRect);
                 }
-                revealAfter(hideBack, ANIM_MS);
+                revealAfter(hideBack, bDur);
               }
 
               if (!animated) renderBoard(board);
 
-              /* Endgame badge */
+              /* Endgame badge — use longest likely duration as buffer */
+              var lastDur = animated ? 380 : 0;
               if (currentMove === allMoves.length - 1) {
-                animTimeout(function(){ showEndBadge(board); }, animated ? ANIM_MS + 120 : 80);
+                animTimeout(function(){ showEndBadge(board); }, lastDur + 120);
               } else {
                 removeBadge();
               }
@@ -1390,24 +1388,28 @@
             }
 
             function spawnGhost(src, fromRect, toRect) {
-              if (!src || !fromRect || !toRect) return;
+              if (!src || !fromRect || !toRect) return ANIM_MS;
+              /* Duration scales with distance: short moves stay at ANIM_MS,
+                 longer moves get proportionally more time for a natural feel */
+              var dx = toRect.left - fromRect.left, dy = toRect.top - fromRect.top;
+              var dur = Math.min(380, Math.round(ANIM_MS + Math.sqrt(dx*dx + dy*dy) * 0.14));
               var g = document.createElement('img'); g.src = src;
               g.className = 'chess-ghost';
               g.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;'+
                 'width:'+fromRect.width+'px;height:'+fromRect.height+'px;'+
                 'left:'+fromRect.left+'px;top:'+fromRect.top+'px;'+
-                'transition:left '+ANIM_MS+'ms cubic-bezier(0.25,0.46,0.45,0.94),'+
-                           'top '+ANIM_MS+'ms cubic-bezier(0.25,0.46,0.45,0.94);';
+                'transition:left '+dur+'ms cubic-bezier(0.25,0.46,0.45,0.94),'+
+                           'top '+dur+'ms cubic-bezier(0.25,0.46,0.45,0.94);';
               document.body.appendChild(g);
               requestAnimationFrame(function(){ requestAnimationFrame(function(){
                 g.style.left = toRect.left+'px'; g.style.top = toRect.top+'px';
               });});
-              /* Short fade at arrival (20ms) — smooths the ghost→static handoff without double-image */
               animTimeout(function(){
                 g.style.transition='opacity 20ms ease';
                 g.style.opacity='0';
-              }, ANIM_MS);
-              animTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, ANIM_MS+25);
+              }, dur);
+              animTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, dur+25);
+              return dur;
             }
 
             function revealAfter(squares, delay) {
@@ -1478,12 +1480,12 @@
                 var hl=document.createElement('div');
                 hl.id=hlId;
                 hl.style.cssText='position:absolute;z-index:10;pointer-events:none;'+
-                  'left:'+(rx+1)+'px;top:'+(ry+1)+'px;width:'+(kr.width-2)+'px;height:'+(kr.height-2)+'px;'+
-                  'background:rgba('+rgbStr+',0);'+
+                  'left:'+rx+'px;top:'+ry+'px;width:'+kr.width+'px;height:'+kr.height+'px;'+
+                  'background:rgba('+rgbStr+',0);box-shadow:inset 0 0 0 1px rgba(0,0,0,0);'+
                   'display:flex;align-items:center;justify-content:center;'+
                   'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
                   'font-family:"InterRegular",sans-serif;line-height:1;'+
-                  'transition:background 0.45s ease,color 0.45s ease;';
+                  'transition:background 0.45s ease,color 0.45s ease,box-shadow 0.45s ease;';
                 hl.textContent=icon;
                 wrapEl.appendChild(hl);
 
@@ -1498,11 +1500,13 @@
                 requestAnimationFrame(function(){requestAnimationFrame(function(){
                   hl.style.background='rgba('+rgbStr+',0.6)';
                   hl.style.color='rgba(255,255,255,0.95)';
+                  hl.style.boxShadow='inset 0 0 0 1px rgba(0,0,0,0.5)';
                 });});
 
                 setTimeout(function(){
                   hl.style.background='rgba('+rgbStr+',0)';
                   hl.style.color='rgba(255,255,255,0)';
+                  hl.style.boxShadow='inset 0 0 0 1px rgba(0,0,0,0)';
                   badge.style.opacity='1';
                   setTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
                 },1100);
