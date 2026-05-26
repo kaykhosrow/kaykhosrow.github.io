@@ -573,13 +573,13 @@
       .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.5px 0.5px 4px rgba(0,0,0,0.22); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
-      .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-      .chess-game-info { font-size: 0.75rem; opacity: 0.5; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; }
+      .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 14px; }
+      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; display: flex; align-items: center; padding: 0 10px; border: 1px solid rgba(0,0,0,0.2); border-radius: 4px; opacity: 0.7; }
       .chess-nav-btns { display: flex; gap: 4px; align-items: center; }
       .chess-bctrl { width: 32px; height: 32px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.2); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s; }
       .chess-bctrl:hover, .chess-bctrl.active { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.15); margin: 0 2px; flex-shrink: 0; }
-      .chess-end-badge { position: fixed; z-index: 9999; pointer-events: none; width: 34px; height: 34px; border-radius: 50%; background: #dc2626; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; font-weight: 700; font-family: 'InterRegular', sans-serif; box-shadow: 0 2px 10px rgba(0,0,0,0.35); transition: left 0.6s cubic-bezier(0.25,0.46,0.45,0.94), top 0.6s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.3s ease; }
+      .chess-end-badge { z-index: 10; pointer-events: none; width: 34px; height: 34px; border-radius: 50%; background: #dc2626; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; font-weight: 700; font-family: 'InterRegular', sans-serif; box-shadow: 0 2px 10px rgba(0,0,0,0.35); transition: left 0.6s cubic-bezier(0.25,0.46,0.45,0.94), top 0.6s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.35s ease; }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
     <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
@@ -1271,7 +1271,7 @@
                   spawnGhost(PIECE_IMGS[mv.color+'r'], rFromRect, rToRect, null, null);
                   revealAfter([mv.to, rookTo], ANIM_MS);
 
-                /* ── Capture: keep captured piece visible until ghost arrives ── */
+                /* ── Capture: captured piece fades out as slider arrives ── */
                 } else if (mv.captured) {
                   var capColor = mv.color==='w'?'b':'w';
                   /* en-passant: captured pawn is on a different square */
@@ -1282,11 +1282,16 @@
                   var movRect  = rectOf(mv.from);
                   renderBoard(board, [mv.to]);
                   var destRect = rectOf(mv.to);
-                  /* Capture ghost: sits at destination, fades out as slider arrives */
+                  /* Capture ghost: stays visible, then fades quickly as piece arrives */
                   if (capRect) {
                     var capGhost = spawnStatic(PIECE_IMGS[capColor+mv.captured], capRect, 9998);
-                    setTimeout(function(){capGhost.style.opacity='0';},ANIM_MS-40);
-                    setTimeout(function(){if(capGhost.parentNode)capGhost.parentNode.removeChild(capGhost);},ANIM_MS+100);
+                    var fadeDelay = Math.round(ANIM_MS * 0.68);
+                    var fadeDur   = ANIM_MS - fadeDelay;
+                    setTimeout(function(){
+                      capGhost.style.transition = 'opacity '+fadeDur+'ms ease-in';
+                      capGhost.style.opacity='0';
+                    }, fadeDelay);
+                    setTimeout(function(){if(capGhost.parentNode)capGhost.parentNode.removeChild(capGhost);},ANIM_MS+80);
                   }
                   spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], movRect, destRect, null, null);
                   revealAfter([mv.to], ANIM_MS);
@@ -1305,19 +1310,30 @@
               else if (step === -1 && prevMove >= 0 && prevMove < allMoves.length) {
                 var pmv  = allMoves[prevMove];
                 animated = true;
+                var isCastleBack = pmv.flags && (pmv.flags.indexOf('k')!==-1||pmv.flags.indexOf('q')!==-1);
+
+                /* Collect ALL source rects BEFORE re-rendering */
                 var bFromRect = rectOf(pmv.to);
-                renderBoard(board, [pmv.from]);
-                var bDestRect = rectOf(pmv.from);
-                spawnGhost(PIECE_IMGS[pmv.color+pmv.piece], bFromRect, bDestRect, null, null);
-                revealAfter([pmv.from], ANIM_MS);
-                /* If castling backward, also move rook back */
-                if (pmv.flags && (pmv.flags.indexOf('k')!==-1||pmv.flags.indexOf('q')!==-1)) {
-                  var brFrom = pmv.flags.indexOf('k')!==-1?(pmv.color==='w'?'f1':'f8'):(pmv.color==='w'?'d1':'d8');
-                  var brTo   = pmv.flags.indexOf('k')!==-1?(pmv.color==='w'?'h1':'h8'):(pmv.color==='w'?'a1':'a8');
-                  var rrFrom = rectOf(brFrom), rrTo = rectOf(brTo);
-                  spawnGhost(PIECE_IMGS[pmv.color+'r'], rrFrom, rrTo, null, null);
-                  revealAfter([pmv.from, brTo], ANIM_MS);
+                var brFrom, brTo, rrFromRect;
+                if (isCastleBack) {
+                  brFrom     = pmv.flags.indexOf('k')!==-1?(pmv.color==='w'?'f1':'f8'):(pmv.color==='w'?'d1':'d8');
+                  brTo       = pmv.flags.indexOf('k')!==-1?(pmv.color==='w'?'h1':'h8'):(pmv.color==='w'?'a1':'a8');
+                  rrFromRect = rectOf(brFrom); /* rook's current (post-castle) square */
                 }
+
+                /* Re-render hiding ALL destinations (so pieces appear only via ghosts) */
+                var hideBack = [pmv.from];
+                if (isCastleBack) hideBack.push(brTo);
+                renderBoard(board, hideBack);
+
+                /* Get destination rects AFTER re-rendering, then animate */
+                var bDestRect = rectOf(pmv.from);
+                spawnGhost(PIECE_IMGS[pmv.color+pmv.piece], bFromRect, bDestRect);
+                if (isCastleBack) {
+                  var rrToRect = rectOf(brTo);
+                  spawnGhost(PIECE_IMGS[pmv.color+'r'], rrFromRect, rrToRect);
+                }
+                revealAfter(hideBack, ANIM_MS);
               }
 
               if (!animated) renderBoard(board);
@@ -1392,21 +1408,22 @@
 
             /* ── Endgame badge ── */
             function removeBadge() {
-              var b=document.getElementById('chessEndBadge');
-              if(b&&b.parentNode)b.parentNode.removeChild(b);
+              ['chessEndBadge','chessKingHl'].forEach(function(id){
+                var el=document.getElementById(id);
+                if(el&&el.parentNode)el.parentNode.removeChild(el);
+              });
             }
 
             function showEndBadge(board) {
               removeBadge();
               if(gameResult==='1/2-1/2'||gameResult==='*')return;
 
-              /* Determine icon and loser color */
               var icon, loserColor;
               var isMate = gameLastSan && gameLastSan.indexOf('#')!==-1;
               if(isMate){ icon='#'; loserColor=gameResult==='1-0'?'b':'w'; }
               else       { icon='⚑'; loserColor=gameResult==='1-0'?'b':'w'; }
 
-              /* Find losing king square */
+              /* Find losing king */
               var kingSq=null;
               outer:for(var r=0;r<8;r++)for(var c=0;c<8;c++){
                 var p=board[r][c];
@@ -1415,23 +1432,41 @@
               if(!kingSq)return;
 
               var kingEl=getSquareEl(kingSq); if(!kingEl)return;
-              var kr=kingEl.getBoundingClientRect();
               var wrapEl=document.getElementById('chessBoardWrap'); if(!wrapEl)return;
-              var wr=wrapEl.getBoundingClientRect();
 
-              /* Badge appears centred on king square */
+              /* Convert to coords relative to chessBoardWrap (position:absolute parent) */
+              var kr = kingEl.getBoundingClientRect();
+              var wr = wrapEl.getBoundingClientRect();
+              var rx = kr.left - wr.left;   /* king square left, relative to wrap */
+              var ry = kr.top  - wr.top;    /* king square top,  relative to wrap */
+              var SZ = 32;
+
+              /* Phase 1: semi-transparent highlight covers the king square */
+              var hl=document.createElement('div');
+              hl.id='chessKingHl';
+              hl.style.cssText='position:absolute;z-index:10;pointer-events:none;'+
+                'left:'+rx+'px;top:'+ry+'px;'+
+                'width:'+kr.width+'px;height:'+kr.height+'px;'+
+                'background:rgba(220,38,38,0.38);transition:opacity 0.45s ease;';
+              wrapEl.appendChild(hl);
+
+              /* Phase 2: badge at top-right corner of king square, starts invisible */
               var badge=document.createElement('div');
               badge.id='chessEndBadge'; badge.className='chess-end-badge';
               badge.textContent=icon;
-              badge.style.left=(kr.left+kr.width/2-17)+'px';
-              badge.style.top =(kr.top +kr.height/2-17)+'px';
-              document.body.appendChild(badge);
+              badge.style.position='absolute';
+              badge.style.left=(rx + kr.width - SZ - 2)+'px';
+              badge.style.top =(ry + 2)+'px';
+              badge.style.opacity='0';
+              badge.style.width=SZ+'px'; badge.style.height=SZ+'px'; badge.style.fontSize='0.85rem';
+              wrapEl.appendChild(badge);
 
-              /* Slides to board top-right corner */
+              /* Phase 3: fade in badge + fade out highlight */
               setTimeout(function(){
-                badge.style.left=(wr.right-42)+'px';
-                badge.style.top =(wr.top+8)+'px';
-              }, 500);
+                badge.style.opacity='1';
+                hl.style.opacity='0';
+                setTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
+              }, 350);
             }
 
             /* ── Auto-play ── */
