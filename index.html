@@ -1493,10 +1493,12 @@
               else return;
 
               var wrapEl=document.getElementById('chessBoardWrap'); if(!wrapEl)return;
+              var boardEl=document.getElementById('chessBoard'); if(!boardEl)return;
               var SZ=30;
-              /* Capture wrap rect ONCE — recomputing inside each mkEffect call risks a
-                 micro-reflow between the two calls shifting ry by a subpixel */
-              var wr=wrapEl.getBoundingClientRect();
+              /* Use offset-based positioning (integer pixels, viewport-immune) rather than
+                 getBoundingClientRect so both highlights use the same reference frame */
+              var boardOL=boardEl.offsetLeft+boardEl.clientLeft;
+              var boardOT=boardEl.offsetTop+boardEl.clientTop;
 
               function mkEffect(color, icon, rgbStr, badgeBg, hlId, badgeId) {
                 var sq=null;
@@ -1506,9 +1508,8 @@
                 }
                 if(!sq)return;
                 var el=getSquareEl(sq); if(!el)return;
-                var kr=el.getBoundingClientRect();
-                var rx=Math.round(kr.left-wr.left), ry=Math.round(kr.top-wr.top);
-                var kw=Math.round(kr.width), kh=Math.round(kr.height);
+                var rx=boardOL+el.offsetLeft, ry=boardOT+el.offsetTop;
+                var kw=el.offsetWidth, kh=el.offsetHeight;
                 var iconPx=Math.round(kw*0.75);
 
                 var hl=document.createElement('div');
@@ -1546,7 +1547,7 @@
 
               var loserIcon=(gameLastSan&&gameLastSan.indexOf('#')!==-1)?'#':'⚑';
               mkEffect(loserColor, loserIcon,  '220,38,38',  '#dc2626', 'chessLoserHl',  'chessLoserBadge');
-              mkEffect(winnerColor, '✓',   '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
+              mkEffect(winnerColor, '!!',  '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
             }
 
             /* ── Auto-play ── */
@@ -1581,7 +1582,13 @@
               this.classList.toggle('active',false);
               var chess=new Chess();
               for(var i=0;i<=currentMove;i++)chess.move(allMoves[i].san);
-              renderBoard(chess.board());
+              var board=chess.board();
+              removeBadge(); /* clear any floating highlights before re-render */
+              renderBoard(board);
+              /* Re-show endgame badge at correct flipped positions */
+              if(currentMove===allMoves.length-1){
+                showEndBadge(board);
+              }
             });
 
             document.addEventListener('keydown',function(e){
