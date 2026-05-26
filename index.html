@@ -1626,52 +1626,50 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
             function showMoveAnnotation(destSq, annotType, fadeDur) {
               removeMoveAnnotation();
               var st = ANNOT_STYLES[annotType]; if (!st) return;
-              var wrapEl=document.getElementById('chessBoardWrap');
-              var boardEl=document.getElementById('chessBoard');
-              var el=getSquareEl(destSq);
-              if(!wrapEl||!boardEl||!el)return;
-              var boardOL=boardEl.offsetLeft+boardEl.clientLeft;
-              var boardOT=boardEl.offsetTop+boardEl.clientTop;
-              var SZ=30, kw=el.offsetWidth;
-              var rx=boardOL+el.offsetLeft, ry=boardOT+el.offsetTop;
-              var iconPx=Math.round(kw*0.52);
-              /* Transition duration matches piece travel so highlight reaches
-                 full opacity exactly when piece lands */
+              var el = getSquareEl(destSq); if (!el) return;
+              /* Append to body at z-index:10000 so it is in the root stacking
+                 context and always above the ghost piece (z-index:9999).
+                 .chess-board has z-index:1 creating its own stacking context —
+                 anything inside it can never beat the ghost no matter its z-index. */
+              var kr = el.getBoundingClientRect();
+              var SZ = 30;
+              var kw = Math.round(kr.width), kh = Math.round(kr.height);
+              var iconPx = Math.round(kw * 0.52);
               var transDur = fadeDur ? (fadeDur/1000).toFixed(3) : '0.08';
 
-              var hl=document.createElement('div');
-              hl.id='chessMoveAnnotHl';
-              hl.style.cssText='position:absolute;inset:0;z-index:10001;pointer-events:none;'+
+              var hl = document.createElement('div');
+              hl.id = 'chessMoveAnnotHl';
+              hl.style.cssText = 'position:fixed;z-index:10000;pointer-events:none;'+
+                'left:'+kr.left+'px;top:'+kr.top+'px;'+
+                'width:'+kw+'px;height:'+kh+'px;'+
                 'background:rgba('+st.rgb+',0);'+
                 'display:flex;align-items:center;justify-content:center;'+
                 'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
                 'font-family:"InterRegular",sans-serif;line-height:1;'+
                 'transition:background '+transDur+'s ease,color '+transDur+'s ease;';
-              hl.innerHTML=st.icon;
-              el.appendChild(hl);
+              hl.innerHTML = st.icon;
+              document.body.appendChild(hl);
 
-              var badge=document.createElement('div');
-              badge.id='chessMoveAnnotBadge';
-              badge.className='chess-end-badge';
-              badge.innerHTML=st.icon;
-              badge.style.cssText='position:absolute;z-index:11;pointer-events:none;background:'+st.bg+';'+
+              var badge = document.createElement('div');
+              badge.id = 'chessMoveAnnotBadge';
+              badge.className = 'chess-end-badge';
+              badge.innerHTML = st.icon;
+              badge.style.cssText = 'position:fixed;z-index:10001;pointer-events:none;background:'+st.bg+';'+
                 'width:'+SZ+'px;height:'+SZ+'px;font-size:0.82rem;opacity:0;'+
-                'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;'+
+                'left:'+(kr.left+kw-SZ/2)+'px;top:'+(kr.top-SZ/2)+'px;'+
                 'transition:opacity 0.4s ease;';
-              wrapEl.appendChild(badge);
+              document.body.appendChild(badge);
 
-              /* Force reflow so initial state is painted; transition fires immediately */
               void hl.offsetWidth;
-              hl.style.background='rgba('+st.rgb+',0.55)';
-              hl.style.color='rgba(255,255,255,0.95)';
+              hl.style.background = 'rgba('+st.rgb+',0.55)';
+              hl.style.color = 'rgba(255,255,255,0.95)';
               if (st.sound) playSound(st.sound);
 
-              /* Hold for fade duration + 900ms then swap to badge */
               var holdTime = (fadeDur || 80) + 900;
               animTimeout(function(){
-                hl.style.background='rgba('+st.rgb+',0)';
-                hl.style.color='rgba(255,255,255,0)';
-                badge.style.opacity='1';
+                hl.style.background = 'rgba('+st.rgb+',0)';
+                hl.style.color = 'rgba(255,255,255,0)';
+                badge.style.opacity = '1';
                 animTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
               }, holdTime);
             }
