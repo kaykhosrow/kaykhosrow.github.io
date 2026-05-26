@@ -1523,10 +1523,8 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 var bDest = allMoves[currentMove] ? allMoves[currentMove].to : null;
                 if (bDest) {
                   if (step === 1) {
-                    /* Start fade-in immediately so it syncs with piece travel —
-                       transition duration matches fwdDur so highlight reaches
-                       full opacity exactly when piece lands */
-                    showMoveAnnotation(bDest, curAnnot, fwdDur);
+                    /* Fire exactly when piece lands; short fade-in feels instant */
+                    animTimeout(function(){ showMoveAnnotation(bDest, curAnnot, 150); }, fwdDur);
                   } else {
                     showMoveAnnotation(bDest, curAnnot, 0);
                   }
