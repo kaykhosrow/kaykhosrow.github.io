@@ -334,9 +334,9 @@
 
       /* Fix: .grain's transform creates a stacking context that traps ::before below fixed nav.
          Remove the transform so ::before sits in the root stacking context instead. */
-      #grain { z-index: 11111 !important; pointer-events: none !important; }
+      #grain { z-index: 99999 !important; pointer-events: none !important; }
       .grain { transform: none !important; }
-      .grain::before { z-index: 11111 !important; position: fixed !important; }
+      .grain::before { z-index: 99999 !important; position: fixed !important; }
 
       @media (max-width: 1199px) {
         .navigation { transition: none !important; animation: none !important; }
