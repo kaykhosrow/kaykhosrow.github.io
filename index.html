@@ -1450,9 +1450,9 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                   if (capRect) {
                     var capGhost = document.createElement('img');
                     capGhost.src = PIECE_IMGS[capColor+mv.captured];
-                    capGhost.style.cssText = 'position:fixed;pointer-events:none;z-index:9998;'+
+                    capGhost.style.cssText = 'position:absolute;pointer-events:none;z-index:9998;'+
                       'width:'+capRect.width+'px;height:'+capRect.height+'px;'+
-                      'left:'+capRect.left+'px;top:'+capRect.top+'px;';
+                      'left:'+(capRect.left+window.scrollX)+'px;top:'+(capRect.top+window.scrollY)+'px;';
                     document.body.appendChild(capGhost);
                     requestAnimationFrame(function(){ requestAnimationFrame(function(){
                       capGhost.style.transition='opacity '+Math.round(movDur*0.92)+'ms ease-in';
@@ -1555,11 +1555,13 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               var dur = Math.min(380, Math.round(ANIM_MS + Math.sqrt(dx*dx + dy*dy) * 0.14));
               var g = document.createElement('img'); g.src = src;
               g.className = 'chess-ghost';
-              /* Animate via transform instead of left/top — runs on GPU compositor,
-                 no layout recalculation per frame, eliminates wobble on long moves */
-              g.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;'+
+              /* position:absolute with document coordinates (BCR + scrollY) so the
+                 ghost scrolls with the board. transform:translate for GPU-smooth movement. */
+              var docLeft = fromRect.left + window.scrollX;
+              var docTop  = fromRect.top  + window.scrollY;
+              g.style.cssText = 'position:absolute;pointer-events:none;z-index:9999;'+
                 'width:'+fromRect.width+'px;height:'+fromRect.height+'px;'+
-                'left:'+fromRect.left+'px;top:'+fromRect.top+'px;'+
+                'left:'+docLeft+'px;top:'+docTop+'px;'+
                 'transform:translate(0,0);will-change:transform;'+
                 'transition:transform '+dur+'ms cubic-bezier(0.25,0.46,0.45,0.94);';
               document.body.appendChild(g);
