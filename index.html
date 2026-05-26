@@ -2459,11 +2459,18 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
             e.preventDefault();
             var target = document.getElementById(id);
             if (!target) return;
-            /* Nudge to scrollY=1 when at top so the nav transitions to its
-               fixed-top state before scrollIntoView calculates — ensures
-               identical landing position regardless of starting scroll */
-            if (window.scrollY < 1) window.scrollTo(0, 1);
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (window.scrollY < 1) {
+              /* Nudge to scrollY=1 and wait 2 frames so the layout settles
+                 in the same state as clicking from any other section */
+              window.scrollTo(0, 1);
+              requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+              });
+            } else {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
           });
         });
       });
