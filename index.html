@@ -1087,6 +1087,7 @@
                   <div class="chess-game-info" id="chessEloW" style="display:none;"></div>
                   <div class="chess-game-info" id="chessEloB" style="display:none;"></div>
                 </div>
+                <div class="chess-game-info" id="chessResult" style="flex:1;margin:0 8px;justify-content:center;"></div>
                 <div class="chess-nav-btns">
                   <button class="chess-bctrl" id="chessFirst" title="Start"><i class="ph ph-skip-back"></i></button>
                   <button class="chess-bctrl" id="chessPrev"  title="Previous"><i class="ph ph-caret-left"></i></button>
@@ -1354,6 +1355,11 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               var el=document.getElementById('chessMeta');if(!el)return;
               var date=fmtDate(h['Date']),tc=fmtTC(h['TimeControl']);
               el.textContent=[date,tc].filter(Boolean).join('\u2009\u00b7\u2009');
+              var rEl=document.getElementById('chessResult');
+              if(rEl){
+                var rTxt=gameResult==='1-0'?'White Wins':gameResult==='0-1'?'Black Wins':gameResult==='1/2-1/2'?'Draw':'';
+                rEl.textContent=rTxt;
+              }
               var wElo=h['WhiteElo']||'', bElo=h['BlackElo']||'';
               var eloW=document.getElementById('chessEloW');
               var eloB=document.getElementById('chessEloB');
