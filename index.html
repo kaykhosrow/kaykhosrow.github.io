@@ -2234,15 +2234,16 @@
         });
       });
 
-      document.querySelectorAll('a[href="#chess"]').forEach(function (link) {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          var target = document.getElementById('chess');
-          if (!target) return;
-          /* scrollIntoView dynamically tracks the element during the scroll
-             animation and re-aims if any above-section layout shifts occur,
-             unlike scrollTo(fixedValue) which commits at click-time only */
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      /* All remaining section nav links: preventDefault stops the browser's
+         native hash re-scroll on repeat clicks; scrollIntoView tracks the
+         element dynamically so layout shifts during scroll don't mis-aim */
+      ['research','teaching','conferences','code','gallery','chess'].forEach(function (id) {
+        document.querySelectorAll('a[href="#' + id + '"]').forEach(function (link) {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+            var target = document.getElementById(id);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
         });
       });
 
