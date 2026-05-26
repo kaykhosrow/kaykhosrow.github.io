@@ -212,7 +212,7 @@
       }
 
 
-      .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.325); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
+      .settings-gear-btn { width: 32px; height: 32px; border-radius: 4px; border: 2px solid rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.4s ease; flex-shrink: 0; }
       .settings-gear-btn.open { transform: rotate(90deg); }
 
       .blog-card h4 { font-size: 1.5rem !important; }
@@ -241,7 +241,7 @@
       .card-full-link { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
       .research-sub-heading { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; opacity: 0.55; margin-bottom: 1.25rem; margin-top: 0; font-family: 'InterRegular', sans-serif !important; text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); }
 
-      .left-bar ul li a { border: 2px solid rgba(0,0,0,0.325); border-radius: 4px; }
+      .left-bar ul li a { border: 2px solid rgba(0,0,0,0.25); border-radius: 4px; }
 
       .about-new-btn { border-radius: 4px !important; transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease !important; font-size: 18px !important; padding: 12px 24px !important; }
       .about-new-btn:hover { background-color: #000 !important; border-color: #000 !important; color: #fff !important; }
@@ -579,9 +579,9 @@
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
       .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 20px; }
-      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 2px solid rgba(0,0,0,0.325); border-radius: 4px; color: rgba(0,0,0,0.7); white-space: nowrap; }
+      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 2px solid rgba(0,0,0,0.25); border-radius: 4px; color: rgba(0,0,0,0.7); white-space: nowrap; }
       .chess-nav-btns { display: flex; gap: 4px; align-items: center; }
-      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 2px solid rgba(0,0,0,0.325); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 2px solid rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
       .chess-bctrl:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl.active:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.15); margin: 0 2px; flex-shrink: 0; }
@@ -1551,20 +1551,20 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
 
             function spawnGhost(src, fromRect, toRect) {
               if (!src || !fromRect || !toRect) return ANIM_MS;
-              /* Duration scales with distance: short moves stay at ANIM_MS,
-                 longer moves get proportionally more time for a natural feel */
               var dx = toRect.left - fromRect.left, dy = toRect.top - fromRect.top;
               var dur = Math.min(380, Math.round(ANIM_MS + Math.sqrt(dx*dx + dy*dy) * 0.14));
               var g = document.createElement('img'); g.src = src;
               g.className = 'chess-ghost';
+              /* Animate via transform instead of left/top — runs on GPU compositor,
+                 no layout recalculation per frame, eliminates wobble on long moves */
               g.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;'+
                 'width:'+fromRect.width+'px;height:'+fromRect.height+'px;'+
                 'left:'+fromRect.left+'px;top:'+fromRect.top+'px;'+
-                'transition:left '+dur+'ms cubic-bezier(0.25,0.46,0.45,0.94),'+
-                           'top '+dur+'ms cubic-bezier(0.25,0.46,0.45,0.94);';
+                'transform:translate(0,0);will-change:transform;'+
+                'transition:transform '+dur+'ms cubic-bezier(0.25,0.46,0.45,0.94);';
               document.body.appendChild(g);
               requestAnimationFrame(function(){ requestAnimationFrame(function(){
-                g.style.left = toRect.left+'px'; g.style.top = toRect.top+'px';
+                g.style.transform = 'translate('+dx+'px,'+dy+'px)';
               });});
               animTimeout(function(){
                 g.style.transition='opacity 20ms ease';
