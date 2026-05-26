@@ -569,7 +569,7 @@
       .chess-rank-col span { font-size: 0.62rem; opacity: 0.65; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
       .chess-coord-row { display: flex; padding-left: 20px; margin-top: 6px; height: 14px; align-items: center; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.65; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
-      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.25; }
+      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.325; }
       .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.25); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
@@ -1474,13 +1474,14 @@
                 var el=getSquareEl(sq); if(!el)return;
                 var kr=el.getBoundingClientRect();
                 var wr=wrapEl.getBoundingClientRect();
-                var rx=kr.left-wr.left, ry=kr.top-wr.top;
-                var iconPx=Math.round(kr.width*0.75);
+                var rx=Math.round(kr.left-wr.left), ry=Math.round(kr.top-wr.top);
+                var kw=Math.round(kr.width), kh=Math.round(kr.height);
+                var iconPx=Math.round(kw*0.75);
 
                 var hl=document.createElement('div');
                 hl.id=hlId;
                 hl.style.cssText='position:absolute;z-index:10;pointer-events:none;'+
-                  'left:'+rx+'px;top:'+ry+'px;width:'+kr.width+'px;height:'+kr.height+'px;'+
+                  'left:'+rx+'px;top:'+ry+'px;width:'+kw+'px;height:'+kh+'px;'+
                   'background:rgba('+rgbStr+',0);box-shadow:inset 0 0 0 1px rgba(0,0,0,0);'+
                   'display:flex;align-items:center;justify-content:center;'+
                   'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
@@ -1494,7 +1495,7 @@
                 badge.textContent=icon;
                 badge.style.cssText='position:absolute;z-index:11;pointer-events:none;background:'+badgeBg+';'+
                   'width:'+SZ+'px;height:'+SZ+'px;font-size:0.88rem;opacity:0;'+
-                  'left:'+(rx+kr.width-SZ/2)+'px;top:'+(ry-SZ/2)+'px;';
+                  'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;';
                 wrapEl.appendChild(badge);
 
                 requestAnimationFrame(function(){requestAnimationFrame(function(){
