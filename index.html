@@ -230,8 +230,13 @@
       #research .blog-card { max-width: 87.5%; box-shadow: 0.25px 0.25px 1.75px rgba(0,0,0,0.25); }
       #research .service-swiper { max-width: 87.5%; margin-left: 0; margin-right: auto; }
       #research .service-swiper .swiper-slide { min-height: 320px; }
-      #research { scroll-margin-top: 100px; }
+      #research { scroll-margin-top: 125px; }
       #teaching { scroll-margin-top: 50px; }
+      #conferences { scroll-margin-top: 50px; }
+      #code { scroll-margin-top: 50px; }
+      #gallery { scroll-margin-top: 50px; }
+      #chess { scroll-margin-top: 50px; }
+      #contact { scroll-margin-top: 50px; }
 
       .card-full-link { position: absolute; inset: 0; z-index: 10; border-radius: inherit; }
       .research-sub-heading { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; opacity: 0.55; margin-bottom: 1.25rem; margin-top: 0; font-family: 'InterRegular', sans-serif !important; text-shadow: 0.1px 0.1px 1.5px rgba(0, 0, 0, 0.5); }
@@ -570,13 +575,13 @@
       .chess-coord-row { display: flex; padding-left: 20px; margin-top: 6px; height: 14px; align-items: center; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.65; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
       .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('assets/chess/board/newspaper.png'); background-size: 100% 100%; opacity: 0.325; }
-      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.25); overflow: hidden; border-radius: 2px; }
+      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.5); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
       .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 20px; }
-      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 2px solid rgba(0,0,0,0.25); border-radius: 4px; color: rgba(0,0,0,0.7); white-space: nowrap; }
+      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 2px solid rgba(0,0,0,0.325); border-radius: 4px; color: rgba(0,0,0,0.7); white-space: nowrap; }
       .chess-nav-btns { display: flex; gap: 4px; align-items: center; }
-      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 2px solid rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 2px solid rgba(0,0,0,0.325); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
       .chess-bctrl:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl.active:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.15); margin: 0 2px; flex-shrink: 0; }
@@ -1094,7 +1099,35 @@
           <script>
           (function () {
 
-            var DEFAULT_PGN = '[Event "Live Chess"]\n[Site "Chess.com"]\n[Date "2026.05.26"]\n[Round "?"]\n[White "White"]\n[Black "Black"]\n[Result "0-1"]\n[TimeControl "600"]\n[WhiteElo "2040"]\n[BlackElo "2068"]\n[Termination "Black won by checkmate"]\n\n1. e4 c6 2. d3 d5 3. e5 Bf5 4. f4 h5 5. Nc3 e6 6. Be2 Bb4 7. Bd2 d4 8. Ne4 Bxe4 9. dxe4 Bxd2+ 10. Qxd2 c5 11. O-O-O Nc6 12. Bf3 Qb6 13. Qe2 O-O-O 14. Bxh5 g6 15. Bf3 Nb4 16. Kb1 Ne7 17. a3 Nbc6 18. Nh3 Rh4 19. Qd2 Na5 20. Be2 c4 21. Qe1 c3 22. b4 Nec6 23. b5 Qc5 24. Ka2 Nb4+ 25. axb4 Qxb4 26. Rb1 Qa4# 0-1';
+            /* ── Paste any chess.com PGN directly between the backticks ── */
+            var DEFAULT_PGN = `[Event "Live Chess"]
+[Site "Chess.com"]
+[Date "2026.05.26"]
+[Round "-"]
+[White "ProfessorKaykhusraw"]
+[Black "Bacuz77"]
+[Result "1-0"]
+[TimeControl "600"]
+[WhiteElo "2052"]
+[BlackElo "1998"]
+[Termination "ProfessorKaykhusraw won by resignation"]
+
+1. e4 g6 2. Nf3 Bg7 3. d4 d6 4. Be3 Nf6 5. Bd3 c6 $6 {[%c_effect
+c6;square;c6;type;Inaccuracy;size;100%;animated;false;persistent;true]} 6. Qd2
+b5 $2 {[%c_effect
+b5;square;b5;type;Mistake;size;100%;animated;false;persistent;true]} 7. Bh6
+Bxh6 $2 {[%c_effect
+h6;square;h6;type;Mistake;size;100%;animated;false;persistent;true]} 8. Qxh6
+Qa5+ $6 {[%c_effect
+a5;square;a5;type;Inaccuracy;size;100%;animated;false;persistent;true]} 9.
+Nbd2 Bg4 10. Ng5 Qb4 11. e5 dxe5 12. dxe5 Qxb2 13. O-O $1 {[%c_effect
+g1;square;g1;type;GreatFind;size;100%;animated;true;persistent;true]} 13...
+Qxe5 14. Rfe1 Qf4 15. Qg7 Rf8 16. Rxe7+ $3 {[%c_effect
+e7;square;e7;type;Brilliant;size;100%;animated;true;persistent;true]} 16...
+Kxe7 17. Re1+ $1 {[%c_effect
+e1;square;e1;type;GreatFind;size;100%;animated;true;persistent;true]} 17...
+Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
+`;
 
             /* ── NAG catalogue ── */
             var NAG = {
@@ -1132,6 +1165,7 @@
               check:   new Audio(SFX_BASE+'move-check.mp3'),
               promote: new Audio(SFX_BASE+'promote.mp3'),
               end:     new Audio(SFX_BASE+'game-end.mp3'),
+
             };
             function playSound(key) {
               var s = SFX[key]; if (!s) return;
@@ -1201,12 +1235,100 @@
             var allMoves=[],nagMap={},currentMove=-1,flipped=false;
             var gameResult='*', gameLastSan='';
 
+            /* ── Brilliant move parser ──────────────────────────────────────
+               Scans raw PGN for !! annotations (attached or standalone).
+               Returns a Set of 0-based move indices. ─────────────────────── */
+            /* ── chess.com annotation colours (matches game review UI) ─── */
+            var ANNOT_STYLES = {
+              Brilliant:   { bg:'#1baca6', rgb:'27,172,166',   icon:'!!', sound:null },
+              GreatFind:   { bg:'#5c8bb0', rgb:'92,139,176',   icon:'!',  sound:null     },
+              Best:        { bg:'#6cbb5a', rgb:'108,187,90',   icon:'★',  sound:null        },
+              Excellent:   { bg:'#96bc4b', rgb:'150,188,75',   icon:'✓',  sound:null        },
+              Good:        { bg:'#96af82', rgb:'150,175,130',  icon:'✓',  sound:null        },
+              Interesting: { bg:'#5c8bb0', rgb:'92,139,176',   icon:'!?', sound:null        },
+              Book:        { bg:'#a08c6e', rgb:'160,140,110',  icon:'B',  sound:null        },
+              Inaccuracy:  { bg:'#e2b864', rgb:'226,184,100',  icon:'?!', sound:null        },
+              Mistake:     { bg:'#e07830', rgb:'224,120,48',   icon:'?',  sound:null        },
+              Miss:        { bg:'#e05858', rgb:'224,88,88',    icon:'✗',  sound:null        },
+              Blunder:     { bg:'#cc2828', rgb:'204,40,40',    icon:'??', sound:null        },
+            };
+
+            /* ── Annotation parser ──────────────────────────────────────────
+               Reads [%c_effect type;TYPE] comments (chess.com format) and
+               NAG codes ($1/$2/$3/$4/$6) and inline !! etc.
+               Returns {moveIdx: annotTypeName} map. ─────────────────────── */
+            function parseAnnotationMap(pgn) {
+              var annotMap = {};
+              var body = pgn.replace(/\[[\s\S]*?\]\s*/g, ''); /* strip headers */
+              /* Tokenise, keeping comments as separate tokens */
+              var tokens = [];
+              var i = 0;
+              while (i < body.length) {
+                if (body[i] === '{') {
+                  var j = body.indexOf('}', i + 1);
+                  if (j === -1) j = body.length - 1;
+                  tokens.push({ comment: body.slice(i + 1, j) });
+                  i = j + 1;
+                } else if (body[i] === '(') {
+                  var depth = 1; var j = i + 1;
+                  while (j < body.length && depth > 0) {
+                    if (body[j] === '(') depth++;
+                    else if (body[j] === ')') depth--;
+                    j++;
+                  }
+                  i = j;
+                } else if (/\s/.test(body[i])) {
+                  i++;
+                } else {
+                  var j = i;
+                  while (j < body.length && !/[\s{(]/.test(body[j])) j++;
+                  var tok = body.slice(i, j);
+                  if (tok) tokens.push({ token: tok });
+                  i = j > i ? j : j + 1;
+                }
+              }
+              var moveIdx = 0, lastIdx = -1;
+              var NAG_TYPE = { 1:'GreatFind', 2:'Mistake', 3:'Brilliant', 4:'Blunder', 5:'Interesting', 6:'Inaccuracy' };
+              for (var k = 0; k < tokens.length; k++) {
+                var tok = tokens[k];
+                if (tok.comment !== undefined) {
+                  var m = tok.comment.match(/type;(\w+)/);
+                  if (m && m[1] !== 'Winner' && lastIdx >= 0 && ANNOT_STYLES[m[1]]) {
+                    annotMap[lastIdx] = m[1]; /* [%c_effect] takes priority */
+                  }
+                  continue;
+                }
+                var t = tok.token; if (!t) continue;
+                if (/^\d+\.+$/.test(t)) continue;
+                if (/^(1-0|0-1|1\/2-1\/2|\*)$/.test(t)) continue;
+                if (/^\$\d+$/.test(t)) {
+                  var nag = parseInt(t.slice(1));
+                  if (NAG_TYPE[nag] && lastIdx >= 0 && !(lastIdx in annotMap)) annotMap[lastIdx] = NAG_TYPE[nag];
+                  continue;
+                }
+                /* inline symbols attached to move token */
+                if (!(moveIdx in annotMap)) {
+                  if (t.indexOf('!!') !== -1)      annotMap[moveIdx] = 'Brilliant';
+                  else if (t.indexOf('??') !== -1) annotMap[moveIdx] = 'Blunder';
+                  else if (t.indexOf('!?') !== -1) annotMap[moveIdx] = 'Interesting';
+                  else if (t.indexOf('?!') !== -1) annotMap[moveIdx] = 'Inaccuracy';
+                  else if (/[^!]!$/.test(t))       annotMap[moveIdx] = 'GreatFind';
+                  else if (/[^?]\?$/.test(t))     annotMap[moveIdx] = 'Mistake';
+                }
+                lastIdx = moveIdx; moveIdx++;
+              }
+              return annotMap;
+            }
+
+            var annotMap = {};
+
             function loadPGN(raw) {
               var rh=parseHeaders(raw);
               var white=rh['White']||'',black=rh['Black']||'';
               nagMap=extractNAGs(raw);
               gameResult=rh['Result']||'*';
               flipped=(gameResult==='0-1');
+              annotMap = parseAnnotationMap(raw);
 
               var clean=sanitisePGN(raw,white,black);
               var chess=new Chess();
@@ -1394,6 +1516,24 @@
               } else {
                 fadeBadge();
               }
+
+              /* Move annotation badge (brilliant, great, mistake, blunder, etc.) */
+              var curAnnot = annotMap[currentMove];
+              if (curAnnot && ANNOT_STYLES[curAnnot]) {
+                var bDest = allMoves[currentMove] ? allMoves[currentMove].to : null;
+                if (bDest) {
+                  if (step === 1) {
+                    /* Start fade-in immediately so it syncs with piece travel —
+                       transition duration matches fwdDur so highlight reaches
+                       full opacity exactly when piece lands */
+                    showMoveAnnotation(bDest, curAnnot, fwdDur);
+                  } else {
+                    showMoveAnnotation(bDest, curAnnot, 0);
+                  }
+                }
+              } else {
+                fadeMoveAnnotation();
+              }
             }
 
             /* ── Ghost helpers ── */
@@ -1482,6 +1622,76 @@
                 el.style.transition='opacity 0.45s ease';
                 el.style.opacity='0';
                 setTimeout(function(){ if(el.parentNode)el.parentNode.removeChild(el); }, 500);
+              });
+            }
+
+            /* ── Brilliant move highlight ('#1baca6' teal, chess.com colour) ── */
+            function showMoveAnnotation(destSq, annotType, fadeDur) {
+              removeMoveAnnotation();
+              var st = ANNOT_STYLES[annotType]; if (!st) return;
+              var wrapEl=document.getElementById('chessBoardWrap');
+              var boardEl=document.getElementById('chessBoard');
+              var el=getSquareEl(destSq);
+              if(!wrapEl||!boardEl||!el)return;
+              var boardOL=boardEl.offsetLeft+boardEl.clientLeft;
+              var boardOT=boardEl.offsetTop+boardEl.clientTop;
+              var SZ=30, kw=el.offsetWidth;
+              var rx=boardOL+el.offsetLeft, ry=boardOT+el.offsetTop;
+              var iconPx=Math.round(kw*0.52);
+              /* Transition duration matches piece travel so highlight reaches
+                 full opacity exactly when piece lands */
+              var transDur = fadeDur ? (fadeDur/1000).toFixed(3) : '0.08';
+
+              var hl=document.createElement('div');
+              hl.id='chessMoveAnnotHl';
+              hl.style.cssText='position:absolute;inset:0;z-index:10;pointer-events:none;'+
+                'background:rgba('+st.rgb+',0);'+
+                'display:flex;align-items:center;justify-content:center;'+
+                'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
+                'font-family:"InterRegular",sans-serif;line-height:1;'+
+                'transition:background '+transDur+'s ease,color '+transDur+'s ease;';
+              hl.innerHTML=st.icon;
+              el.appendChild(hl);
+
+              var badge=document.createElement('div');
+              badge.id='chessMoveAnnotBadge';
+              badge.className='chess-end-badge';
+              badge.innerHTML=st.icon;
+              badge.style.cssText='position:absolute;z-index:11;pointer-events:none;background:'+st.bg+';'+
+                'width:'+SZ+'px;height:'+SZ+'px;font-size:0.82rem;opacity:0;'+
+                'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;'+
+                'transition:opacity 0.4s ease;';
+              wrapEl.appendChild(badge);
+
+              /* Force reflow so initial state is painted; transition fires immediately */
+              void hl.offsetWidth;
+              hl.style.background='rgba('+st.rgb+',0.55)';
+              hl.style.color='rgba(255,255,255,0.95)';
+              if (st.sound) playSound(st.sound);
+
+              /* Hold for fade duration + 900ms then swap to badge */
+              var holdTime = (fadeDur || 80) + 900;
+              animTimeout(function(){
+                hl.style.background='rgba('+st.rgb+',0)';
+                hl.style.color='rgba(255,255,255,0)';
+                badge.style.opacity='1';
+                animTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
+              }, holdTime);
+            }
+            function removeMoveAnnotation() {
+              ['chessMoveAnnotHl','chessMoveAnnotBadge'].forEach(function(id){
+                var el=document.getElementById(id);
+                if(el&&el.parentNode)el.parentNode.removeChild(el);
+              });
+            }
+            function fadeMoveAnnotation() {
+              /* Use opacity so the reverse fade works from wherever the
+                 background transition currently is */
+              ['chessMoveAnnotHl','chessMoveAnnotBadge'].forEach(function(id){
+                var el=document.getElementById(id); if(!el||!el.parentNode)return;
+                el.style.transition='opacity 0.25s ease';
+                el.style.opacity='0';
+                setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},300);
               });
             }
 
@@ -1622,10 +1832,15 @@
               var chess=new Chess();
               for(var i=0;i<=currentMove;i++)chess.move(allMoves[i].san);
               var board=chess.board();
-              removeBadge();
+              removeBadge(); removeMoveAnnotation();
               renderBoard(board);
               if(currentMove===allMoves.length-1){
-                showEndBadgeInstant(board); /* badges only, no re-animation */
+                showEndBadgeInstant(board);
+              }
+              var flipAnnot=annotMap[currentMove];
+              if(flipAnnot&&ANNOT_STYLES[flipAnnot]){
+                var bDest=allMoves[currentMove]?allMoves[currentMove].to:null;
+                if(bDest) showMoveAnnotation(bDest,flipAnnot);
               }
             });
 
@@ -2143,7 +2358,7 @@
     <script>
     (function () {
       function alignOverlays() {
-        document.querySelectorAll('#about, #research, #teaching, #conferences, #code, #gallery, #contact').forEach(function (section) {
+        document.querySelectorAll('#about, #research, #teaching, #conferences, #code, #gallery, #chess, #contact').forEach(function (section) {
           var overlay = section.querySelector('.section-title-overlay-text');
           var title   = section.querySelector('.section-title');
           if (!overlay || !title) return;
@@ -2171,7 +2386,7 @@
 
     <script>
     (function () {
-      var sections = ['home','about','research','teaching','conferences','code','gallery','contact'];
+      var sections = ['home','about','research','teaching','conferences','code','gallery','chess','contact'];
       var offset = 0.35;
 
       function getActive() {
@@ -2233,6 +2448,21 @@
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
       });
+
+      /* All remaining section nav links: preventDefault stops the browser's
+         native hash re-scroll on repeat clicks; scrollIntoView tracks the
+         element dynamically so layout shifts during scroll don't mis-aim */
+      ['research','teaching','conferences','code','gallery','chess'].forEach(function (id) {
+        document.querySelectorAll('a[href="#' + id + '"]').forEach(function (link) {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+            var target = document.getElementById(id);
+            if (!target) return;
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+      });
+
     })();
     </script>
 
