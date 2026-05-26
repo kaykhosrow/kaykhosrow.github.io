@@ -579,9 +579,9 @@
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
       .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 20px; }
-      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 1px solid rgba(0,0,0,0.25); box-shadow: 0.25px 0.25px 0.25px rgba(0,0,0,0.25); border-radius: 4px; color: rgba(0,0,0,0.7); white-space: nowrap; }
+      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 1px solid rgba(0,0,0,0.25); box-shadow: 0.15px 0.15px 0.25px rgba(0,0,0,0.25); border-radius: 4px; color: rgba(0,0,0,0.7); white-space: nowrap; }
       .chess-nav-btns { display: flex; gap: 4px; align-items: center; }
-      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 1px solid rgba(0,0,0,0.25); box-shadow: 0.25px 0.25px 0.25px rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 1px solid rgba(0,0,0,0.25); box-shadow: 0.15px 0.15px 0.25px rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
       .chess-bctrl:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl.active:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl-sep { width: 1px; height: 18px; background: rgba(0,0,0,0.15); margin: 0 2px; flex-shrink: 0; }
@@ -1165,8 +1165,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               check:   new Audio(SFX_BASE+'move-check.mp3'),
               promote: new Audio(SFX_BASE+'promote.mp3'),
               end:     new Audio(SFX_BASE+'game-end.mp3'),
-              brilliant: new Audio(SFX_BASE+'achievement.mp3'),
-              great:    new Audio(SFX_BASE+'puzzle-correct.mp3'),
+
             };
             function playSound(key) {
               var s = SFX[key]; if (!s) return;
@@ -1241,8 +1240,8 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                Returns a Set of 0-based move indices. ─────────────────────── */
             /* ── chess.com annotation colours (matches game review UI) ─── */
             var ANNOT_STYLES = {
-              Brilliant:   { bg:'#1baca6', rgb:'27,172,166',   icon:'!!', sound:'brilliant' },
-              GreatFind:   { bg:'#5c8bb0', rgb:'92,139,176',   icon:'!',  sound:'great'     },
+              Brilliant:   { bg:'#1baca6', rgb:'27,172,166',   icon:'!!', sound:null },
+              GreatFind:   { bg:'#5c8bb0', rgb:'92,139,176',   icon:'!',  sound:null     },
               Best:        { bg:'#6cbb5a', rgb:'108,187,90',   icon:'★',  sound:null        },
               Excellent:   { bg:'#96bc4b', rgb:'150,188,75',   icon:'✓',  sound:null        },
               Good:        { bg:'#96af82', rgb:'150,175,130',  icon:'✓',  sound:null        },
