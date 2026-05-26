@@ -2143,7 +2143,7 @@
     <script>
     (function () {
       function alignOverlays() {
-        document.querySelectorAll('#about, #research, #teaching, #conferences, #code, #gallery, #contact').forEach(function (section) {
+        document.querySelectorAll('#about, #research, #teaching, #conferences, #code, #gallery, #chess, #contact').forEach(function (section) {
           var overlay = section.querySelector('.section-title-overlay-text');
           var title   = section.querySelector('.section-title');
           if (!overlay || !title) return;
@@ -2171,7 +2171,7 @@
 
     <script>
     (function () {
-      var sections = ['home','about','research','teaching','conferences','code','gallery','contact'];
+      var sections = ['home','about','research','teaching','conferences','code','gallery','chess','contact'];
       var offset = 0.35;
 
       function getActive() {
@@ -2230,6 +2230,18 @@
           if (!target) return;
           var offset = (nav ? nav.offsetHeight : 60) - 50;
           var top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        });
+      });
+
+      document.querySelectorAll('a[href="#chess"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          var target = document.getElementById('chess');
+          var nav    = document.getElementById('navigation');
+          if (!target) return;
+          var navH = nav ? nav.offsetHeight : 60;
+          var top  = target.getBoundingClientRect().top + window.scrollY - navH;
           window.scrollTo({ top: top, behavior: 'smooth' });
         });
       });
