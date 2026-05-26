@@ -575,7 +575,7 @@
       .chess-coord-row { display: flex; padding-left: 20px; margin-top: 6px; height: 14px; align-items: center; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.65; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
       .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('assets/chess/board/newspaper.png'); background-size: 100% 100%; opacity: 0.325; }
-      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.5); overflow: hidden; border-radius: 2px; }
+      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.5); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
       .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 20px; }
@@ -1623,24 +1623,28 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
             }
 
             /* ── Brilliant move highlight ('#1baca6' teal, chess.com colour) ── */
-            var _annotScrollFn = null, _annotScrollRaf = null;
-
             function showMoveAnnotation(destSq, annotType, fadeDur) {
               removeMoveAnnotation();
               var st = ANNOT_STYLES[annotType]; if (!st) return;
-              var el = getSquareEl(destSq); if (!el) return;
-              /* position:fixed in body at z-index:10000 — always above the ghost
-                 (9999). Nav is bumped to z-index:20000 so it stays on top.
-                 rAF-throttled scroll listener tracks the square smoothly. */
-              var kr = el.getBoundingClientRect();
-              var SZ = 30, kw = Math.round(kr.width), kh = Math.round(kr.height);
+              var wrapEl = document.getElementById('chessBoardWrap');
+              var boardEl = document.getElementById('chessBoard');
+              var el = getSquareEl(destSq);
+              if (!wrapEl || !boardEl || !el) return;
+              /* position:absolute in chessBoardWrap — scrolls with board, no twitching.
+                 .chess-board no longer has z-index (no stacking context), so
+                 z-index:10000 here participates in root context and beats ghost (9999).
+                 Nav is z-index:20000 so it stays on top. */
+              var boardOL = boardEl.offsetLeft + boardEl.clientLeft;
+              var boardOT = boardEl.offsetTop  + boardEl.clientTop;
+              var rx = boardOL + el.offsetLeft, ry = boardOT + el.offsetTop;
+              var SZ = 30, kw = el.offsetWidth, kh = el.offsetHeight;
               var iconPx = Math.round(kw * 0.52);
               var transDur = fadeDur ? (fadeDur/1000).toFixed(3) : '0.45';
 
               var hl = document.createElement('div');
               hl.id = 'chessMoveAnnotHl';
-              hl.style.cssText = 'position:fixed;z-index:10000;pointer-events:none;'+
-                'left:'+kr.left+'px;top:'+kr.top+'px;'+
+              hl.style.cssText = 'position:absolute;z-index:10000;pointer-events:none;'+
+                'left:'+rx+'px;top:'+ry+'px;'+
                 'width:'+kw+'px;height:'+kh+'px;'+
                 'background:rgba('+st.rgb+',0);'+
                 'display:flex;align-items:center;justify-content:center;'+
@@ -1648,30 +1652,17 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 'font-family:"InterRegular",sans-serif;line-height:1;'+
                 'transition:background '+transDur+'s ease,color '+transDur+'s ease;';
               hl.innerHTML = st.icon;
-              document.body.appendChild(hl);
+              wrapEl.appendChild(hl);
 
               var badge = document.createElement('div');
               badge.id = 'chessMoveAnnotBadge';
               badge.className = 'chess-end-badge';
               badge.innerHTML = st.icon;
-              badge.style.cssText = 'position:fixed;z-index:10001;pointer-events:none;background:'+st.bg+';'+
+              badge.style.cssText = 'position:absolute;z-index:10001;pointer-events:none;background:'+st.bg+';'+
                 'width:'+SZ+'px;height:'+SZ+'px;font-size:0.82rem;opacity:0;'+
-                'left:'+(kr.left+kw-SZ/2)+'px;top:'+(kr.top-SZ/2)+'px;'+
+                'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;'+
                 'transition:opacity 0.4s ease;';
-              document.body.appendChild(badge);
-
-              /* rAF-throttled scroll tracker — batches updates to one per frame */
-              _annotScrollFn = function() {
-                if (_annotScrollRaf) return;
-                _annotScrollRaf = requestAnimationFrame(function() {
-                  _annotScrollRaf = null;
-                  var r = el.getBoundingClientRect();
-                  hl.style.left = r.left+'px'; hl.style.top = r.top+'px';
-                  badge.style.left = (r.left+kw-SZ/2)+'px';
-                  badge.style.top  = (r.top-SZ/2)+'px';
-                });
-              };
-              window.addEventListener('scroll', _annotScrollFn, { passive:true });
+              wrapEl.appendChild(badge);
 
               requestAnimationFrame(function(){requestAnimationFrame(function(){
                 hl.style.background='rgba('+st.rgb+',0.55)';
@@ -1688,16 +1679,12 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               }, holdTime);
             }
             function removeMoveAnnotation() {
-              if (_annotScrollFn) { window.removeEventListener('scroll',_annotScrollFn); _annotScrollFn=null; }
-              if (_annotScrollRaf) { cancelAnimationFrame(_annotScrollRaf); _annotScrollRaf=null; }
               ['chessMoveAnnotHl','chessMoveAnnotBadge'].forEach(function(id){
                 var el=document.getElementById(id);
                 if(el&&el.parentNode)el.parentNode.removeChild(el);
               });
             }
             function fadeMoveAnnotation() {
-              if (_annotScrollFn) { window.removeEventListener('scroll',_annotScrollFn); _annotScrollFn=null; }
-              if (_annotScrollRaf) { cancelAnimationFrame(_annotScrollRaf); _annotScrollRaf=null; }
               /* Use opacity so the reverse fade works from wherever the
                  background transition currently is */
               ['chessMoveAnnotHl','chessMoveAnnotBadge'].forEach(function(id){
