@@ -2460,13 +2460,15 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
             var target = document.getElementById(id);
             if (!target) return;
             if (window.scrollY < 1) {
-              /* Nudge to scrollY=1 and wait 2 frames so the layout settles
-                 in the same state as clicking from any other section */
-              window.scrollTo(0, 1);
-              requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
+              /* From top page the nav is at the bottom so scrollIntoView undershoots
+                 by exactly navH. Manually add navH to land in the same spot as
+                 clicking from any other section. */
+              var nav = document.getElementById('navigation');
+              var navH = nav ? nav.offsetHeight : 0;
+              var smTop = parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
+              window.scrollTo({
+                top: target.getBoundingClientRect().top - smTop + navH,
+                behavior: 'smooth'
               });
             } else {
               target.scrollIntoView({ behavior: 'smooth', block: 'start' });
