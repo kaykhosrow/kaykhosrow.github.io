@@ -1523,9 +1523,12 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 var bDest = allMoves[currentMove] ? allMoves[currentMove].to : null;
                 if (bDest) {
                   if (step === 1) {
-                    animTimeout(function(){ showMoveAnnotation(bDest, curAnnot); }, Math.max(0, fwdDur - 50));
+                    /* Start fade-in immediately so it syncs with piece travel —
+                       transition duration matches fwdDur so highlight reaches
+                       full opacity exactly when piece lands */
+                    showMoveAnnotation(bDest, curAnnot, fwdDur);
                   } else {
-                    showMoveAnnotation(bDest, curAnnot);
+                    showMoveAnnotation(bDest, curAnnot, 0);
                   }
                 }
               } else {
@@ -1623,7 +1626,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
             }
 
             /* ── Brilliant move highlight ('#1baca6' teal, chess.com colour) ── */
-            function showMoveAnnotation(destSq, annotType) {
+            function showMoveAnnotation(destSq, annotType, fadeDur) {
               removeMoveAnnotation();
               var st = ANNOT_STYLES[annotType]; if (!st) return;
               var wrapEl=document.getElementById('chessBoardWrap');
@@ -1635,6 +1638,9 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               var SZ=30, kw=el.offsetWidth;
               var rx=boardOL+el.offsetLeft, ry=boardOT+el.offsetTop;
               var iconPx=Math.round(kw*0.52);
+              /* Transition duration matches piece travel so highlight reaches
+                 full opacity exactly when piece lands */
+              var transDur = fadeDur ? (fadeDur/1000).toFixed(3) : '0.08';
 
               var hl=document.createElement('div');
               hl.id='chessMoveAnnotHl';
@@ -1643,7 +1649,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 'display:flex;align-items:center;justify-content:center;'+
                 'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
                 'font-family:"InterRegular",sans-serif;line-height:1;'+
-                'transition:background 0.45s ease,color 0.45s ease;';
+                'transition:background '+transDur+'s ease,color '+transDur+'s ease;';
               hl.innerHTML=st.icon;
               el.appendChild(hl);
 
@@ -1657,21 +1663,20 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 'transition:opacity 0.4s ease;';
               wrapEl.appendChild(badge);
 
-              requestAnimationFrame(function(){
-                /* Force a reflow so the browser registers the initial opacity:0
-                   state before we set the target, making the transition fire
-                   in this same frame with zero extra delay */
-                void hl.offsetWidth;
-                hl.style.background='rgba('+st.rgb+',0.55)';
-                hl.style.color='rgba(255,255,255,0.95)';
-                if (st.sound) playSound(st.sound);
-              });
+              /* Force reflow so initial state is painted; transition fires immediately */
+              void hl.offsetWidth;
+              hl.style.background='rgba('+st.rgb+',0.55)';
+              hl.style.color='rgba(255,255,255,0.95)';
+              if (st.sound) playSound(st.sound);
+
+              /* Hold for fade duration + 900ms then swap to badge */
+              var holdTime = (fadeDur || 80) + 900;
               animTimeout(function(){
                 hl.style.background='rgba('+st.rgb+',0)';
                 hl.style.color='rgba(255,255,255,0)';
                 badge.style.opacity='1';
                 animTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
-              },1100);
+              }, holdTime);
             }
             function removeMoveAnnotation() {
               ['chessMoveAnnotHl','chessMoveAnnotBadge'].forEach(function(id){
@@ -1680,11 +1685,13 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               });
             }
             function fadeMoveAnnotation() {
+              /* Use opacity so the reverse fade works from wherever the
+                 background transition currently is */
               ['chessMoveAnnotHl','chessMoveAnnotBadge'].forEach(function(id){
                 var el=document.getElementById(id); if(!el||!el.parentNode)return;
-                el.style.transition='opacity 0.45s ease';
+                el.style.transition='opacity 0.25s ease';
                 el.style.opacity='0';
-                setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},500);
+                setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},300);
               });
             }
 
