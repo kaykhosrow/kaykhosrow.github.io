@@ -1284,6 +1284,7 @@
 
               var step = idx - prevMove;
               var animated = false;
+              var fwdDur = 0; /* actual duration of the forward move animation */
 
               /* ── Single-step forward ── */
               if (step === 1 && currentMove >= 0) {
@@ -1308,6 +1309,7 @@
                   var kDur = spawnGhost(PIECE_IMGS[mv.color+'k'], kFromRect, kToRect);
                   spawnGhost(PIECE_IMGS[mv.color+'r'], rFromRect, rToRect);
                   revealAfter([mv.to, rookTo], kDur);
+                  fwdDur = kDur;
 
                 /* ── Capture: captured piece fades out as slider arrives ── */
                 } else if (mv.captured) {
@@ -1339,6 +1341,7 @@
                     }, movDur + 100);
                   }
                   revealAfter([mv.to], movDur);
+                  fwdDur = movDur;
 
                 /* ── Normal move ── */
                 } else {
@@ -1348,6 +1351,7 @@
                   var nDestRect = rectOf(mv.to);
                   var nDur = spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], nMovRect, nDestRect);
                   revealAfter([mv.to], nDur);
+                  fwdDur = nDur;
                 }
               }
 
@@ -1384,10 +1388,9 @@
 
               if (!animated) renderBoard(board);
 
-              /* Endgame badge — use longest likely duration as buffer */
-              var lastDur = animated ? 380 : 0;
+              /* Endgame badge fires when the piece lands (fwdDur), not after a fixed lag */
               if (currentMove === allMoves.length - 1) {
-                animTimeout(function(){ showEndBadge(board); }, lastDur + 120);
+                animTimeout(function(){ showEndBadge(board); }, fwdDur);
               } else {
                 fadeBadge();
               }
@@ -1495,8 +1498,6 @@
               var wrapEl=document.getElementById('chessBoardWrap'); if(!wrapEl)return;
               var boardEl=document.getElementById('chessBoard'); if(!boardEl)return;
               var SZ=30;
-              /* Use offset-based positioning (integer pixels, viewport-immune) rather than
-                 getBoundingClientRect so both highlights use the same reference frame */
               var boardOL=boardEl.offsetLeft+boardEl.clientLeft;
               var boardOT=boardEl.offsetTop+boardEl.clientTop;
 
@@ -1508,25 +1509,26 @@
                 }
                 if(!sq)return;
                 var el=getSquareEl(sq); if(!el)return;
-                var rx=boardOL+el.offsetLeft, ry=boardOT+el.offsetTop;
                 var kw=el.offsetWidth, kh=el.offsetHeight;
                 var iconPx=Math.round(kw*0.75);
 
+                /* Highlight: child of the king square so inset:0 is pixel-perfect */
                 var hl=document.createElement('div');
                 hl.id=hlId;
-                hl.style.cssText='position:absolute;z-index:10;pointer-events:none;'+
-                  'left:'+rx+'px;top:'+ry+'px;width:'+kw+'px;height:'+kh+'px;'+
+                hl.style.cssText='position:absolute;inset:0;z-index:10;pointer-events:none;'+
                   'background:rgba('+rgbStr+',0);'+
                   'display:flex;align-items:center;justify-content:center;'+
                   'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
                   'font-family:"InterRegular",sans-serif;line-height:1;'+
                   'transition:background 0.45s ease,color 0.45s ease;';
-                hl.textContent=icon;
-                wrapEl.appendChild(hl);
+                hl.innerHTML=icon;
+                el.appendChild(hl);
 
+                /* Badge: in wrapEl so it can overhang the board's overflow:hidden */
+                var rx=boardOL+el.offsetLeft, ry=boardOT+el.offsetTop;
                 var badge=document.createElement('div');
                 badge.id=badgeId; badge.className='chess-end-badge';
-                badge.textContent=icon;
+                badge.innerHTML=icon;
                 badge.style.cssText='position:absolute;z-index:11;pointer-events:none;background:'+badgeBg+';'+
                   'width:'+SZ+'px;height:'+SZ+'px;font-size:0.88rem;opacity:0;'+
                   'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;';
@@ -1537,17 +1539,54 @@
                   hl.style.color='rgba(255,255,255,0.95)';
                 });});
 
-                setTimeout(function(){
+                /* Use animTimeout so back-navigation cancels this before badge pops in */
+                animTimeout(function(){
                   hl.style.background='rgba('+rgbStr+',0)';
                   hl.style.color='rgba(255,255,255,0)';
                   badge.style.opacity='1';
-                  setTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
+                  animTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
                 },1100);
               }
 
               var loserIcon=(gameLastSan&&gameLastSan.indexOf('#')!==-1)?'#':'⚑';
               mkEffect(loserColor, loserIcon,  '220,38,38',  '#dc2626', 'chessLoserHl',  'chessLoserBadge');
-              mkEffect(winnerColor, '!!',  '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
+              mkEffect(winnerColor, '<svg viewBox="-0.5 -0.5 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:60%;max-height:60%;display:block;"><path d="m12.9277 11.2693 1.3569 -7.5385 -4.7493 2.2616L7.5 3.7308 5.4646 5.9923 0.7154 3.7308l1.3569 7.5385h10.8554Z" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path></svg>',  '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
+            }
+
+            /* Instant version for flip — no animation, just drops badges at new positions */
+            function showEndBadgeInstant(board) {
+              removeBadge();
+              if(gameResult==='1/2-1/2'||gameResult==='*')return;
+              var loserColor, winnerColor;
+              if(gameResult==='1-0'){loserColor='b';winnerColor='w';}
+              else if(gameResult==='0-1'){loserColor='w';winnerColor='b';}
+              else return;
+              var wrapEl=document.getElementById('chessBoardWrap'); if(!wrapEl)return;
+              var boardEl=document.getElementById('chessBoard'); if(!boardEl)return;
+              var SZ=30;
+              var boardOL=boardEl.offsetLeft+boardEl.clientLeft;
+              var boardOT=boardEl.offsetTop+boardEl.clientTop;
+              var loserIcon=(gameLastSan&&gameLastSan.indexOf('#')!==-1)?'#':'⚑';
+              function mkBadge(color,icon,bg,badgeId){
+                var sq=null;
+                outer:for(var r=0;r<8;r++)for(var c=0;c<8;c++){
+                  var p=board[r][c];
+                  if(p&&p.type==='k'&&p.color===color){sq=sqAlg(r,c);break outer;}
+                }
+                if(!sq)return;
+                var el=getSquareEl(sq); if(!el)return;
+                var rx=boardOL+el.offsetLeft, ry=boardOT+el.offsetTop;
+                var kw=el.offsetWidth;
+                var badge=document.createElement('div');
+                badge.id=badgeId; badge.className='chess-end-badge';
+                badge.innerHTML=icon;
+                badge.style.cssText='position:absolute;z-index:11;pointer-events:none;background:'+bg+';'+
+                  'width:'+SZ+'px;height:'+SZ+'px;font-size:0.88rem;opacity:1;'+
+                  'left:'+(rx+kw-SZ/2)+'px;top:'+(ry-SZ/2)+'px;';
+                wrapEl.appendChild(badge);
+              }
+              mkBadge(loserColor, loserIcon, '#dc2626', 'chessLoserBadge');
+              mkBadge(winnerColor, '<svg viewBox="-0.5 -0.5 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width:60%;max-height:60%;display:block;"><path d="m12.9277 11.2693 1.3569 -7.5385 -4.7493 2.2616L7.5 3.7308 5.4646 5.9923 0.7154 3.7308l1.3569 7.5385h10.8554Z" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path></svg>', '#16a34a', 'chessWinnerBadge');
             }
 
             /* ── Auto-play ── */
@@ -1583,11 +1622,10 @@
               var chess=new Chess();
               for(var i=0;i<=currentMove;i++)chess.move(allMoves[i].san);
               var board=chess.board();
-              removeBadge(); /* clear any floating highlights before re-render */
+              removeBadge();
               renderBoard(board);
-              /* Re-show endgame badge at correct flipped positions */
               if(currentMove===allMoves.length-1){
-                showEndBadge(board);
+                showEndBadgeInstant(board); /* badges only, no re-animation */
               }
             });
 
