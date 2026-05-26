@@ -1534,6 +1534,8 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 animTimeout(function(){ showEndBadge(board); }, fwdDur);
               } else if (step === -1) {
                 fadeBadge(); /* single back step — nice fade */
+              } else if (step === 1) {
+                fadeBadge(); /* single forward step — fade, don't snap off */
               } else {
                 removeBadge(); /* jump (⏮/⏭/click) — instant off */
               }
@@ -1551,6 +1553,8 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 }
               } else if (step === -1) {
                 fadeMoveAnnotation();
+              } else if (step === 1) {
+                fadeMoveAnnotation(); /* single forward step — fade, don't snap off */
               } else {
                 removeMoveAnnotation();
               }
