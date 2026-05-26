@@ -569,7 +569,7 @@
       .chess-rank-col span { font-size: 0.62rem; opacity: 0.65; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
       .chess-coord-row { display: flex; padding-left: 20px; margin-top: 6px; height: 14px; align-items: center; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.65; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
-      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.325; }
+      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('assets/chess/board/newspaper.png'); background-size: 100% 100%; opacity: 0.325; }
       .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.25); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
@@ -1112,7 +1112,7 @@
                Board URL:  images.chesscomfiles.com/chess-themes/boards/newspaper/{size}.png
                Piece IDs:  wk wq wr wb wn wp  /  bk bq br bb bn bp
             ── */
-            var PIECE_BASE = 'https://images.chesscomfiles.com/chess-themes/pieces/neo/150/';
+            var PIECE_BASE = 'assets/chess/pieces/';
             var PIECE_IMGS = {
               wk: PIECE_BASE+'wk.png', wq: PIECE_BASE+'wq.png',
               wr: PIECE_BASE+'wr.png', wb: PIECE_BASE+'wb.png',
@@ -1121,6 +1121,23 @@
               br: PIECE_BASE+'br.png', bb: PIECE_BASE+'bb.png',
               bn: PIECE_BASE+'bn.png', bp: PIECE_BASE+'bp.png',
             };
+
+            /* ── Sound engine ─────────────────────────────────────────────── */
+            var SFX_BASE = 'assets/chess/standard/';
+            var SFX = {
+              move:    new Audio(SFX_BASE+'move-self.mp3'),
+              back:    new Audio(SFX_BASE+'move-opponent.mp3'),
+              capture: new Audio(SFX_BASE+'capture.mp3'),
+              castle:  new Audio(SFX_BASE+'castle.mp3'),
+              check:   new Audio(SFX_BASE+'move-check.mp3'),
+              promote: new Audio(SFX_BASE+'promote.mp3'),
+              end:     new Audio(SFX_BASE+'game-end.mp3'),
+            };
+            function playSound(key) {
+              var s = SFX[key]; if (!s) return;
+              s.currentTime = 0;
+              s.play().catch(function(){});
+            }
 
             function pieceHTML(p) {
               if (!p) return '';
@@ -1276,6 +1293,7 @@
                 /* ── Castling: animate king + rook simultaneously ── */
                 var isCastle = mv.flags && (mv.flags.indexOf('k') !== -1 || mv.flags.indexOf('q') !== -1);
                 if (isCastle) {
+                  playSound('castle');
                   var rookFrom, rookTo;
                   if (mv.flags.indexOf('k') !== -1) {
                     rookFrom = mv.color==='w'?'h1':'h8'; rookTo = mv.color==='w'?'f1':'f8';
@@ -1293,6 +1311,8 @@
 
                 /* ── Capture: captured piece fades out as slider arrives ── */
                 } else if (mv.captured) {
+                  /* check overrides capture sound */
+                  playSound(mv.san.indexOf('+') !== -1 ? 'check' : (mv.promotion ? 'promote' : 'capture'));
                   var capColor = mv.color==='w'?'b':'w';
                   /* en-passant: captured pawn is on a different square */
                   var capSq = mv.flags&&mv.flags.indexOf('e')!==-1
@@ -1322,6 +1342,7 @@
 
                 /* ── Normal move ── */
                 } else {
+                  playSound(mv.san.indexOf('+') !== -1 ? 'check' : (mv.promotion ? 'promote' : 'move'));
                   var nMovRect = rectOf(mv.from);
                   renderBoard(board, [mv.to]);
                   var nDestRect = rectOf(mv.to);
@@ -1334,6 +1355,7 @@
               else if (step === -1 && prevMove >= 0 && prevMove < allMoves.length) {
                 var pmv  = allMoves[prevMove];
                 animated = true;
+                playSound('back');
                 var isCastleBack = pmv.flags && (pmv.flags.indexOf('k')!==-1||pmv.flags.indexOf('q')!==-1);
 
                 /* Collect ALL source rects BEFORE re-rendering */
@@ -1367,7 +1389,7 @@
               if (currentMove === allMoves.length - 1) {
                 animTimeout(function(){ showEndBadge(board); }, lastDur + 120);
               } else {
-                removeBadge();
+                fadeBadge();
               }
             }
 
@@ -1451,10 +1473,19 @@
                 if(el&&el.parentNode)el.parentNode.removeChild(el);
               });
             }
+            function fadeBadge() {
+              ['chessLoserHl','chessLoserBadge','chessWinnerHl','chessWinnerBadge'].forEach(function(id){
+                var el=document.getElementById(id); if(!el||!el.parentNode)return;
+                el.style.transition='opacity 0.45s ease';
+                el.style.opacity='0';
+                setTimeout(function(){ if(el.parentNode)el.parentNode.removeChild(el); }, 500);
+              });
+            }
 
             function showEndBadge(board) {
               removeBadge();
               if(gameResult==='1/2-1/2'||gameResult==='*')return;
+              playSound('end');
 
               var loserColor, winnerColor;
               if(gameResult==='1-0'){loserColor='b';winnerColor='w';}
@@ -1463,6 +1494,9 @@
 
               var wrapEl=document.getElementById('chessBoardWrap'); if(!wrapEl)return;
               var SZ=30;
+              /* Capture wrap rect ONCE — recomputing inside each mkEffect call risks a
+                 micro-reflow between the two calls shifting ry by a subpixel */
+              var wr=wrapEl.getBoundingClientRect();
 
               function mkEffect(color, icon, rgbStr, badgeBg, hlId, badgeId) {
                 var sq=null;
@@ -1473,7 +1507,6 @@
                 if(!sq)return;
                 var el=getSquareEl(sq); if(!el)return;
                 var kr=el.getBoundingClientRect();
-                var wr=wrapEl.getBoundingClientRect();
                 var rx=Math.round(kr.left-wr.left), ry=Math.round(kr.top-wr.top);
                 var kw=Math.round(kr.width), kh=Math.round(kr.height);
                 var iconPx=Math.round(kw*0.75);
@@ -1482,11 +1515,11 @@
                 hl.id=hlId;
                 hl.style.cssText='position:absolute;z-index:10;pointer-events:none;'+
                   'left:'+rx+'px;top:'+ry+'px;width:'+kw+'px;height:'+kh+'px;'+
-                  'background:rgba('+rgbStr+',0);box-shadow:inset 0 0 0 1px rgba(0,0,0,0);'+
+                  'background:rgba('+rgbStr+',0);'+
                   'display:flex;align-items:center;justify-content:center;'+
                   'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
                   'font-family:"InterRegular",sans-serif;line-height:1;'+
-                  'transition:background 0.45s ease,color 0.45s ease,box-shadow 0.45s ease;';
+                  'transition:background 0.45s ease,color 0.45s ease;';
                 hl.textContent=icon;
                 wrapEl.appendChild(hl);
 
@@ -1501,13 +1534,11 @@
                 requestAnimationFrame(function(){requestAnimationFrame(function(){
                   hl.style.background='rgba('+rgbStr+',0.6)';
                   hl.style.color='rgba(255,255,255,0.95)';
-                  hl.style.boxShadow='inset 0 0 0 1px rgba(0,0,0,0.5)';
                 });});
 
                 setTimeout(function(){
                   hl.style.background='rgba('+rgbStr+',0)';
                   hl.style.color='rgba(255,255,255,0)';
-                  hl.style.boxShadow='inset 0 0 0 1px rgba(0,0,0,0)';
                   badge.style.opacity='1';
                   setTimeout(function(){if(hl.parentNode)hl.parentNode.removeChild(hl);},500);
                 },1100);
@@ -1528,7 +1559,7 @@
             function togglePlay(){
               if(playTimer){stopPlay();return;}
               /* if already at end, restart */
-              if(currentMove>=allMoves.length-1)goTo(-1);
+              if(currentMove>=allMoves.length-1)return; /* already at end — nothing to play */
               var btn=document.getElementById('chessPlay');
               btn.classList.add('active');btn.innerHTML='<i class="ph ph-pause"></i>';
               playTimer=setInterval(function(){
@@ -1554,9 +1585,13 @@
             });
 
             document.addEventListener('keydown',function(e){
-              var sec=document.getElementById('chess');if(!sec)return;
-              var rect=sec.getBoundingClientRect();
-              if(rect.bottom<0||rect.top>window.innerHeight)return;
+              /* Only fire when chess is the active section — same 35% threshold as getActiveIdx */
+              var sec=document.getElementById('chess'); if(!sec)return;
+              var mid=window.innerHeight*0.35;
+              var cr=sec.getBoundingClientRect();
+              var nextSec=document.getElementById('contact');
+              var chessActive = cr.top<=mid && (!nextSec||nextSec.getBoundingClientRect().top>mid);
+              if(!chessActive)return;
               if(e.key==='ArrowLeft'){e.preventDefault();stopPlay();goTo(currentMove-1);}
               if(e.key==='ArrowRight'){e.preventDefault();stopPlay();goTo(currentMove+1);}
               if(e.key===' '){e.preventDefault();togglePlay();}
