@@ -570,13 +570,13 @@
       .chess-coord-row { display: flex; padding-left: 20px; margin-top: 6px; height: 14px; align-items: center; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.65; font-family: 'InterRegular', sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; }
       .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.375; }
-      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.5px 0.5px 10px rgba(0,0,0,0.25); overflow: hidden; border-radius: 2px; }
+      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.25px 0.25px 5px rgba(0,0,0,0.25); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
       .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 14px; }
-      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 2px solid rgba(0,0,0,0.325); border-radius: 4px; opacity: 0.7; white-space: nowrap; }
+      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 2px solid rgba(0,0,0,0.25); border-radius: 4px; opacity: 0.7; white-space: nowrap; }
       .chess-nav-btns { display: flex; gap: 4px; align-items: center; }
-      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 2px solid rgba(0,0,0,0.325); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 2px solid rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
       .chess-bctrl:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl.active { border-color: rgba(0,0,0,0.45); background: rgba(0,0,0,0.06); }
       .chess-bctrl.active:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
@@ -1313,12 +1313,10 @@
                       'width:'+capRect.width+'px;height:'+capRect.height+'px;'+
                       'left:'+capRect.left+'px;top:'+capRect.top+'px;';
                     document.body.appendChild(capGhost);
-                    /* Plain setTimeout so clearAnim/transition-shorthand can't interfere.
-                       Piece stays fully opaque until 87% of slide, then 20ms fade. */
-                    setTimeout(function(){
-                      capGhost.style.transition = 'opacity 20ms linear';
-                      requestAnimationFrame(function(){ capGhost.style.opacity = '0'; });
-                    }, Math.round(ANIM_MS * 0.87));
+                    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+                      capGhost.style.transition='opacity '+Math.round(ANIM_MS*0.92)+'ms ease-in';
+                      capGhost.style.opacity='0';
+                    });});
                     setTimeout(function(){
                       if(capGhost.parentNode) capGhost.parentNode.removeChild(capGhost);
                     }, ANIM_MS + 100);
@@ -1513,7 +1511,7 @@
 
               var loserIcon=(gameLastSan&&gameLastSan.indexOf('#')!==-1)?'#':'⚑';
               mkEffect(loserColor, loserIcon,  '220,38,38',  '#dc2626', 'chessLoserHl',  'chessLoserBadge');
-              mkEffect(winnerColor, '\u2605',   '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
+              mkEffect(winnerColor, '*',   '22,163,74', '#16a34a', 'chessWinnerHl', 'chessWinnerBadge');
             }
 
             /* ── Auto-play ── */
