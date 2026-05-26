@@ -569,13 +569,11 @@
       .chess-board-and-ranks { display: flex; gap: 0; }
       .chess-rank-col { display: flex; flex-direction: column; justify-content: space-around; width: 16px; flex-shrink: 0; }
       .chess-rank-col span { font-size: 0.68rem; opacity: 0.4; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; }
-      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); flex: 1; border: 1px solid rgba(0,0,0,0.14); box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.35); overflow: hidden; border-radius: 2px; background-image: url('https://images.chesscomfiles.com/chess-themes/boards/newspaper/560.png'); background-size: 100% 100%; }
-      .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; font-size: 2.05rem; user-select: none; cursor: default; position: relative; transition: background 0.12s; }
+      .chess-board { display: grid; grid-template-columns: repeat(8,1fr); flex: 1; border: 1px solid rgba(0,0,0,0.14); box-shadow: 0.25px 0.25px 2.5px rgba(0,0,0,0.35); overflow: hidden; border-radius: 2px; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; }
+      .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-sq.light { background: transparent; }
       .chess-sq.dark  { background: transparent; }
-      .chess-sq.hl-from { box-shadow: inset 0 0 0 4px rgba(207,188,40,0.9); background: rgba(207,188,40,0.25) !important; }
-      .chess-sq.hl-to   { background: rgba(207,188,40,0.55) !important; }
-      .chess-piece { line-height: 1; pointer-events: none; text-shadow: 0.5px 1px 2px rgba(0,0,0,0.18); }
+      .chess-piece { line-height: 1; pointer-events: none; }
 
       .chess-sidebar { flex: 1; min-width: 0; max-width: 380px; }
       .chess-meta { font-size: 0.82rem; opacity: 0.62; margin-bottom: 1.1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -583,7 +581,6 @@
       .chess-controls { display: flex; align-items: center; gap: 6px; margin-bottom: 1rem; }
       .chess-ctrl-btn { width: 34px; height: 34px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.25); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; transition: background 0.18s, color 0.18s; }
       .chess-ctrl-btn:hover { background: rgb(var(--black)); color: rgb(var(--primary)); }
-      .chess-pos-label { flex: 1; text-align: center; font-size: 0.8rem; opacity: 0.5; font-family: 'InterRegular', sans-serif; }
 
       .chess-moves-list { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 1.4rem; max-height: 280px; overflow-y: auto; border: 1px solid rgba(0,0,0,0.08); border-radius: 4px; padding: 6px 4px; }
       .chess-move-row { display: flex; align-items: center; width: 100%; }
@@ -1112,7 +1109,6 @@
               <div class="chess-controls">
                 <button class="chess-ctrl-btn" id="chessFirst" title="Start"><i class="ph ph-skip-back"></i></button>
                 <button class="chess-ctrl-btn" id="chessPrev"  title="Previous"><i class="ph ph-caret-left"></i></button>
-                <span class="chess-pos-label" id="chessPosLabel">Start</span>
                 <button class="chess-ctrl-btn" id="chessNext"  title="Next"><i class="ph ph-caret-right"></i></button>
                 <button class="chess-ctrl-btn" id="chessLast"  title="End"><i class="ph ph-skip-forward"></i></button>
               </div>
@@ -1120,13 +1116,6 @@
               <div class="chess-moves-list" id="chessMovesList"></div>
 
               <div class="chess-legend" id="chessLegend"></div>
-
-              <button class="chess-pgn-toggle" id="chessPgnToggle">↑ load new pgn</button>
-              <div class="chess-pgn-panel" id="chessPgnPanel">
-                <textarea class="chess-pgn-area" id="chessPgnArea" placeholder="Paste PGN here (with or without analysis)…"></textarea>
-                <button class="btn btn-outline-secondary chess-load-btn" id="chessPgnLoad">Load</button>
-                <p class="chess-error" id="chessError">Invalid PGN — please check and try again.</p>
-              </div>
 
             </div>
           </div>
@@ -1222,12 +1211,19 @@
             }
 
             /* ── State ── */
-            var allMoves=[],nagMap={},currentMove=-1;
+            var allMoves=[],nagMap={},currentMove=-1,flipped=false;
 
             function loadPGN(raw) {
               var rh=parseHeaders(raw);
               var white=rh['White']||'',black=rh['Black']||'';
               nagMap=extractNAGs(raw);
+
+              /* Determine perspective: if Black won (0-1) show from Black's side;
+                 if White won (1-0) show from White's side; draw → White default.
+                 Since the user pastes their own games, the winner is almost always them. */
+              var result=rh['Result']||'*';
+              flipped=(result==='0-1');
+
               var clean=sanitisePGN(raw,white,black);
               var chess=new Chess();
               if(!chess.load_pgn(clean)){
@@ -1296,25 +1292,36 @@
               currentMove=Math.max(-1,Math.min(idx,allMoves.length-1));
               var chess=new Chess();
               for(var i=0;i<=currentMove;i++)chess.move(allMoves[i].san);
-              renderBoard(chess.board(),currentMove>=0?allMoves[currentMove]:null);
-              updateMoveHL();updatePosLabel();scrollActive();
+              renderBoard(chess.board());
+              updateMoveHL();scrollActive();
             }
 
-            function renderBoard(board,lastMove) {
+            function renderBoard(board) {
               var el=document.getElementById('chessBoard');if(!el)return;
               el.innerHTML='';
-              var fromSq=lastMove?lastMove.from:null,toSq=lastMove?lastMove.to:null;
-              for(var r=0;r<8;r++){
-                for(var c=0;c<8;c++){
+              /* flipped = black at bottom: iterate rows/cols in reverse */
+              for(var ri=0;ri<8;ri++){
+                var r=flipped?(7-ri):ri;
+                for(var ci=0;ci<8;ci++){
+                  var c=flipped?(7-ci):ci;
                   var sq=document.createElement('div');
                   sq.className='chess-sq '+((r+c)%2===1?'light':'dark');
-                  var sn=sqName(r,c);
-                  if(sn===fromSq)sq.classList.add('hl-from');
-                  if(sn===toSq)sq.classList.add('hl-to');
                   var p=board[r][c];
                   if(p)sq.innerHTML=pieceHTML(p);
                   el.appendChild(sq);
                 }
+              }
+              /* update rank labels */
+              var rankEl=document.getElementById('chessRankCol');
+              if(rankEl){
+                var ranks=flipped?['1','2','3','4','5','6','7','8']:['8','7','6','5','4','3','2','1'];
+                rankEl.innerHTML=ranks.map(function(r){return '<span>'+r+'</span>';}).join('');
+              }
+              /* update file labels */
+              var fileEl=document.querySelector('.chess-coord-row');
+              if(fileEl){
+                var files=flipped?['h','g','f','e','d','c','b','a']:['a','b','c','d','e','f','g','h'];
+                fileEl.innerHTML=files.map(function(f){return '<span>'+f+'</span>';}).join('');
               }
             }
 
@@ -1322,12 +1329,6 @@
               document.querySelectorAll('#chessMovesList .chess-move-btn').forEach(function(btn){
                 btn.classList.toggle('active',parseInt(btn.getAttribute('data-idx'))===currentMove);
               });
-            }
-
-            function updatePosLabel() {
-              var el=document.getElementById('chessPosLabel');if(!el)return;
-              if(currentMove<0){el.textContent='Start';return;}
-              el.textContent=(Math.floor(currentMove/2)+1)+(currentMove%2===0?'.':'\u2026');
             }
 
             function scrollActive() {
@@ -1349,23 +1350,6 @@
               if(e.key==='ArrowRight'){e.preventDefault();goTo(currentMove+1);}
               if(e.key==='Home'){e.preventDefault();goTo(-1);}
               if(e.key==='End'){e.preventDefault();goTo(allMoves.length-1);}
-            });
-
-            document.getElementById('chessPgnToggle').addEventListener('click',function(){
-              var panel=document.getElementById('chessPgnPanel');
-              panel.classList.toggle('open');
-              this.textContent=panel.classList.contains('open')?'\u2193 close':'\u2191 load new pgn';
-            });
-
-            document.getElementById('chessPgnLoad').addEventListener('click',function(){
-              var raw=document.getElementById('chessPgnArea').value.trim();
-              var err=document.getElementById('chessError');err.style.display='none';
-              if(!raw)return;
-              if(loadPGN(raw)){
-                document.getElementById('chessPgnPanel').classList.remove('open');
-                document.getElementById('chessPgnToggle').textContent='\u2191 load new pgn';
-                document.getElementById('chessPgnArea').value='';
-              }else{err.style.display='block';}
             });
 
             loadPGN(DEFAULT_PGN);
