@@ -1513,11 +1513,13 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               /* Endgame badge fires when the piece lands (fwdDur), not after a fixed lag */
               if (currentMove === allMoves.length - 1) {
                 animTimeout(function(){ showEndBadge(board); }, fwdDur);
+              } else if (step === -1) {
+                fadeBadge(); /* single back step — nice fade */
               } else {
-                fadeBadge();
+                removeBadge(); /* jump (⏮/⏭/click) — instant off */
               }
 
-              /* Move annotation badge (brilliant, great, mistake, blunder, etc.) */
+              /* Move annotation badge */
               var curAnnot = annotMap[currentMove];
               if (curAnnot && ANNOT_STYLES[curAnnot]) {
                 var bDest = allMoves[currentMove] ? allMoves[currentMove].to : null;
@@ -1528,8 +1530,10 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                     showMoveAnnotation(bDest, curAnnot);
                   }
                 }
-              } else {
+              } else if (step === -1) {
                 fadeMoveAnnotation();
+              } else {
+                removeMoveAnnotation();
               }
             }
 
