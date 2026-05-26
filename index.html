@@ -566,9 +566,9 @@
       .chess-board-outer { position: relative; }
       .chess-board-row { display: flex; align-items: stretch; }
       .chess-rank-col { display: flex; flex-direction: column; justify-content: space-around; width: 14px; flex-shrink: 0; padding-bottom: 1px; }
-      .chess-rank-col span { font-size: 0.62rem; opacity: 0.45; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; }
+      .chess-rank-col span { font-size: 0.62rem; opacity: 0.65; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; }
       .chess-coord-row { display: flex; padding-left: 14px; margin-top: 3px; }
-      .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.45; font-family: 'InterRegular', sans-serif; }
+      .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.65; font-family: 'InterRegular', sans-serif; }
       .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.35; }
       .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.5px 0.5px 4px rgba(0,0,0,0.22); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
@@ -1254,11 +1254,11 @@
             }
 
             function goTo(idx) {
+              /* Bounds guard FIRST — out-of-range calls do nothing (no clearAnim) */
+              if (idx > allMoves.length - 1 || idx < -1) return;
+
               /* Cancel any in-flight animations before starting a new one */
               clearAnim();
-
-              /* Clamp and guard: don't overshoot ends */
-              if (idx > allMoves.length - 1 || idx < -1) return;
               var prevMove = currentMove;
               currentMove = idx;
 
@@ -1303,14 +1303,22 @@
                   var movRect  = rectOf(mv.from);
                   renderBoard(board, [mv.to]);
                   var destRect = rectOf(mv.to);
-                  /* Capture ghost: stays solid, then snaps invisible as piece arrives */
+                  /* Capture ghost: ease-in fade starts immediately — stays visible early,
+                     snaps away quickly as piece arrives. Uses rAF + plain setTimeout
+                     so rapid clicking doesn't prevent the fade from firing. */
                   if (capRect) {
-                    var capGhost = spawnStatic(PIECE_IMGS[capColor+mv.captured], capRect, 9998);
-                    animTimeout(function(){
-                      capGhost.style.transition = 'opacity 8ms linear';
-                      capGhost.style.opacity = '0';
-                    }, Math.round(ANIM_MS * 0.88));
-                    animTimeout(function(){if(capGhost.parentNode)capGhost.parentNode.removeChild(capGhost);}, ANIM_MS+80);
+                    var capGhost = document.createElement('img');
+                    capGhost.src = PIECE_IMGS[capColor+mv.captured];
+                    capGhost.style.cssText = 'position:fixed;pointer-events:none;z-index:9998;'+
+                      'width:'+capRect.width+'px;height:'+capRect.height+'px;'+
+                      'left:'+capRect.left+'px;top:'+capRect.top+'px;';
+                    document.body.appendChild(capGhost);
+                    /* Ease-in: slow at start, very fast at end — mimics piece arriving on top */
+                    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+                      capGhost.style.transition='opacity '+Math.round(ANIM_MS*0.92)+'ms ease-in';
+                      capGhost.style.opacity='0';
+                    });});
+                    setTimeout(function(){if(capGhost.parentNode)capGhost.parentNode.removeChild(capGhost);}, ANIM_MS+100);
                   }
                   spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], movRect, destRect, null, null);
                   revealAfter([mv.to], ANIM_MS);
@@ -1394,14 +1402,23 @@
               requestAnimationFrame(function(){ requestAnimationFrame(function(){
                 g.style.left = toRect.left+'px'; g.style.top = toRect.top+'px';
               });});
-              animTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, ANIM_MS+60);
+              /* Fade ghost out at arrival so the crossfade with the static piece is smooth */
+              animTimeout(function(){
+                g.style.transition='opacity 55ms ease';
+                g.style.opacity='0';
+              }, ANIM_MS);
+              animTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, ANIM_MS+70);
             }
 
             function revealAfter(squares, delay) {
               animTimeout(function(){
                 squares.forEach(function(sq){
                   var el=getSquareEl(sq); if(!el)return;
-                  var img=el.querySelector('img'); if(img)img.style.opacity='';
+                  var img=el.querySelector('img'); if(!img)return;
+                  /* Fade the static piece in to match the ghost fading out */
+                  img.style.transition='opacity 55ms ease';
+                  img.style.opacity='1';
+                  setTimeout(function(){ img.style.transition=''; img.style.opacity=''; }, 65);
                 });
               }, delay);
             }
@@ -1460,16 +1477,18 @@
 
               /* Phase 1: highlight covers king square with icon text in centre.
                  Both start invisible and fade in. */
+              var iconPx = Math.round(kr.width * 0.75);
               var hl=document.createElement('div');
               hl.id='chessKingHl';
               hl.style.cssText='position:absolute;z-index:10;pointer-events:none;'+
                 'left:'+rx+'px;top:'+ry+'px;'+
                 'width:'+kr.width+'px;height:'+kr.height+'px;'+
                 'background:rgba(220,38,38,0);'+
+                'box-shadow:inset 0 0 0 0px rgba(220,38,38,0);'+
                 'display:flex;align-items:center;justify-content:center;'+
-                'font-size:1.6rem;font-weight:700;color:rgba(255,255,255,0);'+
-                'font-family:"InterRegular",sans-serif;'+
-                'transition:background 0.45s ease, color 0.45s ease;';
+                'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
+                'font-family:"InterRegular",sans-serif;line-height:1;'+
+                'transition:background 0.45s ease, color 0.45s ease, box-shadow 0.45s ease;';
               hl.textContent=icon;
               wrapEl.appendChild(hl);
 
@@ -1477,6 +1496,7 @@
               requestAnimationFrame(function(){ requestAnimationFrame(function(){
                 hl.style.background='rgba(220,38,38,0.62)';
                 hl.style.color='rgba(255,255,255,0.95)';
+                hl.style.boxShadow='inset 0 0 0 3px rgba(180,20,20,0.85)';
               });});
 
               /* Badge: small solid circle positioned top-right corner of king square,
@@ -1521,10 +1541,13 @@
             document.getElementById('chessPrev').addEventListener('click',function(){stopPlay();goTo(currentMove-1);});
             document.getElementById('chessPlay').addEventListener('click',togglePlay);
             document.getElementById('chessNext').addEventListener('click',function(){stopPlay();goTo(currentMove+1);});
-            document.getElementById('chessLast').addEventListener('click',function(){stopPlay();goTo(allMoves.length-1);});
+            document.getElementById('chessLast').addEventListener('click',function(){
+              stopPlay();
+              if(currentMove<allMoves.length-1)goTo(allMoves.length-1);
+            });
             document.getElementById('chessFlip').addEventListener('click',function(){
               flipped=!flipped;
-              this.classList.toggle('active',false); /* no persistent active state */
+              this.classList.toggle('active',false);
               var chess=new Chess();
               for(var i=0;i<=currentMove;i++)chess.move(allMoves[i].san);
               renderBoard(chess.board());
@@ -1538,7 +1561,7 @@
               if(e.key==='ArrowRight'){e.preventDefault();stopPlay();goTo(currentMove+1);}
               if(e.key===' '){e.preventDefault();togglePlay();}
               if(e.key==='Home'){e.preventDefault();stopPlay();goTo(-1);}
-              if(e.key==='End'){e.preventDefault();stopPlay();goTo(allMoves.length-1);}
+              if(e.key==='End'){e.preventDefault();stopPlay();if(currentMove<allMoves.length-1)goTo(allMoves.length-1);}
             });
 
             loadPGN(DEFAULT_PGN);
