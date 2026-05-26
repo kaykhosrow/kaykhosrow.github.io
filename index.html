@@ -1576,9 +1576,18 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
               });
             }
             function showMoveHighlight(fromSq, toSq) {
-              removeMoveHighlight();
-              if (fromSq) { var f=getSquareEl(fromSq); if(f) f.classList.add('sq-hl'); }
-              if (toSq)   { var t=getSquareEl(toSq);   if(t) t.classList.add('sq-hl'); }
+              /* Build new set of elements to highlight */
+              var newEls = [];
+              if (fromSq) { var f=getSquareEl(fromSq); if(f) newEls.push(f); }
+              if (toSq)   { var t=getSquareEl(toSq);   if(t) newEls.push(t); }
+              /* Remove only squares NOT in the new set — avoids flicker on shared squares */
+              document.querySelectorAll('#chessBoard .chess-sq.sq-hl').forEach(function(el){
+                if (newEls.indexOf(el) === -1) el.classList.remove('sq-hl');
+              });
+              /* Add only squares not already highlighted */
+              newEls.forEach(function(el){
+                if (!el.classList.contains('sq-hl')) el.classList.add('sq-hl');
+              });
             }
 
             /* ── Ghost helpers ── */
