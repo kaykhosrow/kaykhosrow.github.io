@@ -562,21 +562,21 @@
 
       /* ── Chess section ────────────────────────────────────────────────── */
       .chess-viewer { display: block; }
-      .chess-board-col { width: 520px; }
+      .chess-board-col { width: 650px; }
       .chess-board-outer { position: relative; }
       .chess-board-row { display: flex; align-items: stretch; }
       .chess-rank-col { display: flex; flex-direction: column; justify-content: space-around; width: 14px; flex-shrink: 0; padding-bottom: 1px; }
       .chess-rank-col span { font-size: 0.62rem; opacity: 0.45; text-align: center; font-family: 'InterRegular', sans-serif; line-height: 1; }
       .chess-coord-row { display: flex; padding-left: 14px; margin-top: 3px; }
       .chess-coord-row span { flex: 1; text-align: center; font-size: 0.62rem; opacity: 0.45; font-family: 'InterRegular', sans-serif; }
-      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.5; }
+      .chess-board-bg { position: absolute; inset: 0; border-radius: 2px; pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/GiorgioMegrelli/chess.com-boards-and-pieces/master/boards/newspaper.png'); background-size: 100% 100%; opacity: 0.35; }
       .chess-board { display: grid; grid-template-columns: repeat(8,1fr); width: 100%; position: relative; z-index: 1; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0.5px 0.5px 4px rgba(0,0,0,0.22); overflow: hidden; border-radius: 2px; }
       .chess-sq { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; user-select: none; cursor: default; position: relative; background: transparent; }
       .chess-piece { line-height: 1; pointer-events: none; }
       .chess-ctrl-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-left: 14px; }
-      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; box-sizing: border-box; display: flex; align-items: center; padding: 0 10px; border: 1px solid rgba(0,0,0,0.2); border-radius: 4px; opacity: 0.7; }
+      .chess-game-info { font-size: 0.75rem; font-family: 'InterRegular', sans-serif; letter-spacing: 0.02em; height: 32px; line-height: 32px; box-sizing: border-box; display: inline-flex; align-items: center; padding: 0 10px; border: 1px solid rgba(0,0,0,0.2); border-radius: 4px; opacity: 0.7; white-space: nowrap; }
       .chess-nav-btns { display: flex; gap: 4px; align-items: center; }
-      .chess-bctrl { width: 32px; height: 32px; box-sizing: border-box; border-radius: 4px; border: 1px solid rgba(0,0,0,0.2); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+      .chess-bctrl { width: 32px; height: 32px; line-height: 32px; box-sizing: border-box; border-radius: 4px; border: 1px solid rgba(0,0,0,0.2); background: transparent; color: rgb(var(--black)); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s; }
       .chess-bctrl:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
       .chess-bctrl.active { border-color: rgba(0,0,0,0.45); background: rgba(0,0,0,0.06); }
       .chess-bctrl.active:hover { background: rgb(var(--black)); color: rgb(var(--primary)); border-color: transparent; }
@@ -1236,8 +1236,27 @@
 
             /* ── Animated goTo ── */
             var ANIM_MS = 180; /* piece slide duration */
+            var animTimers = [];
+
+            function clearAnim() {
+              animTimers.forEach(clearTimeout);
+              animTimers = [];
+              /* Kill any in-flight ghost elements so they don't interfere */
+              document.querySelectorAll('.chess-ghost').forEach(function(g){
+                if(g.parentNode) g.parentNode.removeChild(g);
+              });
+            }
+
+            function animTimeout(fn, delay) {
+              var t = setTimeout(fn, delay);
+              animTimers.push(t);
+              return t;
+            }
 
             function goTo(idx) {
+              /* Cancel any in-flight animations before starting a new one */
+              clearAnim();
+
               /* Clamp and guard: don't overshoot ends */
               if (idx > allMoves.length - 1 || idx < -1) return;
               var prevMove = currentMove;
@@ -1284,15 +1303,14 @@
                   var movRect  = rectOf(mv.from);
                   renderBoard(board, [mv.to]);
                   var destRect = rectOf(mv.to);
-                  /* Capture ghost: stays visible, snaps out as piece arrives */
+                  /* Capture ghost: stays solid, then snaps invisible as piece arrives */
                   if (capRect) {
                     var capGhost = spawnStatic(PIECE_IMGS[capColor+mv.captured], capRect, 9998);
-                    var fadeDelay = Math.round(ANIM_MS * 0.85);
-                    setTimeout(function(){
-                      capGhost.style.transition = 'opacity 18ms linear';
-                      capGhost.style.opacity='0';
-                    }, fadeDelay);
-                    setTimeout(function(){if(capGhost.parentNode)capGhost.parentNode.removeChild(capGhost);},ANIM_MS+80);
+                    animTimeout(function(){
+                      capGhost.style.transition = 'opacity 8ms linear';
+                      capGhost.style.opacity = '0';
+                    }, Math.round(ANIM_MS * 0.88));
+                    animTimeout(function(){if(capGhost.parentNode)capGhost.parentNode.removeChild(capGhost);}, ANIM_MS+80);
                   }
                   spawnGhost(PIECE_IMGS[mv.color+(mv.promotion||mv.piece)], movRect, destRect, null, null);
                   revealAfter([mv.to], ANIM_MS);
@@ -1341,7 +1359,7 @@
 
               /* Endgame badge */
               if (currentMove === allMoves.length - 1) {
-                setTimeout(function(){ showEndBadge(board); }, animated ? ANIM_MS + 120 : 80);
+                animTimeout(function(){ showEndBadge(board); }, animated ? ANIM_MS + 120 : 80);
               } else {
                 removeBadge();
               }
@@ -1356,15 +1374,17 @@
             function spawnStatic(src, rect, z) {
               if (!src || !rect) return { style:{}, parentNode:null };
               var g = document.createElement('img'); g.src = src;
+              g.className = 'chess-ghost';
               g.style.cssText = 'position:fixed;pointer-events:none;z-index:'+z+';'+
                 'width:'+rect.width+'px;height:'+rect.height+'px;'+
-                'left:'+rect.left+'px;top:'+rect.top+'px;transition:opacity 0.12s ease;';
+                'left:'+rect.left+'px;top:'+rect.top+'px;';
               document.body.appendChild(g); return g;
             }
 
             function spawnGhost(src, fromRect, toRect) {
               if (!src || !fromRect || !toRect) return;
               var g = document.createElement('img'); g.src = src;
+              g.className = 'chess-ghost';
               g.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;'+
                 'width:'+fromRect.width+'px;height:'+fromRect.height+'px;'+
                 'left:'+fromRect.left+'px;top:'+fromRect.top+'px;'+
@@ -1374,11 +1394,11 @@
               requestAnimationFrame(function(){ requestAnimationFrame(function(){
                 g.style.left = toRect.left+'px'; g.style.top = toRect.top+'px';
               });});
-              setTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, ANIM_MS+60);
+              animTimeout(function(){ if(g.parentNode) g.parentNode.removeChild(g); }, ANIM_MS+60);
             }
 
             function revealAfter(squares, delay) {
-              setTimeout(function(){
+              animTimeout(function(){
                 squares.forEach(function(sq){
                   var el=getSquareEl(sq); if(!el)return;
                   var img=el.querySelector('img'); if(img)img.style.opacity='';
@@ -1436,7 +1456,7 @@
               var kr=kingEl.getBoundingClientRect();
               var wr=wrapEl.getBoundingClientRect();
               var rx=kr.left-wr.left, ry=kr.top-wr.top;
-              var SZ=24; /* badge diameter — small, can overlap board edge */
+              var SZ=30; /* badge diameter */
 
               /* Phase 1: highlight covers king square with icon text in centre.
                  Both start invisible and fade in. */
@@ -1447,7 +1467,7 @@
                 'width:'+kr.width+'px;height:'+kr.height+'px;'+
                 'background:rgba(220,38,38,0);'+
                 'display:flex;align-items:center;justify-content:center;'+
-                'font-size:1.5rem;font-weight:700;color:rgba(255,255,255,0);'+
+                'font-size:1.6rem;font-weight:700;color:rgba(255,255,255,0);'+
                 'font-family:"InterRegular",sans-serif;'+
                 'transition:background 0.45s ease, color 0.45s ease;';
               hl.textContent=icon;
@@ -1455,8 +1475,8 @@
 
               /* Trigger fade-in on next frame */
               requestAnimationFrame(function(){ requestAnimationFrame(function(){
-                hl.style.background='rgba(220,38,38,0.38)';
-                hl.style.color='rgba(255,255,255,0.88)';
+                hl.style.background='rgba(220,38,38,0.62)';
+                hl.style.color='rgba(255,255,255,0.95)';
               });});
 
               /* Badge: small solid circle positioned top-right corner of king square,
@@ -1465,7 +1485,7 @@
               badge.id='chessEndBadge'; badge.className='chess-end-badge';
               badge.textContent=icon;
               badge.style.cssText='position:absolute;z-index:11;pointer-events:none;'+
-                'width:'+SZ+'px;height:'+SZ+'px;font-size:0.7rem;opacity:0;'+
+                'width:'+SZ+'px;height:'+SZ+'px;font-size:0.88rem;opacity:0;'+
                 'left:'+(rx+kr.width-SZ/2)+'px;top:'+(ry-SZ/2)+'px;';
               wrapEl.appendChild(badge);
 
