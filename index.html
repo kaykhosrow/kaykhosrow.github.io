@@ -1570,24 +1570,35 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
             }
 
             /* ── Move square highlights ── */
+            var _hlSquares = []; /* algebraic notation of currently highlighted squares */
+
             function removeMoveHighlight() {
               document.querySelectorAll('#chessBoard .chess-sq.sq-hl').forEach(function(el){
                 el.classList.remove('sq-hl');
               });
+              _hlSquares = [];
             }
             function showMoveHighlight(fromSq, toSq) {
-              /* Build new set of elements to highlight */
-              var newEls = [];
-              if (fromSq) { var f=getSquareEl(fromSq); if(f) newEls.push(f); }
-              if (toSq)   { var t=getSquareEl(toSq);   if(t) newEls.push(t); }
-              /* Remove only squares NOT in the new set — avoids flicker on shared squares */
-              document.querySelectorAll('#chessBoard .chess-sq.sq-hl').forEach(function(el){
-                if (newEls.indexOf(el) === -1) el.classList.remove('sq-hl');
+              var newSqs = [fromSq, toSq].filter(Boolean);
+              /* Remove squares leaving the set */
+              _hlSquares.forEach(function(sq) {
+                if (newSqs.indexOf(sq) === -1) {
+                  var el = getSquareEl(sq); if (el) el.classList.remove('sq-hl');
+                }
               });
-              /* Add only squares not already highlighted */
-              newEls.forEach(function(el){
-                if (!el.classList.contains('sq-hl')) el.classList.add('sq-hl');
+              /* Add squares entering or persisting */
+              newSqs.forEach(function(sq) {
+                var el = getSquareEl(sq); if (!el) return;
+                if (_hlSquares.indexOf(sq) !== -1) {
+                  /* Already highlighted — re-apply instantly, no transition */
+                  el.style.transition = 'none';
+                  el.classList.add('sq-hl');
+                  requestAnimationFrame(function(){ el.style.transition = ''; });
+                } else {
+                  el.classList.add('sq-hl'); /* new — fade in normally */
+                }
               });
+              _hlSquares = newSqs;
             }
 
             /* ── Ghost helpers ── */
