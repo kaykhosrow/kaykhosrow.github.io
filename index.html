@@ -1523,8 +1523,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
                 var bDest = allMoves[currentMove] ? allMoves[currentMove].to : null;
                 if (bDest) {
                   if (step === 1) {
-                    /* Fire exactly when piece lands; short fade-in feels instant */
-                    animTimeout(function(){ showMoveAnnotation(bDest, curAnnot, 150); }, fwdDur);
+                    showMoveAnnotation(bDest, curAnnot, fwdDur);
                   } else {
                     showMoveAnnotation(bDest, curAnnot, 0);
                   }
@@ -1642,7 +1641,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
 
               var hl=document.createElement('div');
               hl.id='chessMoveAnnotHl';
-              hl.style.cssText='position:absolute;inset:0;z-index:10;pointer-events:none;'+
+              hl.style.cssText='position:absolute;inset:0;z-index:10001;pointer-events:none;'+
                 'background:rgba('+st.rgb+',0);'+
                 'display:flex;align-items:center;justify-content:center;'+
                 'font-size:'+iconPx+'px;font-weight:900;color:rgba(255,255,255,0);'+
