@@ -572,10 +572,7 @@
       }
 
       /* ── Chess section ────────────────────────────────────────────────── */
-      .chess-viewer { display: flex; align-items: flex-start; gap: 30px; }
-      .chess-side-bar { width: 42px; align-self: stretch; border: 2px solid rgba(0,0,0,0.25); border-radius: 4px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; overflow: hidden; flex-shrink: 0; padding: 8px 0; }
-      .chess-side-text { writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'InterRegular', sans-serif; font-size: 0.72rem; opacity: 0.65; white-space: nowrap; color: rgb(var(--black)); letter-spacing: 0.06em; }
-      .chess-side-text a { color: inherit; text-decoration: underline; text-underline-offset: 2px; opacity: 1; }
+      .chess-viewer { display: block; }
       .chess-board-col { width: 650px; }
       .chess-board-outer { position: relative; }
       .chess-board-row { display: flex; align-items: stretch; gap: 6px; }
@@ -1109,9 +1106,6 @@
                   <button class="chess-bctrl" id="chessFlip"  title="Flip board"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" style="opacity:0.72;transition:opacity 0.15s;"><path fill="currentColor" d="M5,6.09v12l-1.29-1.3a1,1,0,0,0-1.42,1.42l3,3a1,1,0,0,0,1.42,0l3-3a1,1,0,0,0,0-1.42,1,1,0,0,0-1.42,0L7,18.09v-12A1.56,1.56,0,0,1,8.53,4.5H11a1,1,0,0,0,0-2H8.53A3.56,3.56,0,0,0,5,6.09Z"/><path fill="currentColor" d="M14.29,5.79a1,1,0,0,0,1.42,1.42L17,5.91v12a1.56,1.56,0,0,1-1.53,1.59H13a1,1,0,0,0,0,2h2.47A3.56,3.56,0,0,0,19,17.91v-12l1.29,1.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42l-3-3a1,1,0,0,0-1.42,0Z"/></svg></button>
                 </div>
               </div>
-            </div>
-            <div class="chess-side-bar">
-              <span class="chess-side-text">The UI was developed by me. Chess pieces, board, and sound assets are sourced from <a href="https://www.chess.com" target="_blank" rel="noopener">chess.com</a>.</span>
             </div>
           </div>
 
