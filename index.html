@@ -699,7 +699,7 @@
               <div class="settings-divider"></div>
               <!-- Toggle swatches -->
               <button class="lattice-swatch setting-swatch active" id="latticeToggleBtn" title="Toggle Lattice"></button>
-              <button class="grain-swatch setting-swatch" id="grainToggleBtn" title="Toggle Grain"></button>
+              <button class="grain-swatch setting-swatch active" id="grainToggleBtn" title="Toggle Grain"></button>
             </div>
             <button class="settings-gear-btn" id="settingsGearBtn">
               <i class="ph ph-gear-six"></i>
@@ -2086,7 +2086,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
       </div>
     </main>
 
-    <input type="checkbox" id="grained" class="grained-checkbox" style="display:none" />
+    <input type="checkbox" id="grained" class="grained-checkbox" style="display:none" checked />
     <button class="ltr" style="display:none" aria-hidden="true"></button>
     <button class="rtl" style="display:none" aria-hidden="true"></button>
 
@@ -2095,6 +2095,12 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
         this.classList.toggle('open');
         document.getElementById('settingsOptions').classList.toggle('open');
       });
+
+      <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.grained-checkbox').dispatchEvent(new Event('change'));
+  });
+</script>
 
       window.addEventListener('scroll', function () {
         var gearBtn = document.getElementById('settingsGearBtn');
