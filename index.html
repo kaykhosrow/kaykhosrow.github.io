@@ -307,6 +307,8 @@
       .vid-track { display: flex; will-change: transform; }
       .vid-slide { flex: 0 0 calc(100% / 2); box-sizing: border-box; padding: 0 8px; }
       .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border: 3px solid #000; border-radius: 12px; }
+      .vid-slide-wide { flex: 0 0 auto; }
+      .vid-wrapper-wide { padding-bottom: 75% !important; /* fallback ratio before JS resizes it */ width: auto; height: 0; }
       .vid-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; }
       .vid-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 72px; height: 72px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' stroke='white' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; border: 3px solid #000; transition: background-color 0.2s; }
       .vid-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
@@ -982,6 +984,7 @@
                 <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div></div></div>
                 <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div></div></div>
                 <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div></div></div>
+                <div class="vid-slide vid-slide-wide" data-ratio="1.3333"><div class="vid-wrapper vid-wrapper-wide"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/kvPEqAVZp-g/maxresdefault.jpg)" data-id="kvPEqAVZp-g"></div></div></div>
               </div>
             </div>
           </div>
@@ -995,21 +998,53 @@
           (function() {
             var track   = document.getElementById('vidTrack');
             var dotsEl  = document.getElementById('vidDots');
-            var total   = track.querySelectorAll('.vid-slide').length;
-            var visible = 2;
-            var maxIdx  = total - visible;
             var current = 0;
-            var dots    = [];
 
-            for (var i = 0; i <= maxIdx; i++) {
-              var d = document.createElement('div');
-              d.className = 'vid-dot';
-              (function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
-              dotsEl.appendChild(d);
-              dots.push(d);
+            function sizeWideWrappers() {
+              var ref = track.querySelector('.vid-slide:not(.vid-slide-wide) .vid-wrapper');
+              if (!ref) return;
+              var h = ref.getBoundingClientRect().height;
+              track.querySelectorAll('.vid-wrapper-wide').forEach(function(w) {
+                var ratio = parseFloat(w.closest('.vid-slide').getAttribute('data-ratio')) || 1;
+                w.style.height = h + 'px';
+                w.style.width  = (h * ratio) + 'px';
+              });
             }
 
-            function sw() { return track.parentElement.offsetWidth / visible; }
+            function slideWidths() {
+              return Array.prototype.map.call(track.querySelectorAll('.vid-slide'), function(s) {
+                return s.getBoundingClientRect().width;
+              });
+            }
+
+            function maxIndex() {
+              var w = slideWidths(), contW = track.parentElement.offsetWidth;
+              var sum = 0, idx = w.length - 1;
+              for (var i = w.length - 1; i >= 0; i--) {
+                sum += w[i];
+                if (sum <= contW) idx = i; else break;
+              }
+              return Math.max(0, idx);
+            }
+
+            function offsetFor(idx) {
+              var w = slideWidths(), sum = 0;
+              for (var i = 0; i < idx; i++) sum += w[i];
+              var total  = w.reduce(function(a,b){ return a+b; }, 0);
+              var maxOff = Math.max(0, total - track.parentElement.offsetWidth);
+              return Math.min(sum, maxOff);
+            }
+
+            function buildDots() {
+              dotsEl.innerHTML = '';
+              var mIdx = maxIndex();
+              for (var i = 0; i <= mIdx; i++) {
+                var d = document.createElement('div');
+                d.className = 'vid-dot';
+                (function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
+                dotsEl.appendChild(d);
+              }
+            }
 
             function stopAllVideos() {
               track.querySelectorAll('iframe').forEach(function(f) {
@@ -1018,10 +1053,11 @@
             }
 
             function goTo(idx) {
-              current = Math.max(0, Math.min(idx, maxIdx));
+              var mIdx = maxIndex();
+              current = Math.max(0, Math.min(idx, mIdx));
               track.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
-              track.style.transform  = 'translateX(-' + (current * sw()) + 'px)';
-              dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
+              track.style.transform  = 'translateX(-' + offsetFor(current) + 'px)';
+              Array.prototype.forEach.call(dotsEl.children, function(d, i) { d.classList.toggle('active', i === current); });
             }
 
             track.addEventListener('click', function(e) {
@@ -1050,7 +1086,15 @@
 
             document.getElementById('vidPrev').addEventListener('click', function() { stopAllVideos(); goTo(current - 1); });
             document.getElementById('vidNext').addEventListener('click', function() { stopAllVideos(); goTo(current + 1); });
-            window.addEventListener('resize', function() { goTo(current); });
+
+            window.addEventListener('resize', function() {
+              sizeWideWrappers();
+              buildDots();
+              goTo(current);
+            });
+
+            sizeWideWrappers();
+            buildDots();
             goTo(0);
           })();
           </script>
