@@ -980,11 +980,11 @@
           <div class="vid-gallery-wrap">
             <div class="vid-gallery">
               <div class="vid-track" id="vidTrack">
+                <div class="vid-slide vid-slide-wide" data-ratio="1.3333"><div class="vid-wrapper vid-wrapper-wide"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/kvPEqAVZp-g/maxresdefault.jpg)" data-id="kvPEqAVZp-g"></div></div></div>
                 <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg)" data-id="SvZ_sF7gamI"></div></div></div>
                 <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div></div></div>
                 <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div></div></div>
                 <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div></div></div>
-                <div class="vid-slide vid-slide-wide" data-ratio="1.3333"><div class="vid-wrapper vid-wrapper-wide"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/kvPEqAVZp-g/maxresdefault.jpg)" data-id="kvPEqAVZp-g"></div></div></div>
               </div>
             </div>
           </div>
@@ -1077,6 +1077,32 @@
               Array.prototype.forEach.call(dotsEl.children, function(d, i) { d.classList.toggle('active', i === current); });
             }
 
+            /* Force max quality reliably: rather than guessing with fixed
+               delays, listen for the player's own onReady / onStateChange
+               signals (sent via postMessage once enablejsapi is on) and
+               re-issue the quality command each time — including whenever
+               playback (re)starts, since YouTube can silently downgrade
+               quality on state changes. Registered once, applies to every
+               embedded video in the gallery automatically. */
+            function forceMaxQuality(win) {
+              try {
+                win.postMessage(JSON.stringify({event:'command', func:'setPlaybackQualityRange', args:['hd2160','hd2160']}), '*');
+                win.postMessage(JSON.stringify({event:'command', func:'setPlaybackQuality', args:['hd2160']}), '*');
+              } catch (e) {}
+            }
+
+            window.addEventListener('message', function(e) {
+              if (typeof e.data !== 'string' || !e.source) return;
+              var data;
+              try { data = JSON.parse(e.data); } catch (err) { return; }
+              if (!data) return;
+              if (data.event === 'onReady') {
+                forceMaxQuality(e.source);
+              } else if (data.event === 'infoDelivery' && data.info && data.info.playerState === 1) {
+                forceMaxQuality(e.source);
+              }
+            });
+
             track.addEventListener('click', function(e) {
               var thumb = e.target.closest('.vid-thumb');
               if (!thumb) return;
@@ -1096,14 +1122,12 @@
               }
               iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160&hd=1';
               iframe.addEventListener('load', function() {
-                var setQ = function() {
-                  try {
-                    iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'setPlaybackQualityRange',args:['hd2160','hd2160']}), '*');
-                    iframe.contentWindow.postMessage(JSON.stringify({event:'command',func:'setPlaybackQuality',args:['hd2160']}), '*');
-                  } catch(e) {}
-                };
-                setTimeout(setQ, 800);
-                setTimeout(setQ, 2500);
+                /* enablejsapi requires a "listening" handshake before the
+                   player will emit onReady/onStateChange events back to us */
+                try { iframe.contentWindow.postMessage(JSON.stringify({event:'listening', id: id}), '*'); } catch (e) {}
+                /* Fallback nudges in case the handshake or events are missed */
+                setTimeout(function(){ forceMaxQuality(iframe.contentWindow); }, 800);
+                setTimeout(function(){ forceMaxQuality(iframe.contentWindow); }, 2500);
               });
               wrapper.appendChild(iframe);
             });
