@@ -1004,20 +1004,27 @@
               var ref = track.querySelector('.vid-slide:not(.vid-slide-wide) .vid-wrapper');
               if (!ref) return;
               var h = ref.getBoundingClientRect().height;
-              /* Never let a wide slide be wider than the gallery itself, or its
-                 right edge gets clipped by the track's overflow:hidden. Cap the
-                 width to the container (minus the slide's own 16px padding) and
-                 shrink height to match, preserving the video's own aspect ratio. */
+              /* Height always matches the shorts. Width is capped to the
+                 container so the box itself never overflows the track (which
+                 would otherwise get clipped by overflow:hidden). Because a
+                 capped width makes the box narrower (relative to height) than
+                 the video's real aspect ratio, the thumb/iframe inside is
+                 sized to the video's true ratio and letterboxed (centered,
+                 black bars top/bottom) rather than stretched or cropped. */
               var maxW = track.parentElement.offsetWidth - 16;
               track.querySelectorAll('.vid-wrapper-wide').forEach(function(w) {
                 var ratio = parseFloat(w.closest('.vid-slide').getAttribute('data-ratio')) || 1;
-                var targetH = h, targetW = h * ratio;
-                if (targetW > maxW) {
-                  targetW = maxW;
-                  targetH = maxW / ratio;
+                var width = Math.min(h * ratio, maxW);
+                var innerH = width / ratio;
+                w.style.height = h + 'px';
+                w.style.width  = width + 'px';
+                w.style.background = '#000';
+                var inner = w.querySelector('.vid-thumb, iframe');
+                if (inner) {
+                  inner.style.top    = '50%';
+                  inner.style.height = innerH + 'px';
+                  inner.style.transform = 'translateY(-50%)';
                 }
-                w.style.height = targetH + 'px';
-                w.style.width  = targetW + 'px';
               });
             }
 
@@ -1076,10 +1083,17 @@
               var wrapper = thumb.parentNode;
               var id = thumb.getAttribute('data-id');
               thumb.style.display = 'none';
+              var isWide = wrapper.classList.contains('vid-wrapper-wide');
               var iframe = document.createElement('iframe');
               iframe.setAttribute('allowfullscreen','');
               iframe.setAttribute('allow','autoplay');
-              iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';
+              if (isWide) {
+                var ratio = parseFloat(wrapper.closest('.vid-slide').getAttribute('data-ratio')) || 1;
+                var innerH = wrapper.clientWidth / ratio;
+                iframe.style.cssText = 'position:absolute;left:0;width:100%;border:0;z-index:1;top:50%;height:' + innerH + 'px;transform:translateY(-50%);';
+              } else {
+                iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';
+              }
               iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160&hd=1';
               iframe.addEventListener('load', function() {
                 var setQ = function() {
