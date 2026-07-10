@@ -1004,10 +1004,20 @@
               var ref = track.querySelector('.vid-slide:not(.vid-slide-wide) .vid-wrapper');
               if (!ref) return;
               var h = ref.getBoundingClientRect().height;
+              /* Never let a wide slide be wider than the gallery itself, or its
+                 right edge gets clipped by the track's overflow:hidden. Cap the
+                 width to the container (minus the slide's own 16px padding) and
+                 shrink height to match, preserving the video's own aspect ratio. */
+              var maxW = track.parentElement.offsetWidth - 16;
               track.querySelectorAll('.vid-wrapper-wide').forEach(function(w) {
                 var ratio = parseFloat(w.closest('.vid-slide').getAttribute('data-ratio')) || 1;
-                w.style.height = h + 'px';
-                w.style.width  = (h * ratio) + 'px';
+                var targetH = h, targetW = h * ratio;
+                if (targetW > maxW) {
+                  targetW = maxW;
+                  targetH = maxW / ratio;
+                }
+                w.style.height = targetH + 'px';
+                w.style.width  = targetW + 'px';
               });
             }
 
