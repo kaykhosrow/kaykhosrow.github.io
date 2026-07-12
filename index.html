@@ -599,11 +599,6 @@
       .chess-end-badge { z-index: 10; pointer-events: none; border-radius: 50%; background: #dc2626; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-family: 'InterRegular', sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: opacity 0.4s ease; }
     </style>
     <link rel="preload" as="image" href="https://raw.githubusercontent.com/kaykhosrow/kaykhosrow.github.io/main/images/academic.o.png">
-    <link rel="preload" as="image" href="https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg">
-    <link rel="preload" as="image" href="https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg">
-    <link rel="preload" as="image" href="https://img.youtube.com/vi/SbmUKkXXYNk/maxresdefault.jpg">
-    <link rel="preload" as="image" href="https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg">
-    <link rel="preload" as="image" href="https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg">
 
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="images/o.png">
@@ -980,14 +975,7 @@
 
           <div class="vid-gallery-wrap">
             <div class="vid-gallery">
-              <div class="vid-track" id="vidTrack">
-                <div class="vid-slide vid-slide-wide" data-ratio="1.3333"><div class="vid-wrapper vid-wrapper-wide"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/kvPEqAVZp-g/maxresdefault.jpg)" data-id="kvPEqAVZp-g"></div></div></div>
-                <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/SvZ_sF7gamI/maxresdefault.jpg)" data-id="SvZ_sF7gamI"></div></div></div>
-                <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/J0JZivXHkH8/maxresdefault.jpg)" data-id="J0JZivXHkH8"></div></div></div>
-                <div class="vid-slide vid-slide-wide" data-ratio="1.3333"><div class="vid-wrapper vid-wrapper-wide"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/SbmUKkXXYNk/maxresdefault.jpg)" data-id="SbmUKkXXYNk"></div></div></div>
-                <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/DLA1bcUDg2g/maxresdefault.jpg)" data-id="DLA1bcUDg2g"></div></div></div>
-                <div class="vid-slide"><div class="vid-wrapper"><div class="vid-thumb" style="background-image:url(https://img.youtube.com/vi/7g1UTm1c4EA/maxresdefault.jpg)" data-id="7g1UTm1c4EA"></div></div></div>
-              </div>
+              <div class="vid-track" id="vidTrack"></div>
             </div>
           </div>
           <div class="vid-bottom">
@@ -1001,6 +989,67 @@
             var track   = document.getElementById('vidTrack');
             var dotsEl  = document.getElementById('vidDots');
             var current = 0;
+
+            /* ============================================================
+               GALLERY VIDEO LIST — the only thing you need to touch to
+               add, remove, or reorder videos.
+
+               Each entry needs a YouTube id and a "type":
+                 short  → standard 9:16 portrait short (two per row)
+                 square → 1:1, takes the whole row, letterboxed
+                 wide   → 16:9 landscape, takes the whole row, letterboxed
+
+               For anything that isn't a clean 9:16 / 1:1 / 16:9 (e.g. a
+               4:3 video), use type "wide" and add a "ratio" override
+               (width / height as a decimal or fraction) — everything
+               else (sizing, capping, letterboxing, paging, preload
+               hints) is figured out automatically from this list.
+            ============================================================ */
+            var GALLERY_VIDEOS = [
+              { id: 'kvPEqAVZp-g', type: 'wide',  ratio: 4/3 },
+              { id: 'SvZ_sF7gamI', type: 'short' },
+              { id: 'J0JZivXHkH8', type: 'short' },
+              { id: 'SbmUKkXXYNk', type: 'wide',  ratio: 4/3 },
+              { id: 'DLA1bcUDg2g', type: 'short' },
+              { id: '7g1UTm1c4EA', type: 'short' }
+            ];
+
+            var TYPE_DEFAULTS = {
+              short:  { ratio: 9/16 },
+              square: { ratio: 1 },
+              wide:   { ratio: 16/9 }
+            };
+
+            function buildSlides() {
+              track.innerHTML = '';
+              GALLERY_VIDEOS.forEach(function(v) {
+                var def    = TYPE_DEFAULTS[v.type] || TYPE_DEFAULTS.short;
+                var ratio  = v.ratio || def.ratio;
+                var isWide = v.type !== 'short'; // anything but a standard short gets the full-row/letterbox treatment
+
+                var slide = document.createElement('div');
+                slide.className = 'vid-slide' + (isWide ? ' vid-slide-wide' : '');
+                if (isWide) slide.setAttribute('data-ratio', ratio);
+
+                var wrapper = document.createElement('div');
+                wrapper.className = 'vid-wrapper' + (isWide ? ' vid-wrapper-wide' : '');
+
+                var thumb = document.createElement('div');
+                thumb.className = 'vid-thumb';
+                thumb.style.backgroundImage = 'url(https://img.youtube.com/vi/' + v.id + '/maxresdefault.jpg)';
+                thumb.setAttribute('data-id', v.id);
+
+                wrapper.appendChild(thumb);
+                slide.appendChild(wrapper);
+                track.appendChild(slide);
+
+                var preload = document.createElement('link');
+                preload.rel  = 'preload';
+                preload.as   = 'image';
+                preload.href = 'https://img.youtube.com/vi/' + v.id + '/maxresdefault.jpg';
+                document.head.appendChild(preload);
+              });
+            }
 
             function sizeWideWrappers() {
               var ref = track.querySelector('.vid-slide:not(.vid-slide-wide) .vid-wrapper');
@@ -1036,28 +1085,49 @@
               });
             }
 
-            function maxIndex() {
-              var w = slideWidths(), contW = track.parentElement.offsetWidth;
-              var sum = 0, idx = w.length - 1;
-              for (var i = w.length - 1; i >= 0; i--) {
-                sum += w[i];
-                if (sum <= contW) idx = i; else break;
+            /* ── Paged navigation ──────────────────────────────────────
+               Slides are grouped into "pages" that each fill the visible
+               width — normally two shorts, or one wide/square video
+               alone. Next/Prev/dots always move a full page, so a wide
+               video is always either fully in view or fully out of it,
+               never half-revealed the way per-slide stepping could
+               leave it. ──────────────────────────────────────────────── */
+            var pages = [];
+
+            function buildPages() {
+              var widths = slideWidths();
+              var contW  = track.parentElement.offsetWidth;
+              var result = [];
+              var i = 0, cum = 0;
+              while (i < widths.length) {
+                var pageOffset = cum;
+                var pageWidth  = 0;
+                while (i < widths.length && (pageWidth === 0 || pageWidth + widths[i] <= contW + 0.5)) {
+                  pageWidth += widths[i];
+                  cum += widths[i];
+                  i++;
+                }
+                result.push({ offset: pageOffset });
               }
-              return Math.max(0, idx);
+              return result;
             }
 
+            function refreshPages() { pages = buildPages(); }
+
+            function maxIndex() { return Math.max(0, pages.length - 1); }
+
             function offsetFor(idx) {
-              var w = slideWidths(), sum = 0;
-              for (var i = 0; i < idx; i++) sum += w[i];
-              var total  = w.reduce(function(a,b){ return a+b; }, 0);
-              var maxOff = Math.max(0, total - track.parentElement.offsetWidth);
-              return Math.min(sum, maxOff);
+              var widths = slideWidths();
+              var total  = widths.reduce(function(a,b){ return a+b; }, 0);
+              var contW  = track.parentElement.offsetWidth;
+              var maxOff = Math.max(0, total - contW);
+              var raw = pages[idx] ? pages[idx].offset : 0;
+              return Math.min(raw, maxOff);
             }
 
             function buildDots() {
               dotsEl.innerHTML = '';
-              var mIdx = maxIndex();
-              for (var i = 0; i <= mIdx; i++) {
+              for (var i = 0; i <= maxIndex(); i++) {
                 var d = document.createElement('div');
                 d.className = 'vid-dot';
                 (function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
@@ -1072,8 +1142,7 @@
             }
 
             function goTo(idx) {
-              var mIdx = maxIndex();
-              current = Math.max(0, Math.min(idx, mIdx));
+              current = Math.max(0, Math.min(idx, maxIndex()));
               track.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
               track.style.transform  = 'translateX(-' + offsetFor(current) + 'px)';
               Array.prototype.forEach.call(dotsEl.children, function(d, i) { d.classList.toggle('active', i === current); });
@@ -1139,11 +1208,14 @@
 
             window.addEventListener('resize', function() {
               sizeWideWrappers();
+              refreshPages();
               buildDots();
               goTo(current);
             });
 
+            buildSlides();
             sizeWideWrappers();
+            refreshPages();
             buildDots();
             goTo(0);
           })();
