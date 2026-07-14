@@ -4,6 +4,25 @@
     <script>
       history.scrollRestoration = 'manual';
 
+      /* If we're about to land on a specific section (either via the
+         sessionStorage flag set by conferences.html/code.html's Back
+         link, or a legacy #hash deep link), hide the page before first
+         paint so the browser never shows the top of the page at all —
+         we position everything while invisible, then reveal it already
+         in place. This runs synchronously, before any CSS/layout, so it
+         beats the browser's first paint. A safety-net timeout guarantees
+         the page always becomes visible even if something below fails. */
+      var pendingSectionId = null;
+      try { pendingSectionId = sessionStorage.getItem('scrollToSection'); } catch (e) {}
+      var hasPendingScroll = !!pendingSectionId || !!location.hash;
+      if (hasPendingScroll) {
+        document.documentElement.style.visibility = 'hidden';
+        setTimeout(revealPage, 2500); // safety net — never stay hidden forever
+      }
+      function revealPage() {
+        document.documentElement.style.visibility = '';
+      }
+
       /* Some site frameworks (e.g. the bundled assets/js/app.js) sync the
          URL hash to whatever section is in view using history.pushState/
          replaceState directly, which does NOT fire a 'hashchange' event —
@@ -38,6 +57,7 @@
             storedTarget.scrollIntoView();
             storedRoot.style.scrollBehavior = storedPrevBehavior;
           }
+          revealPage();
           stripHashSoon();
           return;
         }
@@ -62,10 +82,12 @@
             root.style.scrollBehavior = prevScrollBehavior;
           }
           history.replaceState(null, '', location.pathname);
+          revealPage();
           stripHashSoon();
         } else {
           history.replaceState(null, '', location.pathname);
           window.scrollTo(0, 0);
+          revealPage();
         }
       });
 
