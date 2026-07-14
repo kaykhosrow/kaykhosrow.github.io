@@ -4,6 +4,20 @@
     <script>
       history.scrollRestoration = 'manual';
 
+      /* Some site frameworks (e.g. the bundled assets/js/app.js) sync the
+         URL hash to whatever section is in view using history.pushState/
+         replaceState directly, which does NOT fire a 'hashchange' event —
+         so the listener below alone can miss it. Re-checking a few times
+         shortly after load catches and strips any hash added this way,
+         regardless of the mechanism used to add it. */
+      function stripHashSoon() {
+        [0, 50, 150, 400, 800, 1500].forEach(function (delay) {
+          setTimeout(function () {
+            if (location.hash) history.replaceState(null, '', location.pathname);
+          }, delay);
+        });
+      }
+
       window.addEventListener('hashchange', function() {
         history.replaceState(null, '', location.pathname);
       });
@@ -24,6 +38,7 @@
             storedTarget.scrollIntoView();
             storedRoot.style.scrollBehavior = storedPrevBehavior;
           }
+          stripHashSoon();
           return;
         }
 
@@ -47,6 +62,7 @@
             root.style.scrollBehavior = prevScrollBehavior;
           }
           history.replaceState(null, '', location.pathname);
+          stripHashSoon();
         } else {
           history.replaceState(null, '', location.pathname);
           window.scrollTo(0, 0);
@@ -866,7 +882,7 @@
                 <!-- AUTO:conferences:start -->
                 <div class="experience-item">
                   <h5><strong>2026</strong></h5>
-                  <p>Scheduled: Annual Conference of the Royal Economic Society (RES); International Conference on Applied Theory, Macro and Empirical Finance (AMEF); Midwest Macroeconomics Meeting; Annual Meeting of the European Economics and Finance Society (EEFS).</p>
+                  <p>Scheduled: Annual Conference of the Money, Macro and Finance (MMF) Society; Annual Conference of the Royal Economic Society (RES); International Conference on Applied Theory, Macro and Empirical Finance (AMEF); Midwest Macroeconomics Meeting; Annual Meeting of the European Economics and Finance Society (EEFS).</p>
                 </div>
                 <div class="experience-item">
                   <h5><strong>2024</strong></h5>
