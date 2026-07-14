@@ -4,25 +4,6 @@
     <script>
       history.scrollRestoration = 'manual';
 
-      /* If we're about to land on a specific section (either via the
-         sessionStorage flag set by conferences.html/code.html's Back
-         link, or a legacy #hash deep link), hide the page before first
-         paint so the browser never shows the top of the page at all —
-         we position everything while invisible, then reveal it already
-         in place. This runs synchronously, before any CSS/layout, so it
-         beats the browser's first paint. A safety-net timeout guarantees
-         the page always becomes visible even if something below fails. */
-      var pendingSectionId = null;
-      try { pendingSectionId = sessionStorage.getItem('scrollToSection'); } catch (e) {}
-      var hasPendingScroll = !!pendingSectionId || !!location.hash;
-      if (hasPendingScroll) {
-        document.documentElement.style.visibility = 'hidden';
-        setTimeout(revealPage, 8000); // safety net — never stay hidden forever, even on a slow connection
-      }
-      function revealPage() {
-        document.documentElement.style.visibility = '';
-      }
-
       /* Some site frameworks (e.g. the bundled assets/js/app.js) sync the
          URL hash to whatever section is in view using history.pushState/
          replaceState directly, which does NOT fire a 'hashchange' event —
@@ -41,47 +22,12 @@
         history.replaceState(null, '', location.pathname);
       });
 
-      /* Position the scroll only once the page is fully ready — see
-         whenFullyReady() below, which waits for both full resource load
-         AND webfont loading to finish, so the target section's position
-         is calculated from its final, true layout rather than a
-         fallback-font approximation that could shift by a few pixels
-         once the real fonts swap in. */
-      var positioned = false;
-
-      /* Something else in the page's own bundled scripts (most likely
-         GSAP's ScrollTrigger — referenced elsewhere via
-         ST.clearScrollMemory() — commonly does a "refresh" pass on load
-         that temporarily resets scroll to the top to remeasure pinned/
-         triggered elements) can reset the scroll position AFTER we've
-         already positioned it, which is what causes the visible jump
-         back to the top even though our own code runs correctly. Since
-         we can't edit that bundled script, this keeps re-snapping the
-         scroll back to the target for a few seconds afterward — any
-         correction here is instant (no animation), so it's imperceptible
-         even if it fires. */
-      function holdScrollPosition(target) {
-        if (!target) return;
-        [50, 150, 300, 600, 1000, 1800, 2800, 4000].forEach(function (delay) {
-          setTimeout(function () {
-            var rect = target.getBoundingClientRect();
-            if (Math.abs(rect.top) > 30) {
-              var root = document.documentElement;
-              var prev = root.style.scrollBehavior;
-              root.style.scrollBehavior = 'auto';
-              target.scrollIntoView();
-              root.style.scrollBehavior = prev;
-            }
-          }, delay);
-        });
-      }
-
-      function positionPage() {
-        if (positioned) return;
-        positioned = true;
-
-        var storedSection = null;
-        try { storedSection = sessionStorage.getItem('scrollToSection'); } catch (e) {}
+      window.addEventListener('pageshow', function() {
+        /* Preferred path: the previous page (e.g. conferences.html,
+           code.html) stored which section to land on via sessionStorage
+           instead of a URL fragment, so the address bar stays clean
+           (just https://kaykhosrow.github.io/) with no #hash at all. */
+        var storedSection = sessionStorage.getItem('scrollToSection');
         if (storedSection) {
           sessionStorage.removeItem('scrollToSection');
           var storedTarget = document.getElementById(storedSection);
@@ -92,9 +38,7 @@
             storedTarget.scrollIntoView();
             storedRoot.style.scrollBehavior = storedPrevBehavior;
           }
-          revealPage();
           stripHashSoon();
-          holdScrollPosition(storedTarget);
           return;
         }
 
@@ -105,8 +49,12 @@
           var target = document.querySelector(location.hash);
           if (target) {
             /* Force an instant jump here regardless of any global
-               scroll-behavior:smooth CSS, so it's a snap into place
-               rather than an animated glide. */
+               scroll-behavior:smooth CSS — this runs after the page has
+               already settled (fonts/images loaded), so an animated
+               scroll would visibly glide from the top down to the
+               section. Temporarily overriding scroll-behavior makes the
+               correction snap into place instead, so the page appears
+               to simply load already at that position. */
             var root = document.documentElement;
             var prevScrollBehavior = root.style.scrollBehavior;
             root.style.scrollBehavior = 'auto';
@@ -114,56 +62,10 @@
             root.style.scrollBehavior = prevScrollBehavior;
           }
           history.replaceState(null, '', location.pathname);
-          revealPage();
           stripHashSoon();
-          holdScrollPosition(target);
         } else {
           history.replaceState(null, '', location.pathname);
           window.scrollTo(0, 0);
-          revealPage();
-        }
-      }
-
-      /* Waits for both: (1) the page's full load event (images and other
-         resources settled) and (2) document.fonts.ready (the custom
-         @font-face fonts have actually finished loading and applied) —
-         whichever finishes last. Only once both are true is layout
-         guaranteed final, so the scroll position will be exact. */
-      function whenFullyReady(cb) {
-        var loaded = document.readyState === 'complete';
-        var fontsReady = !(window.document && document.fonts && document.fonts.ready);
-        function tryRun() { if (loaded && fontsReady) cb(); }
-
-        if (!loaded) {
-          window.addEventListener('load', function () { loaded = true; tryRun(); });
-        }
-        if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(function () { fontsReady = true; tryRun(); });
-        }
-        tryRun();
-      }
-
-      whenFullyReady(function () {
-        /* Let GSAP's ScrollTrigger do its own refresh (which can
-           momentarily reset scroll to the top while it remeasures
-           pinned/triggered elements) BEFORE we position and reveal —
-           so if it's going to jump the scroll around, it does that
-           while the page is still hidden, not after. */
-        try {
-          var ST = window.gsap && window.gsap.core && window.gsap.core.globals().ScrollTrigger;
-          if (ST && ST.refresh) ST.refresh();
-        } catch (e) {}
-        positionPage();
-      });
-
-      /* Fallback for back-forward-cache restores: the readiness checks
-         above won't re-fire on a bfcache restore, only pageshow does —
-         with event.persisted set to true. By that point everything is
-         already loaded, so this runs positionPage immediately. */
-      window.addEventListener('pageshow', function(e) {
-        if (e.persisted) {
-          positioned = false;
-          positionPage();
         }
       });
 
@@ -201,17 +103,6 @@
     
     <link href="assets/css/index.css" rel="stylesheet">
     <style>
-      /* Force instant scrolling everywhere by default. Any global
-         scroll-behavior:smooth rule (e.g. from assets/css/index.css)
-         would also apply to GSAP ScrollTrigger's own internal refresh
-         cycle, which briefly scrolls to 0 and back to remeasure pinned
-         elements — if that jump gets animated by CSS, it's visible as
-         an unwanted flash-to-top-then-back-down. Explicit behavior:
-         'smooth' calls elsewhere in this site's own JS (e.g. the
-         "next chapter" navigation) are unaffected, since passing that
-         option directly always overrides this CSS property. */
-      html, body { scroll-behavior: auto !important; }
-
       @font-face {
         font-family: 'BaronNeue';
         src: url('assets/fonts/Baron-Neue.otf') format('opentype');
