@@ -9,6 +9,24 @@
       });
 
       window.addEventListener('pageshow', function() {
+        /* Preferred path: the previous page (e.g. conferences.html,
+           code.html) stored which section to land on via sessionStorage
+           instead of a URL fragment, so the address bar stays clean
+           (just https://kaykhosrow.github.io/) with no #hash at all. */
+        var storedSection = sessionStorage.getItem('scrollToSection');
+        if (storedSection) {
+          sessionStorage.removeItem('scrollToSection');
+          var storedTarget = document.getElementById(storedSection);
+          if (storedTarget) {
+            var storedRoot = document.documentElement;
+            var storedPrevBehavior = storedRoot.style.scrollBehavior;
+            storedRoot.style.scrollBehavior = 'auto';
+            storedTarget.scrollIntoView();
+            storedRoot.style.scrollBehavior = storedPrevBehavior;
+          }
+          return;
+        }
+
         var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
         var isReload = nav ? nav.type === 'reload' : false;
 
