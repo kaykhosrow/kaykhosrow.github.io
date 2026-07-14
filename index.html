@@ -17,7 +17,7 @@
       var hasPendingScroll = !!pendingSectionId || !!location.hash;
       if (hasPendingScroll) {
         document.documentElement.style.visibility = 'hidden';
-        setTimeout(revealPage, 2500); // safety net — never stay hidden forever
+        setTimeout(revealPage, 8000); // safety net — never stay hidden forever, even on a slow connection
       }
       function revealPage() {
         document.documentElement.style.visibility = '';
@@ -41,12 +41,19 @@
         history.replaceState(null, '', location.pathname);
       });
 
-      window.addEventListener('pageshow', function() {
-        /* Preferred path: the previous page (e.g. conferences.html,
-           code.html) stored which section to land on via sessionStorage
-           instead of a URL fragment, so the address bar stays clean
-           (just https://kaykhosrow.github.io/) with no #hash at all. */
-        var storedSection = sessionStorage.getItem('scrollToSection');
+      /* Position the scroll only once the page is fully ready — see
+         whenFullyReady() below, which waits for both full resource load
+         AND webfont loading to finish, so the target section's position
+         is calculated from its final, true layout rather than a
+         fallback-font approximation that could shift by a few pixels
+         once the real fonts swap in. */
+      var positioned = false;
+      function positionPage() {
+        if (positioned) return;
+        positioned = true;
+
+        var storedSection = null;
+        try { storedSection = sessionStorage.getItem('scrollToSection'); } catch (e) {}
         if (storedSection) {
           sessionStorage.removeItem('scrollToSection');
           var storedTarget = document.getElementById(storedSection);
@@ -69,12 +76,8 @@
           var target = document.querySelector(location.hash);
           if (target) {
             /* Force an instant jump here regardless of any global
-               scroll-behavior:smooth CSS — this runs after the page has
-               already settled (fonts/images loaded), so an animated
-               scroll would visibly glide from the top down to the
-               section. Temporarily overriding scroll-behavior makes the
-               correction snap into place instead, so the page appears
-               to simply load already at that position. */
+               scroll-behavior:smooth CSS, so it's a snap into place
+               rather than an animated glide. */
             var root = document.documentElement;
             var prevScrollBehavior = root.style.scrollBehavior;
             root.style.scrollBehavior = 'auto';
@@ -88,6 +91,38 @@
           history.replaceState(null, '', location.pathname);
           window.scrollTo(0, 0);
           revealPage();
+        }
+      }
+
+      /* Waits for both: (1) the page's full load event (images and other
+         resources settled) and (2) document.fonts.ready (the custom
+         @font-face fonts have actually finished loading and applied) —
+         whichever finishes last. Only once both are true is layout
+         guaranteed final, so the scroll position will be exact. */
+      function whenFullyReady(cb) {
+        var loaded = document.readyState === 'complete';
+        var fontsReady = !(window.document && document.fonts && document.fonts.ready);
+        function tryRun() { if (loaded && fontsReady) cb(); }
+
+        if (!loaded) {
+          window.addEventListener('load', function () { loaded = true; tryRun(); });
+        }
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(function () { fontsReady = true; tryRun(); });
+        }
+        tryRun();
+      }
+
+      whenFullyReady(positionPage);
+
+      /* Fallback for back-forward-cache restores: the readiness checks
+         above won't re-fire on a bfcache restore, only pageshow does —
+         with event.persisted set to true. By that point everything is
+         already loaded, so this runs positionPage immediately. */
+      window.addEventListener('pageshow', function(e) {
+        if (e.persisted) {
+          positioned = false;
+          positionPage();
         }
       });
 
