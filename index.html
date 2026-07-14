@@ -168,24 +168,6 @@
       .code-item h5 { font-weight: 600; margin-bottom: 0.5rem; }
       .code-item p { opacity: 0.8; line-height: 1.7; margin-bottom: 1.5rem; }
 
-      .gallery-carousel { overflow: hidden; width: 100%; max-width: 460px; margin: 0 auto; }
-      .gallery-track { display: flex; flex-direction: row; will-change: transform; }
-      .gallery-slide { flex: 0 0 80%; width: 80%; box-sizing: border-box; padding: 0 10px; opacity: 0.3; transition: opacity 0.4s ease; }
-      .gallery-slide.active { opacity: 1; }
-      .gallery-slide:not(.active) { cursor: pointer; }
-      .video-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 4px; }
-      .video-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; z-index: 2; }
-      .gallery-slide.active .video-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' stroke='white' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; transition: background-color 0.2s; }
-      .gallery-slide.active .video-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
-      .video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1; }
-      .slide-overlay { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; border-radius: 4px; z-index: 5; font-size: 1.5rem; color: rgba(255,255,255,0); background: rgba(255,255,255,0); transition: background 0.3s ease, color 0.3s ease; }
-      .gallery-slide:not(.active) .slide-overlay { display: flex; }
-      .gallery-slide:not(.active):hover .slide-overlay { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
-      .gallery-slide:not(.active):hover { opacity: 0.65; }
-      .gallery-dots { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 28px; }
-      .gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; border: 2.5px solid rgba(0,0,0,0.5); cursor: pointer; transition: background 0.3s, border-color 0.3s, transform 0.3s; box-shadow: 0.5px 0.5px 1.5px rgba(0,0,0,0.25); }
-      .gallery-dot.active { background: #000; border: 2.5px solid #000; transform: scale(1.25); }
-
       /* ── Settings bar ──────────────────────────────────────────────────────── */
       .settings-bar { margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px 0 4px; border-left: 1px solid rgba(0,0,0,0.1); transition: padding-left 0.4s cubic-bezier(0.4,0,0.2,1); }
       .settings-bar:has(.settings-options.open) { padding-left: 12px; }
@@ -234,7 +216,6 @@
       #teaching { scroll-margin-top: 50px; }
       #conferences { scroll-margin-top: 50px; }
       #code { scroll-margin-top: 50px; }
-      #gallery { scroll-margin-top: 50px; }
       #chess { scroll-margin-top: 50px; }
       #contact { scroll-margin-top: 50px; }
 
@@ -293,38 +274,6 @@
       .about-img-wrap .about-img { transition: transform 0.4s ease; display: block; }
       .about-img-wrap:hover .about-img { transform: translateY(-6px); }
 
-      .gallery-swiper { width: 100%; overflow: hidden; }
-      .gallery-swiper { max-width: 680px; margin: 0 auto; overflow: hidden; padding-bottom: 40px; }
-      .gallery-video-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border-radius: 6px; }
-      .gallery-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; z-index: 2; }
-      .gallery-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 52px; height: 52px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' stroke='white' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; transition: background-color 0.2s; }
-      .gallery-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
-      .gallery-pagination .swiper-pagination-bullet { width: 8px; height: 8px; background: transparent; border: 2.5px solid rgba(0,0,0,0.5); opacity: 1; box-shadow: 0.5px 0.5px 1.5px rgba(0,0,0,0.25); }
-      .gallery-pagination .swiper-pagination-bullet-active { background: #000; border-color: #000; transform: scale(1.25); }
-
-      .vid-gallery { overflow: hidden; width: 100%; user-select: none; }
-      .vid-gallery:active { cursor: grabbing; }
-      .vid-track { display: flex; will-change: transform; }
-      .vid-slide { flex: 0 0 calc(100% / 2); box-sizing: border-box; padding: 0 8px; }
-      .vid-wrapper { position: relative; width: 100%; padding-bottom: 177.78%; height: 0; overflow: hidden; border: 3px solid #000; border-radius: 12px; }
-      .vid-slide-wide { flex: 0 0 auto; }
-      .vid-wrapper-wide { padding-bottom: 75% !important; /* fallback ratio before JS resizes it */ width: auto; height: 0; }
-      .vid-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; cursor: pointer; }
-      .vid-thumb::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 72px; height: 72px; background: rgba(0,0,0,0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' stroke='white' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/60% no-repeat; border-radius: 50%; border: 3px solid #000; transition: background-color 0.2s; }
-      .vid-thumb:hover::after { background-color: rgba(180,0,0,0.85); }
-      .vid-dots { display: flex; justify-content: center; gap: 10px; }
-      .vid-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; border: 2.5px solid rgba(0,0,0,0.65); cursor: pointer; transition: background 0.3s, border-color 0.3s, transform 0.3s; box-shadow: 0.5px 0.5px 1.5px rgba(0,0,0,0.25); }
-      .vid-dot.active { background: #000; border-color: #000; transform: scale(1.25); }
-      .vid-gallery-wrap { position: relative; width: 100%; max-width: 1000px; margin-left: 0; margin-right: auto; }
-      .vid-bottom { display: flex; align-items: center; margin-top: 24px; gap: 0; padding: 0 8px; max-width: 1000px; margin-left: 0; margin-right: auto; }
-      .vid-prev, .vid-next { display: flex; align-items: center; flex: 1; cursor: pointer; background: transparent; border: none; padding: 0; transition: opacity 0.2s; opacity: 0.5; }
-      .vid-prev:hover, .vid-next:hover { opacity: 1; }
-      .vid-prev { justify-content: flex-start; }
-      .vid-next { justify-content: flex-end; }
-      .vid-bar { flex: 1; height: 1.5px; background: rgba(0,0,0,0.3); transition: background 0.2s; box-shadow: 0.25px 0.25px 1px rgba(0,0,0,0.25); opacity: 0.75; }
-      .vid-prev:hover .vid-bar, .vid-next:hover .vid-bar { background: rgba(0,0,0,0.8); }
-      .vid-arrow { width: 28px; height: 28px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; box-shadow: 0.5px 0.5px 1.5px rgba(0,0,0,0.25); }
-
       #conferences .experience-wrapper { padding-bottom: 0 !important; }
       #conferences .experience-item p { font-size: 0.97rem; }
       #conferences .view-all-code { margin-top: 4rem; margin-bottom: 0.5rem; }
@@ -354,13 +303,13 @@
       body { min-width: 1200px; overflow-x: visible !important; }
 
       /* ── Left-bar clearance: at least 80px from left, but still auto-centred on wide screens ── */
-      #home, #about, #research, #teaching, #conferences, #code, #gallery, #chess, #contact {
+      #home, #about, #research, #teaching, #conferences, #code, #chess, #contact {
         margin-left:  max(80px, calc((100% - 1140px) / 2)) !important;
         margin-right: max(0px,  calc((100% - 1140px) / 2)) !important;
       }
 
       /* ── Anchor overlay text to its own section, matching research/conferences ── */
-      #about, #teaching, #code, #gallery, #chess { position: relative; }
+      #about, #teaching, #code, #chess { position: relative; }
 
       .container { min-width: 1140px !important; }
 
@@ -663,7 +612,7 @@
             </div>
             <div class="col-12">
               <a href="#about" class="d-flex gap-4 align-items-center next-chapter">
-                <span class="page">01/09</span>
+                <span class="page">01/08</span>
                 <span class="next">Next Chapter</span>
                 <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
               </a>
@@ -684,7 +633,6 @@
             <li class="nav-link"><a href="#teaching"><span class="text">teaching</span></a></li>
             <li class="nav-link"><a href="#conferences"><span class="text">conferences</span></a></li>
             <li class="nav-link"><a href="#code"><span class="text">code</span></a></li>
-            <li class="nav-link"><a href="#gallery"><span class="text">gallery</span></a></li>
             <li class="nav-link"><a href="#chess"><span class="text">chess</span></a></li>
             <li class="nav-link"><a href="#contact"><span class="text">contact</span></a></li>
           </ul>
@@ -744,7 +692,7 @@
           </div>
           <div class="col-12">
             <a href="#research" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">02/09</span>
+              <span class="page">02/08</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -834,7 +782,7 @@
 
           <div class="col-12">
             <a href="#teaching" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">03/09</span>
+              <span class="page">03/08</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -868,7 +816,7 @@
 
           <div class="col-12">
             <a href="#conferences" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">04/09</span>
+              <span class="page">04/08</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -914,7 +862,7 @@
           </div>
           <div class="col-12">
             <a href="#code" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">05/09</span>
+              <span class="page">05/08</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -958,272 +906,8 @@
           </div>
 
           <div class="col-12">
-            <a href="#gallery" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">06/09</span>
-              <span class="next">Next Chapter</span>
-              <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
-            </a>
-          </div>
-        </section>
-
-        <section id="gallery" class="about section container">
-          <span class="section-title-overlay-text">Gallery</span>
-          <div class="section-title text-capitalize">
-            <h4>Cinematography</h4>
-            <h2>Gallery</h2>
-          </div>
-
-          <div class="vid-gallery-wrap">
-            <div class="vid-gallery">
-              <div class="vid-track" id="vidTrack"></div>
-            </div>
-          </div>
-          <div class="vid-bottom">
-            <button class="vid-prev" id="vidPrev"><span class="vid-arrow"><i class="ph-bold ph-arrow-left"></i></span><span class="vid-bar"></span></button>
-            <div class="vid-dots" id="vidDots"></div>
-            <button class="vid-next" id="vidNext"><span class="vid-bar"></span><span class="vid-arrow"><i class="ph-bold ph-arrow-right"></i></span></button>
-          </div>
-
-          <script>
-          (function() {
-            var track   = document.getElementById('vidTrack');
-            var dotsEl  = document.getElementById('vidDots');
-            var current = 0;
-
-            /* ============================================================
-               GALLERY VIDEO LIST — the only thing you need to touch to
-               add, remove, or reorder videos.
-
-               Each entry needs a YouTube id and a "type":
-                 short  → standard 9:16 portrait short (two per row)
-                 square → 1:1, takes the whole row, letterboxed
-                 wide   → 16:9 landscape, takes the whole row, letterboxed
-
-               For anything that isn't a clean 9:16 / 1:1 / 16:9 (e.g. a
-               4:3 video), use type "wide" and add a "ratio" override
-               (width / height as a decimal or fraction) — everything
-               else (sizing, capping, letterboxing, paging, preload
-               hints) is figured out automatically from this list.
-            ============================================================ */
-            var GALLERY_VIDEOS = [
-              { id: 'kvPEqAVZp-g', type: 'wide',  ratio: 4/3 },
-              { id: 'SvZ_sF7gamI', type: 'short' },
-              { id: 'J0JZivXHkH8', type: 'short' },
-              { id: 'SbmUKkXXYNk', type: 'wide',  ratio: 4/3 },
-              { id: 'DLA1bcUDg2g', type: 'short' },
-              { id: '7g1UTm1c4EA', type: 'short' }
-            ];
-
-            var TYPE_DEFAULTS = {
-              short:  { ratio: 9/16 },
-              square: { ratio: 1 },
-              wide:   { ratio: 16/9 }
-            };
-
-            function buildSlides() {
-              track.innerHTML = '';
-              GALLERY_VIDEOS.forEach(function(v) {
-                var def    = TYPE_DEFAULTS[v.type] || TYPE_DEFAULTS.short;
-                var ratio  = v.ratio || def.ratio;
-                var isWide = v.type !== 'short'; // anything but a standard short gets the full-row/letterbox treatment
-
-                var slide = document.createElement('div');
-                slide.className = 'vid-slide' + (isWide ? ' vid-slide-wide' : '');
-                if (isWide) slide.setAttribute('data-ratio', ratio);
-
-                var wrapper = document.createElement('div');
-                wrapper.className = 'vid-wrapper' + (isWide ? ' vid-wrapper-wide' : '');
-
-                var thumb = document.createElement('div');
-                thumb.className = 'vid-thumb';
-                thumb.style.backgroundImage = 'url(https://img.youtube.com/vi/' + v.id + '/maxresdefault.jpg)';
-                thumb.setAttribute('data-id', v.id);
-
-                wrapper.appendChild(thumb);
-                slide.appendChild(wrapper);
-                track.appendChild(slide);
-
-                var preload = document.createElement('link');
-                preload.rel  = 'preload';
-                preload.as   = 'image';
-                preload.href = 'https://img.youtube.com/vi/' + v.id + '/maxresdefault.jpg';
-                document.head.appendChild(preload);
-              });
-            }
-
-            function sizeWideWrappers() {
-              var ref = track.querySelector('.vid-slide:not(.vid-slide-wide) .vid-wrapper');
-              if (!ref) return;
-              var h = ref.getBoundingClientRect().height;
-              /* Height always matches the shorts. Width is capped to the
-                 container so the box itself never overflows the track (which
-                 would otherwise get clipped by overflow:hidden). Because a
-                 capped width makes the box narrower (relative to height) than
-                 the video's real aspect ratio, the thumb/iframe inside is
-                 sized to the video's true ratio and letterboxed (centered,
-                 black bars top/bottom) rather than stretched or cropped. */
-              var maxW = track.parentElement.offsetWidth - 16;
-              track.querySelectorAll('.vid-wrapper-wide').forEach(function(w) {
-                var ratio = parseFloat(w.closest('.vid-slide').getAttribute('data-ratio')) || 1;
-                var width = Math.min(h * ratio, maxW);
-                var innerH = width / ratio;
-                w.style.height = h + 'px';
-                w.style.width  = width + 'px';
-                w.style.background = '#000';
-                var inner = w.querySelector('.vid-thumb, iframe');
-                if (inner) {
-                  inner.style.top    = '50%';
-                  inner.style.height = innerH + 'px';
-                  inner.style.transform = 'translateY(-50%)';
-                }
-              });
-            }
-
-            function slideWidths() {
-              return Array.prototype.map.call(track.querySelectorAll('.vid-slide'), function(s) {
-                return s.getBoundingClientRect().width;
-              });
-            }
-
-            /* ── Paged navigation ──────────────────────────────────────
-               Slides are grouped into "pages" that each fill the visible
-               width — normally two shorts, or one wide/square video
-               alone. Next/Prev/dots always move a full page, so a wide
-               video is always either fully in view or fully out of it,
-               never half-revealed the way per-slide stepping could
-               leave it. ──────────────────────────────────────────────── */
-            var pages = [];
-
-            function buildPages() {
-              var widths = slideWidths();
-              var contW  = track.parentElement.offsetWidth;
-              var result = [];
-              var i = 0, cum = 0;
-              while (i < widths.length) {
-                var pageOffset = cum;
-                var pageWidth  = 0;
-                while (i < widths.length && (pageWidth === 0 || pageWidth + widths[i] <= contW + 0.5)) {
-                  pageWidth += widths[i];
-                  cum += widths[i];
-                  i++;
-                }
-                result.push({ offset: pageOffset });
-              }
-              return result;
-            }
-
-            function refreshPages() { pages = buildPages(); }
-
-            function maxIndex() { return Math.max(0, pages.length - 1); }
-
-            function offsetFor(idx) {
-              var widths = slideWidths();
-              var total  = widths.reduce(function(a,b){ return a+b; }, 0);
-              var contW  = track.parentElement.offsetWidth;
-              var maxOff = Math.max(0, total - contW);
-              var raw = pages[idx] ? pages[idx].offset : 0;
-              return Math.min(raw, maxOff);
-            }
-
-            function buildDots() {
-              dotsEl.innerHTML = '';
-              for (var i = 0; i <= maxIndex(); i++) {
-                var d = document.createElement('div');
-                d.className = 'vid-dot';
-                (function(idx){ d.addEventListener('click', function(){ goTo(idx); }); })(i);
-                dotsEl.appendChild(d);
-              }
-            }
-
-            function stopAllVideos() {
-              track.querySelectorAll('iframe').forEach(function(f) {
-                try { f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}), '*'); } catch(e){}
-              });
-            }
-
-            function goTo(idx) {
-              current = Math.max(0, Math.min(idx, maxIndex()));
-              track.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
-              track.style.transform  = 'translateX(-' + offsetFor(current) + 'px)';
-              Array.prototype.forEach.call(dotsEl.children, function(d, i) { d.classList.toggle('active', i === current); });
-            }
-
-            /* Force max quality reliably: rather than guessing with fixed
-               delays, listen for the player's own onReady / onStateChange
-               signals (sent via postMessage once enablejsapi is on) and
-               re-issue the quality command each time — including whenever
-               playback (re)starts, since YouTube can silently downgrade
-               quality on state changes. Registered once, applies to every
-               embedded video in the gallery automatically. */
-            function forceMaxQuality(win) {
-              try {
-                win.postMessage(JSON.stringify({event:'command', func:'setPlaybackQualityRange', args:['hd2160','hd2160']}), '*');
-                win.postMessage(JSON.stringify({event:'command', func:'setPlaybackQuality', args:['hd2160']}), '*');
-              } catch (e) {}
-            }
-
-            window.addEventListener('message', function(e) {
-              if (typeof e.data !== 'string' || !e.source) return;
-              var data;
-              try { data = JSON.parse(e.data); } catch (err) { return; }
-              if (!data) return;
-              if (data.event === 'onReady') {
-                forceMaxQuality(e.source);
-              } else if (data.event === 'infoDelivery' && data.info && data.info.playerState === 1) {
-                forceMaxQuality(e.source);
-              }
-            });
-
-            track.addEventListener('click', function(e) {
-              var thumb = e.target.closest('.vid-thumb');
-              if (!thumb) return;
-              var wrapper = thumb.parentNode;
-              var id = thumb.getAttribute('data-id');
-              thumb.style.display = 'none';
-              var isWide = wrapper.classList.contains('vid-wrapper-wide');
-              var iframe = document.createElement('iframe');
-              iframe.setAttribute('allowfullscreen','');
-              iframe.setAttribute('allow','autoplay');
-              if (isWide) {
-                var ratio = parseFloat(wrapper.closest('.vid-slide').getAttribute('data-ratio')) || 1;
-                var innerH = wrapper.clientWidth / ratio;
-                iframe.style.cssText = 'position:absolute;left:0;width:100%;border:0;z-index:1;top:50%;height:' + innerH + 'px;transform:translateY(-50%);';
-              } else {
-                iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;';
-              }
-              iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1&enablejsapi=1&vq=hd2160&hd=1';
-              iframe.addEventListener('load', function() {
-                /* enablejsapi requires a "listening" handshake before the
-                   player will emit onReady/onStateChange events back to us */
-                try { iframe.contentWindow.postMessage(JSON.stringify({event:'listening', id: id}), '*'); } catch (e) {}
-                /* Fallback nudges in case the handshake or events are missed */
-                setTimeout(function(){ forceMaxQuality(iframe.contentWindow); }, 800);
-                setTimeout(function(){ forceMaxQuality(iframe.contentWindow); }, 2500);
-              });
-              wrapper.appendChild(iframe);
-            });
-
-            document.getElementById('vidPrev').addEventListener('click', function() { stopAllVideos(); goTo(current - 1); });
-            document.getElementById('vidNext').addEventListener('click', function() { stopAllVideos(); goTo(current + 1); });
-
-            window.addEventListener('resize', function() {
-              sizeWideWrappers();
-              refreshPages();
-              buildDots();
-              goTo(current);
-            });
-
-            buildSlides();
-            sizeWideWrappers();
-            refreshPages();
-            buildDots();
-            goTo(0);
-          })();
-          </script>
-
-          <div class="col-12" style="margin-top: 2rem;">
             <a href="#chess" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">07/09</span>
+              <span class="page">06/08</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -2108,7 +1792,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
 
           <div class="col-12" style="margin-top: 3rem;">
             <a href="#contact" class="d-flex gap-4 align-items-center next-chapter">
-              <span class="page">08/09</span>
+              <span class="page">07/08</span>
               <span class="next">Next Chapter</span>
               <span class="icon"><i class="ph ph-arrow-elbow-right-down"></i></span>
             </a>
@@ -2144,7 +1828,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
             </div>
           </form>
           <div class="col mt-5 pt-5 next-chapter">
-            <span class="page">09/09</span>
+            <span class="page">08/08</span>
           </div>
         </section>
 
@@ -2425,7 +2109,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
 
       var selectors = [
         '#about', '#research', '#teaching',
-        '#conferences', '#code', '#gallery', '#chess', '#contact'
+        '#conferences', '#code', '#chess', '#contact'
       ].map(function (id) {
         return id + ' .section-title h2, ' + id + ' .section-title h4';
       }).join(', ');
@@ -2600,7 +2284,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
     <script>
     (function () {
       function alignOverlays() {
-        document.querySelectorAll('#about, #research, #teaching, #conferences, #code, #gallery, #chess, #contact').forEach(function (section) {
+        document.querySelectorAll('#about, #research, #teaching, #conferences, #code, #chess, #contact').forEach(function (section) {
           var overlay = section.querySelector('.section-title-overlay-text');
           var title   = section.querySelector('.section-title');
           if (!overlay || !title) return;
@@ -2628,7 +2312,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
 
     <script>
     (function () {
-      var sections = ['home','about','research','teaching','conferences','code','gallery','chess','contact'];
+      var sections = ['home','about','research','teaching','conferences','code','chess','contact'];
       var offset = 0.35;
 
       function getActive() {
@@ -2694,7 +2378,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
       /* All remaining section nav links: preventDefault stops the browser's
          native hash re-scroll on repeat clicks; scrollIntoView tracks the
          element dynamically so layout shifts during scroll don't mis-aim */
-      ['research','teaching','conferences','code','gallery','chess'].forEach(function (id) {
+      ['research','teaching','conferences','code','chess'].forEach(function (id) {
         document.querySelectorAll('a[href="#' + id + '"]').forEach(function (link) {
           link.addEventListener('click', function (e) {
             e.preventDefault();
@@ -2723,7 +2407,7 @@ Kd7 18. Qxf8 Be6 19. Nxe6 fxe6 20. Ne4 Nd5 21. Nc5+ Kc7 22. Nxe6+ 1-0
 
     <script>
     (function () {
-      var SECTIONS = ['home','about','research','teaching','conferences','code','gallery','chess','contact'];
+      var SECTIONS = ['home','about','research','teaching','conferences','code','chess','contact'];
       var btn = document.getElementById('navArrowBtn');
       if (!btn) return;
 
